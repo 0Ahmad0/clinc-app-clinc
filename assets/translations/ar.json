@@ -209,5 +209,49 @@
       "save": "حفظ",
       "cancel": "إلغاء"
     }
+  },
+  "services_module": {
+    "title": "إدارة الخدمات",
+    "tabs": {
+      "services": "قائمة الخدمات",
+      "specialties": "التخصصات / الأقسام"
+    },
+    "buttons": {
+      "add_service": "إضافة خدمة جديدة",
+      "add_specialty": "إضافة تخصص جديد"
+    },
+    "labels": {
+      "name": "الاسم",
+      "name_hint": "مثال: قلبية، تحليل دم...",
+      "description": "الوصف",
+      "price": "السعر",
+      "duration": "المدة (دقيقة)",
+      "select_specialty": "تابع للقسم",
+      "select_icon": "اختر أيقونة معبرة",
+      "status": "الحالة"
+    },
+    "cards": {
+      "min": "دقيقة",
+      "currency": "ريال"
+    },
+    "forms": {
+      "save": "حفظ التغييرات",
+      "create": "إضافة جديد",
+      "edit_title": "تعديل {name}",
+      "add_title": "إضافة {name}",
+      "name_label": "الاسم",
+      "desc_label": "الوصف",
+      "price_label": "السعر",
+      "duration_label": "المدة (دقيقة)",
+      "category_label": "القسم التابع له",
+      "icon_label": "أيقونة القسم",
+      "color_label": "لون التمييز",
+      "active_label": "الخدمة متاحة (نشطة)",
+      "validation": {
+        "required": "هذا الحقل مطلوب"
+      },
+      "success_add": "تمت الإضافة بنجاح",
+      "success_edit": "تم التعديل بنجاح"
+    }
   }
 }

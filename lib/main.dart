@@ -71,7 +71,7 @@ class App extends StatelessWidget {
               defaultTransition: Transition.upToDown,
               debugShowCheckedModeBanner: false,
               getPages: AppPages.routes,
-              initialRoute: AppRoutes.addDoctor,
+              initialRoute: AppRoutes.services,
               builder: (context, child) {
                 return MediaQuery(
                   data: MediaQuery.of(

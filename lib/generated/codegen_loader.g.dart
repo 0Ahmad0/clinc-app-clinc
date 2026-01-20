@@ -225,6 +225,50 @@ class CodegenLoader extends AssetLoader{
       "save": "حفظ",
       "cancel": "إلغاء"
     }
+  },
+  "services_module": {
+    "title": "إدارة الخدمات",
+    "tabs": {
+      "services": "قائمة الخدمات",
+      "specialties": "التخصصات / الأقسام"
+    },
+    "buttons": {
+      "add_service": "إضافة خدمة جديدة",
+      "add_specialty": "إضافة تخصص جديد"
+    },
+    "labels": {
+      "name": "الاسم",
+      "name_hint": "مثال: قلبية، تحليل دم...",
+      "description": "الوصف",
+      "price": "السعر",
+      "duration": "المدة (دقيقة)",
+      "select_specialty": "تابع للقسم",
+      "select_icon": "اختر أيقونة معبرة",
+      "status": "الحالة"
+    },
+    "cards": {
+      "min": "دقيقة",
+      "currency": "ريال"
+    },
+    "forms": {
+      "save": "حفظ التغييرات",
+      "create": "إضافة جديد",
+      "edit_title": "تعديل {name}",
+      "add_title": "إضافة {name}",
+      "name_label": "الاسم",
+      "desc_label": "الوصف",
+      "price_label": "السعر",
+      "duration_label": "المدة (دقيقة)",
+      "category_label": "القسم التابع له",
+      "icon_label": "أيقونة القسم",
+      "color_label": "لون التمييز",
+      "active_label": "الخدمة متاحة (نشطة)",
+      "validation": {
+        "required": "هذا الحقل مطلوب"
+      },
+      "success_add": "تمت الإضافة بنجاح",
+      "success_edit": "تم التعديل بنجاح"
+    }
   }
 };
 static const Map<String,dynamic> _en = {
@@ -437,6 +481,50 @@ static const Map<String,dynamic> _en = {
     "buttons": {
       "save": "Save",
       "cancel": "Cancel"
+    }
+  },
+  "services_module": {
+    "title": "Services Management",
+    "tabs": {
+      "services": "Service List",
+      "specialties": "Specialties"
+    },
+    "buttons": {
+      "add_service": "Add New Service",
+      "add_specialty": "Add New Specialty"
+    },
+    "labels": {
+      "name": "Name",
+      "name_hint": "e.g. Cardiology, Blood Test...",
+      "description": "Description",
+      "price": "Price",
+      "duration": "Duration (min)",
+      "select_specialty": "Department",
+      "select_icon": "Select Icon",
+      "status": "Status"
+    },
+    "cards": {
+      "min": "min",
+      "currency": "SR"
+    },
+    "forms": {
+      "save": "Save Changes",
+      "create": "Create New",
+      "edit_title": "Edit {name}",
+      "add_title": "Add {name}",
+      "name_label": "Name",
+      "desc_label": "Description",
+      "price_label": "Price",
+      "duration_label": "Duration (min)",
+      "category_label": "Department",
+      "icon_label": "Department Icon",
+      "color_label": "Highlight Color",
+      "active_label": "Service Available (Active)",
+      "validation": {
+        "required": "Field required"
+      },
+      "success_add": "Added Successfully",
+      "success_edit": "Updated Successfully"
     }
   }
 };

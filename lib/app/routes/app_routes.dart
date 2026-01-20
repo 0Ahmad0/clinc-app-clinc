@@ -1,4 +1,5 @@
 abstract class AppRoutes {
+  static const services = '/services';
   static const addDoctor = '/add_doctor';
   static const doctors = '/doctors';
   static const dashboard = '/dashboard';

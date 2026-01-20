@@ -209,5 +209,49 @@
       "save": "Save",
       "cancel": "Cancel"
     }
+  },
+  "services_module": {
+    "title": "Services Management",
+    "tabs": {
+      "services": "Service List",
+      "specialties": "Specialties"
+    },
+    "buttons": {
+      "add_service": "Add New Service",
+      "add_specialty": "Add New Specialty"
+    },
+    "labels": {
+      "name": "Name",
+      "name_hint": "e.g. Cardiology, Blood Test...",
+      "description": "Description",
+      "price": "Price",
+      "duration": "Duration (min)",
+      "select_specialty": "Department",
+      "select_icon": "Select Icon",
+      "status": "Status"
+    },
+    "cards": {
+      "min": "min",
+      "currency": "SR"
+    },
+    "forms": {
+      "save": "Save Changes",
+      "create": "Create New",
+      "edit_title": "Edit {name}",
+      "add_title": "Add {name}",
+      "name_label": "Name",
+      "desc_label": "Description",
+      "price_label": "Price",
+      "duration_label": "Duration (min)",
+      "category_label": "Department",
+      "icon_label": "Department Icon",
+      "color_label": "Highlight Color",
+      "active_label": "Service Available (Active)",
+      "validation": {
+        "required": "Field required"
+      },
+      "success_add": "Added Successfully",
+      "success_edit": "Updated Successfully"
+    }
   }
 }

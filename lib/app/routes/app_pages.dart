@@ -1,3 +1,5 @@
+import 'package:clinc_app_clinc/modules/services/views/services_view.dart';
+import 'package:clinc_app_clinc/modules/services/bindings/services_binding.dart';
 import 'package:clinc_app_clinc/modules/doctors/views/doctors_view.dart';
 import 'package:clinc_app_clinc/modules/doctors/bindings/doctors_binding.dart';
 import 'package:clinc_app_clinc/modules/dashboard/views/dashboard_view.dart';
@@ -31,6 +33,11 @@ import 'app_routes.dart';
 
 class AppPages {
   static final routes = [
+    GetPage(
+      name: AppRoutes.services,
+      page: () => const ServicesView(),
+      binding: ServicesBinding(),
+    ),
     GetPage(
       name: AppRoutes.addDoctor,
       page: () => const AddDoctorView(),
