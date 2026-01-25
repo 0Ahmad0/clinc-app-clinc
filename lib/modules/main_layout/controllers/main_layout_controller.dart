@@ -6,11 +6,11 @@ import '../../../generated/locale_keys.g.dart';
 
 class MainLayoutController extends GetxController {
   // ── State ──
-  final RxInt currentIndex = 1.obs;
+  final RxInt currentIndex = 3.obs;
 
   // هذه القيمة تأتي من User Model المخزن محلياً
   // اجعلها false للتجربة (لمنع الدخول)
-  final bool isProfileCompleted = false;
+  final bool isProfileCompleted = true;
 
   // ── Navigation Logic ──
   void changeTab(int index) {

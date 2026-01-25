@@ -253,5 +253,119 @@
       "success_add": "تمت الإضافة بنجاح",
       "success_edit": "تم التعديل بنجاح"
     }
+  },
+  "appointments": {
+    "title": "المواعيد",
+    "tabs": {
+      "all": "الكل",
+      "pending": "قيد المراجعة",
+      "approved": "مؤكدة",
+      "completed": "مكتملة",
+      "rejected": "مرفوضة"
+    },
+    "search_hint": "ابحث باسم المريض أو الخدمة...",
+    "card": {
+      "patient": "المريض",
+      "service": "الخدمة",
+      "type": "النوع",
+      "time": "الوقت"
+    },
+    "type": {
+      "consultation": "استشارة",
+      "service": "خدمة",
+      "lab_test": "تحليل مخبري"
+    },
+    "status": {
+      "pending": "قيد المراجعة",
+      "approved": "مؤكد",
+      "completed": "مكتمل",
+      "rejected": "مرفوض"
+    },
+    "details": {
+      "title": "تفاصيل الموعد",
+      "patient_info": "معلومات المريض",
+      "appointment_info": "معلومات الموعد",
+      "result": "نتيجة التحليل",
+      "result_missing": "لم يتم رفع نتيجة التحليل بعد",
+      "result_uploaded": "تم رفع نتيجة التحليل"
+    },
+    "actions": {
+      "approve": "موافقة",
+      "reject": "رفض",
+      "complete": "إنهاء الموعد",
+      "upload_result": "رفع نتيجة التحليل (PDF)",
+      "view_result": "عرض الملف",
+      "save": "حفظ"
+    },
+    "reject": {
+      "title": "سبب الرفض",
+      "reason_label": "اختر سبباً",
+      "other": "أخرى",
+      "note_label": "اكتب السبب بالتفصيل",
+      "note_hint": "مثال: الطبيب غير متوفر في هذا الوقت",
+      "reasons": {
+        "doctor_unavailable": "الطبيب غير متوفر",
+        "clinic_closed": "العيادة مغلقة",
+        "invalid_booking": "حجز غير صحيح",
+        "need_more_info": "نحتاج معلومات إضافية"
+      },
+      "validation": {
+        "reason_required": "اختر سبباً",
+        "note_required": "اكتب سبب الرفض"
+      }
+    },
+    "upload": {
+      "title": "رفع نتيجة التحليل",
+      "pick_pdf": "اختيار ملف PDF",
+      "selected_file": "الملف المختار",
+      "no_file": "لا يوجد ملف",
+      "uploading": "جارٍ الرفع...",
+      "validation": {
+        "pdf_required": "الرجاء اختيار ملف PDF"
+      },
+      "success": "تم رفع النتيجة بنجاح"
+    },
+    "messages": {
+      "approved": "تمت الموافقة على الموعد",
+      "rejected": "تم رفض الموعد",
+      "completed": "تم إنهاء الموعد",
+      "error": "حدث خطأ، حاول مرة أخرى"
+    }
+  },
+  "reports": {
+    "title": "التقارير",
+    "filters": {
+      "type": "نوع التقرير",
+      "range": "الفترة",
+      "today": "اليوم",
+      "week": "هذا الأسبوع",
+      "month": "هذا الشهر",
+      "custom": "مخصص"
+    },
+    "types": {
+      "appointments": "تقرير المواعيد",
+      "revenue": "تقرير الإيرادات",
+      "lab_results": "تقرير التحاليل",
+      "doctors": "تقرير الأطباء"
+    },
+    "sections": {
+      "summary": "ملخص",
+      "list": "قائمة التقارير"
+    },
+    "cards": {
+      "total": "الإجمالي",
+      "completed": "مكتمل",
+      "cancelled": "ملغي",
+      "pending": "قيد المراجعة"
+    },
+    "details": {
+      "title": "تفاصيل التقرير",
+      "generated_at": "تاريخ الإنشاء",
+      "download_pdf": "تحميل PDF",
+      "view_pdf": "عرض PDF"
+    },
+    "messages": {
+      "empty": "لا يوجد تقارير ضمن هذه الفترة"
+    }
   }
 }

@@ -1,4 +1,7 @@
 abstract class AppRoutes {
+  static const reports = '/import';
+  static const appointmentsDetails = '/appointment_detalis';
+  static const appointments = '/appointments';
   static const services = '/services';
   static const addDoctor = '/add_doctor';
   static const doctors = '/doctors';

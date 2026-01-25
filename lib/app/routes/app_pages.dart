@@ -1,3 +1,5 @@
+import 'package:clinc_app_clinc/modules/appointments/views/appointments_view.dart';
+import 'package:clinc_app_clinc/modules/appointments/bindings/appointments_binding.dart';
 import 'package:clinc_app_clinc/modules/services/views/services_view.dart';
 import 'package:clinc_app_clinc/modules/services/bindings/services_binding.dart';
 import 'package:clinc_app_clinc/modules/doctors/views/doctors_view.dart';
@@ -21,6 +23,8 @@ import 'package:clinc_app_clinc/modules/splash/bindings/splash_binding.dart';
 import 'package:get/get.dart';
 import '../../modules/add_doctor/bindings/add_doctor_binding.dart';
 import '../../modules/add_doctor/views/add_doctor_view.dart';
+import '../../modules/appointments/bindings/appointment_details_binding.dart';
+import '../../modules/appointments/views/appointment_details_view.dart';
 import '../../modules/auth/bindings/forgot_password_binding.dart';
 import '../../modules/auth/views/forgot_password_view.dart';
 import '../../modules/complete_profile/bindings/complete_profile_binding.dart';
@@ -29,10 +33,27 @@ import '../../modules/main_layout/bindings/main_layout_binding.dart';
 import '../../modules/main_layout/views/main_layout_view.dart';
 import '../../modules/pending_approval/bindings/pending_approval_binding.dart';
 import '../../modules/pending_approval/views/pending_approval_view.dart';
+import '../../modules/reports/bindings/reports_binding.dart';
+import '../../modules/reports/views/reports_view.dart';
 import 'app_routes.dart';
 
 class AppPages {
   static final routes = [
+    GetPage(
+      name: AppRoutes.reports,
+      page: () => const ReportsView(),
+      binding: ReportsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.appointmentsDetails,
+      page: () => const AppointmentDetailsView(),
+      binding: AppointmentDetailsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.appointments,
+      page: () => const AppointmentsView(),
+      binding: AppointmentsBinding(),
+    ),
     GetPage(
       name: AppRoutes.services,
       page: () => const ServicesView(),

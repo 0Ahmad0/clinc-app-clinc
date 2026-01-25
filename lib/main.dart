@@ -71,7 +71,7 @@ class App extends StatelessWidget {
               defaultTransition: Transition.upToDown,
               debugShowCheckedModeBanner: false,
               getPages: AppPages.routes,
-              initialRoute: AppRoutes.services,
+              initialRoute: AppRoutes.mainLayout,
               builder: (context, child) {
                 return MediaQuery(
                   data: MediaQuery.of(
@@ -87,3 +87,4 @@ class App extends StatelessWidget {
     );
   }
 }
+

@@ -269,6 +269,120 @@ class CodegenLoader extends AssetLoader{
       "success_add": "تمت الإضافة بنجاح",
       "success_edit": "تم التعديل بنجاح"
     }
+  },
+  "appointments": {
+    "title": "المواعيد",
+    "tabs": {
+      "all": "الكل",
+      "pending": "قيد المراجعة",
+      "approved": "مؤكدة",
+      "completed": "مكتملة",
+      "rejected": "مرفوضة"
+    },
+    "search_hint": "ابحث باسم المريض أو الخدمة...",
+    "card": {
+      "patient": "المريض",
+      "service": "الخدمة",
+      "type": "النوع",
+      "time": "الوقت"
+    },
+    "type": {
+      "consultation": "استشارة",
+      "service": "خدمة",
+      "lab_test": "تحليل مخبري"
+    },
+    "status": {
+      "pending": "قيد المراجعة",
+      "approved": "مؤكد",
+      "completed": "مكتمل",
+      "rejected": "مرفوض"
+    },
+    "details": {
+      "title": "تفاصيل الموعد",
+      "patient_info": "معلومات المريض",
+      "appointment_info": "معلومات الموعد",
+      "result": "نتيجة التحليل",
+      "result_missing": "لم يتم رفع نتيجة التحليل بعد",
+      "result_uploaded": "تم رفع نتيجة التحليل"
+    },
+    "actions": {
+      "approve": "موافقة",
+      "reject": "رفض",
+      "complete": "إنهاء الموعد",
+      "upload_result": "رفع نتيجة التحليل (PDF)",
+      "view_result": "عرض الملف",
+      "save": "حفظ"
+    },
+    "reject": {
+      "title": "سبب الرفض",
+      "reason_label": "اختر سبباً",
+      "other": "أخرى",
+      "note_label": "اكتب السبب بالتفصيل",
+      "note_hint": "مثال: الطبيب غير متوفر في هذا الوقت",
+      "reasons": {
+        "doctor_unavailable": "الطبيب غير متوفر",
+        "clinic_closed": "العيادة مغلقة",
+        "invalid_booking": "حجز غير صحيح",
+        "need_more_info": "نحتاج معلومات إضافية"
+      },
+      "validation": {
+        "reason_required": "اختر سبباً",
+        "note_required": "اكتب سبب الرفض"
+      }
+    },
+    "upload": {
+      "title": "رفع نتيجة التحليل",
+      "pick_pdf": "اختيار ملف PDF",
+      "selected_file": "الملف المختار",
+      "no_file": "لا يوجد ملف",
+      "uploading": "جارٍ الرفع...",
+      "validation": {
+        "pdf_required": "الرجاء اختيار ملف PDF"
+      },
+      "success": "تم رفع النتيجة بنجاح"
+    },
+    "messages": {
+      "approved": "تمت الموافقة على الموعد",
+      "rejected": "تم رفض الموعد",
+      "completed": "تم إنهاء الموعد",
+      "error": "حدث خطأ، حاول مرة أخرى"
+    }
+  },
+  "reports": {
+    "title": "التقارير",
+    "filters": {
+      "type": "نوع التقرير",
+      "range": "الفترة",
+      "today": "اليوم",
+      "week": "هذا الأسبوع",
+      "month": "هذا الشهر",
+      "custom": "مخصص"
+    },
+    "types": {
+      "appointments": "تقرير المواعيد",
+      "revenue": "تقرير الإيرادات",
+      "lab_results": "تقرير التحاليل",
+      "doctors": "تقرير الأطباء"
+    },
+    "sections": {
+      "summary": "ملخص",
+      "list": "قائمة التقارير"
+    },
+    "cards": {
+      "total": "الإجمالي",
+      "completed": "مكتمل",
+      "cancelled": "ملغي",
+      "pending": "قيد المراجعة"
+    },
+    "details": {
+      "title": "تفاصيل التقرير",
+      "generated_at": "تاريخ الإنشاء",
+      "download_pdf": "تحميل PDF",
+      "view_pdf": "عرض PDF"
+    },
+    "messages": {
+      "empty": "لا يوجد تقارير ضمن هذه الفترة"
+    }
   }
 };
 static const Map<String,dynamic> _en = {
@@ -525,6 +639,120 @@ static const Map<String,dynamic> _en = {
       },
       "success_add": "Added Successfully",
       "success_edit": "Updated Successfully"
+    }
+  },
+  "appointments": {
+    "title": "Appointments",
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "approved": "Approved",
+      "completed": "Completed",
+      "rejected": "Rejected"
+    },
+    "search_hint": "Search by patient or service...",
+    "card": {
+      "patient": "Patient",
+      "service": "Service",
+      "type": "Type",
+      "time": "Time"
+    },
+    "type": {
+      "consultation": "Consultation",
+      "service": "Service",
+      "lab_test": "Lab Test"
+    },
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "completed": "Completed",
+      "rejected": "Rejected"
+    },
+    "details": {
+      "title": "Appointment Details",
+      "patient_info": "Patient Info",
+      "appointment_info": "Appointment Info",
+      "result": "Lab Result",
+      "result_missing": "Lab result not uploaded yet",
+      "result_uploaded": "Lab result uploaded"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "complete": "Complete",
+      "upload_result": "Upload Lab Result (PDF)",
+      "view_result": "View File",
+      "save": "Save"
+    },
+    "reject": {
+      "title": "Rejection Reason",
+      "reason_label": "Select a reason",
+      "other": "Other",
+      "note_label": "Write the reason",
+      "note_hint": "e.g. Doctor is unavailable at this time",
+      "reasons": {
+        "doctor_unavailable": "Doctor unavailable",
+        "clinic_closed": "Clinic closed",
+        "invalid_booking": "Invalid booking",
+        "need_more_info": "Need more information"
+      },
+      "validation": {
+        "reason_required": "Please select a reason",
+        "note_required": "Please write the rejection reason"
+      }
+    },
+    "upload": {
+      "title": "Upload Lab Result",
+      "pick_pdf": "Pick PDF File",
+      "selected_file": "Selected file",
+      "no_file": "No file selected",
+      "uploading": "Uploading...",
+      "validation": {
+        "pdf_required": "Please select a PDF file"
+      },
+      "success": "Result uploaded successfully"
+    },
+    "messages": {
+      "approved": "Appointment approved",
+      "rejected": "Appointment rejected",
+      "completed": "Appointment completed",
+      "error": "Something went wrong"
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "filters": {
+      "type": "Report Type",
+      "range": "Range",
+      "today": "Today",
+      "week": "This Week",
+      "month": "This Month",
+      "custom": "Custom"
+    },
+    "types": {
+      "appointments": "Appointments Report",
+      "revenue": "Revenue Report",
+      "lab_results": "Lab Results Report",
+      "doctors": "Doctors Report"
+    },
+    "sections": {
+      "summary": "Summary",
+      "list": "Reports List"
+    },
+    "cards": {
+      "total": "Total",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "pending": "Pending"
+    },
+    "details": {
+      "title": "Report Details",
+      "generated_at": "Generated at",
+      "download_pdf": "Download PDF",
+      "view_pdf": "View PDF"
+    },
+    "messages": {
+      "empty": "No reports found for this range"
     }
   }
 };

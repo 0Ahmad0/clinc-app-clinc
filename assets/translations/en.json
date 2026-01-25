@@ -253,5 +253,119 @@
       "success_add": "Added Successfully",
       "success_edit": "Updated Successfully"
     }
+  },
+  "appointments": {
+    "title": "Appointments",
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "approved": "Approved",
+      "completed": "Completed",
+      "rejected": "Rejected"
+    },
+    "search_hint": "Search by patient or service...",
+    "card": {
+      "patient": "Patient",
+      "service": "Service",
+      "type": "Type",
+      "time": "Time"
+    },
+    "type": {
+      "consultation": "Consultation",
+      "service": "Service",
+      "lab_test": "Lab Test"
+    },
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "completed": "Completed",
+      "rejected": "Rejected"
+    },
+    "details": {
+      "title": "Appointment Details",
+      "patient_info": "Patient Info",
+      "appointment_info": "Appointment Info",
+      "result": "Lab Result",
+      "result_missing": "Lab result not uploaded yet",
+      "result_uploaded": "Lab result uploaded"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "complete": "Complete",
+      "upload_result": "Upload Lab Result (PDF)",
+      "view_result": "View File",
+      "save": "Save"
+    },
+    "reject": {
+      "title": "Rejection Reason",
+      "reason_label": "Select a reason",
+      "other": "Other",
+      "note_label": "Write the reason",
+      "note_hint": "e.g. Doctor is unavailable at this time",
+      "reasons": {
+        "doctor_unavailable": "Doctor unavailable",
+        "clinic_closed": "Clinic closed",
+        "invalid_booking": "Invalid booking",
+        "need_more_info": "Need more information"
+      },
+      "validation": {
+        "reason_required": "Please select a reason",
+        "note_required": "Please write the rejection reason"
+      }
+    },
+    "upload": {
+      "title": "Upload Lab Result",
+      "pick_pdf": "Pick PDF File",
+      "selected_file": "Selected file",
+      "no_file": "No file selected",
+      "uploading": "Uploading...",
+      "validation": {
+        "pdf_required": "Please select a PDF file"
+      },
+      "success": "Result uploaded successfully"
+    },
+    "messages": {
+      "approved": "Appointment approved",
+      "rejected": "Appointment rejected",
+      "completed": "Appointment completed",
+      "error": "Something went wrong"
+    }
+  },
+  "reports": {
+    "title": "Reports",
+    "filters": {
+      "type": "Report Type",
+      "range": "Range",
+      "today": "Today",
+      "week": "This Week",
+      "month": "This Month",
+      "custom": "Custom"
+    },
+    "types": {
+      "appointments": "Appointments Report",
+      "revenue": "Revenue Report",
+      "lab_results": "Lab Results Report",
+      "doctors": "Doctors Report"
+    },
+    "sections": {
+      "summary": "Summary",
+      "list": "Reports List"
+    },
+    "cards": {
+      "total": "Total",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "pending": "Pending"
+    },
+    "details": {
+      "title": "Report Details",
+      "generated_at": "Generated at",
+      "download_pdf": "Download PDF",
+      "view_pdf": "View PDF"
+    },
+    "messages": {
+      "empty": "No reports found for this range"
+    }
   }
 }

@@ -1,4 +1,7 @@
+import 'package:clinc_app_clinc/modules/appointments/views/appointments_view.dart';
 import 'package:clinc_app_clinc/modules/doctors/views/doctors_view.dart';
+import 'package:clinc_app_clinc/modules/reports/views/reports_view.dart';
+import 'package:clinc_app_clinc/modules/services/views/services_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,9 +25,9 @@ class MainLayoutView extends GetView<MainLayoutController> {
           children: const [
             DashboardView(), // 0
             DoctorsView(),
-            Center(child: Text("Services Screen")), // 2 (Placeholder)
-            Center(child: Text("Appointments Screen")), // 3 (Placeholder)
-            Center(child: Text("Reports Screen")), // 4 (Placeholder)
+            ServicesView(),
+            AppointmentsView(),
+            ReportsView()
           ],
         ),
       ),

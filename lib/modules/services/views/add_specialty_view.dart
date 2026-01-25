@@ -59,21 +59,24 @@ class AddSpecialtyView extends GetView<AddSpecialtyController> {
               // 1. Icon & Color Preview Card
               Center(
                 child: Obx(
-                  () => Container(
-                    width: 100.r,
-                    height: 100.r,
-                    decoration: BoxDecoration(
-                      color: controller.selectedColor.value.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: controller.selectedColor.value,
-                        width: 2,
+                  () => InkWell(
+                    onTap: () => Get.find<AddSpecialtyController>().setIcon(Icons.account_circle),
+                    child: Container(
+                      width: 100.r,
+                      height: 100.r,
+                      decoration: BoxDecoration(
+                        color: controller.selectedColor.value.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: controller.selectedColor.value,
+                          width: 2,
+                        ),
                       ),
-                    ),
-                    child: Icon(
-                      controller.selectedIcon.value,
-                      size: 40.sp,
-                      color: controller.selectedColor.value,
+                      child: Icon(
+                        controller.selectedIcon.value,
+                        size: 40.sp,
+                        color: controller.selectedColor.value,
+                      ),
                     ),
                   ),
                 ),
