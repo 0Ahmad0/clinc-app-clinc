@@ -11,13 +11,8 @@ class OtpInputWidget extends GetView<OtpController> {
   @override
   Widget build(BuildContext context) {
     final defaultPinTheme = PinTheme(
-      width: 56.w,
-      height: 60.h,
-      textStyle: TextStyle(
-        fontSize: 22.sp,
-        fontWeight: FontWeight.bold,
-        color: Colors.black87,
-      ),
+      width: 60.w,
+      height: 60.w,
       decoration: BoxDecoration(
         color: Colors.grey.shade100,
         borderRadius: BorderRadius.circular(12),
@@ -40,6 +35,7 @@ class OtpInputWidget extends GetView<OtpController> {
     );
 
     return Pinput(
+      autofocus: true,
       controller: controller.otpController,
       length: 4,
       defaultPinTheme: defaultPinTheme,

@@ -1,28 +1,39 @@
-import 'package:clinc_app_clinc/app/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../app/routes/app_routes.dart';
+
 class OnboardingController extends GetxController {
-  final pageController = PageController();
-  var currentPage = 0.obs;
+  static const int pagesCount = 3;
 
-  void onPageChanged(int index) {
-    currentPage.value = index;
-  }
+  final PageController pageController = PageController();
+  final RxInt currentIndex = 0.obs;
 
-  void nextStep() {
-    if (currentPage.value < 2) {
-      pageController.nextPage(
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    } else {
-       Get.offAllNamed(AppRoutes.login);
-    }
+  bool get isLast => currentIndex.value == pagesCount - 1;
+
+  void onPageChanged(int i) => currentIndex.value = i;
+
+  void next() {
+    if (isLast) return;
+    pageController.nextPage(
+      duration: const Duration(milliseconds: 280),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   void skip() {
+    // TODO: save onboarding seen flag
     Get.offAllNamed(AppRoutes.login);
-    // Get.offAllNamed(Routes.REGISTER_CLINIC);
+  }
+
+  void getStarted() {
+    // TODO: save onboarding seen flag
+    Get.offAllNamed(AppRoutes.login);
+  }
+
+  @override
+  void onClose() {
+    pageController.dispose();
+    super.onClose();
   }
 }

@@ -20,15 +20,21 @@
     }
   },
   "register": {
-    "title": "إنشاء حساب عيادة",
-    "subtitle": "سجل الآن وابدأ في إدارة عيادتك بذكاء",
+    "title": "إنشاء حساب",
+    "subtitle": "أنشئ حساب منشأتك الطبية",
     "fields": {
-      "clinic_name": "اسم العيادة",
-      "clinic_name_hint": "مثال: عيادة الشفاء",
+      "clinic_name": "اسم المنشأة",
+      "clinic_name_hint": "مثال: عيادة الشفاء / مخبر الأمل",
       "license_number": "رقم الترخيص",
-      "license_hint": "رقم الترخيص الطبي المعتمد",
+      "license_hint": "رقم الترخيص المعتمد",
+      "account_type": "نوع الحساب",
       "password": "كلمة المرور",
       "confirm_password": "تأكيد كلمة المرور"
+    },
+    "account_type": {
+      "clinic": "عيادة مستقلة",
+      "clinic_with_lab": "عيادة تحتوي مخبر",
+      "lab": "مخبر مستقل"
     },
     "buttons": {
       "submit": "إرسال للتدقيق",
@@ -36,9 +42,9 @@
       "login_action": "تسجيل الدخول"
     },
     "messages": {
-      "success": "تم الإرسال بنجاح، بانتظار موافقة الإدارة",
+      "required_field": "هذا الحقل مطلوب",
       "password_mismatch": "كلمتا المرور غير متطابقتين",
-      "required_field": "هذا الحقل مطلوب"
+      "type_required": "اختر نوع الحساب"
     }
   },
   "login": {

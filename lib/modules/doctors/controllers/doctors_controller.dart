@@ -1,3 +1,5 @@
+import 'package:clinc_app_clinc/app/routes/app_routes.dart';
+import 'package:clinc_app_clinc/modules/doctors/views/doctor_details_view.dart';
 import 'package:get/get.dart';
 
 class DoctorsController extends GetxController {
@@ -12,12 +14,11 @@ class DoctorsController extends GetxController {
   ].obs;
 
   void goToAddDoctor() {
-    // Get.toNamed(Routes.ADD_DOCTOR);
+    Get.toNamed(AppRoutes.addDoctor);
   }
 
   void goToDoctorDetails(int id) {
-    // Get.toNamed(Routes.DOCTOR_DETAILS, arguments: id);
-    // للتجربة السريعة سنطبع الاسم
+    Get.to(DoctorDetailsView());
     final doc = doctorList.firstWhere((e) => e['id'] == id);
     print("Open details for ${doc['name']}");
   }

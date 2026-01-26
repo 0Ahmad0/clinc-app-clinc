@@ -15,22 +15,19 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
   @override
   Widget build(BuildContext context) {
     return AppScaffoldWidget(
-      body: AppPaddingWidget(
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
-        child: Center(
-          // Center مهم هنا لجمالية الشاشات البسيطة
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const ForgotPasswordHeaderWidget(),
-                40.verticalSpace,
-                const ForgotPasswordFormWidget(),
-                32.verticalSpace,
-                const ForgotPasswordActionsWidget(),
-              ],
-            ),
+      body: Center(
+        // Center مهم هنا لجمالية الشاشات البسيطة
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const ForgotPasswordHeaderWidget(),
+              40.verticalSpace,
+              const ForgotPasswordFormWidget(),
+              32.verticalSpace,
+              const ForgotPasswordActionsWidget(),
+            ],
           ),
         ),
       ),

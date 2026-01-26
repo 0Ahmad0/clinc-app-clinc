@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:open_filex/open_filex.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../controllers/appointment_details_controller.dart';
 
@@ -219,6 +220,15 @@ class _ActionsSection extends GetView<AppointmentDetailsController> {
               ),
             ),
           ],
+
+          if (a.hasResult)
+            OutlinedButton(
+              onPressed: () async {
+                final path = a.resultPdfPathOrUrl!;
+                await OpenFilex.open(path);
+              },
+              child: Text(tr(LocaleKeys.appointments_actions_view_result)),
+            ),
         ],
       );
     });

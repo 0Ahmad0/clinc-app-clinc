@@ -12,6 +12,7 @@ class PendingActionsWidget extends GetView<PendingApprovalController> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -29,11 +30,10 @@ class PendingActionsWidget extends GetView<PendingApprovalController> {
 
         20.verticalSpace,
 
-        // زر تواصل مع الدعم
         OutlinedButton.icon(
           onPressed: controller.contactSupport,
           icon: const Icon(Icons.support_agent),
-          label: Text(tr(LocaleKeys.pending_approval_buttons_contact_support)),
+          label: Text(tr(LocaleKeys.pending_approval_buttons_contact_support),style: theme.textTheme.bodySmall,),
           style: OutlinedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 14.h),
             side: BorderSide(color: Colors.grey.shade300),

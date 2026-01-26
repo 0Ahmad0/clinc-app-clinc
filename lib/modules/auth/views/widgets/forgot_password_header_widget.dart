@@ -1,3 +1,4 @@
+import 'package:clinc_app_clinc/app/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,9 +14,8 @@ class ForgotPasswordHeaderWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // يفضل استخدام صورة Vector تعبر عن نسيان كلمة السر
         AppSvgWidget(
-          path: 'assets/icons/forgot_password.svg',
+          path: AppAssets.appleLogoIcon,
           height: 150.h,
           width: 150.w,
         ),

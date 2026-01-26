@@ -15,22 +15,19 @@ class LoginView extends GetView<LoginController> {
   Widget build(BuildContext context) {
     return AppScaffoldWidget(
       body: SafeArea(
-        child: AppPaddingWidget(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: Center(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const LoginHeaderWidget(),
-                  40.verticalSpace, // مسافة أكبر قليلاً لفصل الهيدر
-                  const LoginFormWidget(),
-                  24.verticalSpace,
-                  const LoginActionsWidget(),
-                ],
-              ),
+        child: Center(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const LoginHeaderWidget(),
+                40.verticalSpace, // مسافة أكبر قليلاً لفصل الهيدر
+                const LoginFormWidget(),
+                24.verticalSpace,
+                const LoginActionsWidget(),
+              ],
             ),
           ),
         ),

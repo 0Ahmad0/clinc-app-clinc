@@ -1,9 +1,10 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:clinc_app_clinc/generated/locale_keys.g.dart';
 
-import '../../../../generated/locale_keys.g.dart';
 import '../../controllers/appointment_details_controller.dart';
 
 class UploadPdfBottomSheet extends StatefulWidget {
@@ -15,6 +16,24 @@ class UploadPdfBottomSheet extends StatefulWidget {
 
 class _UploadPdfBottomSheetState extends State<UploadPdfBottomSheet> {
   String? _filePath;
+  String? _fileName;
+
+  Future<void> _pickPdf() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: const ['pdf'],
+      withData: false,
+    );
+
+    if (result == null) return;
+    final file = result.files.single;
+    if (file.path == null) return;
+
+    setState(() {
+      _filePath = file.path!;
+      _fileName = file.name;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +63,10 @@ class _UploadPdfBottomSheetState extends State<UploadPdfBottomSheet> {
               ),
             ),
             14.verticalSpace,
-            Text(tr(LocaleKeys.appointments_upload_title),
-                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800)),
+            Text(
+              tr(LocaleKeys.appointments_upload_title),
+              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+            ),
             16.verticalSpace,
 
             Container(
@@ -53,7 +74,6 @@ class _UploadPdfBottomSheetState extends State<UploadPdfBottomSheet> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(color: cs.outlineVariant),
-                color: cs.surface,
               ),
               child: Row(
                 children: [
@@ -61,7 +81,7 @@ class _UploadPdfBottomSheetState extends State<UploadPdfBottomSheet> {
                   10.horizontalSpace,
                   Expanded(
                     child: Text(
-                      _filePath ?? tr(LocaleKeys.appointments_upload_no_file),
+                      _fileName ?? tr(LocaleKeys.appointments_upload_no_file),
                       style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -73,10 +93,7 @@ class _UploadPdfBottomSheetState extends State<UploadPdfBottomSheet> {
             12.verticalSpace,
 
             OutlinedButton.icon(
-              onPressed: () async {
-                // Mock file selection
-                setState(() => _filePath = '/storage/mock/result_${DateTime.now().millisecondsSinceEpoch}.pdf');
-              },
+              onPressed: _pickPdf,
               icon: const Icon(Icons.attach_file),
               label: Text(tr(LocaleKeys.appointments_upload_pick_pdf)),
             ),
@@ -99,8 +116,10 @@ class _UploadPdfBottomSheetState extends State<UploadPdfBottomSheet> {
                 padding: EdgeInsets.symmetric(vertical: 14.h),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
               ),
-              child: Text(tr(LocaleKeys.appointments_actions_save),
-                  style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800)),
+              child: Text(
+                tr(LocaleKeys.appointments_actions_save),
+                style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800),
+              ),
             ),
           ],
         ),

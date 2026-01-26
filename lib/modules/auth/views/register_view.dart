@@ -5,6 +5,7 @@ import '../../../app/core/widgets/app_app_bar_widget.dart';
 import '../../../app/core/widgets/app_padding_widget.dart';
 import '../../../app/core/widgets/app_scaffold_widget.dart';
 import '../controllers/register_controller.dart';
+import 'widgets/register_account_type_selector.dart';
 import 'widgets/register_actions_widget.dart';
 import 'widgets/register_form_widget.dart';
 import 'widgets/register_header_widget.dart';
@@ -15,15 +16,16 @@ class RegisterView extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
     return AppScaffoldWidget(
-      body: AppPaddingWidget(
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
+      body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const RegisterHeaderWidget(),
-              32.verticalSpace,
+              20.verticalSpace,
+              const RegisterAccountTypeSelector(),
+              16.verticalSpace,
               const RegisterFormWidget(),
               24.verticalSpace,
               const RegisterActionsWidget(),

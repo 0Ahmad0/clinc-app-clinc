@@ -20,15 +20,21 @@
     }
   },
   "register": {
-    "title": "Create Clinic Account",
-    "subtitle": "Register now and manage your clinic smartly",
+    "title": "Create Account",
+    "subtitle": "Create your medical facility account",
     "fields": {
-      "clinic_name": "Clinic Name",
-      "clinic_name_hint": "e.g. Al-Shifa Clinic",
+      "clinic_name": "Facility Name",
+      "clinic_name_hint": "e.g. Al-Shifa Clinic / Hope Lab",
       "license_number": "License Number",
-      "license_hint": "Approved medical license number",
+      "license_hint": "Official license number",
+      "account_type": "Account Type",
       "password": "Password",
       "confirm_password": "Confirm Password"
+    },
+    "account_type": {
+      "clinic": "Clinic Only",
+      "clinic_with_lab": "Clinic With Lab",
+      "lab": "Lab Only"
     },
     "buttons": {
       "submit": "Submit for Review",
@@ -36,9 +42,9 @@
       "login_action": "Login"
     },
     "messages": {
-      "success": "Submitted successfully, awaiting admin approval",
+      "required_field": "This field is required",
       "password_mismatch": "Passwords do not match",
-      "required_field": "This field is required"
+      "type_required": "Please select account type"
     }
   },
   "login": {

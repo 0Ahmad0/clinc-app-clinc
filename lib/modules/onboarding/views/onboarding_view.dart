@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../generated/locale_keys.g.dart';
+import 'package:clinc_app_clinc/generated/locale_keys.g.dart';
 import '../controllers/onboarding_controller.dart';
-import 'widgets/onboarding_footer_widget.dart';
-import 'widgets/onboarding_header_widget.dart';
-import 'widgets/onboarding_page_item_widget.dart';
+import 'widgets/onboarding_bottom_bar_widget.dart';
+import 'widgets/onboarding_page_widget.dart';
+import 'widgets/onboarding_top_bar_widget.dart';
 
 class OnboardingView extends GetView<OnboardingController> {
   const OnboardingView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            OnboardingHeader(theme: theme),
+            const OnboardingTopBarWidget(),
+            10.verticalSpace,
             Expanded(
               child: PageView.builder(
                 controller: controller.pageController,
+                itemCount: OnboardingController.pagesCount,
                 onPageChanged: controller.onPageChanged,
-                itemCount: 3,
+                physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return OnboardingPageItem(index: index, theme: theme);
+                  return OnboardingPageWidget(index: index);
                 },
               ),
             ),
-            OnboardingFooter(theme: theme),
-            30.verticalSpace,
+
+            const OnboardingBottomBarWidget(),
+            16.verticalSpace,
           ],
         ),
       ),

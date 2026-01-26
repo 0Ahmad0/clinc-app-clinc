@@ -16,18 +16,14 @@ class LoginActionsWidget extends GetView<LoginController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // زر الدخول
-        Obx(
-          () => controller.isLoading.value
-              ? Center(child: AppLoadingWidget())
-              : AppButtonWidget(
-                  text: tr(LocaleKeys.login_buttons_login),
-                  onPressed: controller.login,
-                  // height: 50.h,
-                ),
+        AppButtonWidget(
+          isLoading: controller.isLoading.value,
+          text: tr(LocaleKeys.login_buttons_login),
+          onPressed: controller.login,
+          // height: 50.h,
         ),
 
-        32.verticalSpace,
+        14.verticalSpace,
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

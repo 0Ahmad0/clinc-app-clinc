@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class DoctorDetailsView extends StatelessWidget {
   const DoctorDetailsView({super.key});
@@ -10,7 +11,7 @@ class DoctorDetailsView extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     // استقبال الـ ID (مثال)
-    // final id = Get.arguments;
+    final id = Get.arguments;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,

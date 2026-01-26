@@ -11,13 +11,10 @@ class OtpActionsWidget extends GetView<OtpController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => controller.isLoading.value
-          ? Center(child: AppLoadingWidget())
-          : AppButtonWidget(
-              text: tr(LocaleKeys.otp_buttons_verify),
-              onPressed: () => controller.verifyOtp(),
-            ),
+    return AppButtonWidget(
+      isLoading: controller.isLoading.value,
+      text: tr(LocaleKeys.otp_buttons_verify),
+      onPressed: () => controller.verifyOtp(),
     );
   }
 }

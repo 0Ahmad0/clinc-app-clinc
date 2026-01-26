@@ -36,15 +36,21 @@ class CodegenLoader extends AssetLoader{
     }
   },
   "register": {
-    "title": "إنشاء حساب عيادة",
-    "subtitle": "سجل الآن وابدأ في إدارة عيادتك بذكاء",
+    "title": "إنشاء حساب",
+    "subtitle": "أنشئ حساب منشأتك الطبية",
     "fields": {
-      "clinic_name": "اسم العيادة",
-      "clinic_name_hint": "مثال: عيادة الشفاء",
+      "clinic_name": "اسم المنشأة",
+      "clinic_name_hint": "مثال: عيادة الشفاء / مخبر الأمل",
       "license_number": "رقم الترخيص",
-      "license_hint": "رقم الترخيص الطبي المعتمد",
+      "license_hint": "رقم الترخيص المعتمد",
+      "account_type": "نوع الحساب",
       "password": "كلمة المرور",
       "confirm_password": "تأكيد كلمة المرور"
+    },
+    "account_type": {
+      "clinic": "عيادة مستقلة",
+      "clinic_with_lab": "عيادة تحتوي مخبر",
+      "lab": "مخبر مستقل"
     },
     "buttons": {
       "submit": "إرسال للتدقيق",
@@ -52,9 +58,9 @@ class CodegenLoader extends AssetLoader{
       "login_action": "تسجيل الدخول"
     },
     "messages": {
-      "success": "تم الإرسال بنجاح، بانتظار موافقة الإدارة",
+      "required_field": "هذا الحقل مطلوب",
       "password_mismatch": "كلمتا المرور غير متطابقتين",
-      "required_field": "هذا الحقل مطلوب"
+      "type_required": "اختر نوع الحساب"
     }
   },
   "login": {
@@ -407,15 +413,21 @@ static const Map<String,dynamic> _en = {
     }
   },
   "register": {
-    "title": "Create Clinic Account",
-    "subtitle": "Register now and manage your clinic smartly",
+    "title": "Create Account",
+    "subtitle": "Create your medical facility account",
     "fields": {
-      "clinic_name": "Clinic Name",
-      "clinic_name_hint": "e.g. Al-Shifa Clinic",
+      "clinic_name": "Facility Name",
+      "clinic_name_hint": "e.g. Al-Shifa Clinic / Hope Lab",
       "license_number": "License Number",
-      "license_hint": "Approved medical license number",
+      "license_hint": "Official license number",
+      "account_type": "Account Type",
       "password": "Password",
       "confirm_password": "Confirm Password"
+    },
+    "account_type": {
+      "clinic": "Clinic Only",
+      "clinic_with_lab": "Clinic With Lab",
+      "lab": "Lab Only"
     },
     "buttons": {
       "submit": "Submit for Review",
@@ -423,9 +435,9 @@ static const Map<String,dynamic> _en = {
       "login_action": "Login"
     },
     "messages": {
-      "success": "Submitted successfully, awaiting admin approval",
+      "required_field": "This field is required",
       "password_mismatch": "Passwords do not match",
-      "required_field": "This field is required"
+      "type_required": "Please select account type"
     }
   },
   "login": {

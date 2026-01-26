@@ -2,57 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-import '../../../generated/locale_keys.g.dart'; // تأكد من المسار الصحيح للملف المولد
+import '../../../app/data/account_type.dart';
+import '../../../generated/locale_keys.g.dart';
 
 class RegisterController extends GetxController {
-  // ── Text Controllers ──
   final TextEditingController nameController = TextEditingController();
   final TextEditingController licenseController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-  // ── State Variables ──
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final RxBool isLoading = false.obs;
   final RxBool isPassHidden = true.obs;
   final RxBool isConfirmPassHidden = true.obs;
 
-  // ── Actions ──
-  void togglePassVisibility() => isPassHidden.toggle();
-  void toggleConfirmPassVisibility() => isConfirmPassHidden.toggle();
+  final Rxn<AccountType> selectedAccountType = Rxn<AccountType>();
 
-  Future<void> register() async {
-    if (!formKey.currentState!.validate()) return;
+  void selectAccountType(AccountType type) => selectedAccountType.value = type;
 
-    try {
-      isLoading.value = true;
-
-      // Simulate API Call
-      await Future.delayed(const Duration(seconds: 2));
-
-      // TODO: Send to Backend -> Status: Pending
-
-      Get.snackbar(
-        tr(LocaleKeys.register_title), // أو أي عنوان عام للنجاح
-        tr(LocaleKeys.register_messages_success),
-        backgroundColor: Colors.green.withOpacity(0.1),
-        colorText: Colors.green,
-      );
-
-      // Navigate to 'Pending Approval' Screen
-      // Get.offAllNamed(Routes.PENDING);
-
-    } catch (e) {
-      Get.snackbar('Error', e.toString());
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  // ── Validators ──
   String? validateRequired(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       return tr(LocaleKeys.register_messages_required_field);
     }
     return null;
@@ -63,6 +33,39 @@ class RegisterController extends GetxController {
       return tr(LocaleKeys.register_messages_password_mismatch);
     }
     return null;
+  }
+
+  String? validateAccountType() {
+    if (selectedAccountType.value == null) {
+      return tr(LocaleKeys.register_messages_type_required);
+    }
+    return null;
+  }
+
+  Future<void> register() async {
+    final ok = formKey.currentState?.validate() ?? false;
+    if (!ok) return;
+
+    // تحقق نوع الحساب
+    if (validateAccountType() != null) {
+      Get.snackbar('Error', tr(LocaleKeys.register_messages_type_required));
+      return;
+    }
+
+    try {
+      isLoading.value = true;
+
+      // TODO: call API
+      // payload: name, license, password, accountType = selectedAccountType.value
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      // بعدها: Pending Approval
+      // Get.offAllNamed(AppRoutes.pendingApproval);
+
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   @override

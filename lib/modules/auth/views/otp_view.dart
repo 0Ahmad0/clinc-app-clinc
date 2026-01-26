@@ -15,23 +15,20 @@ class OtpView extends GetView<OtpController> {
   @override
   Widget build(BuildContext context) {
     return AppScaffoldWidget(
-      body: AppPaddingWidget(
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
-        child: Center(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const OtpHeaderWidget(),
-                40.verticalSpace,
-                const OtpInputWidget(),
-                32.verticalSpace,
-                const OtpTimerWidget(),
-                24.verticalSpace,
-                const OtpActionsWidget(),
-              ],
-            ),
+      body: Center(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const OtpHeaderWidget(),
+              40.verticalSpace,
+              const OtpInputWidget(),
+              32.verticalSpace,
+              const OtpTimerWidget(),
+              24.verticalSpace,
+              const OtpActionsWidget(),
+            ],
           ),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:clinc_app_clinc/app/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +13,7 @@ class LoginHeaderWidget extends StatelessWidget {
     return Column(
       children: [
         AppSvgWidget(
-          path: 'assets/icons/clinic_logo.svg',
+          path: AppAssets.outlineDoctorIcon,
           height: 100.h,
           width: 100.w,
         ),

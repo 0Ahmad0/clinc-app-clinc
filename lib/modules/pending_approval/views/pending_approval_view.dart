@@ -21,27 +21,24 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
         actions: [
           IconButton(
             onPressed: controller.logout,
-            icon: const Icon(Icons.logout, color: Colors.redAccent),
+            icon: const Icon(Icons.logout),
             tooltip: 'Logout',
           ),
         ],
       ),
-      body: AppPaddingWidget(
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
-        child: Center(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const PendingIllustrationWidget(),
-                40.verticalSpace,
-                const PendingInfoWidget(),
-                48.verticalSpace,
-                const PendingActionsWidget(),
-              ],
-            ),
+      body: Center(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const PendingIllustrationWidget(),
+              40.verticalSpace,
+              const PendingInfoWidget(),
+              48.verticalSpace,
+              const PendingActionsWidget(),
+            ],
           ),
         ),
       ),

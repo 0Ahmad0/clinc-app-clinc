@@ -16,11 +16,9 @@ class DoctorsView extends GetView<DoctorsController> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background, // لون الخلفية (رمادي فاتح جداً عادة)
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          // 1. AppBar
           SliverAppBar(
             pinned: true,
             backgroundColor: colorScheme.background,
@@ -39,7 +37,6 @@ class DoctorsView extends GetView<DoctorsController> {
             ),
           ),
 
-          // 2. زر الإضافة الكبير (مطابق للصورة)
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
             sliver: SliverToBoxAdapter(
@@ -47,7 +44,6 @@ class DoctorsView extends GetView<DoctorsController> {
             ),
           ),
 
-          // 3. عنوان القسم "الأطباء المسجلين"
           SliverPadding(
             padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 10.h),
             sliver: SliverToBoxAdapter(
@@ -61,7 +57,6 @@ class DoctorsView extends GetView<DoctorsController> {
             ),
           ),
 
-          // 4. القائمة
           Obx(() => SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             sliver: SliverList(

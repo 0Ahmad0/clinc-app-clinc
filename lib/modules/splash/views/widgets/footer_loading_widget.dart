@@ -23,7 +23,7 @@ class FooterLoadingWidget extends StatelessWidget {
           ),
           20.verticalSpace,
           Text(
-            tr(LocaleKeys.splash_powered_by),
+            'copy write@',
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurface.withOpacity(0.5),
             ),
