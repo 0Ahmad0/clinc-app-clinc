@@ -269,7 +269,7 @@
       "completed": "Completed",
       "rejected": "Rejected"
     },
-    "search_hint": "Search by patient or service...",
+    "search_hint": "Search for appointment or patient...",
     "card": {
       "patient": "Patient",
       "service": "Service",
@@ -280,6 +280,10 @@
       "consultation": "Consultation",
       "service": "Service",
       "lab_test": "Lab Test"
+    },
+    "empty": {
+      "title": "No Appointments",
+      "subtitle": "No appointments found matching the search criteria"
     },
     "status": {
       "pending": "Pending",
@@ -292,6 +296,8 @@
       "patient_info": "Patient Info",
       "appointment_info": "Appointment Info",
       "result": "Lab Result",
+      "notes": "Notes",
+      "add_notes": "Add notes here...",
       "result_missing": "Lab result not uploaded yet",
       "result_uploaded": "Lab result uploaded"
     },
@@ -368,10 +374,19 @@
       "title": "Report Details",
       "generated_at": "Generated at",
       "download_pdf": "Download PDF",
+      "visual_summary": "Visual Summary",
+      "notes": "Notes",
+      "add_notes": "Add your notes here..."
+    },
+    "actions": {
+      "generate": "Generate New Report",
+      "save": "Save",
       "view_pdf": "View PDF"
     },
     "messages": {
-      "empty": "No reports found for this range"
+      "empty": "No Reports",
+      "empty_title": "No reports have been created yet",
+      "empty_subtitle": "You can create a new report by clicking the button below"
     }
   }
 }

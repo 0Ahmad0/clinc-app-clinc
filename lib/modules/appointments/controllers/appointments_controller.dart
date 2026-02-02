@@ -1,12 +1,10 @@
 import 'package:get/get.dart';
-
 import '../../../app/data/appointment_model.dart';
 import '../../../app/extension/appointment_type_extensions.dart';
 
 class AppointmentsController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxList<AppointmentModel> items = <AppointmentModel>[].obs;
-
   final Rx<AppointmentStatus?> filter = Rx<AppointmentStatus?>(null);
 
   @override
@@ -49,7 +47,7 @@ class AppointmentsController extends GetxController {
         type: AppointmentType.labTest,
         dateTime: DateTime.now().subtract(const Duration(days: 2)),
         status: AppointmentStatus.completed,
-        resultPdfPathOrUrl: '', // not uploaded
+        resultPdfPathOrUrl: '', // Not uploaded
       ),
       AppointmentModel(
         id: 'a5',

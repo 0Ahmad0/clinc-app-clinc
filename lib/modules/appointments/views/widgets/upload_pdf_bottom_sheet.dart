@@ -3,43 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:clinc_app_clinc/generated/locale_keys.g.dart';
-
+import '../../../../generated/locale_keys.g.dart';
 import '../../controllers/appointment_details_controller.dart';
 
-class UploadPdfBottomSheet extends StatefulWidget {
+class UploadPdfBottomSheet extends StatelessWidget {
   const UploadPdfBottomSheet({super.key});
 
   @override
-  State<UploadPdfBottomSheet> createState() => _UploadPdfBottomSheetState();
-}
-
-class _UploadPdfBottomSheetState extends State<UploadPdfBottomSheet> {
-  String? _filePath;
-  String? _fileName;
-
-  Future<void> _pickPdf() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: const ['pdf'],
-      withData: false,
-    );
-
-    if (result == null) return;
-    final file = result.files.single;
-    if (file.path == null) return;
-
-    setState(() {
-      _filePath = file.path!;
-      _fileName = file.name;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<AppointmentDetailsController>();
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final controller = Get.find<AppointmentDetailsController>();
+
+    // GetX Reactive Variables
+    final filePath = Rxn<String>();
+    final fileName = Rxn<String>();
+
+    Future<void> pickPdf() async {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: const ['pdf'],
+        withData: false,
+      );
+
+      if (result == null) return;
+      final file = result.files.single;
+      if (file.path == null) return;
+
+      filePath.value = file.path!;
+      fileName.value = file.name;
+    }
 
     return SafeArea(
       child: Container(
@@ -69,7 +62,7 @@ class _UploadPdfBottomSheetState extends State<UploadPdfBottomSheet> {
             ),
             16.verticalSpace,
 
-            Container(
+            Obx(() => Container(
               padding: EdgeInsets.all(14.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.r),
@@ -81,19 +74,19 @@ class _UploadPdfBottomSheetState extends State<UploadPdfBottomSheet> {
                   10.horizontalSpace,
                   Expanded(
                     child: Text(
-                      _fileName ?? tr(LocaleKeys.appointments_upload_no_file),
+                      fileName.value ?? tr(LocaleKeys.appointments_upload_no_file),
                       style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
-            ),
+            )),
 
             12.verticalSpace,
 
             OutlinedButton.icon(
-              onPressed: _pickPdf,
+              onPressed: pickPdf,
               icon: const Icon(Icons.attach_file),
               label: Text(tr(LocaleKeys.appointments_upload_pick_pdf)),
             ),
@@ -102,13 +95,13 @@ class _UploadPdfBottomSheetState extends State<UploadPdfBottomSheet> {
 
             ElevatedButton(
               onPressed: () async {
-                if ((_filePath ?? '').isEmpty) {
+                if (filePath.value == null) {
                   Get.snackbar('Error', tr(LocaleKeys.appointments_upload_validation_pdf_required));
                   return;
                 }
-                await controller.uploadPdfResult(_filePath!);
+                await controller.uploadPdfResult(filePath.value!);
                 Get.back();
-                Get.snackbar('OK', tr(LocaleKeys.appointments_upload_success));
+                Get.snackbar('Success', tr(LocaleKeys.appointments_upload_success));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: cs.primary,

@@ -278,6 +278,7 @@ class CodegenLoader extends AssetLoader{
   },
   "appointments": {
     "title": "المواعيد",
+    "search_hint": "بحث عن موعد أو مريض...",
     "tabs": {
       "all": "الكل",
       "pending": "قيد المراجعة",
@@ -285,7 +286,10 @@ class CodegenLoader extends AssetLoader{
       "completed": "مكتملة",
       "rejected": "مرفوضة"
     },
-    "search_hint": "ابحث باسم المريض أو الخدمة...",
+    "empty": {
+      "title": "لا توجد مواعيد",
+      "subtitle": "لم يتم العثور على أي مواعيد تطابق معايير البحث"
+    },
     "card": {
       "patient": "المريض",
       "service": "الخدمة",
@@ -307,6 +311,8 @@ class CodegenLoader extends AssetLoader{
       "title": "تفاصيل الموعد",
       "patient_info": "معلومات المريض",
       "appointment_info": "معلومات الموعد",
+      "notes": "ملاحظات",
+      "add_notes": "أضف ملاحظات هنا...",
       "result": "نتيجة التحليل",
       "result_missing": "لم يتم رفع نتيجة التحليل بعد",
       "result_uploaded": "تم رفع نتيجة التحليل"
@@ -356,6 +362,7 @@ class CodegenLoader extends AssetLoader{
   },
   "reports": {
     "title": "التقارير",
+    "actions_save": "",
     "filters": {
       "type": "نوع التقرير",
       "range": "الفترة",
@@ -384,10 +391,20 @@ class CodegenLoader extends AssetLoader{
       "title": "تفاصيل التقرير",
       "generated_at": "تاريخ الإنشاء",
       "download_pdf": "تحميل PDF",
+      "view_pdf": "عرض PDF",
+      "visual_summary": "ملخص مرئي",
+      "notes": "ملاحظات",
+      "add_notes": "أضف ملاحظاتك هنا..."
+    },
+    "actions": {
+      "generate": "إنشاء تقرير جديد",
+      "save": "حفظ",
       "view_pdf": "عرض PDF"
     },
     "messages": {
-      "empty": "لا يوجد تقارير ضمن هذه الفترة"
+      "empty": "لا توجد تقارير",
+      "empty_title": "لم يتم إنشاء أي تقارير بعد",
+      "empty_subtitle": "يمكنك إنشاء تقرير جديد بالضغط على الزر أدناه"
     }
   }
 };
@@ -662,7 +679,7 @@ static const Map<String,dynamic> _en = {
       "completed": "Completed",
       "rejected": "Rejected"
     },
-    "search_hint": "Search by patient or service...",
+    "search_hint": "Search for appointment or patient...",
     "card": {
       "patient": "Patient",
       "service": "Service",
@@ -673,6 +690,10 @@ static const Map<String,dynamic> _en = {
       "consultation": "Consultation",
       "service": "Service",
       "lab_test": "Lab Test"
+    },
+    "empty": {
+      "title": "No Appointments",
+      "subtitle": "No appointments found matching the search criteria"
     },
     "status": {
       "pending": "Pending",
@@ -685,6 +706,8 @@ static const Map<String,dynamic> _en = {
       "patient_info": "Patient Info",
       "appointment_info": "Appointment Info",
       "result": "Lab Result",
+      "notes": "Notes",
+      "add_notes": "Add notes here...",
       "result_missing": "Lab result not uploaded yet",
       "result_uploaded": "Lab result uploaded"
     },
@@ -761,10 +784,19 @@ static const Map<String,dynamic> _en = {
       "title": "Report Details",
       "generated_at": "Generated at",
       "download_pdf": "Download PDF",
+      "visual_summary": "Visual Summary",
+      "notes": "Notes",
+      "add_notes": "Add your notes here..."
+    },
+    "actions": {
+      "generate": "Generate New Report",
+      "save": "Save",
       "view_pdf": "View PDF"
     },
     "messages": {
-      "empty": "No reports found for this range"
+      "empty": "No Reports",
+      "empty_title": "No reports have been created yet",
+      "empty_subtitle": "You can create a new report by clicking the button below"
     }
   }
 };

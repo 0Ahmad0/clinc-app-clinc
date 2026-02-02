@@ -4,8 +4,7 @@ import '../../../app/extension/appointment_type_extensions.dart';
 import 'appointments_controller.dart';
 
 class AppointmentDetailsController extends GetxController {
-  final AppointmentsController listController =
-      Get.find<AppointmentsController>();
+  final AppointmentsController listController = Get.find<AppointmentsController>();
 
   late final AppointmentModel initial;
   final Rx<AppointmentModel> appointment = AppointmentModel(
@@ -23,7 +22,6 @@ class AppointmentDetailsController extends GetxController {
   void onInit() {
     super.onInit();
     initial = Get.arguments as AppointmentModel;
-    // لو صار تحديث بالقائمة قبل ما يفتح التفاصيل:
     appointment.value = listController.findById(initial.id) ?? initial;
   }
 
@@ -46,7 +44,7 @@ class AppointmentDetailsController extends GetxController {
   Future<void> uploadPdfResult(String filePath) async {
     try {
       isLoading.value = true;
-      await Future.delayed(const Duration(milliseconds: 500)); // mock delay
+      await Future.delayed(const Duration(milliseconds: 500)); // Mock delay
 
       final updated = appointment.value.copyWith(resultPdfPathOrUrl: filePath);
       appointment.value = updated;
@@ -57,13 +55,13 @@ class AppointmentDetailsController extends GetxController {
   }
 
   Future<void> _updateStatus(
-    AppointmentStatus status, {
-    String? rejectReasonKey,
-    String? rejectNote,
-  }) async {
+      AppointmentStatus status, {
+        String? rejectReasonKey,
+        String? rejectNote,
+      }) async {
     try {
       isLoading.value = true;
-      await Future.delayed(const Duration(milliseconds: 450)); // mock delay
+      await Future.delayed(const Duration(milliseconds: 450)); // Mock delay
 
       final updated = appointment.value.copyWith(
         status: status,

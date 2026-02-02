@@ -215,13 +215,16 @@ abstract class  LocaleKeys {
   static const services_module_forms = 'services_module.forms';
   static const services_module = 'services_module';
   static const appointments_title = 'appointments.title';
+  static const appointments_search_hint = 'appointments.search_hint';
   static const appointments_tabs_all = 'appointments.tabs.all';
   static const appointments_tabs_pending = 'appointments.tabs.pending';
   static const appointments_tabs_approved = 'appointments.tabs.approved';
   static const appointments_tabs_completed = 'appointments.tabs.completed';
   static const appointments_tabs_rejected = 'appointments.tabs.rejected';
   static const appointments_tabs = 'appointments.tabs';
-  static const appointments_search_hint = 'appointments.search_hint';
+  static const appointments_empty_title = 'appointments.empty.title';
+  static const appointments_empty_subtitle = 'appointments.empty.subtitle';
+  static const appointments_empty = 'appointments.empty';
   static const appointments_card_patient = 'appointments.card.patient';
   static const appointments_card_service = 'appointments.card.service';
   static const appointments_card_type = 'appointments.card.type';
@@ -239,6 +242,8 @@ abstract class  LocaleKeys {
   static const appointments_details_title = 'appointments.details.title';
   static const appointments_details_patient_info = 'appointments.details.patient_info';
   static const appointments_details_appointment_info = 'appointments.details.appointment_info';
+  static const appointments_details_notes = 'appointments.details.notes';
+  static const appointments_details_add_notes = 'appointments.details.add_notes';
   static const appointments_details_result = 'appointments.details.result';
   static const appointments_details_result_missing = 'appointments.details.result_missing';
   static const appointments_details_result_uploaded = 'appointments.details.result_uploaded';
@@ -279,6 +284,7 @@ abstract class  LocaleKeys {
   static const appointments_messages = 'appointments.messages';
   static const appointments = 'appointments';
   static const reports_title = 'reports.title';
+  static const reports_actions_save = 'reports.actions_save';
   static const reports_filters_type = 'reports.filters.type';
   static const reports_filters_range = 'reports.filters.range';
   static const reports_filters_today = 'reports.filters.today';
@@ -303,8 +309,16 @@ abstract class  LocaleKeys {
   static const reports_details_generated_at = 'reports.details.generated_at';
   static const reports_details_download_pdf = 'reports.details.download_pdf';
   static const reports_details_view_pdf = 'reports.details.view_pdf';
+  static const reports_details_visual_summary = 'reports.details.visual_summary';
+  static const reports_details_notes = 'reports.details.notes';
+  static const reports_details_add_notes = 'reports.details.add_notes';
   static const reports_details = 'reports.details';
+  static const reports_actions_generate = 'reports.actions.generate';
+  static const reports_actions_view_pdf = 'reports.actions.view_pdf';
+  static const reports_actions = 'reports.actions';
   static const reports_messages_empty = 'reports.messages.empty';
+  static const reports_messages_empty_title = 'reports.messages.empty_title';
+  static const reports_messages_empty_subtitle = 'reports.messages.empty_subtitle';
   static const reports_messages = 'reports.messages';
   static const reports = 'reports';
 
