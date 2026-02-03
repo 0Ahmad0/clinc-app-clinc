@@ -190,32 +190,59 @@
   },
   "add_doctor": {
     "title": "إضافة طبيب جديد",
+    "buttons": {
+      "cancel": "إلغاء",
+      "save": "حفظ"
+    },
     "labels": {
       "full_name": "الاسم الكامل",
-      "name_hint": "مثال: د. محمد الأحمد",
+      "name_hint": "أدخل اسم الطبيب الكامل",
       "specialty": "التخصص",
-      "specialty_hint": "اختر التخصص",
+      "specialty_hint": "اختر تخصص الطبيب",
       "gender": "الجنس",
-      "license": "رقم الترخيص الطبي",
-      "license_hint": "رقم الترخيص",
-      "image_title": "الصورة الشخصية",
-      "work_hours": "أيام وساعات العمل"
-    },
-    "gender": {
       "gmale": "ذكر",
-      "gfemale": "أنثى"
+      "gfemale": "أنثى",
+      "license": "رقم الترخيص",
+      "license_hint": "أدخل رقم الترخيص الطبي",
+      "hospital": "المستشفى/العيادة",
+      "hospital_hint": "أدخل اسم المستشفى أو العيادة",
+      "phone": "رقم الهاتف",
+      "phone_hint": "أدخل رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "email_hint": "أدخل البريد الإلكتروني",
+      "experience": "سنوات الخبرة",
+      "experience_hint": "أدخل عدد سنوات الخبرة",
+      "qualifications": "المؤهلات العلمية",
+      "qualification_hint": "أضف مؤهل علمي",
+      "add_qualification": "إضافة مؤهل",
+      "about": "نبذة عن الطبيب",
+      "about_hint": "أضف معلومات عن الطبيب",
+      "active": "الحالة",
+      "work_hours": "ساعات العمل",
+      "image_title": "صورة الطبيب",
+      "upload_drag_drop": "اسحب وأفلت الصورة هنا",
+      "upload_or": "أو",
+      "upload_browse": "تصفح الملفات",
+      "upload_support": "يدعم JPG, PNG"
     },
-    "upload": {
-      "drag_drop": "اسحب و أفلت الصورة هنا",
-      "or": "أو",
-      "browse": "اختر ملف",
-      "support": "PNG, JPG, GIF up to 10MB"
+    "schedule": {
+      "day_off": "عطلة",
+      "days": {
+        "mon": "الإثنين",
+        "tue": "الثلاثاء",
+        "wed": "الأربعاء",
+        "thu": "الخميس",
+        "fri": "الجمعة",
+        "sat": "السبت",
+        "sun": "الأحد"
+      }
     },
-    "buttons": {
-      "save": "حفظ",
-      "cancel": "إلغاء"
+    "messages": {
+      "success": "تم إضافة الطبيب بنجاح",
+      "error": "حدث خطأ أثناء إضافة الطبيب"
     }
   },
+
   "services_module": {
     "title": "إدارة الخدمات",
     "tabs": {
@@ -262,7 +289,6 @@
   },
   "appointments": {
     "title": "المواعيد",
-
     "search_hint": "بحث عن موعد أو مريض...",
     "tabs": {
       "all": "الكل",
@@ -275,7 +301,6 @@
       "title": "لا توجد مواعيد",
       "subtitle": "لم يتم العثور على أي مواعيد تطابق معايير البحث"
     },
-
     "card": {
       "patient": "المريض",
       "service": "الخدمة",
@@ -392,5 +417,57 @@
       "empty_title": "لم يتم إنشاء أي تقارير بعد",
       "empty_subtitle": "يمكنك إنشاء تقرير جديد بالضغط على الزر أدناه"
     }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "mark_all_read": "قراءة الكل",
+    "delete_all": "حذف الكل",
+    "confirm_mark_all_read": "هل تريد وضع جميع الإشعارات كمقروءة؟",
+    "confirm_delete_all": "هل تريد حذف جميع الإشعارات؟",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "empty_title": "لا توجد إشعارات",
+    "empty_subtitle": "ستظهر الإشعارات الجديدة هنا عندما تتلقاها"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "sections": {
+      "account": "الحساب",
+      "notifications": "الإشعارات",
+      "appearance": "المظهر",
+      "support": "الدعم"
+    },
+    "profile": "الملف الشخصي",
+    "profile_subtitle": "تعديل معلوماتك الشخصية",
+    "profile_name": "الاسم الكامل",
+    "profile_email": "البريد الإلكتروني",
+    "profile_phone": "رقم الهاتف",
+    "profile_clinic_name": "اسم العيادة",
+    "profile_clinic_address": "عنوان العيادة",
+    "profile_license": "رقم الترخيص الطبي",
+    "edit_profile": "تعديل الملف الشخصي",
+    "password": "كلمة المرور",
+    "password_subtitle": "تغيير كلمة المرور",
+    "app_notifications": "إشعارات التطبيق",
+    "email_notifications": "إشعارات البريد الإلكتروني",
+    "sms_notifications": "إشعارات الرسائل القصيرة",
+    "language": "اللغة",
+    "theme": "الثيم",
+    "theme_system": "نظام التشغيل",
+    "theme_light": "فاتح",
+    "theme_dark": "داكن",
+    "help": "المساعدة",
+    "contact_support": "تواصل مع الدعم",
+    "privacy_policy": "سياسة الخصوصية",
+    "about": "حول التطبيق",
+    "logout": "تسجيل الخروج",
+    "confirm_logout": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "validation_required": "هذا الحقل مطلوب",
+    "validation_invalid_email": "البريد الإلكتروني غير صالح"
   }
 }

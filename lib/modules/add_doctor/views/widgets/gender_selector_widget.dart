@@ -13,9 +13,9 @@ class GenderSelectorWidget extends GetView<AddDoctorController> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: _buildGenderOption(context, 'male', LocaleKeys.add_doctor_gender_gmale)),
+        Expanded(child: _buildGenderOption(context, 'male', LocaleKeys.add_doctor_labels_gmale)),
         16.horizontalSpace,
-        Expanded(child: _buildGenderOption(context, 'female', LocaleKeys.add_doctor_gender_gfemale)),
+        Expanded(child: _buildGenderOption(context, 'female', LocaleKeys.add_doctor_labels_gfemale)),
       ],
     );
   }

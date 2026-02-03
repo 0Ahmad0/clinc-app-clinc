@@ -1,4 +1,6 @@
 abstract class AppRoutes {
+  static const settings = '/settings';
+  static const notifications = '/notifications';
   static const reports = '/import';
   static const appointmentsDetails = '/appointment_detalis';
   static const appointments = '/appointments';
@@ -7,7 +9,6 @@ abstract class AppRoutes {
   static const doctors = '/doctors';
   static const dashboard = '/dashboard';
   static const mainLayout = '/main_layout';
-  static const home = '/home';
   static const completeProfile = '/complete_profile';
   static const pendingApproval = '/pending_approval';
   static const otp = '/otp';

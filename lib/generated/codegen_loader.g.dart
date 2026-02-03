@@ -206,30 +206,56 @@ class CodegenLoader extends AssetLoader{
   },
   "add_doctor": {
     "title": "إضافة طبيب جديد",
+    "buttons": {
+      "cancel": "إلغاء",
+      "save": "حفظ"
+    },
     "labels": {
       "full_name": "الاسم الكامل",
-      "name_hint": "مثال: د. محمد الأحمد",
+      "name_hint": "أدخل اسم الطبيب الكامل",
       "specialty": "التخصص",
-      "specialty_hint": "اختر التخصص",
+      "specialty_hint": "اختر تخصص الطبيب",
       "gender": "الجنس",
-      "license": "رقم الترخيص الطبي",
-      "license_hint": "رقم الترخيص",
-      "image_title": "الصورة الشخصية",
-      "work_hours": "أيام وساعات العمل"
-    },
-    "gender": {
       "gmale": "ذكر",
-      "gfemale": "أنثى"
+      "gfemale": "أنثى",
+      "license": "رقم الترخيص",
+      "license_hint": "أدخل رقم الترخيص الطبي",
+      "hospital": "المستشفى/العيادة",
+      "hospital_hint": "أدخل اسم المستشفى أو العيادة",
+      "phone": "رقم الهاتف",
+      "phone_hint": "أدخل رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "email_hint": "أدخل البريد الإلكتروني",
+      "experience": "سنوات الخبرة",
+      "experience_hint": "أدخل عدد سنوات الخبرة",
+      "qualifications": "المؤهلات العلمية",
+      "qualification_hint": "أضف مؤهل علمي",
+      "add_qualification": "إضافة مؤهل",
+      "about": "نبذة عن الطبيب",
+      "about_hint": "أضف معلومات عن الطبيب",
+      "active": "الحالة",
+      "work_hours": "ساعات العمل",
+      "image_title": "صورة الطبيب",
+      "upload_drag_drop": "اسحب وأفلت الصورة هنا",
+      "upload_or": "أو",
+      "upload_browse": "تصفح الملفات",
+      "upload_support": "يدعم JPG, PNG"
     },
-    "upload": {
-      "drag_drop": "اسحب و أفلت الصورة هنا",
-      "or": "أو",
-      "browse": "اختر ملف",
-      "support": "PNG, JPG, GIF up to 10MB"
+    "schedule": {
+      "day_off": "عطلة",
+      "days": {
+        "mon": "الإثنين",
+        "tue": "الثلاثاء",
+        "wed": "الأربعاء",
+        "thu": "الخميس",
+        "fri": "الجمعة",
+        "sat": "السبت",
+        "sun": "الأحد"
+      }
     },
-    "buttons": {
-      "save": "حفظ",
-      "cancel": "إلغاء"
+    "messages": {
+      "success": "تم إضافة الطبيب بنجاح",
+      "error": "حدث خطأ أثناء إضافة الطبيب"
     }
   },
   "services_module": {
@@ -406,6 +432,58 @@ class CodegenLoader extends AssetLoader{
       "empty_title": "لم يتم إنشاء أي تقارير بعد",
       "empty_subtitle": "يمكنك إنشاء تقرير جديد بالضغط على الزر أدناه"
     }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "mark_all_read": "قراءة الكل",
+    "delete_all": "حذف الكل",
+    "confirm_mark_all_read": "هل تريد وضع جميع الإشعارات كمقروءة؟",
+    "confirm_delete_all": "هل تريد حذف جميع الإشعارات؟",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "empty_title": "لا توجد إشعارات",
+    "empty_subtitle": "ستظهر الإشعارات الجديدة هنا عندما تتلقاها"
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "sections": {
+      "account": "الحساب",
+      "notifications": "الإشعارات",
+      "appearance": "المظهر",
+      "support": "الدعم"
+    },
+    "profile": "الملف الشخصي",
+    "profile_subtitle": "تعديل معلوماتك الشخصية",
+    "profile_name": "الاسم الكامل",
+    "profile_email": "البريد الإلكتروني",
+    "profile_phone": "رقم الهاتف",
+    "profile_clinic_name": "اسم العيادة",
+    "profile_clinic_address": "عنوان العيادة",
+    "profile_license": "رقم الترخيص الطبي",
+    "edit_profile": "تعديل الملف الشخصي",
+    "password": "كلمة المرور",
+    "password_subtitle": "تغيير كلمة المرور",
+    "app_notifications": "إشعارات التطبيق",
+    "email_notifications": "إشعارات البريد الإلكتروني",
+    "sms_notifications": "إشعارات الرسائل القصيرة",
+    "language": "اللغة",
+    "theme": "الثيم",
+    "theme_system": "نظام التشغيل",
+    "theme_light": "فاتح",
+    "theme_dark": "داكن",
+    "help": "المساعدة",
+    "contact_support": "تواصل مع الدعم",
+    "privacy_policy": "سياسة الخصوصية",
+    "about": "حول التطبيق",
+    "logout": "تسجيل الخروج",
+    "confirm_logout": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "validation_required": "هذا الحقل مطلوب",
+    "validation_invalid_email": "البريد الإلكتروني غير صالح"
   }
 };
 static const Map<String,dynamic> _en = {
@@ -600,30 +678,56 @@ static const Map<String,dynamic> _en = {
   },
   "add_doctor": {
     "title": "Add New Doctor",
+    "buttons": {
+      "cancel": "Cancel",
+      "save": "Save"
+    },
     "labels": {
       "full_name": "Full Name",
-      "name_hint": "e.g. Dr. John Doe",
+      "name_hint": "Enter doctor's full name",
       "specialty": "Specialty",
-      "specialty_hint": "Select Specialty",
+      "specialty_hint": "Select doctor's specialty",
       "gender": "Gender",
-      "license": "Medical License Number",
-      "license_hint": "License Number",
-      "image_title": "Profile Picture",
-      "work_hours": "Working Days & Hours"
-    },
-    "gender": {
       "gmale": "Male",
-      "gfemale": "Female"
+      "gfemale": "Female",
+      "license": "License Number",
+      "license_hint": "Enter medical license number",
+      "hospital": "Hospital/Clinic",
+      "hospital_hint": "Enter hospital or clinic name",
+      "phone": "Phone Number",
+      "phone_hint": "Enter phone number",
+      "email": "Email Address",
+      "email_hint": "Enter email address",
+      "experience": "Years of Experience",
+      "experience_hint": "Enter number of years of experience",
+      "qualifications": "Academic Qualifications",
+      "qualification_hint": "Add academic qualification",
+      "add_qualification": "Add Qualification",
+      "about": "About the Doctor",
+      "about_hint": "Add information about the doctor",
+      "active": "Status",
+      "work_hours": "Working Hours",
+      "image_title": "Doctor's Photo",
+      "upload_drag_drop": "Drag and drop image here",
+      "upload_or": "or",
+      "upload_browse": "Browse files",
+      "upload_support": "Supports JPG, PNG"
     },
-    "upload": {
-      "drag_drop": "Drag & Drop image here",
-      "or": "or",
-      "browse": "Browse File",
-      "support": "PNG, JPG, GIF up to 10MB"
+    "schedule": {
+      "day_off": "Day Off",
+      "days": {
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday",
+        "sun": "Sunday"
+      }
     },
-    "buttons": {
-      "save": "Save",
-      "cancel": "Cancel"
+    "messages": {
+      "success": "Doctor added successfully",
+      "error": "An error occurred while adding the doctor"
     }
   },
   "services_module": {
@@ -798,6 +902,58 @@ static const Map<String,dynamic> _en = {
       "empty_title": "No reports have been created yet",
       "empty_subtitle": "You can create a new report by clicking the button below"
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "mark_all_read": "Mark All as Read",
+    "delete_all": "Delete All",
+    "confirm_mark_all_read": "Do you want to mark all notifications as read?",
+    "confirm_delete_all": "Do you want to delete all notifications?",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "empty_title": "No notifications",
+    "empty_subtitle": "New notifications will appear here when you receive them"
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "account": "Account",
+      "notifications": "Notifications",
+      "appearance": "Appearance",
+      "support": "Support"
+    },
+    "profile": "Profile",
+    "profile_subtitle": "Edit your personal information",
+    "profile_name": "Full Name",
+    "profile_email": "Email Address",
+    "profile_phone": "Phone Number",
+    "profile_clinic_name": "Clinic Name",
+    "profile_clinic_address": "Clinic Address",
+    "profile_license": "Medical License Number",
+    "edit_profile": "Edit Profile",
+    "password": "Password",
+    "password_subtitle": "Change your password",
+    "app_notifications": "App Notifications",
+    "email_notifications": "Email Notifications",
+    "sms_notifications": "SMS Notifications",
+    "language": "Language",
+    "theme": "Theme",
+    "theme_system": "System Default",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "help": "Help",
+    "contact_support": "Contact Support",
+    "privacy_policy": "Privacy Policy",
+    "about": "About App",
+    "logout": "Logout",
+    "confirm_logout": "Are you sure you want to logout?",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "validation_required": "This field is required",
+    "validation_invalid_email": "Invalid email address"
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar": _ar, "en": _en};

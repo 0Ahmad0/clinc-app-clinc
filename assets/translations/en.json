@@ -190,30 +190,56 @@
   },
   "add_doctor": {
     "title": "Add New Doctor",
+    "buttons": {
+      "cancel": "Cancel",
+      "save": "Save"
+    },
     "labels": {
       "full_name": "Full Name",
-      "name_hint": "e.g. Dr. John Doe",
+      "name_hint": "Enter doctor's full name",
       "specialty": "Specialty",
-      "specialty_hint": "Select Specialty",
+      "specialty_hint": "Select doctor's specialty",
       "gender": "Gender",
-      "license": "Medical License Number",
-      "license_hint": "License Number",
-      "image_title": "Profile Picture",
-      "work_hours": "Working Days & Hours"
-    },
-    "gender": {
       "gmale": "Male",
-      "gfemale": "Female"
+      "gfemale": "Female",
+      "license": "License Number",
+      "license_hint": "Enter medical license number",
+      "hospital": "Hospital/Clinic",
+      "hospital_hint": "Enter hospital or clinic name",
+      "phone": "Phone Number",
+      "phone_hint": "Enter phone number",
+      "email": "Email Address",
+      "email_hint": "Enter email address",
+      "experience": "Years of Experience",
+      "experience_hint": "Enter number of years of experience",
+      "qualifications": "Academic Qualifications",
+      "qualification_hint": "Add academic qualification",
+      "add_qualification": "Add Qualification",
+      "about": "About the Doctor",
+      "about_hint": "Add information about the doctor",
+      "active": "Status",
+      "work_hours": "Working Hours",
+      "image_title": "Doctor's Photo",
+      "upload_drag_drop": "Drag and drop image here",
+      "upload_or": "or",
+      "upload_browse": "Browse files",
+      "upload_support": "Supports JPG, PNG"
     },
-    "upload": {
-      "drag_drop": "Drag & Drop image here",
-      "or": "or",
-      "browse": "Browse File",
-      "support": "PNG, JPG, GIF up to 10MB"
+    "schedule": {
+      "day_off": "Day Off",
+      "days": {
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday",
+        "sun": "Sunday"
+      }
     },
-    "buttons": {
-      "save": "Save",
-      "cancel": "Cancel"
+    "messages": {
+      "success": "Doctor added successfully",
+      "error": "An error occurred while adding the doctor"
     }
   },
   "services_module": {
@@ -388,5 +414,57 @@
       "empty_title": "No reports have been created yet",
       "empty_subtitle": "You can create a new report by clicking the button below"
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "mark_all_read": "Mark All as Read",
+    "delete_all": "Delete All",
+    "confirm_mark_all_read": "Do you want to mark all notifications as read?",
+    "confirm_delete_all": "Do you want to delete all notifications?",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "empty_title": "No notifications",
+    "empty_subtitle": "New notifications will appear here when you receive them"
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "account": "Account",
+      "notifications": "Notifications",
+      "appearance": "Appearance",
+      "support": "Support"
+    },
+    "profile": "Profile",
+    "profile_subtitle": "Edit your personal information",
+    "profile_name": "Full Name",
+    "profile_email": "Email Address",
+    "profile_phone": "Phone Number",
+    "profile_clinic_name": "Clinic Name",
+    "profile_clinic_address": "Clinic Address",
+    "profile_license": "Medical License Number",
+    "edit_profile": "Edit Profile",
+    "password": "Password",
+    "password_subtitle": "Change your password",
+    "app_notifications": "App Notifications",
+    "email_notifications": "Email Notifications",
+    "sms_notifications": "SMS Notifications",
+    "language": "Language",
+    "theme": "Theme",
+    "theme_system": "System Default",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "help": "Help",
+    "contact_support": "Contact Support",
+    "privacy_policy": "Privacy Policy",
+    "about": "About App",
+    "logout": "Logout",
+    "confirm_logout": "Are you sure you want to logout?",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "validation_required": "This field is required",
+    "validation_invalid_email": "Invalid email address"
   }
 }

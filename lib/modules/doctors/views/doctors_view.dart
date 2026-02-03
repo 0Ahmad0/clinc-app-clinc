@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:easy_localization/easy_localization.dart';
-import '../../../generated/locale_keys.g.dart';
+import '../../../app/data/doctor_model.dart';
 import '../controllers/doctors_controller.dart';
-import 'widgets/add_doctor_button.dart';
-import 'widgets/doctor_list_item.dart';
+import 'widgets/doctor_card.dart';
 
 class DoctorsView extends GetView<DoctorsController> {
   const DoctorsView({super.key});
@@ -13,72 +11,101 @@ class DoctorsView extends GetView<DoctorsController> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final cs = theme.colorScheme;
 
     return Scaffold(
+      backgroundColor: cs.surface,
+      floatingActionButton: FloatingActionButton(
+        onPressed: controller.goToAddDoctor,
+        backgroundColor: cs.primary,
+        child: Icon(Icons.add, color: cs.onPrimary),
+      ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
+          // 1. Sliver App Bar
           SliverAppBar(
             pinned: true,
-            backgroundColor: colorScheme.background,
+            floating: true,
+            backgroundColor: cs.surface,
             elevation: 0,
             centerTitle: true,
             title: Text(
-              tr(LocaleKeys.doctors_page_title),
+              "الأطباء",
               style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: colorScheme.onBackground,
+                fontWeight: FontWeight.w800,
               ),
             ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: colorScheme.onBackground),
-              onPressed: () => Get.back(),
-            ),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.search, color: cs.onSurface),
+                onPressed: () {
+                  // TODO: فتح شريط البحث
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.filter_list, color: cs.onSurface),
+                onPressed: () {
+                  // TODO: فتح فلتر الأطباء
+                },
+              ),
+            ],
           ),
 
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-            sliver: SliverToBoxAdapter(
-              child: const AddDoctorButton(),
-            ),
-          ),
+          // 2. قائمة الأطباء
+          Obx(() {
+            if (controller.doctorList.isEmpty) {
+              return SliverFillRemaining(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.person_search_outlined,
+                        size: 80.sp,
+                        color: cs.onSurface.withOpacity(0.3),
+                      ),
+                      24.verticalSpace,
+                      Text(
+                        "لا يوجد أطباء",
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      8.verticalSpace,
+                      Text(
+                        "يمكنك إضافة طبيب جديد بالضغط على الزر أدناه",
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: cs.onSurface.withOpacity(0.6),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
 
-          SliverPadding(
-            padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 10.h),
-            sliver: SliverToBoxAdapter(
-              child: Text(
-                tr(LocaleKeys.doctors_page_registered_title),
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: colorScheme.onBackground,
+            return SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    final doctor = controller.doctorList[index];
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 16.h),
+                      child: DoctorCard(
+                        doctor: doctor,
+                        onTap: () => controller.goToDoctorDetails(doctor.id),
+                        onToggleStatus: () => controller.toggleDoctorStatus(doctor.id),
+                      ),
+                    );
+                  },
+                  childCount: controller.doctorList.length,
                 ),
               ),
-            ),
-          ),
-
-          Obx(() => SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 12.h),
-                    child: DoctorListItem(
-                      item: controller.doctorList[index],
-                      onTap: () => controller.goToDoctorDetails(
-                          controller.doctorList[index]['id'] as int
-                      ),
-                    ),
-                  );
-                },
-                childCount: controller.doctorList.length,
-              ),
-            ),
-          )),
-
-          // مسافة سفلية
-          SliverToBoxAdapter(child: SizedBox(height: 20.h)),
+            );
+          }),
         ],
       ),
     );

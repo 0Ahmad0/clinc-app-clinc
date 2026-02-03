@@ -1,3 +1,7 @@
+import 'package:clinc_app_clinc/modules/settings/views/settings_view.dart';
+import 'package:clinc_app_clinc/modules/settings/bindings/settings_binding.dart';
+import 'package:clinc_app_clinc/modules/notifications/views/notifications_view.dart';
+import 'package:clinc_app_clinc/modules/notifications/bindings/notifications_binding.dart';
 import 'package:clinc_app_clinc/modules/appointments/views/appointments_view.dart';
 import 'package:clinc_app_clinc/modules/appointments/bindings/appointments_binding.dart';
 import 'package:clinc_app_clinc/modules/services/views/services_view.dart';
@@ -6,8 +10,6 @@ import 'package:clinc_app_clinc/modules/doctors/views/doctors_view.dart';
 import 'package:clinc_app_clinc/modules/doctors/bindings/doctors_binding.dart';
 import 'package:clinc_app_clinc/modules/dashboard/views/dashboard_view.dart';
 import 'package:clinc_app_clinc/modules/dashboard/bindings/dashboard_binding.dart';
-import 'package:clinc_app_clinc/modules/home/views/home_view.dart';
-import 'package:clinc_app_clinc/modules/home/bindings/home_binding.dart';
 import 'package:clinc_app_clinc/modules/auth/views/otp_view.dart';
 import 'package:clinc_app_clinc/modules/auth/bindings/otp_binding.dart';
 import 'package:clinc_app_clinc/modules/auth/views/register_view.dart';
@@ -39,6 +41,16 @@ import 'app_routes.dart';
 
 class AppPages {
   static final routes = [
+    GetPage(
+      name: AppRoutes.settings,
+      page: () => const SettingsView(),
+      binding: SettingsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.notifications,
+      page: () => const NotificationsView(),
+      binding: NotificationsBinding(),
+    ),
     GetPage(
       name: AppRoutes.reports,
       page: () => const ReportsView(),
@@ -79,11 +91,7 @@ class AppPages {
       page: () => const MainLayoutView(),
       binding: MainLayoutBinding(),
     ),
-    GetPage(
-      name: AppRoutes.home,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
-    ),
+
     GetPage(
       name: AppRoutes.completeProfile,
       page: () => const CompleteProfileView(),
