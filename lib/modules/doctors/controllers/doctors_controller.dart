@@ -1,121 +1,125 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../app/data/doctor_model.dart';
 import '../../../app/routes/app_routes.dart';
 import '../views/doctor_details_view.dart';
 
 class DoctorsController extends GetxController {
-  final RxList<DoctorModel> doctorList = <DoctorModel>[].obs;
+  // القوائم
+  final RxList<DoctorModel> allDoctors = <DoctorModel>[].obs;
+  final RxList<DoctorModel> displayedDoctors = <DoctorModel>[].obs;
+
+  // البحث
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void onInit() {
     super.onInit();
-    _seedMockData();
+    _loadMockData();
   }
 
-  void _seedMockData() {
-    doctorList.value = [
+  void _loadMockData() {
+    // بيانات وهمية للتجربة تتطابق مع المودل السابق
+    allDoctors.addAll([
       DoctorModel(
-        id: 1,
-        name: 'Dr. Ethan Carter',
-        specialty: 'Cardiology',
-        hospital: 'Radiant Hospital',
-        image: 'assets/images/doctor_1.png',
-        isActive: true,
-        license: 'MOH-123456',
-        phone: '+963999000111',
-        email: 'ethan.carter@radiant.com',
-        experience: 10,
-        about: 'خبرة 10 سنوات في أمراض القلب، عضو الجمعية الطبية العالمية. متابع لأحدث الأبحاث الطبية في مجال القلب والأوعية الدموية.',
-        qualifications: ['MD', 'PhD', 'FACC'],
-        workingDays: ['الاثنين', 'الأربعاء', 'الجمعة'],
-        workingHours: '9:00 AM - 5:00 PM',
+        id: '1',
+        nameAr: "د. أحمد علي",
+        nameEn: "Dr. Ahmed Ali",
+        specialty: "Cardiology",
+        fee: 150.0,
+        isAvailable: true,
+        phone: "0599123456",
+        email: "ahmed@example.com",
+        licenseNumber: "LIC-9920",
+        yearsOfExperience: 10,
+        about: "طبيب متخصص في أمراض القلب والأوعية الدموية بخبرة 10 سنوات.",
+        imagePath: "",
+        // يمكن وضع رابط صورة من النت للتجربة
+        qualificationFiles: [],
+        workingHours: [],
+        gender: 'Male',
       ),
       DoctorModel(
-        id: 2,
-        name: 'Dr. Olivia Bennett',
-        specialty: 'Dermatology',
-        hospital: 'Skin Care Center',
-        image: 'assets/images/doctor_2.png',
-        isActive: true,
-        license: 'MOH-234567',
-        phone: '+963999000222',
-        email: 'olivia.bennett@skincare.com',
-        experience: 8,
-        about: 'أخصائية جلدية معتمدة مع خبرة 8 سنوات في علاج الأمراض الجلدية والتجميلية.',
-        qualifications: ['MD', 'Dermatology Specialist'],
-        workingDays: ['الثلاثاء', 'الخميس'],
-        workingHours: '10:00 AM - 6:00 PM',
+        id: '2',
+        nameAr: "د. سارة حسن",
+        nameEn: "Dr. Sarah Hassan",
+        specialty: "Dermatology",
+        fee: 200.0,
+        isAvailable: false,
+        phone: "0599887766",
+        email: "sarah@example.com",
+        licenseNumber: "LIC-5541",
+        yearsOfExperience: 5,
+        about: "أخصائية جلدية وتجميل وعلاج بالليزر.",
+        imagePath: "",
+        qualificationFiles: [],
+        workingHours: [],
+        gender: 'Male',
       ),
-      // أضف بقية الأطباء بنفس الطريقة
-    ];
+    ]);
+    displayedDoctors.assignAll(allDoctors);
   }
 
-  void goToAddDoctor() {
-    Get.toNamed(AppRoutes.addDoctor);
-  }
-
-  void goToDoctorDetails(int id) {
-    final doctor = doctorList.firstWhere((e) => e.id == id);
-    Get.to(() => const DoctorDetailsView(), arguments: doctor);
-  }
-
-  void deleteDoctor(int id) {
-    doctorList.removeWhere((doctor) => doctor.id == id);
-    Get.back();
-    Get.snackbar(
-      'تم الحذف',
-      'تم حذف الطبيب بنجاح',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Get.theme.colorScheme.primary,
-      colorText: Get.theme.colorScheme.onPrimary,
-    );
-  }
-
-  void toggleDoctorStatus(int id) {
-    final index = doctorList.indexWhere((doctor) => doctor.id == id);
-    if (index != -1) {
-      final updatedDoctor = doctorList[index].copyWith(
-        isActive: !doctorList[index].isActive,
+  // دالة البحث
+  void runSearch(String query) {
+    if (query.isEmpty) {
+      displayedDoctors.assignAll(allDoctors);
+    } else {
+      displayedDoctors.assignAll(
+        allDoctors.where((doctor) {
+          final nameAr = doctor.nameAr.toLowerCase();
+          final nameEn = doctor.nameEn.toLowerCase();
+          final specialty = doctor.specialty.toLowerCase();
+          final q = query.toLowerCase();
+          return nameAr.contains(q) ||
+              nameEn.contains(q) ||
+              specialty.contains(q);
+        }).toList(),
       );
-      doctorList[index] = updatedDoctor;
     }
   }
 
-}
+  // التنقل
+  void goToAddDoctor() {
+    Get.toNamed(AppRoutes.addDoctor);
+    // للتجربة المباشرة:
+    // Get.to(() => DoctorFormView());
+  }
 
-// إضافة امتداد copyWith إلى DoctorModel
-extension DoctorCopy on DoctorModel {
-  DoctorModel copyWith({
-    int? id,
-    String? name,
-    String? specialty,
-    String? hospital,
-    String? image,
-    bool? isActive,
-    String? license,
-    String? phone,
-    String? email,
-    int? experience,
-    String? about,
-    List<String>? qualifications,
-    List<String>? workingDays,
-    String? workingHours,
-  }) {
-    return DoctorModel(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      specialty: specialty ?? this.specialty,
-      hospital: hospital ?? this.hospital,
-      image: image ?? this.image,
-      isActive: isActive ?? this.isActive,
-      license: license ?? this.license,
-      phone: phone ?? this.phone,
-      email: email ?? this.email,
-      experience: experience ?? this.experience,
-      about: about ?? this.about,
-      qualifications: qualifications ?? this.qualifications,
-      workingDays: workingDays ?? this.workingDays,
-      workingHours: workingHours ?? this.workingHours,
+  void goToDoctorDetails(DoctorModel doctor) {
+    // نمرر الأوبجكت للصفحة
+    Get.to(() => DoctorDetailsView(), arguments: doctor);
+  }
+
+  void goToEditDoctor(DoctorModel doctor) {
+    // Get.toNamed(AppRoutes.addDoctor, arguments: doctor);
+    // عند العودة نقوم بتحديث القائمة
+  }
+
+  // تبديل الحالة (نشط / غير نشط)
+  void toggleStatus(String id) {
+    int index = allDoctors.indexWhere((d) => d.id == id);
+    if (index != -1) {
+      // ننشئ نسخة جديدة مع عكس الحالة
+      var doc = allDoctors[index];
+      doc.isAvailable = !doc.isAvailable;
+      allDoctors[index] = doc;
+
+      // تحديث العرض
+      runSearch(searchController.text);
+      update();
+    }
+  }
+
+  // حذف طبيب
+  void deleteDoctor(String id) {
+    allDoctors.removeWhere((d) => d.id == id);
+    runSearch(searchController.text);
+    Get.back(); // إغلاق الديالوج أو الصفحة
+    Get.snackbar(
+      "تم",
+      "تم حذف الطبيب بنجاح",
+      snackPosition: SnackPosition.BOTTOM,
     );
   }
 }

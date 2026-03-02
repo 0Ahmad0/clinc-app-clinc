@@ -6,11 +6,7 @@ class ProfileHeader extends StatelessWidget {
   final ProfileModel profile;
   final VoidCallback onEdit;
 
-  const ProfileHeader({
-    super.key,
-    required this.profile,
-    required this.onEdit,
-  });
+  const ProfileHeader({super.key, required this.profile, required this.onEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +28,12 @@ class ProfileHeader extends StatelessWidget {
                     : null,
                 child: profile.avatar == null
                     ? Text(
-                  profile.name.isNotEmpty ? profile.name[0] : '?',
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    color: cs.onPrimaryContainer,
-                    fontWeight: FontWeight.w800,
-                  ),
-                )
+                        profile.name.isNotEmpty ? profile.name[0] : '?',
+                        style: theme.textTheme.headlineMedium?.copyWith(
+                          color: cs.onPrimaryContainer,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      )
                     : null,
               ),
               Positioned(
@@ -73,13 +69,6 @@ class ProfileHeader extends StatelessWidget {
 
           // Name and Clinic
           Text(
-            profile.name,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          4.verticalSpace,
-          Text(
             profile.clinicName,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: cs.onSurfaceVariant,
@@ -91,7 +80,11 @@ class ProfileHeader extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.email_outlined, size: 16.sp, color: cs.onSurfaceVariant),
+              Icon(
+                Icons.email_outlined,
+                size: 16.sp,
+                color: cs.onSurfaceVariant,
+              ),
               6.horizontalSpace,
               Text(
                 profile.email,
@@ -100,7 +93,11 @@ class ProfileHeader extends StatelessWidget {
                 ),
               ),
               16.horizontalSpace,
-              Icon(Icons.phone_outlined, size: 16.sp, color: cs.onSurfaceVariant),
+              Icon(
+                Icons.phone_outlined,
+                size: 16.sp,
+                color: cs.onSurfaceVariant,
+              ),
               6.horizontalSpace,
               Text(
                 profile.phone,

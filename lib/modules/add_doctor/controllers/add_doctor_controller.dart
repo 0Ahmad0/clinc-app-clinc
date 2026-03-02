@@ -1,196 +1,346 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
+
+import '../../../../generated/locale_keys.g.dart';
 import '../../../app/data/doctor_model.dart';
-import '../../doctors/controllers/doctors_controller.dart';
 
 class AddDoctorController extends GetxController {
-  // Controllers
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController specialtyController = TextEditingController();
-  final TextEditingController licenseController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController experienceController = TextEditingController();
-  final TextEditingController aboutController = TextEditingController();
-  final TextEditingController hospitalController = TextEditingController();
+  // --- Global Key for Form Validation ---
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  // State
-  final RxString selectedGender = 'male'.obs;
-  final Rxn<String> selectedImagePath = Rxn<String>();
-  final RxBool isLoading = false.obs;
-  final RxBool isActive = true.obs;
+  // --- Text Controllers ---
+  late TextEditingController nameArController;
+  late TextEditingController nameEnController;
+  late TextEditingController feeController;
+  late TextEditingController licenseController;
+  late TextEditingController experienceController;
+  late TextEditingController aboutController;
+  late TextEditingController phoneController;
+  late TextEditingController emailController;
 
-  // قائمة التخصصات
+  // --- Observable Variables (Reactive) ---
+  var selectedImage = ''.obs;
+  var selectedSpecialty = ''.obs;
+  var selectedGender = 'Male'.obs;
+  var isAvailable = true.obs;
+
+  // Lists
+  var qualificationFiles = <String>[].obs;
+  var workingHoursList = <WorkingHours>[].obs;
+
+  // --- Doctor Data Management ---
+  var doctorsList = <DoctorModel>[].obs;
+  var searchResults = <DoctorModel>[].obs;
+
+  // --- Edit Mode Control ---
+  var isEditMode = false.obs;
+  String? editingDoctorId;
+
+  // --- Static Data ---
   final List<String> specialties = [
     'Cardiology',
     'Dermatology',
     'Neurology',
     'Pediatrics',
-    'Orthopedics',
-    'Oncology',
-    'Ophthalmology',
-    'Psychiatry',
-    'Gynecology',
-    'Urology'
+    'Dentist',
+    'Surgery',
+  ];
+  final List<String> weekDays = [
+    'Saturday',
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
   ];
 
-  // جدول الدوام
-  final RxList<Map<String, dynamic>> workingHours = [
-    {'day': 'mon', 'time': '9:00 AM - 5:00 PM', 'isOff': false},
-    {'day': 'tue', 'time': '9:00 AM - 5:00 PM', 'isOff': false},
-    {'day': 'wed', 'time': '9:00 AM - 5:00 PM', 'isOff': false},
-    {'day': 'thu', 'time': '9:00 AM - 5:00 PM', 'isOff': false},
-    {'day': 'fri', 'time': '1:00 PM - 9:00 PM', 'isOff': false},
-    {'day': 'sat', 'time': 'Off', 'isOff': true},
-    {'day': 'sun', 'time': 'Off', 'isOff': true},
-  ].obs;
+  // ===========================================================================
+  // Lifecycle Methods
+  // ===========================================================================
 
-  // قائمة المؤهلات العلمية
-  final RxList<String> qualifications = <String>[].obs;
-  final TextEditingController qualificationController = TextEditingController();
+  @override
+  void onInit() {
+    super.onInit();
+    _initializeControllers();
+    _initializeWorkingHours();
+
+    if (Get.arguments != null && Get.arguments is DoctorModel) {
+      _loadDoctorData(Get.arguments as DoctorModel);
+    }
+  }
 
   @override
   void onClose() {
-    nameController.dispose();
-    specialtyController.dispose();
+    nameArController.dispose();
+    nameEnController.dispose();
+    feeController.dispose();
     licenseController.dispose();
-    phoneController.dispose();
-    emailController.dispose();
     experienceController.dispose();
     aboutController.dispose();
-    hospitalController.dispose();
-    qualificationController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
     super.onClose();
   }
 
-  // تغيير الجنس
-  void setGender(String gender) {
-    selectedGender.value = gender;
+  // ===========================================================================
+  // Initialization & Helper Methods
+  // ===========================================================================
+
+  void _initializeControllers() {
+    nameArController = TextEditingController();
+    nameEnController = TextEditingController();
+    feeController = TextEditingController();
+    licenseController = TextEditingController();
+    experienceController = TextEditingController();
+    aboutController = TextEditingController();
+    phoneController = TextEditingController();
+    emailController = TextEditingController();
   }
 
-  // اختيار الصورة
+  void _initializeWorkingHours() {
+    workingHoursList.value = weekDays
+        .map(
+          (day) => WorkingHours(
+            day: day,
+            startTime: "09:00 AM",
+            endTime: "05:00 PM",
+            isDayOff: false,
+          ),
+        )
+        .toList();
+  }
+
+  // ===========================================================================
+  // Edit Mode Logic
+  // ===========================================================================
+
+  void _loadDoctorData(DoctorModel doctor) {
+    isEditMode.value = true;
+    editingDoctorId = doctor.id;
+
+    nameArController.text = doctor.nameAr;
+    nameEnController.text = doctor.nameEn;
+    feeController.text = doctor.fee.toString();
+    licenseController.text = doctor.licenseNumber;
+    experienceController.text = doctor.yearsOfExperience.toString();
+    aboutController.text = doctor.about;
+    phoneController.text = doctor.phone;
+    emailController.text = doctor.email;
+
+    selectedImage.value = doctor.imagePath;
+    selectedSpecialty.value = doctor.specialty;
+    selectedGender.value = doctor.gender;
+    isAvailable.value = doctor.isAvailable;
+    qualificationFiles.value = List.from(doctor.qualificationFiles);
+
+    workingHoursList.value = doctor.workingHours
+        .map(
+          (wh) => WorkingHours(
+            day: wh.day,
+            startTime: wh.startTime,
+            endTime: wh.endTime,
+            isDayOff: wh.isDayOff,
+          ),
+        )
+        .toList();
+  }
+
+  // ===========================================================================
+  // File & Image Handling
+  // ===========================================================================
+
   Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      selectedImage.value = image.path;
+    }
+  }
+
+  Future<void> pickPDFs() async {
     try {
-      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        selectedImagePath.value = pickedFile.path;
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        allowMultiple: true,
+      );
+
+      if (result != null) {
+        List<String> paths = result.paths.whereType<String>().toList();
+        qualificationFiles.addAll(paths);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to pick image: $e');
+      print("Error picking files: $e");
+      Get.snackbar("Error", "Could not pick files");
     }
   }
 
-  // إضافة مؤهل علمي
-  void addQualification() {
-    if (qualificationController.text.isNotEmpty) {
-      qualifications.add(qualificationController.text);
-      qualificationController.clear();
+  void removeFile(int index) {
+    if (index >= 0 && index < qualificationFiles.length) {
+      qualificationFiles.removeAt(index);
     }
   }
 
-  // إزالة مؤهل علمي
-  void removeQualification(int index) {
-    qualifications.removeAt(index);
+  // ===========================================================================
+  // Working Hours Logic (NEW)
+  // ===========================================================================
+
+  void toggleDayOff(int index, bool val) {
+    // val here comes from Switch: true means "Working Day", false means "Day Off"
+    var item = workingHoursList[index];
+    // We want isDayOff to be false when switch is active (true)
+    item.isDayOff = !val;
+    workingHoursList[index] = item;
+    workingHoursList.refresh();
   }
 
-  // تبديل حالة يوم العمل
-  void toggleDayOff(int index) {
-    final updatedHours = List<Map<String, dynamic>>.from(workingHours);
-    updatedHours[index] = {
-      ...updatedHours[index],
-      'isOff': !updatedHours[index]['isOff'],
-      'time': updatedHours[index]['isOff'] ? '9:00 AM - 5:00 PM' : 'Off',
-    };
-    workingHours.value = updatedHours;
+  Future<void> selectTime(
+    BuildContext context,
+    int index,
+    bool isStartTime,
+  ) async {
+    TimeOfDay initialTime = TimeOfDay.now();
+
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      String formattedTime = picked.format(context);
+      var item = workingHoursList[index];
+      if (isStartTime) {
+        item.startTime = formattedTime;
+      } else {
+        item.endTime = formattedTime;
+      }
+      workingHoursList[index] = item;
+      workingHoursList.refresh();
+    }
   }
 
-  // تغيير وقت العمل
-  void changeWorkTime(int index, String newTime) {
-    final updatedHours = List<Map<String, dynamic>>.from(workingHours);
-    updatedHours[index] = {
-      ...updatedHours[index],
-      'time': newTime,
-    };
-    workingHours.value = updatedHours;
-  }
+  // ===========================================================================
+  // Save & Update Logic
+  // ===========================================================================
 
-  // حفظ الطبيب
-  Future<void> saveDoctor() async {
-    if (!validateForm()) return;
+  void saveDoctor() {
+    if (!formKey.currentState!.validate()) return;
 
-    isLoading(true);
-    try {
-      // إنشاء نموذج الطبيب
-      final newDoctor = DoctorModel(
-        id: DateTime.now().millisecondsSinceEpoch,
-        name: nameController.text,
-        specialty: specialtyController.text,
-        hospital: hospitalController.text,
-        image: selectedImagePath.value,
-        isActive: isActive.value,
-        license: licenseController.text,
-        phone: phoneController.text,
-        email: emailController.text,
-        experience: int.tryParse(experienceController.text) ?? 0,
-        about: aboutController.text,
-        qualifications: qualifications.isNotEmpty ? qualifications : null,
-        workingDays: workingHours
-            .where((day) => !day['isOff'])
-            .map((day) => day['day'] as String)
-            .toList(),
-        workingHours: workingHours.firstWhere((day) => !day['isOff'], orElse: () => {'time': ''})['time'],
-      );
-
-      // الحصول على كنترولر الأطباء وإضافة الطبيب الجديد
-      final doctorsController = Get.find<DoctorsController>();
-      doctorsController.doctorList.add(newDoctor);
-
-      // عرض رسالة نجاح
-      Get.back();
-      Get.snackbar(
-        'نجاح',
-        'تم إضافة الطبيب بنجاح',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
-    } catch (e) {
+    if (selectedSpecialty.value.isEmpty) {
       Get.snackbar(
         'خطأ',
-        'فشل إضافة الطبيب: $e',
+        tr(LocaleKeys.add_doctor_validations_select_specialty),
+        backgroundColor: Colors.red.withOpacity(0.2),
+        colorText: Colors.red,
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
       );
-    } finally {
-      isLoading(false);
+      return;
+    }
+
+    final doctor = DoctorModel(
+      id: isEditMode.value
+          ? editingDoctorId
+          : DateTime.now().millisecondsSinceEpoch.toString(),
+      imagePath: selectedImage.value,
+      nameAr: nameArController.text,
+      nameEn: nameEnController.text,
+      specialty: selectedSpecialty.value,
+      fee: double.tryParse(feeController.text) ?? 0.0,
+      gender: selectedGender.value,
+      licenseNumber: licenseController.text,
+      yearsOfExperience: int.tryParse(experienceController.text) ?? 0,
+      about: aboutController.text,
+      phone: phoneController.text,
+      email: emailController.text,
+      qualificationFiles: List.from(qualificationFiles),
+      isAvailable: isAvailable.value,
+      workingHours: List.from(workingHoursList),
+    );
+
+    if (isEditMode.value) {
+      _updateExistingDoctor(doctor);
+    } else {
+      _addNewDoctor(doctor);
     }
   }
 
-  // التحقق من صحة الفورم
-  bool validateForm() {
-    if (nameController.text.isEmpty) {
-      Get.snackbar('خطأ', 'يرجى إدخال اسم الطبيب');
-      return false;
+  void _updateExistingDoctor(DoctorModel doctor) {
+    int index = doctorsList.indexWhere((d) => d.id == editingDoctorId);
+    if (index != -1) {
+      doctorsList[index] = doctor;
+      Get.back();
+      Get.snackbar(
+        tr(LocaleKeys.add_doctor_alerts_success),
+        tr(LocaleKeys.add_doctor_alerts_updated),
+        backgroundColor: Colors.green.withOpacity(0.2),
+        snackPosition: SnackPosition.TOP,
+      );
+      update();
     }
-    if (specialtyController.text.isEmpty) {
-      Get.snackbar('خطأ', 'يرجى اختيار تخصص الطبيب');
-      return false;
-    }
-    if (licenseController.text.isEmpty) {
-      Get.snackbar('خطأ', 'يرجى إدخال رقم الترخيص');
-      return false;
-    }
-    if (phoneController.text.isEmpty) {
-      Get.snackbar('خطأ', 'يرجى إدخال رقم الهاتف');
-      return false;
-    }
-    return true;
   }
 
-  // إلغاء العملية
-  void cancel() {
-    Get.back();
+  void _addNewDoctor(DoctorModel doctor) {
+    doctorsList.add(doctor);
+    Get.snackbar(
+      tr(LocaleKeys.add_doctor_alerts_success),
+      tr(LocaleKeys.add_doctor_alerts_saved),
+      backgroundColor: Colors.green.withOpacity(0.2),
+      snackPosition: SnackPosition.TOP,
+    );
+    _clearForm();
+  }
+
+  // ===========================================================================
+  // Reset Logic
+  // ===========================================================================
+
+  void _clearForm() {
+    nameArController.clear();
+    nameEnController.clear();
+    feeController.clear();
+    licenseController.clear();
+    experienceController.clear();
+    aboutController.clear();
+    phoneController.clear();
+    emailController.clear();
+
+    selectedImage.value = '';
+    selectedSpecialty.value = '';
+    selectedGender.value = 'Male';
+    isAvailable.value = true;
+    isEditMode.value = false;
+    editingDoctorId = null;
+
+    qualificationFiles.clear();
+    _initializeWorkingHours();
+  }
+
+  // ===========================================================================
+  // Search Logic
+  // ===========================================================================
+
+  void searchDoctors(String query) {
+    if (query.isEmpty) {
+      searchResults.assignAll(doctorsList);
+    } else {
+      searchResults.assignAll(
+        doctorsList.where((doc) {
+          final nameEn = doc.nameEn.toLowerCase();
+          final nameAr = doc.nameAr;
+          final q = query.toLowerCase();
+          return nameEn.contains(q) || nameAr.contains(q);
+        }).toList(),
+      );
+    }
   }
 }

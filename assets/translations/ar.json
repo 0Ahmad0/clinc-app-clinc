@@ -179,70 +179,128 @@
     "complete_now": "استكمال الملف"
   },
   "doctors_page": {
-    "title": "الأطباء",
+    "title": "قائمة الأطباء",
+    "search_hint": "ابحث باسم الطبيب أو التخصص...",
     "add_button": "إضافة طبيب جديد",
-    "registered_title": "الأطباء المسجلين",
+    "no_doctors": "لا يوجد أطباء مضافين حالياً",
+    "no_doctors_desc": "يمكنك إضافة طبيب جديد بالضغط على الزر في الأسفل",
     "status": {
       "active": "نشط",
-      "inactive": "غير نشط"
+      "inactive": "غير متاح"
+    }
+  },
+  "doctor_details": {
+    "sections": {
+      "basic_info": "المعلومات الأساسية",
+      "contact": "بيانات الاتصال",
+      "about": "نبذة عن الطبيب",
+      "qualifications": "المؤهلات العلمية",
+      "working_hours": "أوقات الدوام"
     },
-    "details": "تفاصيل الطبيب"
+    "labels": {
+      "license": "رقم الترخيص",
+      "phone": "رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "experience": "سنوات الخبرة",
+      "experience_years": "{} سنوات",
+      "fee": "الكشفية"
+    },
+    "actions": {
+      "edit": "تعديل البيانات",
+      "delete": "حذف الطبيب",
+      "call": "اتصال"
+    },
+    "dialogs": {
+      "delete_title": "تأكيد الحذف",
+      "delete_msg": "هل أنت متأكد من حذف {}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "حذف",
+      "cancel": "تراجع"
+    }
   },
   "add_doctor": {
     "title": "إضافة طبيب جديد",
-    "buttons": {
-      "cancel": "إلغاء",
-      "save": "حفظ"
-    },
+    "edit_title": "تعديل بيانات الطبيب",
     "labels": {
-      "full_name": "الاسم الكامل",
-      "name_hint": "أدخل اسم الطبيب الكامل",
+      "name_ar": "الاسم (بالعربية)",
+      "name_en": "الاسم (بالانجليزية)",
+      "name_hint": "أدخل الاسم هنا",
       "specialty": "التخصص",
       "specialty_hint": "اختر تخصص الطبيب",
-      "gender": "الجنس",
-      "gmale": "ذكر",
-      "gfemale": "أنثى",
-      "license": "رقم الترخيص",
-      "license_hint": "أدخل رقم الترخيص الطبي",
-      "hospital": "المستشفى/العيادة",
-      "hospital_hint": "أدخل اسم المستشفى أو العيادة",
+      "fee": "أتعاب الكشفية",
+      "fee_hint": "مثال: 50.0",
+      "license": "رقم الترخيص الطبي",
       "phone": "رقم الهاتف",
-      "phone_hint": "أدخل رقم الهاتف",
-      "email": "البريد الإلكتروني",
-      "email_hint": "أدخل البريد الإلكتروني",
       "experience": "سنوات الخبرة",
-      "experience_hint": "أدخل عدد سنوات الخبرة",
-      "qualifications": "المؤهلات العلمية",
-      "qualification_hint": "أضف مؤهل علمي",
-      "add_qualification": "إضافة مؤهل",
       "about": "نبذة عن الطبيب",
-      "about_hint": "أضف معلومات عن الطبيب",
-      "active": "الحالة",
-      "work_hours": "ساعات العمل",
-      "image_title": "صورة الطبيب",
-      "upload_drag_drop": "اسحب وأفلت الصورة هنا",
-      "upload_or": "أو",
-      "upload_browse": "تصفح الملفات",
-      "upload_support": "يدعم JPG, PNG"
+      "email": "البريد الإلكتروني",
+      "qualification_files": "المؤهلات العلمية (PDF)",
+      "availability": "حالة التوافر (متاح للعمل)"
     },
-    "schedule": {
-      "day_off": "عطلة",
-      "days": {
-        "mon": "الإثنين",
-        "tue": "الثلاثاء",
-        "wed": "الأربعاء",
-        "thu": "الخميس",
-        "fri": "الجمعة",
-        "sat": "السبت",
-        "sun": "الأحد"
-      }
+    "buttons": {
+      "save": "حفظ البيانات",
+      "update": "تحديث المعلومات",
+      "cancel": "إلغاء",
+      "upload_files": "رفع ملفات"
     },
-    "messages": {
-      "success": "تم إضافة الطبيب بنجاح",
-      "error": "حدث خطأ أثناء إضافة الطبيب"
+    "validations": {
+      "required": "هذا الحقل مطلوب",
+      "select_specialty": "يرجى اختيار التخصص"
+    },
+    "alerts": {
+      "success": "تم بنجاح",
+      "saved": "تم حفظ بيانات الطبيب بنجاح",
+      "updated": "تم تعديل بيانات الطبيب بنجاح"
     }
   },
-
+  "working_hours": {
+    "title": "جدول العمل الأسبوعي",
+    "day_off": "عطلة",
+    "work_day": "عمل",
+    "from": "من",
+    "to": "إلى",
+    "days": {
+      "Saturday": "السبت",
+      "Sunday": "الأحد",
+      "Monday": "الاثنين",
+      "Tuesday": "الثلاثاء",
+      "Wednesday": "الأربعاء",
+      "Thursday": "الخميس",
+      "Friday": "الجمعة"
+    }
+  },
+  "services_page": {
+    "title": "قائمة الخدمات والتخصصات",
+    "tabs": {
+      "services": "باقات التحاليل",
+      "specialties": "العيادات والتخصصات"
+    },
+    "headers": {
+      "active_services": "الباقات المفعلة",
+      "available_specialties": "التخصصات المتاحة"
+    },
+    "add_service": {
+      "title": "إضافة باقة جديدة",
+      "select_category": "اختر نوع الباقة",
+      "hint_category": "مثال: تحاليل الهرمونات، الفيتامينات...",
+      "price": "السعر",
+      "notes": "ملاحظات للطبيب/المخبر",
+      "save_btn": "حفظ الباقة",
+      "enable_test": "تفعيل التحليل"
+    },
+    "add_specialty": {
+      "title": "إضافة تخصص جديد",
+      "name_hint": "اختر التخصص",
+      "icon_select": "أيقونة التخصص",
+      "color_select": "لون التمييز",
+      "save_btn": "إضافة"
+    },
+    "categories": {
+      "Hormones": "باقة الهرمونات الشاملة",
+      "Pre_marriage": "فحوصات الزواج",
+      "Vitamins": "باقة الفيتامينات",
+      "General": "فحوصات عامة"
+    }
+  },
   "services_module": {
     "title": "إدارة الخدمات",
     "tabs": {
@@ -373,7 +431,6 @@
   },
   "reports": {
     "title": "التقارير",
-    "actions_save": "",
     "filters": {
       "type": "نوع التقرير",
       "range": "الفترة",
@@ -469,5 +526,35 @@
     "confirm": "تأكيد",
     "validation_required": "هذا الحقل مطلوب",
     "validation_invalid_email": "البريد الإلكتروني غير صالح"
+  },
+  "services": {
+    "title": "إدارة الخدمات",
+    "tabs": {
+      "lab_tests": "التحاليل الطبية",
+      "specialties": "التخصصات الطبية"
+    },
+    "search_placeholder": "ابحث عن خدمة...",
+    "lab_tests": {
+      "header": "تحاليل الدم",
+      "selected_count": "تحاليل مختارة",
+      "save_all": "حفظ الكل",
+      "cbc": "صورة دم كاملة",
+      "lft": "وظائف كبد",
+      "kft": "وظائف كلى",
+      "tft": "وظائف غدة درقية",
+      "bs": "سكر دم"
+    },
+    "specialties": {
+      "header": "الأقسام الرئيسية",
+      "count": "{{count}} قسم",
+      "hematology": "أمراض الدم",
+      "biochemistry": "الكيمياء الحيوية",
+      "hormones": "الهرمونات",
+      "immunology": "المناعة",
+      "microbiology": "الميكروبيولوجي",
+      "urinalysis": "تحليل البول",
+      "pathology": "باثولوجي",
+      "add_custom": "إضافة قسم مخصص"
+    }
   }
 }

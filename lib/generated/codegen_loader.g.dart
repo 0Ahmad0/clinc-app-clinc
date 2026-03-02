@@ -195,67 +195,126 @@ class CodegenLoader extends AssetLoader{
     "complete_now": "استكمال الملف"
   },
   "doctors_page": {
-    "title": "الأطباء",
+    "title": "قائمة الأطباء",
+    "search_hint": "ابحث باسم الطبيب أو التخصص...",
     "add_button": "إضافة طبيب جديد",
-    "registered_title": "الأطباء المسجلين",
+    "no_doctors": "لا يوجد أطباء مضافين حالياً",
+    "no_doctors_desc": "يمكنك إضافة طبيب جديد بالضغط على الزر في الأسفل",
     "status": {
       "active": "نشط",
-      "inactive": "غير نشط"
+      "inactive": "غير متاح"
+    }
+  },
+  "doctor_details": {
+    "sections": {
+      "basic_info": "المعلومات الأساسية",
+      "contact": "بيانات الاتصال",
+      "about": "نبذة عن الطبيب",
+      "qualifications": "المؤهلات العلمية",
+      "working_hours": "أوقات الدوام"
     },
-    "details": "تفاصيل الطبيب"
+    "labels": {
+      "license": "رقم الترخيص",
+      "phone": "رقم الهاتف",
+      "email": "البريد الإلكتروني",
+      "experience": "سنوات الخبرة",
+      "experience_years": "{} سنوات",
+      "fee": "الكشفية"
+    },
+    "actions": {
+      "edit": "تعديل البيانات",
+      "delete": "حذف الطبيب",
+      "call": "اتصال"
+    },
+    "dialogs": {
+      "delete_title": "تأكيد الحذف",
+      "delete_msg": "هل أنت متأكد من حذف {}؟ لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "حذف",
+      "cancel": "تراجع"
+    }
   },
   "add_doctor": {
     "title": "إضافة طبيب جديد",
-    "buttons": {
-      "cancel": "إلغاء",
-      "save": "حفظ"
-    },
+    "edit_title": "تعديل بيانات الطبيب",
     "labels": {
-      "full_name": "الاسم الكامل",
-      "name_hint": "أدخل اسم الطبيب الكامل",
+      "name_ar": "الاسم (بالعربية)",
+      "name_en": "الاسم (بالانجليزية)",
+      "name_hint": "أدخل الاسم هنا",
       "specialty": "التخصص",
       "specialty_hint": "اختر تخصص الطبيب",
-      "gender": "الجنس",
-      "gmale": "ذكر",
-      "gfemale": "أنثى",
-      "license": "رقم الترخيص",
-      "license_hint": "أدخل رقم الترخيص الطبي",
-      "hospital": "المستشفى/العيادة",
-      "hospital_hint": "أدخل اسم المستشفى أو العيادة",
+      "fee": "أتعاب الكشفية",
+      "fee_hint": "مثال: 50.0",
+      "license": "رقم الترخيص الطبي",
       "phone": "رقم الهاتف",
-      "phone_hint": "أدخل رقم الهاتف",
-      "email": "البريد الإلكتروني",
-      "email_hint": "أدخل البريد الإلكتروني",
       "experience": "سنوات الخبرة",
-      "experience_hint": "أدخل عدد سنوات الخبرة",
-      "qualifications": "المؤهلات العلمية",
-      "qualification_hint": "أضف مؤهل علمي",
-      "add_qualification": "إضافة مؤهل",
       "about": "نبذة عن الطبيب",
-      "about_hint": "أضف معلومات عن الطبيب",
-      "active": "الحالة",
-      "work_hours": "ساعات العمل",
-      "image_title": "صورة الطبيب",
-      "upload_drag_drop": "اسحب وأفلت الصورة هنا",
-      "upload_or": "أو",
-      "upload_browse": "تصفح الملفات",
-      "upload_support": "يدعم JPG, PNG"
+      "email": "البريد الإلكتروني",
+      "qualification_files": "المؤهلات العلمية (PDF)",
+      "availability": "حالة التوافر (متاح للعمل)"
     },
-    "schedule": {
-      "day_off": "عطلة",
-      "days": {
-        "mon": "الإثنين",
-        "tue": "الثلاثاء",
-        "wed": "الأربعاء",
-        "thu": "الخميس",
-        "fri": "الجمعة",
-        "sat": "السبت",
-        "sun": "الأحد"
-      }
+    "buttons": {
+      "save": "حفظ البيانات",
+      "update": "تحديث المعلومات",
+      "cancel": "إلغاء",
+      "upload_files": "رفع ملفات"
     },
-    "messages": {
-      "success": "تم إضافة الطبيب بنجاح",
-      "error": "حدث خطأ أثناء إضافة الطبيب"
+    "validations": {
+      "required": "هذا الحقل مطلوب",
+      "select_specialty": "يرجى اختيار التخصص"
+    },
+    "alerts": {
+      "success": "تم بنجاح",
+      "saved": "تم حفظ بيانات الطبيب بنجاح",
+      "updated": "تم تعديل بيانات الطبيب بنجاح"
+    }
+  },
+  "working_hours": {
+    "title": "جدول العمل الأسبوعي",
+    "day_off": "عطلة",
+    "work_day": "عمل",
+    "from": "من",
+    "to": "إلى",
+    "days": {
+      "Saturday": "السبت",
+      "Sunday": "الأحد",
+      "Monday": "الاثنين",
+      "Tuesday": "الثلاثاء",
+      "Wednesday": "الأربعاء",
+      "Thursday": "الخميس",
+      "Friday": "الجمعة"
+    }
+  },
+  "services_page": {
+    "title": "قائمة الخدمات والتخصصات",
+    "tabs": {
+      "services": "باقات التحاليل",
+      "specialties": "العيادات والتخصصات"
+    },
+    "headers": {
+      "active_services": "الباقات المفعلة",
+      "available_specialties": "التخصصات المتاحة"
+    },
+    "add_service": {
+      "title": "إضافة باقة جديدة",
+      "select_category": "اختر نوع الباقة",
+      "hint_category": "مثال: تحاليل الهرمونات، الفيتامينات...",
+      "price": "السعر",
+      "notes": "ملاحظات للطبيب/المخبر",
+      "save_btn": "حفظ الباقة",
+      "enable_test": "تفعيل التحليل"
+    },
+    "add_specialty": {
+      "title": "إضافة تخصص جديد",
+      "name_hint": "اختر التخصص",
+      "icon_select": "أيقونة التخصص",
+      "color_select": "لون التمييز",
+      "save_btn": "إضافة"
+    },
+    "categories": {
+      "Hormones": "باقة الهرمونات الشاملة",
+      "Pre_marriage": "فحوصات الزواج",
+      "Vitamins": "باقة الفيتامينات",
+      "General": "فحوصات عامة"
     }
   },
   "services_module": {
@@ -388,7 +447,6 @@ class CodegenLoader extends AssetLoader{
   },
   "reports": {
     "title": "التقارير",
-    "actions_save": "",
     "filters": {
       "type": "نوع التقرير",
       "range": "الفترة",
@@ -484,6 +542,36 @@ class CodegenLoader extends AssetLoader{
     "confirm": "تأكيد",
     "validation_required": "هذا الحقل مطلوب",
     "validation_invalid_email": "البريد الإلكتروني غير صالح"
+  },
+  "services": {
+    "title": "إدارة الخدمات",
+    "tabs": {
+      "lab_tests": "التحاليل الطبية",
+      "specialties": "التخصصات الطبية"
+    },
+    "search_placeholder": "ابحث عن خدمة...",
+    "lab_tests": {
+      "header": "تحاليل الدم",
+      "selected_count": "تحاليل مختارة",
+      "save_all": "حفظ الكل",
+      "cbc": "صورة دم كاملة",
+      "lft": "وظائف كبد",
+      "kft": "وظائف كلى",
+      "tft": "وظائف غدة درقية",
+      "bs": "سكر دم"
+    },
+    "specialties": {
+      "header": "الأقسام الرئيسية",
+      "count": "{{count}} قسم",
+      "hematology": "أمراض الدم",
+      "biochemistry": "الكيمياء الحيوية",
+      "hormones": "الهرمونات",
+      "immunology": "المناعة",
+      "microbiology": "الميكروبيولوجي",
+      "urinalysis": "تحليل البول",
+      "pathology": "باثولوجي",
+      "add_custom": "إضافة قسم مخصص"
+    }
   }
 };
 static const Map<String,dynamic> _en = {
@@ -667,67 +755,126 @@ static const Map<String,dynamic> _en = {
     "complete_now": "Complete Now"
   },
   "doctors_page": {
-    "title": "Doctors",
+    "title": "Doctors List",
+    "search_hint": "Search by doctor name or specialty...",
     "add_button": "Add New Doctor",
-    "registered_title": "Registered Doctors",
+    "no_doctors": "No doctors added yet",
+    "no_doctors_desc": "You can add a new doctor by pressing the button below",
     "status": {
       "active": "Active",
-      "inactive": "Inactive"
+      "inactive": "Unavailable"
+    }
+  },
+  "doctor_details": {
+    "sections": {
+      "basic_info": "Basic Information",
+      "contact": "Contact Information",
+      "about": "About the Doctor",
+      "qualifications": "Qualifications",
+      "working_hours": "Working Hours"
     },
-    "details": "Doctor Details"
+    "labels": {
+      "license": "License Number",
+      "phone": "Phone Number",
+      "email": "Email Address",
+      "experience": "Years of Experience",
+      "experience_years": "{} years",
+      "fee": "Consultation Fee"
+    },
+    "actions": {
+      "edit": "Edit Data",
+      "delete": "Delete Doctor",
+      "call": "Call"
+    },
+    "dialogs": {
+      "delete_title": "Confirm Deletion",
+      "delete_msg": "Are you sure you want to delete {}? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
   },
   "add_doctor": {
     "title": "Add New Doctor",
-    "buttons": {
-      "cancel": "Cancel",
-      "save": "Save"
-    },
+    "edit_title": "Edit Doctor Information",
     "labels": {
-      "full_name": "Full Name",
-      "name_hint": "Enter doctor's full name",
+      "name_ar": "Name (Arabic)",
+      "name_en": "Name (English)",
+      "name_hint": "Enter name here",
       "specialty": "Specialty",
       "specialty_hint": "Select doctor's specialty",
-      "gender": "Gender",
-      "gmale": "Male",
-      "gfemale": "Female",
-      "license": "License Number",
-      "license_hint": "Enter medical license number",
-      "hospital": "Hospital/Clinic",
-      "hospital_hint": "Enter hospital or clinic name",
+      "fee": "Consultation Fee",
+      "fee_hint": "Example: 50.0",
+      "license": "Medical License Number",
       "phone": "Phone Number",
-      "phone_hint": "Enter phone number",
-      "email": "Email Address",
-      "email_hint": "Enter email address",
       "experience": "Years of Experience",
-      "experience_hint": "Enter number of years of experience",
-      "qualifications": "Academic Qualifications",
-      "qualification_hint": "Add academic qualification",
-      "add_qualification": "Add Qualification",
       "about": "About the Doctor",
-      "about_hint": "Add information about the doctor",
-      "active": "Status",
-      "work_hours": "Working Hours",
-      "image_title": "Doctor's Photo",
-      "upload_drag_drop": "Drag and drop image here",
-      "upload_or": "or",
-      "upload_browse": "Browse files",
-      "upload_support": "Supports JPG, PNG"
+      "email": "Email Address",
+      "qualification_files": "Qualifications (PDF)",
+      "availability": "Availability Status (Available for Work)"
     },
-    "schedule": {
-      "day_off": "Day Off",
-      "days": {
-        "mon": "Monday",
-        "tue": "Tuesday",
-        "wed": "Wednesday",
-        "thu": "Thursday",
-        "fri": "Friday",
-        "sat": "Saturday",
-        "sun": "Sunday"
-      }
+    "buttons": {
+      "save": "Save Data",
+      "update": "Update Information",
+      "cancel": "Cancel",
+      "upload_files": "Upload Files"
     },
-    "messages": {
-      "success": "Doctor added successfully",
-      "error": "An error occurred while adding the doctor"
+    "validations": {
+      "required": "This field is required",
+      "select_specialty": "Please select a specialty"
+    },
+    "alerts": {
+      "success": "Success",
+      "saved": "Doctor data has been saved successfully",
+      "updated": "Doctor data has been updated successfully"
+    }
+  },
+  "working_hours": {
+    "title": "Weekly Work Schedule",
+    "day_off": "Day Off",
+    "work_day": "Working Day",
+    "from": "From",
+    "to": "To",
+    "days": {
+      "Saturday": "Saturday",
+      "Sunday": "Sunday",
+      "Monday": "Monday",
+      "Tuesday": "Tuesday",
+      "Wednesday": "Wednesday",
+      "Thursday": "Thursday",
+      "Friday": "Friday"
+    }
+  },
+  "services_page": {
+    "title": "Services & Specialties List",
+    "tabs": {
+      "services": "Test Packages",
+      "specialties": "Clinics & Specialties"
+    },
+    "headers": {
+      "active_services": "Active Packages",
+      "available_specialties": "Available Specialties"
+    },
+    "add_service": {
+      "title": "Add New Package",
+      "select_category": "Select Package Type",
+      "hint_category": "Example: Hormones, Vitamins...",
+      "price": "Price",
+      "notes": "Notes for Doctor/Lab",
+      "save_btn": "Save Package",
+      "enable_test": "Enable Test"
+    },
+    "add_specialty": {
+      "title": "Add New Specialty",
+      "name_hint": "Select Specialty",
+      "icon_select": "Specialty Icon",
+      "color_select": "Accent Color",
+      "save_btn": "Add"
+    },
+    "categories": {
+      "Hormones": "Comprehensive Hormone Package",
+      "Pre_marriage": "Pre-marital Checkups",
+      "Vitamins": "Vitamins Package",
+      "General": "General Checkups"
     }
   },
   "services_module": {
@@ -954,6 +1101,36 @@ static const Map<String,dynamic> _en = {
     "confirm": "Confirm",
     "validation_required": "This field is required",
     "validation_invalid_email": "Invalid email address"
+  },
+  "services": {
+    "title": "Services Management",
+    "tabs": {
+      "lab_tests": "Medical Tests",
+      "specialties": "Medical Specialties"
+    },
+    "search_placeholder": "Search for a service...",
+    "lab_tests": {
+      "header": "Blood Tests",
+      "selected_count": "Selected Tests",
+      "save_all": "Save All",
+      "cbc": "CBC (Complete Blood Count)",
+      "lft": "Liver Function Test",
+      "kft": "Kidney Function Test",
+      "tft": "Thyroid Function Test",
+      "bs": "Blood Sugar"
+    },
+    "specialties": {
+      "header": "Main Departments",
+      "count": "{} Departments",
+      "hematology": "Hematology",
+      "biochemistry": "Biochemistry",
+      "hormones": "Hormones",
+      "immunology": "Immunology",
+      "microbiology": "Microbiology",
+      "urinalysis": "Urinalysis",
+      "pathology": "Pathology",
+      "add_custom": "Add Custom Specialty"
+    }
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"ar": _ar, "en": _en};

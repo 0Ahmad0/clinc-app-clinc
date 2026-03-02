@@ -1,328 +1,350 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../../../app/core/widgets/app_text_filed_widget.dart';
+import 'dart:io';
+
 import '../../../generated/locale_keys.g.dart';
 import '../controllers/add_doctor_controller.dart';
-import 'widgets/form_label_widget.dart';
-import 'widgets/gender_selector_widget.dart';
-import 'widgets/image_upload_widget.dart';
-import 'widgets/work_hours_list_item.dart';
-import 'widgets/qualification_chip.dart';
 
 class AddDoctorView extends GetView<AddDoctorController> {
   const AddDoctorView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
     return Scaffold(
-      backgroundColor: cs.surface,
-      bottomNavigationBar: _buildBottomButtons(cs, theme),
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          // 1. AppBar
-          _buildAppBar(cs, theme),
-
-          // 2. محتوى الفورم
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                // الصورة الشخصية
-                const Center(child: ImageUploadWidget()),
-                30.verticalSpace,
-
-                // الاسم الكامل
-                FormLabelWidget(label: LocaleKeys.add_doctor_labels_full_name),
-                AppTextFormFieldWidget(
-                  controller: controller.nameController,
-                  hintText: tr(LocaleKeys.add_doctor_labels_name_hint),
-                ),
-                20.verticalSpace,
-
-                // التخصص
-                FormLabelWidget(label: LocaleKeys.add_doctor_labels_specialty),
-                _buildSpecialtyDropdown(cs, theme),
-                20.verticalSpace,
-
-                // الجنس
-                FormLabelWidget(label: LocaleKeys.add_doctor_labels_gender),
-                const GenderSelectorWidget(),
-                20.verticalSpace,
-
-                // رقم الترخيص
-                FormLabelWidget(label: LocaleKeys.add_doctor_labels_license),
-                AppTextFormFieldWidget(
-                  controller: controller.licenseController,
-                  hintText: tr(LocaleKeys.add_doctor_labels_license_hint),
-                ),
-                20.verticalSpace,
-
-                // المستشفى
-                FormLabelWidget(label: LocaleKeys.add_doctor_labels_hospital),
-                AppTextFormFieldWidget(
-                  controller: controller.hospitalController,
-                  hintText: tr(LocaleKeys.add_doctor_labels_hospital_hint),
-                ),
-                20.verticalSpace,
-
-                // رقم الهاتف
-                FormLabelWidget(label: LocaleKeys.add_doctor_labels_phone),
-                AppTextFormFieldWidget(
-                  controller: controller.phoneController,
-                  hintText: tr(LocaleKeys.add_doctor_labels_phone_hint),
-                  keyboardType: TextInputType.phone,
-                ),
-                20.verticalSpace,
-
-                // البريد الإلكتروني
-                FormLabelWidget(label: LocaleKeys.add_doctor_labels_email),
-                AppTextFormFieldWidget(
-                  controller: controller.emailController,
-                  hintText: tr(LocaleKeys.add_doctor_labels_email_hint),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                20.verticalSpace,
-
-                // سنوات الخبرة
-                FormLabelWidget(label: LocaleKeys.add_doctor_labels_experience),
-                AppTextFormFieldWidget(
-                  controller: controller.experienceController,
-                  hintText: tr(LocaleKeys.add_doctor_labels_experience_hint),
-                  keyboardType: TextInputType.number,
-                ),
-                20.verticalSpace,
-
-                // المؤهلات العلمية
-                FormLabelWidget(label: LocaleKeys.add_doctor_labels_qualifications),
-                _buildQualificationsSection(cs, theme),
-                20.verticalSpace,
-
-                // نبذة عن الطبيب
-                FormLabelWidget(label: LocaleKeys.add_doctor_labels_about),
-                AppTextFormFieldWidget(
-                  controller: controller.aboutController,
-                  hintText: tr(LocaleKeys.add_doctor_labels_about_hint),
-                  maxLines: 4,
-                ),
-                20.verticalSpace,
-
-                // حالة الطبيب (نشط/غير نشط)
-                _buildActiveToggle(cs, theme),
-                30.verticalSpace,
-
-                // عنوان ساعات العمل
-                _buildWorkHoursTitle(theme, cs),
-              ]),
-            ),
+      appBar: AppBar(
+        title: Obx(
+              () => Text(
+            controller.isEditMode.value
+                ? tr(LocaleKeys.add_doctor_edit_title)
+                : tr(LocaleKeys.add_doctor_title),
           ),
-
-          // 3. قائمة ساعات العمل
-          _buildWorkHoursList(),
-        ],
+        ),
+        centerTitle: true,
       ),
-    );
-  }
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.w),
+        child: Form(
+          key: controller.formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // --- 1. Image Picker ---
+              Center(
+                child: GestureDetector(
+                  onTap: controller.pickImage,
+                  child: Obx(() {
+                    return CircleAvatar(
+                      radius: 50.r,
+                      backgroundColor: Colors.grey[200],
+                      backgroundImage: controller.selectedImage.value.isNotEmpty
+                          ? FileImage(File(controller.selectedImage.value))
+                          : null,
+                      child: controller.selectedImage.value.isEmpty
+                          ? Icon(
+                        Icons.camera_alt,
+                        size: 30.sp,
+                        color: Colors.grey,
+                      )
+                          : null,
+                    );
+                  }),
+                ),
+              ),
+              SizedBox(height: 20.h),
 
-  Widget _buildAppBar(ColorScheme cs, ThemeData theme) {
-    return SliverAppBar(
-      pinned: true,
-      backgroundColor: cs.surface,
-      elevation: 0,
-      centerTitle: true,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios, color: cs.onSurface, size: 20.sp),
-        onPressed: () => Get.back(),
-      ),
-      title: Text(
-        tr(LocaleKeys.add_doctor_title),
-        style: theme.textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: cs.onSurface,
+              // --- 2. Basic Info ---
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildTextField(
+                      controller.nameArController,
+                      tr(LocaleKeys.add_doctor_labels_name_ar),
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: _buildTextField(
+                      controller.nameEnController,
+                      tr(LocaleKeys.add_doctor_labels_name_en),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.h),
+
+              // Specialty Dropdown
+              Obx(
+                    () => DropdownButtonFormField<String>(
+                  decoration: _inputDecoration(
+                    tr(LocaleKeys.add_doctor_labels_specialty),
+                  ),
+                  hint: Text(tr(LocaleKeys.add_doctor_labels_specialty_hint)),
+                  value: controller.selectedSpecialty.value.isEmpty
+                      ? null
+                      : controller.selectedSpecialty.value,
+                  items: controller.specialties.map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (val) => controller.selectedSpecialty.value = val!,
+                  validator: (val) => val == null
+                      ? tr(LocaleKeys.add_doctor_validations_required)
+                      : null,
+                ),
+              ),
+
+              SizedBox(height: 10.h),
+              _buildTextField(
+                controller.feeController,
+                tr(LocaleKeys.add_doctor_labels_fee),
+                isNumber: true,
+              ),
+
+              // --- 3. Professional Info ---
+              SizedBox(height: 20.h),
+              _buildTextField(
+                controller.licenseController,
+                tr(LocaleKeys.add_doctor_labels_license),
+              ),
+              SizedBox(height: 10.h),
+              _buildTextField(
+                controller.experienceController,
+                tr(LocaleKeys.add_doctor_labels_experience),
+                isNumber: true,
+              ),
+              SizedBox(height: 10.h),
+              _buildTextField(
+                controller.aboutController,
+                tr(LocaleKeys.add_doctor_labels_about),
+                maxLines: 3,
+              ),
+
+              // --- 4. Qualification Files (PDFs) ---
+              SizedBox(height: 20.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    tr(LocaleKeys.add_doctor_labels_qualification_files),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  TextButton.icon(
+                    onPressed: controller.pickPDFs,
+                    icon: Icon(Icons.attach_file),
+                    label: Text(tr(LocaleKeys.add_doctor_buttons_upload_files)),
+                  ),
+                ],
+              ),
+
+              // عرض الملفات المختارة
+              Obx(() => Column(
+                children: controller.qualificationFiles.asMap().entries.map((entry) {
+                  int idx = entry.key;
+                  String path = entry.value;
+                  return Card(
+                    child: ListTile(
+                      leading: Icon(Icons.picture_as_pdf, color: Colors.red),
+                      title: Text(path.split('/').last, maxLines: 1, overflow: TextOverflow.ellipsis),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => controller.removeFile(idx),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              )),
+
+
+              // --- 5. Working Hours Section ---
+              SizedBox(height: 20.h),
+              Text(
+                tr(LocaleKeys.working_hours_title),
+                style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).primaryColor
+                ),
+              ),
+              SizedBox(height: 10.h),
+
+              Obx(() => Column(
+                children: List.generate(controller.workingHoursList.length, (index) {
+                  var workDay = controller.workingHoursList[index];
+                  // Assuming "working_hours.days.Saturday" key format exists
+                  String dayNameKey = "working_hours.days.${workDay.day}";
+                  // Fallback to English day name if translation fails/is missing for now to prevent crash
+                  String dayName = tr(dayNameKey);
+                  if (dayName == dayNameKey) dayName = workDay.day;
+
+                  return Card(
+                    margin: EdgeInsets.only(bottom: 8.h),
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                dayName,
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    workDay.isDayOff
+                                        ? tr(LocaleKeys.working_hours_day_off)
+                                        : tr(LocaleKeys.working_hours_work_day),
+                                    style: TextStyle(
+                                        color: workDay.isDayOff ? Colors.red : Colors.green,
+                                        fontSize: 12.sp
+                                    ),
+                                  ),
+                                  Switch(
+                                    value: !workDay.isDayOff,
+                                    activeColor: Colors.green,
+                                    onChanged: (val) => controller.toggleDayOff(index, val),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          if (!workDay.isDayOff) ...[
+                            Divider(),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _buildTimePicker(
+                                    context,
+                                    title: tr(LocaleKeys.working_hours_from),
+                                    time: workDay.startTime ?? "--:--",
+                                    onTap: () => controller.selectTime(context, index, true),
+                                  ),
+                                ),
+                                SizedBox(width: 10.w),
+                                Icon(Icons.arrow_forward, size: 16.sp, color: Colors.grey),
+                                SizedBox(width: 10.w),
+                                Expanded(
+                                  child: _buildTimePicker(
+                                    context,
+                                    title: tr(LocaleKeys.working_hours_to),
+                                    time: workDay.endTime ?? "--:--",
+                                    onTap: () => controller.selectTime(context, index, false),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              )),
+
+
+              // --- 6. Availability ---
+              SizedBox(height: 20.h),
+              Obx(
+                    () => SwitchListTile(
+                  title: Text(tr(LocaleKeys.add_doctor_labels_availability)),
+                  value: controller.isAvailable.value,
+                  onChanged: (val) => controller.isAvailable.value = val,
+                ),
+              ),
+
+              // --- 7. Submit Button ---
+              SizedBox(height: 30.h),
+              SizedBox(
+                width: double.infinity,
+                height: 50.h,
+                child: ElevatedButton(
+                  onPressed: controller.saveDoctor,
+                  child: Obx(
+                        () => Text(
+                      controller.isEditMode.value
+                          ? tr(LocaleKeys.add_doctor_buttons_update)
+                          : tr(LocaleKeys.add_doctor_buttons_save),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 50.h), // Bottom padding
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildBottomButtons(ColorScheme cs, ThemeData theme) {
-    return Obx(() => Container(
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: cs.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: ElevatedButton(
-              onPressed: controller.cancel,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: cs.surfaceVariant,
-                foregroundColor: cs.onSurface,
-                elevation: 0,
-                padding: EdgeInsets.symmetric(vertical: 16.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-              ),
-              child: Text(tr(LocaleKeys.add_doctor_buttons_cancel)),
-            ),
-          ),
-          16.horizontalSpace,
-          Expanded(
-            child: ElevatedButton(
-              onPressed: controller.isLoading.value ? null : controller.saveDoctor,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: cs.primary,
-                foregroundColor: cs.onPrimary,
-                elevation: 0,
-                padding: EdgeInsets.symmetric(vertical: 16.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-              ),
-              child: controller.isLoading.value
-                  ? SizedBox(
-                width: 20.r,
-                height: 20.r,
-                child: CircularProgressIndicator(
-                  color: cs.onPrimary,
-                  strokeWidth: 2,
-                ),
-              )
-                  : Text(
-                tr(LocaleKeys.add_doctor_buttons_save),
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ));
-  }
-
-  Widget _buildSpecialtyDropdown(ColorScheme cs, ThemeData theme) {
-    return DropdownButtonFormField<String>(
-      value: controller.specialtyController.text.isEmpty
-          ? null
-          : controller.specialtyController.text,
-      decoration: InputDecoration(
-        hintText: tr(LocaleKeys.add_doctor_labels_specialty_hint),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: cs.outline.withOpacity(0.3)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: cs.outline.withOpacity(0.3)),
-        ),
-      ),
-      items: controller.specialties
-          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-          .toList(),
-      onChanged: (val) => controller.specialtyController.text = val!,
+  Widget _buildTextField(
+      TextEditingController ctrl,
+      String label, {
+        bool isNumber = false,
+        int maxLines = 1,
+      }) {
+    return TextFormField(
+      controller: ctrl,
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      maxLines: maxLines,
+      validator: (val) =>
+      val!.isEmpty ? tr(LocaleKeys.add_doctor_validations_required) : null,
+      decoration: _inputDecoration(label),
     );
   }
 
-  Widget _buildQualificationsSection(ColorScheme cs, ThemeData theme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
+  InputDecoration _inputDecoration(String hint) {
+    return InputDecoration(
+      labelText: hint,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(10.r)),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+    );
+  }
+
+  Widget _buildTimePicker(BuildContext context, {required String title, required String time, required VoidCallback onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: AppTextFormFieldWidget(
-                controller: controller.qualificationController,
-                hintText: tr(LocaleKeys.add_doctor_labels_qualification_hint),
-              ),
+            Text(
+              title,
+              style: TextStyle(fontSize: 10.sp, color: Colors.grey[600]),
             ),
-            8.horizontalSpace,
-            IconButton(
-              onPressed: controller.addQualification,
-              icon: Icon(Icons.add_circle_outline, color: cs.primary),
-              tooltip: tr(LocaleKeys.add_doctor_labels_add_qualification),
+            SizedBox(height: 4.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  time,
+                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                ),
+                Icon(Icons.access_time, size: 16.sp, color: Theme.of(context).primaryColor),
+              ],
             ),
           ],
         ),
-        12.verticalSpace,
-        Obx(() => Wrap(
-          spacing: 8.w,
-          runSpacing: 8.h,
-          children: List.generate(
-            controller.qualifications.length,
-                (index) => QualificationChip(
-              label: controller.qualifications[index],
-              onDeleted: () => controller.removeQualification(index),
-            ),
-          ),
-        )),
-      ],
-    );
-  }
-
-  Widget _buildActiveToggle(ColorScheme cs, ThemeData theme) {
-    return Obx(() => Row(
-      children: [
-        Text(
-          tr(LocaleKeys.add_doctor_labels_active),
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: cs.onSurface.withOpacity(0.8),
-          ),
-        ),
-        const Spacer(),
-        Switch(
-          value: controller.isActive.value,
-          onChanged: (value) => controller.isActive.value = value,
-          activeColor: cs.primary,
-          activeTrackColor: cs.primary.withOpacity(0.3),
-          inactiveThumbColor: cs.outline,
-          inactiveTrackColor: cs.outlineVariant,
-        ),
-      ],
-    ));
-  }
-
-  Widget _buildWorkHoursTitle(ThemeData theme, ColorScheme cs) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          tr(LocaleKeys.add_doctor_labels_work_hours),
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: cs.onSurface,
-          ),
-        ),
-        10.verticalSpace,
-        Divider(color: cs.outlineVariant),
-      ],
-    );
-  }
-
-  Widget _buildWorkHoursList() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-            (context, index) {
-          return WorkHoursListItem(
-            item: controller.workingHours[index],
-            onToggle: () => controller.toggleDayOff(index),
-            onTimeChanged: (newTime) => controller.changeWorkTime(index, newTime),
-          );
-        },
-        childCount: controller.workingHours.length,
       ),
     );
   }

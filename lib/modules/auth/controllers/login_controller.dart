@@ -24,10 +24,8 @@ class LoginController extends GetxController {
     try {
       isLoading.value = true;
 
-      // محاكاة الاتصال بالسيرفر
       await Future.delayed(const Duration(seconds: 2));
 
-      // TODO: API Call -> Get Token -> Save Token
 
       Get.snackbar(
         tr(LocaleKeys.login_title),
@@ -36,8 +34,7 @@ class LoginController extends GetxController {
         colorText: Colors.green,
       );
 
-      // التوجيه للشاشة الرئيسية
-      // Get.offAllNamed(Routes.HOME);
+      Get.offAllNamed(AppRoutes.mainLayout);
 
     } catch (e) {
       Get.snackbar('Error', e.toString());

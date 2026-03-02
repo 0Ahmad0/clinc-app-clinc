@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../app/data/doctor_model.dart';
+import 'package:easy_localization/easy_localization.dart';
+import '../../../../app/data/doctor_model.dart';
+import 'dart:io';
+
+import '../../../../generated/locale_keys.g.dart';
 
 class DoctorCard extends StatelessWidget {
   final DoctorModel doctor;
@@ -8,63 +12,77 @@ class DoctorCard extends StatelessWidget {
   final VoidCallback onToggleStatus;
 
   const DoctorCard({
-    super.key,
+    Key? key,
     required this.doctor,
     required this.onTap,
     required this.onToggleStatus,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
 
-    return Hero(
-      tag: 'doctor_${doctor.id}',
+    // تحديد اللغة لعرض الاسم المناسب
+    final bool isAr = context.locale.languageCode == 'ar';
+    final String displayName = isAr ? doctor.nameAr : doctor.nameEn;
+
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.h),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
       child: Material(
         color: Colors.transparent,
+        borderRadius: BorderRadius.circular(20.r),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(16.r),
-          child: Container(
-            padding: EdgeInsets.all(16.w),
-            decoration: BoxDecoration(
-              color: cs.surface,
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: cs.outlineVariant.withOpacity(0.2)),
-              boxShadow: [
-                BoxShadow(
-                  color: cs.shadow.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
+          borderRadius: BorderRadius.circular(20.r),
+          child: Padding(
+            padding: EdgeInsets.all(12.w),
             child: Row(
               children: [
-                // صورة الطبيب
+                // 1. الصورة مع مؤشر الحالة
                 Stack(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12.r),
-                      child: Image.network(
-                        // doctor.image ??
-                            'https://th.bing.com/th/id/R.b379902c62bb9c7333c2bbf704d8104c?rik=EALI63%2bLUEhkeA&riu=http%3a%2f%2fwww.texila.us%2fblog%2fwp-content%2fuploads%2f2015%2f09%2fDoctor-Background.jpg&ehk=xT7BPf004Jh0P1KDbK%2f2xsvItxYhv%2bFqwSrNT6Qamvg%3d&risl=&pid=ImgRaw&r=0',
-                        width: 60.r,
-                        height: 60.r,
-                        fit: BoxFit.cover,
+                    Container(
+                      width: 80.r,
+                      height: 80.r,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.r),
+                        color: theme.primaryColor.withOpacity(0.1),
+                        image: doctor.imagePath.isNotEmpty
+                            ? DecorationImage(
+                          image: FileImage(File(doctor.imagePath)),
+                          fit: BoxFit.cover,
+                        )
+                            : const DecorationImage(
+                          image: NetworkImage('https://via.placeholder.com/150'), // Placeholder
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     Positioned(
-                      bottom: 4,
-                      right: 4,
+                      top: 6,
+                      right: 6,
                       child: Container(
-                        width: 12.r,
-                        height: 12.r,
+                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                         decoration: BoxDecoration(
-                          color: doctor.isActive ? Colors.green : Colors.red,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: cs.surface, width: 2),
+                          color: doctor.isAvailable ? Colors.green : Colors.red,
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Text(
+                          doctor.isAvailable
+                              ? tr(LocaleKeys.doctors_page_status_active)
+                              : tr(LocaleKeys.doctors_page_status_inactive),
+                          style: TextStyle(color: Colors.white, fontSize: 8.sp, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
@@ -72,53 +90,62 @@ class DoctorCard extends StatelessWidget {
                 ),
                 16.horizontalSpace,
 
-                // معلومات الطبيب
+                // 2. المعلومات
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        doctor.name,
+                        displayName,
                         style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.sp,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      4.verticalSpace,
-                      Text(
-                        doctor.specialty,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: cs.primary,
+                      6.verticalSpace,
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: theme.primaryColor.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(6.r),
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        child: Text(
+                          doctor.specialty,
+                          style: TextStyle(
+                            color: theme.primaryColor,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                      4.verticalSpace,
-                      Text(
-                        doctor.hospital,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: cs.onSurfaceVariant,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      6.verticalSpace,
+                      Row(
+                        children: [
+                          Icon(Icons.star, color: Colors.amber, size: 14.sp),
+                          4.horizontalSpace,
+                          Text(
+                            "${doctor.yearsOfExperience} ${tr(LocaleKeys.doctor_details_labels_experience)}", // يمكن تعديل النص ليظهر "5 سنوات" فقط
+                            style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-                12.horizontalSpace,
 
-                // زر تبديل الحالة
-                IconButton(
-                  onPressed: onToggleStatus,
-                  icon: Icon(
-                    doctor.isActive
-                        ? Icons.toggle_on_outlined
-                        : Icons.toggle_off_outlined,
-                    color: doctor.isActive ? cs.primary : cs.outline,
-                    size: 30.sp,
-                  ),
-                  tooltip: doctor.isActive ? "تعطيل" : "تفعيل",
+                // 3. زر التبديل السريع
+                Column(
+                  children: [
+                    IconButton(
+                      onPressed: onToggleStatus,
+                      icon: Icon(
+                        doctor.isAvailable ? Icons.check_circle : Icons.do_not_disturb_on,
+                        color: doctor.isAvailable ? Colors.green : Colors.grey,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

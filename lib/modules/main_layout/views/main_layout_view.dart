@@ -8,7 +8,6 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../../dashboard/views/dashboard_view.dart';
 import '../controllers/main_layout_controller.dart';
-// استورد باقي الصفحات (DoctorsView, ServicesView...)
 
 class MainLayoutView extends GetView<MainLayoutController> {
   const MainLayoutView({super.key});
@@ -18,7 +17,6 @@ class MainLayoutView extends GetView<MainLayoutController> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      // الجسم يتغير بناءً على الاندكس
       body: Obx(
         () => IndexedStack(
           index: controller.currentIndex.value,

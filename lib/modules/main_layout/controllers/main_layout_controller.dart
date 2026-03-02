@@ -6,7 +6,7 @@ import '../../../generated/locale_keys.g.dart';
 
 class MainLayoutController extends GetxController {
   // ── State ──
-  final RxInt currentIndex = 3.obs;
+  final RxInt currentIndex = 0.obs;
 
   // هذه القيمة تأتي من User Model المخزن محلياً
   // اجعلها false للتجربة (لمنع الدخول)
