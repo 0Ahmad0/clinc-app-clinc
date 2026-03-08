@@ -31,21 +31,19 @@ extension ReportRangeX on ReportRange {
   }
 }
 
-
-
 class ReportModel {
   final String id;
   final ReportType type;
   final DateTime generatedAt;
 
-  // Summary numbers (flexible)
   final int total;
   final int completed;
   final int pending;
   final int cancelled;
 
-  // PDF (اختياري)
   final String? pdfPathOrUrl;
+
+  final double? totalRevenue;
 
   const ReportModel({
     required this.id,
@@ -56,7 +54,11 @@ class ReportModel {
     required this.pending,
     required this.cancelled,
     this.pdfPathOrUrl,
+    this.totalRevenue,
   });
 
   bool get hasPdf => (pdfPathOrUrl ?? '').isNotEmpty;
+
+  double get completionRate =>
+      total == 0 ? 0 : (completed / total * 100);
 }
