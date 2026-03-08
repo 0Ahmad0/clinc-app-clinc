@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'dart:io';
-
 import '../../../app/data/doctor_model.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../../add_doctor/views/add_doctor_view.dart';
@@ -15,153 +13,51 @@ class DoctorDetailsView extends GetView<DoctorsController> {
   @override
   Widget build(BuildContext context) {
     final DoctorModel doctor = Get.arguments as DoctorModel;
-
-    final theme = Theme.of(context);
-    final isAr = context.locale.languageCode == 'ar';
-    final name = isAr ? doctor.nameAr : doctor.nameEn;
+    final specColor = DoctorsController.specialtyColor(doctor.specialty);
+    final initials = _getInitials(doctor.nameAr);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverAppBar(
-            expandedHeight: 260.h,
-            pinned: true,
-            backgroundColor: theme.primaryColor,
-            elevation: 0,
-            leading: IconButton(
-              icon: Container(
-                padding: EdgeInsets.all(8.r),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.arrow_back, color: Colors.white),
-              ),
-              onPressed: () => Get.back(),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Get.to(() => const AddDoctorView(), arguments: doctor);
-                },
-                icon: Container(
-                  padding: EdgeInsets.all(8.r),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.edit, color: Colors.white),
-                ),
-              ),
-              SizedBox(width: 8.w),
-              // زر الحذف
-              IconButton(
-                onPressed: () => _showDeleteDialog(context, doctor),
-                icon: Container(
-                  padding: EdgeInsets.all(8.r),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.8),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.delete_outline, color: Colors.white),
-                ),
-              ),
-              SizedBox(width: 16.w),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Hero(
-                    tag: 'doctor_img_${doctor.id}',
-                    child: doctor.imagePath.isNotEmpty
-                        ? Image.file(File(doctor.imagePath), fit: BoxFit.cover)
-                        : Image.network(
-                            'https://img.freepik.com/free-photo/doctor-offering-medical-advice_23-2147796524.jpg',
-                            // Placeholder احترافي
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.2),
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.6),
-                        ],
-                      ),
+          _HeroAppBar(
+              doctor: doctor, specColor: specColor, initials: initials),
+          SliverPadding(
+            padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 40.h),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                _StatsRow(doctor: doctor, specColor: specColor),
+                20.verticalSpace,
+                _ContactButtons(doctor: doctor),
+                20.verticalSpace,
+                _SectionCard(
+                  icon: Icons.info_outline_rounded,
+                  title: 'نبذة عن الطبيب',
+                  color: specColor,
+                  child: Text(
+                    doctor.about,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      height: 1.7,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.8),
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-
-          // 2. المحتوى الرئيسي
-          SliverToBoxAdapter(
-            child: Transform.translate(
-              offset: Offset(0, -30.h), // رفع المحتوى ليتداخل مع الصورة
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Column(
-                  children: [
-                    // --- بطاقة المعلومات الرئيسية ---
-                    _buildMainInfoCard(context, doctor, name),
-
-                    SizedBox(height: 20.h),
-
-                    // --- أزرار الاتصال السريع ---
-                    _buildQuickActions(context, doctor),
-
-                    SizedBox(height: 20.h),
-
-                    // --- النبذة ---
-                    _buildSectionHeader(
-                      context,
-                      tr(LocaleKeys.add_doctor_labels_about),
-                      Icons.person_outline,
-                    ),
-                    _buildContentCard(
-                      child: Text(
-                        doctor.about,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.black87,
-                          height: 1.6,
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 20.h),
-
-                    // --- جدول المواعيد (Working Hours) ---
-                    _buildSectionHeader(
-                      context,
-                      tr(LocaleKeys.working_hours_title),
-                      Icons.access_time,
-                    ),
-                    _buildWorkingHoursCard(context, doctor),
-
-                    SizedBox(height: 20.h),
-
-                    // --- الملفات المرفقة (إن وجدت) ---
-                    if (doctor.qualificationFiles.isNotEmpty) ...[
-                      _buildSectionHeader(
-                        context,
-                        tr(LocaleKeys.add_doctor_labels_qualification_files),
-                        Icons.file_present,
-                      ),
-                      _buildDocumentsList(doctor),
-                      SizedBox(height: 30.h),
-                    ],
-                  ],
                 ),
-              ),
+                20.verticalSpace,
+                _SectionCard(
+                  icon: Icons.calendar_month_rounded,
+                  title: 'جدول الدوام الأسبوعي',
+                  color: specColor,
+                  child: _WeeklySchedule(
+                      workingHours: doctor.workingHours,
+                      specColor: specColor),
+                ),
+                20.verticalSpace,
+              ]),
             ),
           ),
         ],
@@ -169,181 +65,418 @@ class DoctorDetailsView extends GetView<DoctorsController> {
     );
   }
 
-  // ===========================================================================
-  // Widgets Components
-  // ===========================================================================
+  String _getInitials(String name) {
+    final parts = name.replaceAll('د.', '').trim().split(' ');
+    if (parts.length >= 2) return '${parts[0][0]}${parts[1][0]}';
+    return parts[0].isNotEmpty ? parts[0][0] : '؟';
+  }
+}
 
-  Widget _buildMainInfoCard(
-    BuildContext context,
-    DoctorModel doctor,
-    String name,
-  ) {
+class _HeroAppBar extends StatelessWidget {
+  final DoctorModel doctor;
+  final Color specColor;
+  final String initials;
+
+  const _HeroAppBar(
+      {required this.doctor, required this.specColor, required this.initials});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return SliverAppBar(
+      expandedHeight: 260.h,
+      pinned: true,
+      backgroundColor: specColor,
+      elevation: 0,
+      leading: Padding(
+        padding: EdgeInsets.all(8.r),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.2),
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                color: Colors.white, size: 18),
+            onPressed: () => Get.back(),
+          ),
+        ),
+      ),
+      actions: [
+        Padding(
+          padding: EdgeInsets.only(left: 4.w),
+          child: Container(
+            margin: EdgeInsets.all(8.r),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.edit_rounded, color: Colors.white, size: 18),
+              onPressed: () =>
+                  Get.to(() => const AddDoctorView(), arguments: doctor),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 8.w),
+          child: Container(
+            margin: EdgeInsets.all(8.r),
+            decoration: BoxDecoration(
+              color: Colors.red.withValues(alpha: 0.3),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.delete_rounded, color: Colors.white, size: 18),
+              onPressed: () => _showDeleteDialog(context, doctor),
+            ),
+          ),
+        ),
+      ],
+      flexibleSpace: FlexibleSpaceBar(
+        collapseMode: CollapseMode.pin,
+        background: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [specColor, specColor.withValues(alpha: 0.7)],
+            ),
+          ),
+          child: Stack(
+            children: [
+              Positioned(
+                top: -40,
+                right: -40,
+                child: Container(
+                  width: 180.r,
+                  height: 180.r,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.06),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: -30,
+                left: -30,
+                child: Container(
+                  width: 140.r,
+                  height: 140.r,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.06),
+                  ),
+                ),
+              ),
+              SafeArea(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      60.verticalSpace,
+                      Container(
+                        width: 80.r,
+                        height: 80.r,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withValues(alpha: 0.25),
+                          border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.5),
+                              width: 3),
+                        ),
+                        child: Center(
+                          child: Text(
+                            initials,
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ),
+                      ),
+                      12.verticalSpace,
+                      Text(
+                        doctor.nameAr,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      6.verticalSpace,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.w, vertical: 6.h),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(
+                              color: Colors.white.withValues(alpha: 0.4)),
+                        ),
+                        child: Text(
+                          doctor.specialty,
+                          style: theme.textTheme.labelLarge?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, DoctorModel doctor) {
+    final ctrl = Get.find<DoctorsController>();
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        title: Row(
+          children: [
+            Icon(Icons.warning_rounded, color: Colors.red, size: 24.sp),
+            8.horizontalSpace,
+            const Text('حذف الطبيب'),
+          ],
+        ),
+        content: Text('هل أنت متأكد من حذف ${doctor.nameAr}؟'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('إلغاء'),
+          ),
+          ElevatedButton(
+            onPressed: () => ctrl.deleteDoctor(doctor.id!),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r)),
+            ),
+            child: const Text('حذف', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatsRow extends StatelessWidget {
+  final DoctorModel doctor;
+  final Color specColor;
+  const _StatsRow({required this.doctor, required this.specColor});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return Row(
+      children: [
+        Expanded(
+          child: _StatCard(
+            value: '${doctor.yearsOfExperience}',
+            label: 'سنة خبرة',
+            icon: Icons.workspace_premium_rounded,
+            color: const Color(0xFFF59E0B),
+            theme: theme,
+            cs: cs,
+          ),
+        ),
+        8.horizontalSpace,
+        Expanded(
+          child: _StatCard(
+            value: '\$${doctor.fee.toInt()}',
+            label: 'رسوم الكشف',
+            icon: Icons.payments_rounded,
+            color: const Color(0xFF16B364),
+            theme: theme,
+            cs: cs,
+          ),
+        ),
+        8.horizontalSpace,
+        Expanded(
+          child: _StatCard(
+            value: doctor.isAvailable ? 'متاح' : 'مشغول',
+            label: 'الحالة',
+            icon: doctor.isAvailable
+                ? Icons.check_circle_rounded
+                : Icons.cancel_rounded,
+            color: doctor.isAvailable
+                ? const Color(0xFF16B364)
+                : const Color(0xFFF04438),
+            theme: theme,
+            cs: cs,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final String value;
+  final String label;
+  final IconData icon;
+  final Color color;
+  final ThemeData theme;
+  final ColorScheme cs;
+
+  const _StatCard({
+    required this.value,
+    required this.label,
+    required this.icon,
+    required this.color,
+    required this.theme,
+    required this.cs,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 8.w),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24.r),
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: color.withValues(alpha: 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         children: [
+          Container(
+            padding: EdgeInsets.all(8.r),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 18.sp),
+          ),
+          8.verticalSpace,
           Text(
-            name,
-            style: TextStyle(
-              fontSize: 22.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+            value,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w900,
+              color: cs.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 8.h),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20.r),
+          4.verticalSpace,
+          Text(
+            label,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: cs.onSurfaceVariant.withValues(alpha: 0.6),
             ),
-            child: Text(
-              doctor.specialty,
-              style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 14.sp,
-              ),
-            ),
-          ),
-          SizedBox(height: 20.h),
-
-          // إحصائيات سريعة (خبرة، سعر، حالة)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatItem(
-                context,
-                value: "${doctor.yearsOfExperience}+",
-                label: tr(LocaleKeys.add_doctor_labels_experience),
-              ),
-              Container(width: 1, height: 40.h, color: Colors.grey[200]),
-              _buildStatItem(
-                context,
-                value: "\$${doctor.fee.toInt()}",
-                label: tr(LocaleKeys.add_doctor_labels_fee),
-              ),
-              Container(width: 1, height: 40.h, color: Colors.grey[200]),
-              _buildStatItem(
-                context,
-                value: doctor.isAvailable
-                    ? tr(LocaleKeys.doctors_page_status_active)
-                    : tr(LocaleKeys.doctors_page_status_inactive),
-                label: "الحالة",
-                textColor: doctor.isAvailable ? Colors.green : Colors.red,
-              ),
-            ],
+            textAlign: TextAlign.center,
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildStatItem(
-    BuildContext context, {
-    required String value,
-    required String label,
-    Color? textColor,
-  }) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-            color: textColor ?? Colors.black87,
-          ),
-        ),
-        SizedBox(height: 4.h),
-        Text(
-          label,
-          style: TextStyle(fontSize: 12.sp, color: Colors.grey[500]),
-        ),
-      ],
-    );
-  }
+class _ContactButtons extends StatelessWidget {
+  final DoctorModel doctor;
+  const _ContactButtons({required this.doctor});
 
-  Widget _buildQuickActions(BuildContext context, DoctorModel doctor) {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return Row(
       children: [
         Expanded(
-          child: _buildActionButton(
-            context,
-            icon: Icons.call,
-            label: "اتصال",
-            color: Colors.green,
-            onTap: () {
-              // Logic to launch dialer
-              Get.snackbar(
-                "اتصال",
-                "جاري الاتصال بـ ${doctor.phone}...",
-                snackPosition: SnackPosition.BOTTOM,
-              );
-            },
+          child: _ContactBtn(
+            icon: Icons.call_rounded,
+            label: 'اتصال',
+            value: doctor.phone,
+            color: const Color(0xFF16B364),
+            theme: theme,
+            cs: cs,
           ),
         ),
-        SizedBox(width: 16.w),
+        12.horizontalSpace,
         Expanded(
-          child: _buildActionButton(
-            context,
-            icon: Icons.email,
-            label: "إيميل",
-            color: Colors.blueAccent,
-            onTap: () {
-              Get.snackbar(
-                "إيميل",
-                "جاري فتح الإيميل لـ ${doctor.email}...",
-                snackPosition: SnackPosition.BOTTOM,
-              );
-            },
+          child: _ContactBtn(
+            icon: Icons.email_rounded,
+            label: 'إيميل',
+            value: doctor.email,
+            color: const Color(0xFF2E90FA),
+            theme: theme,
+            cs: cs,
+          ),
+        ),
+        12.horizontalSpace,
+        Expanded(
+          child: _ContactBtn(
+            icon: Icons.badge_rounded,
+            label: 'الترخيص',
+            value: doctor.licenseNumber,
+            color: const Color(0xFFF59E0B),
+            theme: theme,
+            cs: cs,
           ),
         ),
       ],
     );
   }
+}
 
-  Widget _buildActionButton(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16.r),
+class _ContactBtn extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+  final ThemeData theme;
+  final ColorScheme cs;
+
+  const _ContactBtn({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+    required this.theme,
+    required this.cs,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => Get.snackbar(
+        label,
+        value,
+        backgroundColor: color.withValues(alpha: 0.9),
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+      ),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16.h),
+        padding: EdgeInsets.symmetric(vertical: 14.h),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: color.withOpacity(0.2)),
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(14.r),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
           children: [
             Icon(icon, color: color, size: 22.sp),
-            SizedBox(width: 8.w),
+            6.verticalSpace,
             Text(
               label,
-              style: TextStyle(
+              style: theme.textTheme.labelSmall?.copyWith(
                 color: color,
-                fontWeight: FontWeight.bold,
-                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
@@ -351,193 +484,178 @@ class DoctorDetailsView extends GetView<DoctorsController> {
       ),
     );
   }
+}
 
-  Widget _buildWorkingHoursCard(BuildContext context, DoctorModel doctor) {
+class _SectionCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Color color;
+  final Widget child;
+
+  const _SectionCard({
+    required this.icon,
+    required this.title,
+    required this.color,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(18.w),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.3)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
+            color: cs.shadow.withValues(alpha: 0.05),
+            blurRadius: 16,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
-        children: doctor.workingHours.map((wh) {
-          final isClosed = wh.isDayOff;
-          // جلب اسم اليوم المترجم
-          String dayName = tr("working_hours.days.${wh.day}");
-          // (fallback if translation fails)
-          if (dayName.contains("working_hours")) dayName = wh.day;
-
-          return Padding(
-            padding: EdgeInsets.only(bottom: 12.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 8.r,
-                      height: 8.r,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isClosed ? Colors.red[200] : Colors.green,
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Text(
-                      dayName,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.r),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
-                Text(
-                  isClosed
-                      ? tr(LocaleKeys.working_hours_day_off)
-                      : "${wh.startTime} - ${wh.endTime}",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: isClosed ? Colors.red[300] : Colors.black54,
-                    fontWeight: isClosed ? FontWeight.normal : FontWeight.w600,
-                  ),
+                child: Icon(icon, color: color, size: 18.sp),
+              ),
+              10.horizontalSpace,
+              Text(
+                title,
+                style: theme.textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
                 ),
-              ],
-            ),
-          );
-        }).toList(),
+              ),
+            ],
+          ),
+          16.verticalSpace,
+          child,
+        ],
       ),
     );
   }
+}
 
-  Widget _buildDocumentsList(DoctorModel doctor) {
-    return SizedBox(
-      height: 80.h,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: doctor.qualificationFiles.length,
-        separatorBuilder: (_, __) => SizedBox(width: 12.w),
-        itemBuilder: (context, index) {
-          String path = doctor.qualificationFiles[index];
-          String fileName = path.split('/').last;
+class _WeeklySchedule extends StatelessWidget {
+  final List<WorkingHours> workingHours;
+  final Color specColor;
 
-          return Container(
-            width: 200.w,
-            padding: EdgeInsets.all(12.w),
+  const _WeeklySchedule(
+      {required this.workingHours, required this.specColor});
+
+  static const _dayNames = {
+    'saturday': 'السبت',
+    'sunday': 'الأحد',
+    'monday': 'الاثنين',
+    'tuesday': 'الثلاثاء',
+    'wednesday': 'الأربعاء',
+    'thursday': 'الخميس',
+    'friday': 'الجمعة',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    if (workingHours.isEmpty) {
+      return Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHighest.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.info_outline_rounded,
+                size: 18.sp, color: cs.onSurfaceVariant),
+            8.horizontalSpace,
+            Text(
+              'لا يوجد جدول دوام محدد',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                  color: cs.onSurfaceVariant),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      children: workingHours.map((wh) {
+        final dayName = _dayNames[wh.day] ?? wh.day;
+        final isOff = wh.isDayOff;
+        final rowColor =
+            isOff ? const Color(0xFFF04438) : specColor;
+
+        return Padding(
+          padding: EdgeInsets.only(bottom: 10.h),
+          child: Container(
+            padding:
+                EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: rowColor.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: Colors.grey[200]!),
+              border: Border.all(
+                  color: rowColor.withValues(alpha: 0.15)),
             ),
             child: Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(8.r),
+                  width: 8.r,
+                  height: 8.r,
                   decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(8.r),
+                    shape: BoxShape.circle,
+                    color: rowColor,
                   ),
-                  child: const Icon(Icons.picture_as_pdf, color: Colors.red),
                 ),
-                SizedBox(width: 10.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        fileName,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        "PDF Document",
-                        style: TextStyle(fontSize: 10.sp, color: Colors.grey),
-                      ),
-                    ],
+                10.horizontalSpace,
+                SizedBox(
+                  width: 70.w,
+                  child: Text(
+                    dayName,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: cs.onSurface,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 12.w, vertical: 5.h),
+                  decoration: BoxDecoration(
+                    color: rowColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(
+                        color: rowColor.withValues(alpha: 0.3)),
+                  ),
+                  child: Text(
+                    isOff
+                        ? 'إجازة'
+                        : '${wh.startTime} - ${wh.endTime}',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: rowColor,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ],
             ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(
-    BuildContext context,
-    String title,
-    IconData icon,
-  ) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
-      child: Row(
-        children: [
-          Icon(icon, size: 20.sp, color: Theme.of(context).primaryColor),
-          SizedBox(width: 8.w),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildContentCard({required Widget child}) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: child,
-    );
-  }
-
-  // --- Delete Dialog ---
-  void _showDeleteDialog(BuildContext context, DoctorModel doctor) {
-    final isAr = context.locale.languageCode == 'ar';
-    Get.defaultDialog(
-      title: tr(LocaleKeys.doctor_details_dialogs_delete_title),
-      titleStyle: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
-      middleText: tr(
-        LocaleKeys.doctor_details_dialogs_delete_msg,
-        args: [isAr ? doctor.nameAr : doctor.nameEn],
-      ),
-      contentPadding: EdgeInsets.all(20.w),
-      textConfirm: tr(LocaleKeys.doctor_details_dialogs_confirm),
-      textCancel: tr(LocaleKeys.doctor_details_dialogs_cancel),
-      confirmTextColor: Colors.white,
-      buttonColor: Colors.red,
-      cancelTextColor: Colors.black,
-      onConfirm: () => controller.deleteDoctor(doctor.id!),
-      radius: 16.r,
+        );
+      }).toList(),
     );
   }
 }
