@@ -40,7 +40,6 @@ class AppointmentsView extends GetView<AppointmentsController> {
           );
         }),
       ),
-      floatingActionButton: _AddFab(),
     );
   }
 }
