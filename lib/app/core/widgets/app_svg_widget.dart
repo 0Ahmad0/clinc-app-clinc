@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vector_graphics/vector_graphics.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AppSvgWidget extends StatelessWidget {
   const AppSvgWidget({
@@ -19,8 +19,8 @@ class AppSvgWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VectorGraphic(
-      loader: AssetBytesLoader(path),
+    return SvgPicture.asset(
+      path,
       width: width ?? 26,
       height: height ?? 26,
       colorFilter: color != null

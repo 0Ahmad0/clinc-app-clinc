@@ -45,7 +45,6 @@ class CPScheduleWidget extends GetView<CompleteProfileController> {
                       // Switch يأخذ لونه تلقائياً من الثيم
                       Switch.adaptive(
                         value: !day.isDayOff,
-                        activeThumbColor: colorScheme.primary,
                         onChanged: (val) =>
                             controller.toggleDayOff(index, !val),
                       ),
