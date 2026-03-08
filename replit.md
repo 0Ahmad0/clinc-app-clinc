@@ -47,6 +47,24 @@ web/                    # Flutter web platform files
 - **Build command**: `flutter build web --release`
 - **Public directory**: `build/web`
 
+## UI Redesigns Completed
+
+### Reports Module (Full Redesign)
+- **reports_view.dart**: Gradient teal header, icon filter chips, KPI cards, weekly grouped bar chart
+- **report_list_item.dart**: Colored left accent bar, segmented progress bar, stat badges
+- **report_details_view.dart**: Full-bleed gradient hero header, 2×2 stat grid, donut chart with legend
+
+### Appointments Module (Full Redesign)
+- **appointments_view.dart**: Gradient teal header with live stats, 5 horizontal filter tabs with count badges
+- **appointment_card_widget.dart**: Status-aware cards with inline action buttons:
+  - قيد المراجعة: Accept (green) + Reject (red) buttons
+  - المؤكد: Complete (teal) + Upload Result (blue, lab only) buttons
+  - المكتمل: Completed footer with result status
+  - المرفوض: Rejection reason + note displayed inline
+- **reject_bottom_sheet.dart**: New sheet with chip-style reason selector + note input
+- **upload_result_bottom_sheet.dart**: New sheet with drag-area UI for PDF upload
+- **status_colors.dart**: Centralized color mapping for statuses and types (lib/app/colors/)
+
 ## Setup Notes
 
 - Flutter installed via Nix system dependencies (flutter package)
