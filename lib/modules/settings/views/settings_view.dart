@@ -8,6 +8,9 @@ import 'widgets/language_dialog.dart';
 import 'widgets/theme_dialog.dart';
 import 'profile_view.dart';
 import 'password_view.dart';
+import 'support_view.dart';
+import 'policy_view.dart';
+import 'about_view.dart';
 
 class SettingsView extends GetView<SettingsController> {
   const SettingsView({super.key});
@@ -255,24 +258,18 @@ class SettingsView extends GetView<SettingsController> {
         iconColor: const Color(0xFF2563EB),
         children: [
           _SettingsTile(
-            icon: Icons.help_rounded,
+            icon: Icons.support_agent_rounded,
             iconColor: const Color(0xFF2563EB),
-            title: tr(LocaleKeys.settings_help),
-            onTap: () {},
-          ),
-          _Divider(),
-          _SettingsTile(
-            icon: Icons.contact_support_rounded,
-            iconColor: const Color(0xFF009688),
-            title: tr(LocaleKeys.settings_contact_support),
-            onTap: () {},
+            title: 'المساعدة والدعم',
+            subtitle: 'أسئلة شائعة وتواصل مع الفريق',
+            onTap: () => Get.to(() => const SupportView()),
           ),
           _Divider(),
           _SettingsTile(
             icon: Icons.privacy_tip_rounded,
             iconColor: const Color(0xFF8B5CF6),
             title: tr(LocaleKeys.settings_privacy_policy),
-            onTap: () {},
+            onTap: () => Get.to(() => const PolicyView()),
           ),
           _Divider(),
           _SettingsTile(
@@ -280,7 +277,7 @@ class SettingsView extends GetView<SettingsController> {
             iconColor: const Color(0xFF64748B),
             title: tr(LocaleKeys.settings_about),
             subtitle: 'الإصدار 1.0.0',
-            onTap: () {},
+            onTap: () => Get.to(() => const AboutView()),
           ),
         ],
       ),
@@ -393,11 +390,11 @@ class SettingsView extends GetView<SettingsController> {
   }
 
   void _showLanguageDialog() {
-    Get.dialog(const LanguageDialog());
+    showLanguageBottomSheet();
   }
 
   void _showThemeDialog() {
-    Get.dialog(const ThemeDialog());
+    showThemeBottomSheet();
   }
 }
 

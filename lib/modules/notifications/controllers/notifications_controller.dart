@@ -4,6 +4,42 @@ import '../../../app/data/notification_model.dart';
 class NotificationsController extends GetxController {
   final RxList<NotificationModel> notifications = <NotificationModel>[].obs;
   final RxBool isLoading = false.obs;
+  final RxString selectedFilter = 'all'.obs;
+
+  void changeFilter(String filter) => selectedFilter.value = filter;
+
+  int get unreadCount => notifications.where((n) => n.status == NotificationStatus.unread).length;
+
+  List<NotificationModel> get filteredNotifications {
+    switch (selectedFilter.value) {
+      case 'unread':
+        return notifications.where((n) => n.status == NotificationStatus.unread).toList();
+      case 'read':
+        return notifications.where((n) => n.status == NotificationStatus.read).toList();
+      default:
+        return notifications.toList();
+    }
+  }
+
+  Map<String, List<NotificationModel>> get filteredGroupedNotifications {
+    final Map<String, List<NotificationModel>> groups = {};
+    for (final notification in filteredNotifications) {
+      final dateKey = notification.formattedDate;
+      if (!groups.containsKey(dateKey)) groups[dateKey] = [];
+      groups[dateKey]!.add(notification);
+    }
+    final sortedKeys = groups.keys.toList()
+      ..sort((a, b) {
+        if (a == 'اليوم') return -1;
+        if (b == 'اليوم') return 1;
+        if (a == 'البارحة') return -1;
+        if (b == 'البارحة') return 1;
+        return b.compareTo(a);
+      });
+    final sortedGroups = <String, List<NotificationModel>>{};
+    for (final key in sortedKeys) sortedGroups[key] = groups[key]!;
+    return sortedGroups;
+  }
 
   @override
   void onInit() {
