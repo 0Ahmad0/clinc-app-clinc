@@ -196,9 +196,9 @@ class _MiniStat extends StatelessWidget {
 
 class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   @override
-  double get minExtent => 64;
+  double get minExtent => ScreenUtil().setHeight(52);
   @override
-  double get maxExtent => 64;
+  double get maxExtent => ScreenUtil().setHeight(52);
 
   @override
   Widget build(
@@ -267,7 +267,7 @@ class _FilterTabs extends GetView<AppointmentsController> {
       final current = controller.filter.value;
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 7.h),
         child: Row(
           children: tabs.map((tab) {
             final isSelected = current == tab.status;

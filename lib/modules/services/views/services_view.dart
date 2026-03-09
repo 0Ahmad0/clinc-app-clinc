@@ -201,12 +201,12 @@ class ServicesView extends GetView<ServicesController> {
                                   letterSpacing: -0.5,
                                 ),
                               ),
-                              6.verticalSpace,
+                              4.verticalSpace,
                               Obx(() {
-                                final labs = controller.activeLabCategories.length;
-                                final specs = controller.activeSpecialties.length;
+                                final activeLabs = controller.activeLabCategories.length;
+                                final activeSpecs = controller.activeSpecialties.length;
                                 return Text(
-                                  '$labs تحاليل • $specs تخصصات',
+                                  '${activeLabs + activeSpecs} خدمة نشطة',
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: Colors.white.withValues(alpha: 0.75),
                                   ),
@@ -215,6 +215,26 @@ class ServicesView extends GetView<ServicesController> {
                             ],
                           ),
                         ),
+                        8.horizontalSpace,
+                        Obx(() {
+                          final totalLabs = controller.availableLabCategories.length;
+                          final totalSpecs = controller.availableSpecialties.length;
+                          return Row(
+                            children: [
+                              _ServiceMiniStat(
+                                count: totalLabs,
+                                label: 'تحاليل',
+                                theme: theme,
+                              ),
+                              8.horizontalSpace,
+                              _ServiceMiniStat(
+                                count: totalSpecs,
+                                label: 'تخصصات',
+                                theme: theme,
+                              ),
+                            ],
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -235,14 +255,13 @@ class ServicesView extends GetView<ServicesController> {
           children: [
             _buildTabBar(theme, cs),
             Expanded(
-              child: PageView(
-                controller: controller.pageController,
-                onPageChanged: (index) => controller.currentTab.value = index,
+              child: Obx(() => IndexedStack(
+                index: controller.currentTab.value,
                 children: [
                   _buildLabsGrid(context),
                   _buildSpecialtiesGrid(context),
                 ],
-              ),
+              )),
             ),
           ],
         ),
@@ -982,6 +1001,48 @@ class SubTestsView extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ServiceMiniStat extends StatelessWidget {
+  final int count;
+  final String label;
+  final ThemeData theme;
+
+  const _ServiceMiniStat({
+    required this.count,
+    required this.label,
+    required this.theme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        children: [
+          Text(
+            '$count',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          Text(
+            label,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: Colors.white.withValues(alpha: 0.75),
+              fontSize: 9.sp,
+            ),
           ),
         ],
       ),

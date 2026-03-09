@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../app/data/doctor_model.dart';
+import '../../../app/routes/app_routes.dart';
 import '../../../generated/locale_keys.g.dart';
-import '../../add_doctor/views/add_doctor_view.dart';
 import '../controllers/doctors_controller.dart';
 
 class DoctorDetailsView extends GetView<DoctorsController> {
@@ -115,7 +115,7 @@ class _HeroAppBar extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.edit_rounded, color: Colors.white, size: 18),
               onPressed: () =>
-                  Get.to(() => const AddDoctorView(), arguments: doctor),
+                  Get.toNamed(AppRoutes.addDoctor, arguments: doctor),
             ),
           ),
         ),
