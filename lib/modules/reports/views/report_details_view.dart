@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:open_filex/open_filex.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../app/data/report_model.dart';
 import '../../../generated/locale_keys.g.dart';
 
@@ -603,11 +603,9 @@ class _DistributionChartState extends State<_DistributionChart> {
                           sectionsSpace: 3,
                           centerSpaceRadius: 36.r,
                           pieTouchData: PieTouchData(
-                            touchCallback:
-                                (FlTouchEvent event, pieTouchResponse) {
+                            touchCallback: (event, pieTouchResponse) {
                               setState(() {
-                                if (!event.isInterestedForInteractions ||
-                                    pieTouchResponse == null ||
+                                if (pieTouchResponse == null ||
                                     pieTouchResponse.touchedSection == null) {
                                   touchedIndex = -1;
                                   return;
@@ -861,8 +859,10 @@ class _ActionsRow extends StatelessWidget {
           Expanded(
             child: FilledButton.icon(
               onPressed: () async {
-                if (report.pdfPathOrUrl != null) {
-                  await OpenFilex.open(report.pdfPathOrUrl!);
+                if (report.pdfPathOrUrl != null &&
+                    report.pdfPathOrUrl!.isNotEmpty) {
+                  final uri = Uri.tryParse(report.pdfPathOrUrl!);
+                  if (uri != null) await launchUrl(uri);
                 }
               },
               icon: Icon(Icons.picture_as_pdf_rounded, size: 18.sp),
