@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../controllers/register_controller.dart';
+import '../../../app/data/account_type.dart';
 
 class RegisterView extends GetView<RegisterController> {
   const RegisterView({super.key});
@@ -33,7 +34,7 @@ class RegisterView extends GetView<RegisterController> {
                   _FormCard(controller: controller),
                   20.verticalSpace,
                   Obx(() => _GradientAuthButton(
-                    label: tr(LocaleKeys.register_buttons_register),
+                    label: tr(LocaleKeys.register_buttons_submit),
                     isLoading: controller.isLoading.value,
                     onTap: controller.register,
                   )),
@@ -47,7 +48,7 @@ class RegisterView extends GetView<RegisterController> {
                       ),
                       6.horizontalSpace,
                       GestureDetector(
-                        onTap: controller.toLogin,
+                        onTap: () => Get.back(),
                         child: Text(
                           tr(LocaleKeys.register_buttons_login_action),
                           style: TextStyle(color: _teal, fontSize: 13.sp, fontWeight: FontWeight.w800),
