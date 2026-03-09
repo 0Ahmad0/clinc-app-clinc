@@ -41,7 +41,7 @@ class DashboardView extends GetView<DashboardController> {
     return SliverAppBar(
       pinned: true,
       floating: false,
-      expandedHeight: 180.h,
+      expandedHeight: 155.h,
       backgroundColor: const Color(0xFF00695C),
       elevation: 0,
       surfaceTintColor: Colors.transparent,
@@ -56,8 +56,8 @@ class DashboardView extends GetView<DashboardController> {
                 right: 0,
                 top: 0,
                 child: Container(
-                  width: 9,
-                  height: 9,
+                  width: 8,
+                  height: 8,
                   decoration: const BoxDecoration(
                     color: Color(0xFFF59E0B),
                     shape: BoxShape.circle,
@@ -71,7 +71,7 @@ class DashboardView extends GetView<DashboardController> {
           onPressed: () => Get.toNamed(AppRoutes.settings),
           icon: const Icon(Icons.settings_outlined, color: Colors.white, size: 24),
         ),
-        16.horizontalSpace,
+        12.horizontalSpace,
       ],
       flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,
@@ -87,9 +87,10 @@ class DashboardView extends GetView<DashboardController> {
           ),
           child: SafeArea(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 0),
+              padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     children: [
@@ -182,31 +183,12 @@ class DashboardView extends GetView<DashboardController> {
           ),
         ),
       ),
-      title: Row(
-        children: [
-          Container(
-            width: 32.r,
-            height: 32.r,
-            decoration: const BoxDecoration(
-              color: Color(0xFF26A69A),
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                'ع',
-                style: TextStyle(color: Colors.white, fontSize: 14.sp, fontWeight: FontWeight.w800),
-              ),
-            ),
-          ),
-          10.horizontalSpace,
-          Text(
-            'عيادة الشفاء',
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
+      title: Text(
+        'لوحة التحكم',
+        style: theme.textTheme.titleMedium?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w800,
+        ),
       ),
     );
   }
@@ -216,7 +198,7 @@ class DashboardView extends GetView<DashboardController> {
       _QuickAction('موعد جديد', Icons.add_circle_rounded, const Color(0xFF009688), () => Get.toNamed('/appointments')),
       _QuickAction('الأطباء', Icons.people_rounded, const Color(0xFF3949AB), () => Get.toNamed('/doctors')),
       _QuickAction('الخدمات', Icons.medical_services_rounded, const Color(0xFF2563EB), () => Get.toNamed('/services')),
-      _QuickAction('التقارير', Icons.analytics_rounded, const Color(0xFF10B981), () => Get.toNamed('/reports')),
+      _QuickAction('التقارير', Icons.analytics_rounded, const Color(0xFF10B981), () => Get.toNamed(AppRoutes.reports)),
     ];
 
     return SliverToBoxAdapter(
@@ -447,7 +429,9 @@ class DashboardView extends GetView<DashboardController> {
         statusText = 'قادم';
     }
 
-    return Container(
+    return GestureDetector(
+      onTap: () => Get.toNamed(AppRoutes.appointments),
+      child: Container(
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
         color: cs.surface,
@@ -529,6 +513,7 @@ class DashboardView extends GetView<DashboardController> {
             ],
           ),
         ],
+      ),
       ),
     );
   }

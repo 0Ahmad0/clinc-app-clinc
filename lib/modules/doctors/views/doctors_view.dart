@@ -155,9 +155,9 @@ class _MiniStat extends StatelessWidget {
 
 class _SearchAndFilterDelegate extends SliverPersistentHeaderDelegate {
   @override
-  double get minExtent => 110;
+  double get minExtent => 56 + ScreenUtil().setHeight(40);
   @override
-  double get maxExtent => 110;
+  double get maxExtent => 56 + ScreenUtil().setHeight(40);
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
@@ -226,7 +226,7 @@ class _SpecialtyFilters extends GetView<DoctorsController> {
 
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
         child: Row(
           children: [
             _SpecialtyChip(

@@ -23,16 +23,90 @@ class ReportsView extends GetView<ReportsController> {
         physics: const BouncingScrollPhysics(),
         slivers: [
           _buildHeader(theme, cs, isDark),
+          _buildPeriodTabs(theme, cs),
           _buildTypeFilters(theme, cs),
-          _buildRangeFilters(theme, cs),
           _buildSummaryCards(theme, cs),
           _buildChartSection(theme, cs),
-          _buildMonthlyRevenueSection(theme, cs),
+          _buildExportRow(theme, cs),
           _buildListHeader(theme, cs),
           _buildReportsList(cs),
         ],
       ),
-      floatingActionButton: _buildFab(cs),
+    );
+  }
+
+  Widget _buildPeriodTabs(ThemeData theme, ColorScheme cs) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(16.w, 20.h, 16.w, 0),
+        child: Obx(() {
+          final sel = controller.selectedPeriodTab.value;
+          return Container(
+            padding: EdgeInsets.all(4.w),
+            decoration: BoxDecoration(
+              color: cs.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(14.r),
+            ),
+            child: Row(
+              children: [
+                _PeriodTab(
+                  label: 'أسبوعي',
+                  icon: Icons.view_week_rounded,
+                  isSelected: sel == 0,
+                  color: const Color(0xFF009688),
+                  onTap: () => controller.changePeriodTab(0),
+                ),
+                _PeriodTab(
+                  label: 'شهري',
+                  icon: Icons.calendar_month_rounded,
+                  isSelected: sel == 1,
+                  color: const Color(0xFF3949AB),
+                  onTap: () => controller.changePeriodTab(1),
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildExportRow(ThemeData theme, ColorScheme cs) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Obx(() {
+                final loading = controller.isLoading.value;
+                return _ExportButton(
+                  label: 'تصدير PDF',
+                  icon: Icons.picture_as_pdf_rounded,
+                  gradientColors: const [Color(0xFF004D40), Color(0xFF009688)],
+                  shadowColor: const Color(0xFF009688),
+                  isLoading: loading,
+                  onTap: loading ? null : controller.generatePdfReport,
+                );
+              }),
+            ),
+            12.horizontalSpace,
+            Expanded(
+              child: Obx(() {
+                final loading = controller.isCsvLoading.value;
+                return _ExportButton(
+                  label: 'تصدير CSV',
+                  icon: Icons.table_chart_rounded,
+                  gradientColors: const [Color(0xFF1A237E), Color(0xFF3949AB)],
+                  shadowColor: const Color(0xFF3949AB),
+                  isLoading: loading,
+                  onTap: loading ? null : controller.exportCsvReport,
+                );
+              }),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -173,56 +247,6 @@ class ReportsView extends GetView<ReportsController> {
     );
   }
 
-  // ─────────────────────────────────────────────
-  // Range Filters
-  // ─────────────────────────────────────────────
-  Widget _buildRangeFilters(ThemeData theme, ColorScheme cs) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),
-        child: Obx(() {
-          final selected = controller.selectedRange.value;
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                for (final r in ReportRange.values) ...[
-                  _RangeChip(
-                    label: tr(r.key()),
-                    isSelected: r == selected,
-                    onTap: r == ReportRange.custom
-                        ? () async {
-                            final now = DateTime.now();
-                            final range = await showDateRangePicker(
-                              context: Get.context!,
-                              firstDate: DateTime(now.year - 1),
-                              lastDate: DateTime(now.year + 1),
-                              initialDateRange: DateTimeRange(
-                                start: now.subtract(const Duration(days: 7)),
-                                end: now,
-                              ),
-                              builder: (context, child) => Theme(
-                                data: Theme.of(context).copyWith(
-                                  colorScheme: Theme.of(context).colorScheme,
-                                ),
-                                child: child!,
-                              ),
-                            );
-                            if (range != null) {
-                              controller.setCustomRange(range);
-                            }
-                          }
-                        : () => controller.changeRange(r),
-                  ),
-                  8.horizontalSpace,
-                ],
-              ],
-            ),
-          );
-        }),
-      ),
-    );
-  }
 
   // ─────────────────────────────────────────────
   // Summary KPI Cards
@@ -269,13 +293,21 @@ class ReportsView extends GetView<ReportsController> {
   }
 
   // ─────────────────────────────────────────────
-  // Chart Section
+  // Chart Section (switches with period tab)
   // ─────────────────────────────────────────────
   Widget _buildChartSection(ThemeData theme, ColorScheme cs) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),
-        child: _WeeklyBarChart(controller: controller),
+        child: Obx(() {
+          final period = controller.selectedPeriodTab.value;
+          return AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: period == 0
+                ? _WeeklyBarChart(key: const ValueKey('weekly'), controller: controller)
+                : _MonthlyRevenueChart(key: const ValueKey('monthly'), controller: controller),
+          );
+        }),
       ),
     );
   }
@@ -343,74 +375,6 @@ class ReportsView extends GetView<ReportsController> {
     });
   }
 
-  // ─────────────────────────────────────────────
-  // FAB
-  // ─────────────────────────────────────────────
-  Widget _buildMonthlyRevenueSection(ThemeData theme, ColorScheme cs) {
-    return SliverToBoxAdapter(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),
-        child: _MonthlyRevenueChart(controller: controller),
-      ),
-    );
-  }
-
-  Widget _buildFab(ColorScheme cs) {
-    return Obx(() {
-      final loading = controller.isLoading.value;
-      return Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF004D40), Color(0xFF009688)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF009688).withValues(alpha: 0.4),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: loading ? null : controller.generatePdfReport,
-            borderRadius: BorderRadius.circular(16.r),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (loading)
-                    SizedBox(
-                      width: 18.r,
-                      height: 18.r,
-                      child: const CircularProgressIndicator(
-                          color: Colors.white, strokeWidth: 2),
-                    )
-                  else
-                    Icon(Icons.picture_as_pdf_rounded,
-                        color: Colors.white, size: 20.sp),
-                  8.horizontalSpace,
-                  Text(
-                    loading ? 'جاري الإنشاء...' : 'تصدير PDF',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-  }
 
   Color _typeColor(ReportType type, ColorScheme cs) {
     switch (type) {
@@ -423,6 +387,157 @@ class ReportsView extends GetView<ReportsController> {
       case ReportType.doctors:
         return const Color(0xFFF59E0B);
     }
+  }
+}
+
+// ═══════════════════════════════════════════════
+// Period Tab
+// ═══════════════════════════════════════════════
+class _PeriodTab extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool isSelected;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _PeriodTab({
+    required this.label,
+    required this.icon,
+    required this.isSelected,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeInOut,
+          padding: EdgeInsets.symmetric(vertical: 11.h),
+          decoration: BoxDecoration(
+            gradient: isSelected
+                ? LinearGradient(
+                    colors: [color, color.withValues(alpha: 0.75)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
+                : null,
+            borderRadius: BorderRadius.circular(10.r),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: color.withValues(alpha: 0.3),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : [],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                size: 16.sp,
+                color: isSelected
+                    ? Colors.white
+                    : theme.colorScheme.onSurfaceVariant,
+              ),
+              6.horizontalSpace,
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w700,
+                  color: isSelected
+                      ? Colors.white
+                      : theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════
+// Export Button
+// ═══════════════════════════════════════════════
+class _ExportButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final List<Color> gradientColors;
+  final Color shadowColor;
+  final bool isLoading;
+  final VoidCallback? onTap;
+
+  const _ExportButton({
+    required this.label,
+    required this.icon,
+    required this.gradientColors,
+    required this.shadowColor,
+    required this.isLoading,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: gradientColors,
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(14.r),
+        boxShadow: [
+          BoxShadow(
+            color: shadowColor.withValues(alpha: 0.35),
+            blurRadius: 14,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(14.r),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 14.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isLoading)
+                  SizedBox(
+                    width: 16.r,
+                    height: 16.r,
+                    child: const CircularProgressIndicator(
+                        color: Colors.white, strokeWidth: 2),
+                  )
+                else
+                  Icon(icon, color: Colors.white, size: 18.sp),
+                8.horizontalSpace,
+                Text(
+                  isLoading ? 'جاري...' : label,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 13.sp,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -502,51 +617,6 @@ class _TypeFilterChip extends StatelessWidget {
   }
 }
 
-// ═══════════════════════════════════════════════
-// Range Chip
-// ═══════════════════════════════════════════════
-class _RangeChip extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _RangeChip({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? cs.primary.withValues(alpha: 0.12)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(999.r),
-          border: Border.all(
-            color: isSelected ? cs.primary : cs.outlineVariant,
-            width: isSelected ? 1.5 : 1,
-          ),
-        ),
-        child: Text(
-          label,
-          style: theme.textTheme.labelMedium?.copyWith(
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-            color: isSelected ? cs.primary : cs.onSurfaceVariant,
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 // ═══════════════════════════════════════════════
 // KPI Card
