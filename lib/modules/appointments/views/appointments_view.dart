@@ -196,9 +196,9 @@ class _MiniStat extends StatelessWidget {
 
 class _TabBarDelegate extends SliverPersistentHeaderDelegate {
   @override
-  double get minExtent => ScreenUtil().setHeight(52);
+  double get minExtent => 56.0;
   @override
-  double get maxExtent => ScreenUtil().setHeight(52);
+  double get maxExtent => 56.0;
 
   @override
   Widget build(

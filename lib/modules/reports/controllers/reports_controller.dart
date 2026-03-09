@@ -4,8 +4,10 @@ import '../../../app/data/report_model.dart';
 
 class ReportsController extends GetxController {
   final RxBool isLoading = false.obs;
+  final RxBool isCsvLoading = false.obs;
   final Rx<ReportType> selectedType = ReportType.appointments.obs;
   final Rx<ReportRange> selectedRange = ReportRange.week.obs;
+  final RxInt selectedPeriodTab = 0.obs;
   final Rxn<DateTimeRange> customRange = Rxn<DateTimeRange>();
   final RxList<ReportModel> reports = <ReportModel>[].obs;
 
@@ -30,6 +32,7 @@ class ReportsController extends GetxController {
 
   void changeType(ReportType type) => selectedType.value = type;
   void changeRange(ReportRange range) => selectedRange.value = range;
+  void changePeriodTab(int i) => selectedPeriodTab.value = i;
   void setCustomRange(DateTimeRange range) {
     customRange.value = range;
     selectedRange.value = ReportRange.custom;
@@ -89,6 +92,20 @@ class ReportsController extends GetxController {
       backgroundColor: const Color(0xFF009688).withValues(alpha: 0.9),
       colorText: Colors.white,
       icon: const Icon(Icons.picture_as_pdf_rounded, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+    );
+  }
+
+  Future<void> exportCsvReport() async {
+    isCsvLoading.value = true;
+    await Future.delayed(const Duration(milliseconds: 900));
+    isCsvLoading.value = false;
+    Get.snackbar(
+      'تم تصدير CSV',
+      'تم حفظ ملف CSV في مجلد التنزيلات',
+      backgroundColor: const Color(0xFF3949AB).withValues(alpha: 0.9),
+      colorText: Colors.white,
+      icon: const Icon(Icons.table_chart_rounded, color: Colors.white),
       snackPosition: SnackPosition.TOP,
     );
   }
