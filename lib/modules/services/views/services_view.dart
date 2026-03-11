@@ -145,110 +145,77 @@ class ServicesView extends GetView<ServicesController> {
       backgroundColor: cs.surface,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverAppBar(
-            pinned: true,
-            floating: false,
-            expandedHeight: 155.h,
-            backgroundColor: const Color(0xFF1E40AF),
-            elevation: 0,
-            surfaceTintColor: Colors.transparent,
-            leading: IconButton(
-              onPressed: () => Get.back(),
-              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-            ),
-            flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: isDark
-                        ? [const Color(0xFF1E3A8A), const Color(0xFF1E1B4B)]
-                        : [const Color(0xFF2563EB), const Color(0xFF1E1B4B)],
-                  ),
+          SliverToBoxAdapter(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [const Color(0xFF1E3A8A), const Color(0xFF1E1B4B)]
+                      : [const Color(0xFF2563EB), const Color(0xFF1E1B4B)],
                 ),
-                child: SafeArea(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 46.r,
-                          height: 46.r,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(14.r),
-                          ),
-                          child: Icon(
-                            Icons.medical_services_rounded,
-                            color: Colors.white,
-                            size: 24.sp,
-                          ),
+              ),
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 20.h),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(10.r),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(14.r),
                         ),
-                        14.horizontalSpace,
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'إدارة الخدمات',
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: -0.5,
+                        child: Icon(
+                          Icons.medical_services_rounded,
+                          color: Colors.white,
+                          size: 26.sp,
+                        ),
+                      ),
+                      14.horizontalSpace,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'إدارة الخدمات',
+                              style: theme.textTheme.headlineSmall?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                            Obx(() {
+                              final activeLabs = controller.activeLabCategories.length;
+                              final activeSpecs = controller.activeSpecialties.length;
+                              return Text(
+                                '${activeLabs + activeSpecs} خدمة نشطة',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.8),
                                 ),
-                              ),
-                              4.verticalSpace,
-                              Obx(() {
-                                final activeLabs = controller.activeLabCategories.length;
-                                final activeSpecs = controller.activeSpecialties.length;
-                                return Text(
-                                  '${activeLabs + activeSpecs} خدمة نشطة',
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: Colors.white.withValues(alpha: 0.75),
-                                  ),
-                                );
-                              }),
-                            ],
-                          ),
+                              );
+                            }),
+                          ],
                         ),
-                        8.horizontalSpace,
-                        Obx(() {
-                          final totalLabs = controller.availableLabCategories.length;
-                          final totalSpecs = controller.availableSpecialties.length;
-                          return Row(
-                            children: [
-                              _ServiceMiniStat(
-                                count: totalLabs,
-                                label: 'تحاليل',
-                                theme: theme,
-                              ),
-                              8.horizontalSpace,
-                              _ServiceMiniStat(
-                                count: totalSpecs,
-                                label: 'تخصصات',
-                                theme: theme,
-                              ),
-                            ],
-                          );
-                        }),
-                      ],
-                    ),
+                      ),
+                      Obx(() {
+                        final totalLabs = controller.availableLabCategories.length;
+                        final totalSpecs = controller.availableSpecialties.length;
+                        return Row(
+                          children: [
+                            _ServiceMiniStat(count: totalLabs, label: 'تحاليل', theme: theme),
+                            8.horizontalSpace,
+                            _ServiceMiniStat(count: totalSpecs, label: 'تخصصات', theme: theme),
+                          ],
+                        );
+                      }),
+                    ],
                   ),
                 ),
               ),
             ),
-            title: Text(
-              'إدارة الخدمات',
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            centerTitle: false,
           ),
         ],
         body: Column(

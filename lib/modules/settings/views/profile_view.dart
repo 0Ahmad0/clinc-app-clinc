@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import '../controllers/settings_controller.dart';
 import '../../../app/data/profile_model.dart';
 
@@ -21,6 +23,14 @@ class _ProfileViewState extends State<ProfileView> {
   late TextEditingController _licenseCtrl;
   final _formKey = GlobalKey<FormState>();
   bool _saving = false;
+
+  File? _coverImageFile;
+  File? _avatarImageFile;
+  final _picker = ImagePicker();
+
+  static const _purple = Color(0xFF673AB7);
+  static const _darkPurple = Color(0xFF311B92);
+  static const _teal = Color(0xFF009688);
 
   @override
   void initState() {
@@ -46,6 +56,68 @@ class _ProfileViewState extends State<ProfileView> {
     super.dispose();
   }
 
+  Future<void> _pickCoverImage() async {
+    final source = await _showImageSourceDialog();
+    if (source == null) return;
+    final xFile = await _picker.pickImage(source: source, imageQuality: 85);
+    if (xFile != null && mounted) {
+      setState(() => _coverImageFile = File(xFile.path));
+    }
+  }
+
+  Future<void> _pickAvatarImage() async {
+    final source = await _showImageSourceDialog();
+    if (source == null) return;
+    final xFile = await _picker.pickImage(source: source, imageQuality: 85);
+    if (xFile != null && mounted) {
+      setState(() => _avatarImageFile = File(xFile.path));
+    }
+  }
+
+  Future<ImageSource?> _showImageSourceDialog() async {
+    return showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (_) => Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        ),
+        padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 32.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(width: 40.w, height: 4.h, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r))),
+            20.verticalSpace,
+            Text('اختر مصدر الصورة', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15.sp)),
+            20.verticalSpace,
+            Row(
+              children: [
+                Expanded(
+                  child: _SourceTile(
+                    icon: Icons.camera_alt_rounded,
+                    label: 'الكاميرا',
+                    color: _teal,
+                    onTap: () => Navigator.pop(context, ImageSource.camera),
+                  ),
+                ),
+                16.horizontalSpace,
+                Expanded(
+                  child: _SourceTile(
+                    icon: Icons.photo_library_rounded,
+                    label: 'المعرض',
+                    color: _purple,
+                    onTap: () => Navigator.pop(context, ImageSource.gallery),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
@@ -60,7 +132,7 @@ class _ProfileViewState extends State<ProfileView> {
         clinicName: _clinicCtrl.text.trim(),
         clinicAddress: _addressCtrl.text.trim(),
         licenseNumber: _licenseCtrl.text.trim(),
-        avatar: existing.avatar,
+        avatar: _avatarImageFile?.path ?? existing.avatar,
       ),
     );
     setState(() => _saving = false);
@@ -68,7 +140,7 @@ class _ProfileViewState extends State<ProfileView> {
     Get.snackbar(
       'تم الحفظ',
       'تم تحديث بيانات ملفك الشخصي بنجاح',
-      backgroundColor: const Color(0xFF673AB7),
+      backgroundColor: _purple,
       colorText: Colors.white,
       snackPosition: SnackPosition.TOP,
       margin: EdgeInsets.all(16.r),
@@ -87,102 +159,15 @@ class _ProfileViewState extends State<ProfileView> {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 160.h,
-            backgroundColor: const Color(0xFF4527A0),
-            elevation: 0,
-            surfaceTintColor: Colors.transparent,
-            leading: IconButton(
-              onPressed: () => Get.back(),
-              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-            ),
-            title: Text(
-              'الملف الشخصي',
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: _saving ? null : _save,
-                child: Text(
-                  'حفظ',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 15.sp,
-                  ),
-                ),
-              ),
-              10.horizontalSpace,
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              collapseMode: CollapseMode.pin,
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: isDark
-                        ? [const Color(0xFF311B92), const Color(0xFF1A0050)]
-                        : [const Color(0xFF673AB7), const Color(0xFF311B92)],
-                  ),
-                ),
-                child: SafeArea(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      60.verticalSpace,
-                      Obx(() {
-                        final name = _ctrl.profile.value.name;
-                        return Container(
-                          width: 64.r,
-                          height: 64.r,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF9C27B0), Color(0xFF673AB7)],
-                            ),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.4),
-                              width: 2.5,
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              name.isNotEmpty ? name[0] : 'م',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.w900,
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
-                      10.verticalSpace,
-                      Text(
-                        'اضغط حفظ لتطبيق التغييرات',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.65),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+          SliverToBoxAdapter(child: _buildPhotoHeader(cs, isDark)),
           SliverPadding(
             padding: EdgeInsets.fromLTRB(16.w, 20.h, 16.w, 40.h),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 if (_saving)
                   LinearProgressIndicator(
-                    color: const Color(0xFF673AB7),
-                    backgroundColor: const Color(0xFF673AB7).withValues(alpha: 0.15),
+                    color: _purple,
+                    backgroundColor: _purple.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(999),
                   ),
                 if (_saving) 16.verticalSpace,
@@ -191,57 +176,21 @@ class _ProfileViewState extends State<ProfileView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _SectionHeader(title: 'المعلومات الشخصية', icon: Icons.person_rounded, color: const Color(0xFF673AB7)),
+                      _SectionHeader(title: 'معلومات العيادة', icon: Icons.local_hospital_rounded, color: _teal),
                       12.verticalSpace,
-                      _FormField(
-                        controller: _nameCtrl,
-                        label: 'الاسم الكامل',
-                        icon: Icons.badge_rounded,
-                        color: const Color(0xFF673AB7),
-                        validator: (v) => v == null || v.isEmpty ? 'الاسم مطلوب' : null,
-                      ),
+                      _FormField(controller: _clinicCtrl, label: 'اسم العيادة', icon: Icons.business_rounded, color: _teal, validator: (v) => v == null || v.isEmpty ? 'اسم العيادة مطلوب' : null),
                       14.verticalSpace,
-                      _FormField(
-                        controller: _emailCtrl,
-                        label: 'البريد الإلكتروني',
-                        icon: Icons.email_rounded,
-                        color: const Color(0xFF2563EB),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (v) => v == null || !v.contains('@') ? 'بريد إلكتروني غير صحيح' : null,
-                      ),
+                      _FormField(controller: _addressCtrl, label: 'عنوان العيادة', icon: Icons.location_on_rounded, color: const Color(0xFFEF4444), maxLines: 2),
                       14.verticalSpace,
-                      _FormField(
-                        controller: _phoneCtrl,
-                        label: 'رقم الهاتف',
-                        icon: Icons.phone_rounded,
-                        color: const Color(0xFF009688),
-                        keyboardType: TextInputType.phone,
-                      ),
+                      _FormField(controller: _licenseCtrl, label: 'رقم الترخيص', icon: Icons.verified_rounded, color: const Color(0xFFF59E0B)),
                       24.verticalSpace,
-                      _SectionHeader(title: 'معلومات العيادة', icon: Icons.local_hospital_rounded, color: const Color(0xFF009688)),
+                      _SectionHeader(title: 'المعلومات الشخصية', icon: Icons.person_rounded, color: _purple),
                       12.verticalSpace,
-                      _FormField(
-                        controller: _clinicCtrl,
-                        label: 'اسم العيادة',
-                        icon: Icons.business_rounded,
-                        color: const Color(0xFF009688),
-                        validator: (v) => v == null || v.isEmpty ? 'اسم العيادة مطلوب' : null,
-                      ),
+                      _FormField(controller: _nameCtrl, label: 'الاسم الكامل', icon: Icons.badge_rounded, color: _purple, validator: (v) => v == null || v.isEmpty ? 'الاسم مطلوب' : null),
                       14.verticalSpace,
-                      _FormField(
-                        controller: _addressCtrl,
-                        label: 'عنوان العيادة',
-                        icon: Icons.location_on_rounded,
-                        color: const Color(0xFFEF4444),
-                        maxLines: 2,
-                      ),
+                      _FormField(controller: _emailCtrl, label: 'البريد الإلكتروني', icon: Icons.email_rounded, color: const Color(0xFF2563EB), keyboardType: TextInputType.emailAddress, validator: (v) => v == null || !v.contains('@') ? 'بريد إلكتروني غير صحيح' : null),
                       14.verticalSpace,
-                      _FormField(
-                        controller: _licenseCtrl,
-                        label: 'رقم الترخيص',
-                        icon: Icons.verified_rounded,
-                        color: const Color(0xFFF59E0B),
-                      ),
+                      _FormField(controller: _phoneCtrl, label: 'رقم الهاتف', icon: Icons.phone_rounded, color: _teal, keyboardType: TextInputType.phone),
                       30.verticalSpace,
                       _SaveButton(saving: _saving, onTap: _save),
                     ],
@@ -254,15 +203,193 @@ class _ProfileViewState extends State<ProfileView> {
       ),
     );
   }
+
+  Widget _buildPhotoHeader(ColorScheme cs, bool isDark) {
+    return SizedBox(
+      height: 230.h,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          GestureDetector(
+            onTap: _pickCoverImage,
+            child: Stack(
+              children: [
+                Container(
+                  height: 170.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: _coverImageFile == null
+                        ? LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: isDark
+                                ? [_darkPurple, const Color(0xFF1A0050)]
+                                : [_purple, _darkPurple],
+                          )
+                        : null,
+                  ),
+                  child: _coverImageFile != null
+                      ? Image.file(_coverImageFile!, fit: BoxFit.cover, width: double.infinity, height: 170.h)
+                      : null,
+                ),
+                SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: EdgeInsets.all(12.r),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () => Get.back(),
+                          child: Container(
+                            padding: EdgeInsets.all(8.r),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.3),
+                              borderRadius: BorderRadius.circular(10.r),
+                            ),
+                            child: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18.sp),
+                          ),
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: _saving ? null : _save,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(20.r),
+                            ),
+                            child: Text('حفظ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 14.sp)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 10.h,
+                  right: 14.w,
+                  child: Container(
+                    padding: EdgeInsets.all(7.r),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.camera_alt_rounded, color: Colors.white, size: 14.sp),
+                        4.horizontalSpace,
+                        Text('تغيير الغلاف', style: TextStyle(color: Colors.white, fontSize: 11.sp, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Stack(
+                children: [
+                  GestureDetector(
+                    onTap: _pickAvatarImage,
+                    child: Container(
+                      width: 82.r,
+                      height: 82.r,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: cs.surface, width: 3.5),
+                        boxShadow: [BoxShadow(color: _purple.withValues(alpha: 0.3), blurRadius: 16, offset: const Offset(0, 4))],
+                      ),
+                      child: ClipOval(
+                        child: _avatarImageFile != null
+                            ? Image.file(_avatarImageFile!, fit: BoxFit.cover)
+                            : Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [Color(0xFF9C27B0), _purple],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
+                                child: Obx(() {
+                                  final name = _ctrl.profile.value.name;
+                                  return Center(
+                                    child: Text(
+                                      name.isNotEmpty ? name[0] : 'م',
+                                      style: TextStyle(color: Colors.white, fontSize: 30.sp, fontWeight: FontWeight.w900),
+                                    ),
+                                  );
+                                }),
+                              ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: _pickAvatarImage,
+                      child: Container(
+                        width: 26.r,
+                        height: 26.r,
+                        decoration: BoxDecoration(
+                          color: _purple,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: cs.surface, width: 2),
+                        ),
+                        child: Icon(Icons.camera_alt_rounded, color: Colors.white, size: 13.sp),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SourceTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+  const _SourceTile({required this.icon, required this.label, required this.color, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 18.h),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: color.withValues(alpha: 0.2)),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 28.r),
+            10.verticalSpace,
+            Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w700, fontSize: 13.sp)),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _SectionHeader extends StatelessWidget {
   final String title;
   final IconData icon;
   final Color color;
-
   const _SectionHeader({required this.title, required this.icon, required this.color});
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -271,21 +398,12 @@ class _SectionHeader extends StatelessWidget {
         Container(
           width: 4.w,
           height: 18.h,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(4.r),
-          ),
+          decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4.r)),
         ),
         10.horizontalSpace,
         Icon(icon, color: color, size: 18.sp),
         8.horizontalSpace,
-        Text(
-          title,
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.w800,
-            color: color,
-          ),
-        ),
+        Text(title, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800, color: color)),
       ],
     );
   }
@@ -299,7 +417,6 @@ class _FormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final int maxLines;
   final String? Function(String?)? validator;
-
   const _FormField({
     required this.controller,
     required this.label,
@@ -309,12 +426,10 @@ class _FormField extends StatelessWidget {
     this.maxLines = 1,
     this.validator,
   });
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
@@ -327,22 +442,10 @@ class _FormField extends StatelessWidget {
         prefixIcon: Icon(icon, color: color, size: 20.sp),
         filled: true,
         fillColor: color.withValues(alpha: 0.04),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14.r),
-          borderSide: BorderSide(color: color.withValues(alpha: 0.2)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14.r),
-          borderSide: BorderSide(color: color.withValues(alpha: 0.15)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14.r),
-          borderSide: BorderSide(color: color, width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14.r),
-          borderSide: BorderSide(color: cs.error),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(14.r), borderSide: BorderSide(color: color.withValues(alpha: 0.2))),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14.r), borderSide: BorderSide(color: color.withValues(alpha: 0.15))),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14.r), borderSide: BorderSide(color: color, width: 1.5)),
+        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14.r), borderSide: BorderSide(color: cs.error)),
         contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       ),
     );
@@ -352,9 +455,7 @@ class _FormField extends StatelessWidget {
 class _SaveButton extends StatelessWidget {
   final bool saving;
   final VoidCallback onTap;
-
   const _SaveButton({required this.saving, required this.onTap});
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -375,13 +476,7 @@ class _SaveButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: saving
               ? []
-              : [
-                  BoxShadow(
-                    color: const Color(0xFF673AB7).withValues(alpha: 0.35),
-                    blurRadius: 14,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
+              : [BoxShadow(color: const Color(0xFF673AB7).withValues(alpha: 0.35), blurRadius: 14, offset: const Offset(0, 5))],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -390,10 +485,7 @@ class _SaveButton extends StatelessWidget {
               SizedBox(
                 width: 18.r,
                 height: 18.r,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.grey.shade600,
-                ),
+                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.grey.shade600),
               )
             else
               const Icon(Icons.save_rounded, color: Colors.white, size: 20),

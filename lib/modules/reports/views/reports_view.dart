@@ -114,89 +114,73 @@ class ReportsView extends GetView<ReportsController> {
   // Header
   // ─────────────────────────────────────────────
   Widget _buildHeader(ThemeData theme, ColorScheme cs, bool isDark) {
-    return SliverAppBar(
-      pinned: true,
-      floating: false,
-      expandedHeight: 160.h,
-      backgroundColor: cs.primary,
-      elevation: 0,
-      surfaceTintColor: Colors.transparent,
-      flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.pin,
-        background: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: isDark
-                  ? [const Color(0xFF00695C), const Color(0xFF004D40)]
-                  : [const Color(0xFF00897B), const Color(0xFF004D40)],
-            ),
+    return SliverToBoxAdapter(
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDark
+                ? [const Color(0xFF00695C), const Color(0xFF004D40)]
+                : [const Color(0xFF00897B), const Color(0xFF004D40)],
           ),
-          child: SafeArea(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 20.h),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(10.r),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
+                  child: Icon(
+                    Icons.analytics_rounded,
+                    color: Colors.white,
+                    size: 26.sp,
+                  ),
+                ),
+                14.horizontalSpace,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 42.r,
-                        height: 42.r,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: Icon(
-                          Icons.analytics_rounded,
+                      Text(
+                        tr(LocaleKeys.reports_title),
+                        style: theme.textTheme.headlineSmall?.copyWith(
                           color: Colors.white,
-                          size: 22.sp,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -0.5,
                         ),
                       ),
-                      12.horizontalSpace,
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              tr(LocaleKeys.reports_title),
-                              style: theme.textTheme.headlineSmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800,
-                                letterSpacing: -0.5,
-                              ),
-                            ),
-                            4.verticalSpace,
-                            Obx(() {
-                              final s = controller.summary;
-                              return Text(
-                                '${s.total} ${tr(LocaleKeys.reports_cards_total)} • ${s.completed} ${tr(LocaleKeys.reports_cards_completed)}',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.75),
-                                ),
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
+                      Obx(() {
+                        final s = controller.summary;
+                        return Text(
+                          '${s.total} ${tr(LocaleKeys.reports_cards_total)} • ${s.completed} ${tr(LocaleKeys.reports_cards_completed)}',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.8),
+                          ),
+                        );
+                      }),
                     ],
                   ),
-                ],
-              ),
+                ),
+                Obx(() {
+                  final s = controller.summary;
+                  return _HeaderStat(
+                    value: '${s.pending}',
+                    label: 'قيد',
+                    color: const Color(0xFFFBBF24),
+                  );
+                }),
+              ],
             ),
           ),
         ),
       ),
-      title: Text(
-        tr(LocaleKeys.reports_title),
-        style: theme.textTheme.titleMedium?.copyWith(
-          color: Colors.white,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
-      centerTitle: false,
     );
   }
 
@@ -1143,6 +1127,42 @@ class _EmptyState extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _HeaderStat extends StatelessWidget {
+  final String value;
+  final String label;
+  final Color color;
+  const _HeaderStat({required this.value, required this.label, required this.color});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.8),
+              fontSize: 10.sp,
+            ),
+          ),
+        ],
       ),
     );
   }
