@@ -69,6 +69,19 @@ class AppGradients {
     colors: [Color(0xFFB71C1C), Color(0xFFE53935), Color(0xFFEF5350)],
   );
 
+  // ── Blue (Services) ──────────────────────────────────────────────────────────
+  static const LinearGradient blue = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF1E1B4B), Color(0xFF1E3A8A), Color(0xFF2563EB)],
+  );
+
+  static const LinearGradient blueLight = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
+  );
+
   // ── Shadow colors per gradient ────────────────────────────────────────────
   static const Color tealShadow   = Color(0x60009688);
   static const Color indigoShadow = Color(0x603949AB);
@@ -76,4 +89,5 @@ class AppGradients {
   static const Color purpleShadow = Color(0x60673AB7);
   static const Color greenShadow  = Color(0x6043A047);
   static const Color redShadow    = Color(0x60E53935);
+  static const Color blueShadow   = Color(0x602563EB);
 }
