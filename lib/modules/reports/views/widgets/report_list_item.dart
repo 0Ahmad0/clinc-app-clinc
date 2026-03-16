@@ -47,11 +47,12 @@ class ReportListItem extends StatelessWidget {
                 ),
               ],
             ),
-            child: Row(
+            child: IntrinsicHeight(
+              child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
                   width: 4.w,
-                  height: double.infinity,
                   constraints: BoxConstraints(minHeight: 80.h),
                   decoration: BoxDecoration(
                     color: color,
@@ -199,6 +200,7 @@ class ReportListItem extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
             ),
           ),
         ),
