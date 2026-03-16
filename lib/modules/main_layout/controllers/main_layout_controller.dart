@@ -1,64 +1,54 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
-
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import '../../../generated/locale_keys.g.dart';
 
 class MainLayoutController extends GetxController {
-  // ── State ──
+  // ── State ──────────────────────────────────────────────────────────────────
+
   final RxInt currentIndex = 0.obs;
 
-  // هذه القيمة تأتي من User Model المخزن محلياً
-  // اجعلها false للتجربة (لمنع الدخول)
+  /// Replace with actual value from UserModel / local storage.
   final bool isProfileCompleted = true;
 
-  // ── Navigation Logic ──
-  void changeTab(int index) {
-    // الصفحة 0 (Dashboard) مسموحة دائماً
-    if (index == 0) {
-      currentIndex.value = index;
-      return;
-    }
+  // ── Public API ─────────────────────────────────────────────────────────────
 
-    // باقي الصفحات تتطلب بروفايل مكتمل
-    if (!isProfileCompleted) {
-      _showBlockingAlert(index);
-    } else {
+  /// Owns haptic feedback + profile guard — View only calls this.
+  void changeTab(int index) {
+    HapticFeedback.lightImpact();
+
+    if (index == 0 || isProfileCompleted) {
       currentIndex.value = index;
+    } else {
+      _showBlockingAlert(index);
     }
   }
 
-  void _showBlockingAlert(int index) {
-    String sectionName = '';
-    switch (index) {
-      case 1:
-        sectionName = tr(LocaleKeys.nav_doctors);
-        break;
-      case 2:
-        sectionName = tr(LocaleKeys.nav_services);
-        break;
-      case 3:
-        sectionName = tr(LocaleKeys.nav_appointments);
-        break;
-      case 4:
-        sectionName = tr(LocaleKeys.nav_reports);
-        break;
-    }
+  // ── Private ────────────────────────────────────────────────────────────────
 
+  void _showBlockingAlert(int index) {
     Get.defaultDialog(
       title: tr(LocaleKeys.home_incomplete_profile_alert_title),
-      // "ملفك غير مكتمل"
       middleText: tr(
         LocaleKeys.alerts_incomplete_profile_blocking,
-        args: [sectionName],
+        args: [_sectionName(index)],
       ),
       textConfirm: tr(LocaleKeys.alerts_complete_now),
       confirmTextColor: Colors.white,
       onConfirm: () {
-        Get.back(); // إغلاق الدايلوج
-        // Get.toNamed(Routes.COMPLETE_PROFILE); // الذهاب للاستكمال
+        Get.back();
+        // Get.toNamed(Routes.COMPLETE_PROFILE);
       },
-      textCancel: tr('cancel'), // زر إلغاء اختياري
+      textCancel: tr('cancel'),
     );
   }
+
+  String _sectionName(int index) => switch (index) {
+    1 => tr(LocaleKeys.nav_doctors),
+    2 => tr(LocaleKeys.nav_services),
+    3 => tr(LocaleKeys.nav_appointments),
+    4 => tr(LocaleKeys.nav_reports),
+    _ => '',
+  };
 }
