@@ -1,14 +1,8 @@
-enum NotificationType {
-  appointment,
-  labResult,
-  payment,
-  message,
-}
+import 'package:flutter/material.dart';
 
-enum NotificationStatus {
-  unread,
-  read,
-}
+enum NotificationType { appointment, labResult, payment, message }
+
+enum NotificationStatus { unread, read }
 
 class NotificationModel {
   final String id;
@@ -17,9 +11,9 @@ class NotificationModel {
   final NotificationType type;
   final NotificationStatus status;
   final DateTime createdAt;
-  final String? relatedId; // ID للموعد أو الفاتورة المرتبطة
+  final String? relatedId;
 
-  NotificationModel({
+  const NotificationModel({
     required this.id,
     required this.title,
     required this.body,
@@ -29,7 +23,6 @@ class NotificationModel {
     this.relatedId,
   });
 
-  // للتحقق إذا كان الإشعار اليوم
   bool get isToday {
     final now = DateTime.now();
     return createdAt.year == now.year &&
@@ -37,7 +30,6 @@ class NotificationModel {
         createdAt.day == now.day;
   }
 
-  // للتحقق إذا كان الإشعار البارحة
   bool get isYesterday {
     final yesterday = DateTime.now().subtract(const Duration(days: 1));
     return createdAt.year == yesterday.year &&
@@ -45,15 +37,49 @@ class NotificationModel {
         createdAt.day == yesterday.day;
   }
 
-  // للحصول على التاريخ المنسق
   String get formattedDate {
     if (isToday) return 'اليوم';
     if (isYesterday) return 'البارحة';
     return '${createdAt.day}/${createdAt.month}/${createdAt.year}';
   }
 
-  // للحصول على الوقت المنسق
-  String get formattedTime {
-    return '${createdAt.hour}:${createdAt.minute.toString().padLeft(2, '0')}';
-  }
+  String get formattedTime =>
+      '${createdAt.hour}:${createdAt.minute.toString().padLeft(2, '0')}';
+
+  NotificationModel copyWith({
+    String? id,
+    String? title,
+    String? body,
+    NotificationType? type,
+    NotificationStatus? status,
+    DateTime? createdAt,
+    String? relatedId,
+  }) =>
+      NotificationModel(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        body: body ?? this.body,
+        type: type ?? this.type,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        relatedId: relatedId ?? this.relatedId,
+      );
+}
+
+// ── UI extensions (type → icon / color) ──────────────────────────────────────
+
+extension NotificationTypeX on NotificationType {
+  IconData get icon => switch (this) {
+    NotificationType.appointment => Icons.event_note_rounded,
+    NotificationType.labResult   => Icons.science_rounded,
+    NotificationType.payment     => Icons.payments_rounded,
+    NotificationType.message     => Icons.message_rounded,
+  };
+
+  Color get color => switch (this) {
+    NotificationType.appointment => const Color(0xFF009688),
+    NotificationType.labResult   => const Color(0xFF8B5CF6),
+    NotificationType.payment     => const Color(0xFF10B981),
+    NotificationType.message     => const Color(0xFF3B82F6),
+  };
 }
