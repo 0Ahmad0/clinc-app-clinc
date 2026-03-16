@@ -20,7 +20,7 @@ class DoctorCard extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final specColor = DoctorsController.specialtyColor(doctor.specialty);
-    final initials = _getInitials(doctor.nameAr);
+    final initials  = DoctorsController.getInitials(doctor.nameAr);
 
     return GestureDetector(
       onTap: onTap,
@@ -159,13 +159,6 @@ class DoctorCard extends StatelessWidget {
     );
   }
 
-  String _getInitials(String name) {
-    final parts = name.replaceAll('د.', '').trim().split(' ');
-    if (parts.length >= 2) {
-      return '${parts[0][0]}${parts[1][0]}';
-    }
-    return parts[0].isNotEmpty ? parts[0][0] : '؟';
-  }
 }
 
 class _Avatar extends StatelessWidget {
