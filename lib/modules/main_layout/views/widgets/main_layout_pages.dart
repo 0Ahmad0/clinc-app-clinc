@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../controllers/main_layout_controller.dart';
-import '../../../../appointments/views/appointments_view.dart';
-import '../../../../dashboard/views/dashboard_view.dart';
-import '../../../../doctors/views/doctors_view.dart';
-import '../../../../reports/views/reports_view.dart';
-import '../../../../services/views/services_view.dart';
+
+import '../../../appointments/views/appointments_view.dart';
+import '../../../dashboard/views/dashboard_view.dart';
+import '../../../doctors/views/doctors_view.dart';
+import '../../../reports/views/reports_view.dart';
+import '../../../services/views/services_view.dart';
+import '../../controllers/main_layout_controller.dart';
 
 /// Renders the currently selected tab via IndexedStack (all tabs stay alive).
 class MainLayoutPages extends GetView<MainLayoutController> {

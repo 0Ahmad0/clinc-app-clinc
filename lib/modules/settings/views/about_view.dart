@@ -211,51 +211,29 @@ class AboutView extends StatelessWidget {
   }
 
   Widget _buildRateCard(ThemeData theme, ColorScheme cs) {
-    return Container(
-      padding: EdgeInsets.all(20.r),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF59E0B).withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.2)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'أعجبك التطبيق؟',
-                  style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-                ),
-                4.verticalSpace,
-                Text(
-                  'قيّمنا بخمس نجوم وساعدنا في التحسين!',
-                  style: theme.textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
-                ),
-              ],
+    return GestureDetector(
+      onTap: (){},
+      child: Container(
+        padding: EdgeInsets.all(20.r),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF59E0B).withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(18.r),
+          border: Border.all(color: const Color(0xFFF59E0B).withValues(alpha: 0.2)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'أعجبك التطبيق؟',
+              style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
             ),
-          ),
-          14.horizontalSpace,
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFF59E0B),
-              foregroundColor: Colors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+            4.verticalSpace,
+            Text(
+              'قيّمنا بخمس نجوم وساعدنا في التحسين!',
+              style: theme.textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.star_rounded, size: 16.sp),
-                4.horizontalSpace,
-                const Text('تقييم', style: TextStyle(fontWeight: FontWeight.w700)),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

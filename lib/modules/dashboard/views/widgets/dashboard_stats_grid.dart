@@ -16,7 +16,7 @@ class DashboardStatsGrid extends GetView<DashboardController> {
           crossAxisCount: 2,
           mainAxisSpacing: 12.h,
           crossAxisSpacing: 12.w,
-          childAspectRatio: 1.55,
+          childAspectRatio: 1.4,
         ),
         delegate: SliverChildBuilderDelegate(
           (_, i) => _StatCard(stat: controller.stats[i]),
@@ -133,9 +133,9 @@ class _CardBottomSection extends StatelessWidget {
         4.verticalSpace,
         Text(stat.label,
             style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12.sp, fontWeight: FontWeight.w600)),
-        if (stat.isIncome)
-          Text('اضغط للإظهار',
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 9.sp)),
+        // if (stat.isIncome)
+        //   Text('اضغط للإظهار',
+        //       style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 9.sp)),
       ],
     );
   }
