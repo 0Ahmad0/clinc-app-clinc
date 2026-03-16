@@ -23,7 +23,7 @@ class AppointmentDetailsView extends GetView<AppointmentDetailsController> {
         final statusColor = AppStatusColors.forStatus(a.status);
 
         return CustomScrollView(
-          physics: const BouncingScrollPhysics(),
+           
           slivers: [
             AppointmentHeroHeader(appointment: a, statusColor: statusColor),
             SliverPadding(

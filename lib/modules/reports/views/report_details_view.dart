@@ -20,7 +20,7 @@ class ReportDetailsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+         
         slivers: [
           ReportDetailsHeroHeader(report: report),
           SliverPadding(

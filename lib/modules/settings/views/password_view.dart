@@ -53,7 +53,7 @@ class _PasswordViewState extends State<PasswordView> {
     return Scaffold(
       backgroundColor: cs.surface,
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+         
         slivers: [
           SliverAppBar(
             pinned: true,

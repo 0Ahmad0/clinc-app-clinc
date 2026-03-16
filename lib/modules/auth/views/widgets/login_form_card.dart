@@ -42,7 +42,7 @@ class LoginFormCard extends StatelessWidget {
               validator: controller.validateRequired,
             ),
             16.verticalSpace,
-            Obx(() => AppAuthField(
+            AppAuthField(
               controller: controller.passwordController,
               label: tr(LocaleKeys.login_fields_password),
               icon: Icons.lock_outline,
@@ -50,7 +50,7 @@ class LoginFormCard extends StatelessWidget {
               inputAction: TextInputAction.done,
               validator: controller.validateRequired,
               onSubmitted: (_) => controller.login(),
-            )),
+            ),
             6.verticalSpace,
             Align(
               alignment: AlignmentDirectional.centerEnd,

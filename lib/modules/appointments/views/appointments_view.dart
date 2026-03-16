@@ -29,7 +29,7 @@ class AppointmentsView extends GetView<AppointmentsController> {
           }
           return ListView.separated(
             padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 100.h),
-            physics: const BouncingScrollPhysics(),
+             
             itemCount: list.length,
             separatorBuilder: (_, __) => 14.verticalSpace,
             itemBuilder: (_, i) => AppointmentCardWidget(item: list[i]),

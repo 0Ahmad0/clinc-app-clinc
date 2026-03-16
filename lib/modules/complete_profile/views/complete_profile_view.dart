@@ -55,7 +55,7 @@ class CompleteProfileView extends GetView<CompleteProfileController> {
         ),
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+         
         padding: EdgeInsets.only(bottom: 40.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

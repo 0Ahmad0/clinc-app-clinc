@@ -13,7 +13,7 @@ class OnboardingPageView extends GetView<OnboardingController> {
       controller: controller.pageController,
       itemCount: OnboardingController.pagesCount,
       onPageChanged: controller.onPageChanged,
-      physics: const BouncingScrollPhysics(),
+       
       itemBuilder: (_, i) => OnboardingPage(index: i),
     );
   }

@@ -29,7 +29,7 @@ class AddDoctorView extends GetView<AddDoctorController> {
       body: Form(
         key: controller.formKey,
         child: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
+           
           slivers: [
             const AddDoctorHeroHeader(),
             SliverPadding(

@@ -18,7 +18,7 @@ class SettingsView extends GetView<SettingsController> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+         
         slivers: [
           const SettingsHeroHeader(),
           SliverToBoxAdapter(child: 20.verticalSpace),

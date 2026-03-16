@@ -19,7 +19,7 @@ class LoginController extends GetxController {
   void togglePassVisibility() => isPassHidden.toggle();
 
   Future<void> login() async {
-    if (!formKey.currentState!.validate()) return;
+    if (formKey.currentState!.validate()) return;
 
     try {
       isLoading.value = true;

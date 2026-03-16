@@ -18,7 +18,7 @@ class ReportsView extends GetView<ReportsController> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+         
         slivers: const [
           ReportsHeader(),
           ReportsPeriodTabs(),

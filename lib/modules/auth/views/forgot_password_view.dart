@@ -31,7 +31,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
           ),
           Expanded(
             child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
+               
               padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: Column(
                 children: [

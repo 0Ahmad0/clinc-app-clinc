@@ -19,7 +19,7 @@ class DashboardView extends GetView<DashboardController> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+         
         slivers: [
           const DashboardSliverHeader(),
           const DashboardQuickActions(),

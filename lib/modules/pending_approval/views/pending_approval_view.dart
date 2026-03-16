@@ -19,7 +19,7 @@ class PendingApprovalView extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+         
         slivers: [
           SliverToBoxAdapter(
             child: AppGradientHeader(

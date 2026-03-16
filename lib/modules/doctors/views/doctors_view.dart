@@ -27,7 +27,7 @@ class DoctorsView extends GetView<DoctorsController> {
 
           return ListView.separated(
             padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 100.h),
-            physics: const BouncingScrollPhysics(),
+             
             itemCount: list.length,
             separatorBuilder: (_, __) => 12.verticalSpace,
             itemBuilder: (_, i) => DoctorCard(

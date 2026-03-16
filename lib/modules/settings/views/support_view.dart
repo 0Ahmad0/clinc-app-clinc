@@ -17,7 +17,7 @@ class SupportView extends StatelessWidget {
     return Scaffold(
       backgroundColor: cs.surface,
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+         
         slivers: [
           SliverToBoxAdapter(child: _buildHeader(theme, isDark)),
           SliverPadding(

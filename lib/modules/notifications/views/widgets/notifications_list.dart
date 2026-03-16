@@ -19,7 +19,7 @@ class NotificationsList extends GetView<NotificationsController> {
       if (grouped.isEmpty) return const EmptyNotifications();
 
       return ListView.builder(
-        physics: const BouncingScrollPhysics(),
+         
         padding: EdgeInsets.fromLTRB(0, 8.h, 0, 40.h),
         itemCount: grouped.length,
         itemBuilder: (_, index) {

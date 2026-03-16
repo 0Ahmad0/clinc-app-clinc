@@ -21,7 +21,7 @@ class DoctorDetailsView extends GetView<DoctorsController> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+         
         slivers: [
           DoctorDetailsHeroAppBar(doctor: doctor, specColor: specColor, initials: initials),
           SliverPadding(

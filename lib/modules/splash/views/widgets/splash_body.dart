@@ -5,6 +5,14 @@ import 'splash_footer.dart';
 import 'splash_loading_dots.dart';
 import 'splash_logo_circle.dart';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+// Note: Ensure these imports match your project structure
+// import 'splash_brand_section.dart';
+// import 'splash_footer.dart';
+// import 'splash_loading_dots.dart';
+// import 'splash_logo_circle.dart';
+
 class SplashBody extends StatefulWidget {
   const SplashBody({super.key});
 
@@ -45,10 +53,17 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 900),
     )..repeat();
 
+    // FIX: Wrapped Curves.easeOutBack in _ClampedCurve to prevent
+    // values > 1.0 from breaking the TweenSequence assertion.
     _logoScale = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 0.0, end: 1.2), weight: 65),
       TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 35),
-    ]).animate(CurvedAnimation(parent: _heroCtrl, curve: Curves.easeOutBack));
+    ]).animate(
+      CurvedAnimation(
+        parent: _heroCtrl,
+        curve: const _ClampedCurve(Curves.easeOutBack),
+      ),
+    );
 
     _logoOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
@@ -103,7 +118,7 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
                   opacity: _logoOpacity,
                   child: ScaleTransition(
                     scale: _logoScale,
-                    child: const SplashLogoCircle(),
+                    child: const SplashLogoCircle(), // Ensure this widget exists
                   ),
                 ),
                 30.verticalSpace,
@@ -113,19 +128,19 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
                     opacity: _textOpacity,
                     child: Transform.translate(
                       offset: Offset(0, _textSlide.value),
-                      child: const SplashBrandName(),
+                      child: const SplashBrandName(), // Ensure this widget exists
                     ),
                   ),
                 ),
                 10.verticalSpace,
                 FadeTransition(
                   opacity: _taglineOpacity,
-                  child: const SplashTagline(),
+                  child: const SplashTagline(), // Ensure this widget exists
                 ),
                 const Spacer(flex: 2),
-                SplashLoadingDots(controller: _dotsCtrl),
+                SplashLoadingDots(controller: _dotsCtrl), // Ensure this widget exists
                 18.verticalSpace,
-                const SplashFooter(),
+                const SplashFooter(), // Ensure this widget exists
                 24.verticalSpace,
               ],
             ),
@@ -133,6 +148,17 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
         ],
       ),
     );
+  }
+}
+
+/// A custom curve helper to prevent "overshooting" curves from breaking TweenSequences
+class _ClampedCurve extends Curve {
+  final Curve curve;
+  const _ClampedCurve(this.curve);
+
+  @override
+  double transformInternal(double t) {
+    return curve.transform(t).clamp(0.0, 1.0);
   }
 }
 

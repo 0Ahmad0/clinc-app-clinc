@@ -138,7 +138,7 @@ class _ProfileViewState extends State<ProfileView> {
     return Scaffold(
       backgroundColor: cs.surface,
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+         
         slivers: [
           SliverToBoxAdapter(child: _buildPhotoHeader(cs, isDark)),
           SliverPadding(
