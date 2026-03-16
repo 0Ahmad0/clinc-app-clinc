@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../../../app/core/design/app_gradients.dart';
+import '../../../app/core/widgets/app_gradient_button.dart';
+import '../../../app/core/widgets/app_gradient_header.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../controllers/pending_approval_controller.dart';
 
@@ -10,7 +13,6 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
   const PendingApprovalView({super.key});
 
   static const _amber = Color(0xFFF59E0B);
-  static const _darkAmber = Color(0xFF92400E);
   static const _teal = Color(0xFF009688);
 
   @override
@@ -21,7 +23,28 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverToBoxAdapter(child: _buildTopBanner(context)),
+          SliverToBoxAdapter(
+            child: AppGradientHeader(
+              gradient: AppGradients.amber,
+              icon: Icons.access_time_rounded,
+              iconCircleSize: 90,
+              iconSize: 50,
+              bottomRadius: 40,
+              title: tr(LocaleKeys.pending_approval_title),
+              subtitle: tr(LocaleKeys.pending_approval_subtitle),
+              trailing: _buildLogoutButton(),
+              badge: Container(
+                width: 22.r,
+                height: 22.r,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: _amber, width: 1.5),
+                ),
+                child: Icon(Icons.hourglass_empty_rounded, size: 12.r, color: _amber),
+              ),
+            ),
+          ),
           SliverPadding(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             sliver: SliverList(
@@ -41,99 +64,28 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
     );
   }
 
-  Widget _buildTopBanner(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF78350F), _darkAmber, _amber],
+  Widget _buildLogoutButton() {
+    return GestureDetector(
+      onTap: controller.logout,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.18),
+          borderRadius: BorderRadius.circular(10.r),
         ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(40),
-          bottomRight: Radius.circular(40),
-        ),
-      ),
-      child: SafeArea(
-        bottom: false,
-        child: Column(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: controller.logout,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 7.h),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.18),
-                        borderRadius: BorderRadius.circular(10.r),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.logout_rounded, color: Colors.white, size: 15.r),
-                          6.horizontalSpace,
-                          Text(
-                            'تسجيل الخروج',
-                            style: TextStyle(color: Colors.white, fontSize: 12.sp, fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            28.verticalSpace,
-            Container(
-              width: 90.r,
-              height: 90.r,
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Icon(Icons.access_time_rounded, size: 50.r, color: Colors.white),
-                    Positioned(
-                      bottom: 14.r,
-                      right: 14.r,
-                      child: Container(
-                        width: 22.r,
-                        height: 22.r,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: _amber, width: 1.5),
-                        ),
-                        child: Icon(Icons.hourglass_empty_rounded, size: 12.r, color: _amber),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            16.verticalSpace,
+            Icon(Icons.logout_rounded, color: Colors.white, size: 15.r),
+            6.horizontalSpace,
             Text(
-              tr(LocaleKeys.pending_approval_title),
-              style: TextStyle(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.w900),
-            ),
-            10.verticalSpace,
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40.w),
-              child: Text(
-                tr(LocaleKeys.pending_approval_subtitle),
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.82), fontSize: 12.sp, height: 1.5),
+              'تسجيل الخروج',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            28.verticalSpace,
           ],
         ),
       ),
@@ -145,7 +97,13 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 20, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       padding: EdgeInsets.all(20.r),
       child: Column(
@@ -168,7 +126,11 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
                   children: [
                     Text(
                       'حالة الطلب',
-                      style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14.sp, color: Colors.grey.shade800),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 14.sp,
+                        color: Colors.grey.shade800,
+                      ),
                     ),
                     4.verticalSpace,
                     Container(
@@ -179,7 +141,11 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
                       ),
                       child: Text(
                         'قيد المراجعة',
-                        style: TextStyle(color: _amber, fontSize: 11.sp, fontWeight: FontWeight.w700),
+                        style: TextStyle(
+                          color: _amber,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
@@ -197,7 +163,11 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
             ),
             child: Text(
               tr(LocaleKeys.pending_approval_description),
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 12.sp, height: 1.6),
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 12.sp,
+                height: 1.6,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -217,13 +187,26 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 20, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       padding: EdgeInsets.all(20.r),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('مراحل التفعيل', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14.sp, color: Colors.grey.shade800)),
+          Text(
+            'مراحل التفعيل',
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              fontSize: 14.sp,
+              color: Colors.grey.shade800,
+            ),
+          ),
           16.verticalSpace,
           ...List.generate(steps.length, (i) {
             final step = steps[i];
@@ -277,72 +260,21 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
   Widget _buildActionsCard() {
     return Column(
       children: [
-        Obx(() => GestureDetector(
-          onTap: controller.isLoading.value ? null : controller.checkStatus,
-          child: Container(
-            width: double.infinity,
-            height: 52.h,
-            decoration: BoxDecoration(
-              gradient: controller.isLoading.value
-                  ? null
-                  : const LinearGradient(
-                      colors: [_amber, Color(0xFFD97706)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-              color: controller.isLoading.value ? Colors.grey.shade300 : null,
-              borderRadius: BorderRadius.circular(14.r),
-              boxShadow: controller.isLoading.value
-                  ? []
-                  : [BoxShadow(color: _amber.withValues(alpha: 0.38), blurRadius: 14, offset: const Offset(0, 5))],
-            ),
-            child: Center(
-              child: controller.isLoading.value
-                  ? SizedBox(
-                      width: 22.r,
-                      height: 22.r,
-                      child: const CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white),
-                    )
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.refresh_rounded, color: Colors.white, size: 18.r),
-                        8.horizontalSpace,
-                        Text(
-                          tr(LocaleKeys.pending_approval_buttons_check_status),
-                          style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeight.w800),
-                        ),
-                      ],
-                    ),
-            ),
-          ),
+        Obx(() => AppGradientButton(
+          label: tr(LocaleKeys.pending_approval_buttons_check_status),
+          isLoading: controller.isLoading.value,
+          onTap: controller.checkStatus,
+          gradient: AppGradients.amber,
+          shadowColor: AppGradients.amberShadow,
+          prefixIcon: Icon(Icons.refresh_rounded, color: Colors.white, size: 18.r),
         )),
         16.verticalSpace,
-        GestureDetector(
+        AppOutlineGradientButton(
+          label: tr(LocaleKeys.pending_approval_buttons_contact_support),
           onTap: controller.contactSupport,
-          child: Container(
-            width: double.infinity,
-            height: 50.h,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(color: Colors.grey.shade200),
-              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 12, offset: const Offset(0, 3))],
-            ),
-            child: Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.support_agent_rounded, color: Colors.grey.shade600, size: 18.r),
-                  8.horizontalSpace,
-                  Text(
-                    tr(LocaleKeys.pending_approval_buttons_contact_support),
-                    style: TextStyle(color: Colors.grey.shade700, fontSize: 14.sp, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          borderColor: Colors.grey.shade200,
+          textColor: Colors.grey.shade700,
+          prefixIcon: Icon(Icons.support_agent_rounded, color: Colors.grey.shade600, size: 18.r),
         ),
       ],
     );
@@ -355,5 +287,12 @@ class _Step {
   final String label;
   final bool done;
   final bool active;
-  const _Step({required this.icon, required this.color, required this.label, required this.done, this.active = false});
+
+  const _Step({
+    required this.icon,
+    required this.color,
+    required this.label,
+    required this.done,
+    this.active = false,
+  });
 }

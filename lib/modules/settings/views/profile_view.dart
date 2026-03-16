@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import '../controllers/settings_controller.dart';
 import '../../../app/data/profile_model.dart';
+import '../../../app/core/widgets/app_bottom_sheet.dart';
+import '../../../app/core/design/app_gradients.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -75,46 +77,25 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Future<ImageSource?> _showImageSourceDialog() async {
-    return showModalBottomSheet<ImageSource>(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (_) => Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+    return AppBottomSheet.showOptions<ImageSource>(
+      title: 'اختر مصدر الصورة',
+      gradient: AppGradients.purple,
+      options: [
+        AppBottomSheetOption(
+          icon: Icons.camera_alt_rounded,
+          label: 'الكاميرا',
+          subtitle: 'التقط صورة جديدة',
+          value: ImageSource.camera,
+          color: const Color(0xFF009688),
         ),
-        padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 32.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(width: 40.w, height: 4.h, decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(4.r))),
-            20.verticalSpace,
-            Text('اختر مصدر الصورة', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15.sp)),
-            20.verticalSpace,
-            Row(
-              children: [
-                Expanded(
-                  child: _SourceTile(
-                    icon: Icons.camera_alt_rounded,
-                    label: 'الكاميرا',
-                    color: _teal,
-                    onTap: () => Navigator.pop(context, ImageSource.camera),
-                  ),
-                ),
-                16.horizontalSpace,
-                Expanded(
-                  child: _SourceTile(
-                    icon: Icons.photo_library_rounded,
-                    label: 'المعرض',
-                    color: _purple,
-                    onTap: () => Navigator.pop(context, ImageSource.gallery),
-                  ),
-                ),
-              ],
-            ),
-          ],
+        AppBottomSheetOption(
+          icon: Icons.photo_library_rounded,
+          label: 'معرض الصور',
+          subtitle: 'اختر من الصور الموجودة',
+          value: ImageSource.gallery,
+          color: const Color(0xFF673AB7),
         ),
-      ),
+      ],
     );
   }
 
@@ -350,36 +331,6 @@ class _ProfileViewState extends State<ProfileView> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SourceTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-  final VoidCallback onTap;
-  const _SourceTile({required this.icon, required this.label, required this.color, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 18.h),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: color.withValues(alpha: 0.2)),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: color, size: 28.r),
-            10.verticalSpace,
-            Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w700, fontSize: 13.sp)),
-          ],
-        ),
       ),
     );
   }
