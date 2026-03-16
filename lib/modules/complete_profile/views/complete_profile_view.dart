@@ -1,35 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../app/core/widgets/app_button_widget.dart';
-import '../../../app/core/widgets/app_scaffold_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
+import '../../../app/core/design/app_gradients.dart';
+import '../../../app/core/widgets/app_gradient_button.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../controllers/complete_profile_controller.dart';
-import 'widgets/cp_images_widget.dart';
-import 'widgets/cp_info_widget.dart';
-import 'widgets/cp_schedule_widget.dart';
+import 'widgets/cp_images_section.dart';
+import 'widgets/cp_info_card.dart';
+import 'widgets/cp_schedule_card.dart';
 
 class CompleteProfileView extends GetView<CompleteProfileController> {
   const CompleteProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffoldWidget(
-      appBar: AppBar(
-        title: Text(tr(LocaleKeys.complete_profile_title)),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          TextButton(
-            onPressed: controller.skip,
-            child: Text(
-              tr(LocaleKeys.complete_profile_skip),
-              style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Container(
+          decoration: const BoxDecoration(gradient: AppGradients.purple),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: Text(
+              tr(LocaleKeys.complete_profile_title),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+              ),
             ),
+            centerTitle: true,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white),
+              onPressed: () => Get.back(),
+            ),
+            actions: [
+              TextButton(
+                onPressed: controller.skip,
+                child: Text(
+                  tr(LocaleKeys.complete_profile_skip),
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.85),
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -37,37 +60,24 @@ class CompleteProfileView extends GetView<CompleteProfileController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // 1. قسم الصور (بانر + بروفايل)
-            const CPImagesWidget(),
-
+            const CPImagesSection(),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   24.verticalSpace,
-                  // 2. قسم المعلومات (اختصاص + هاتف)
-                  const CPInfoWidget(),
-
+                  const CPInfoCard(),
+                  24.verticalSpace,
+                  const CPScheduleCard(),
                   32.verticalSpace,
-                  Text(
-                    tr(LocaleKeys.complete_profile_sections_schedule),
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  16.verticalSpace,
-
-                  // 3. جدول الدوام (الوحش)
-                  const CPScheduleWidget(),
-
-                  40.verticalSpace,
-
-                  // زر الحفظ
-                  AppButtonWidget(
-                    text: tr(LocaleKeys.complete_profile_buttons_save_finish),
-                    onPressed: controller.saveDataAndFinish,
-                  ),
+                  Obx(() => AppGradientButton(
+                    label: tr(LocaleKeys.complete_profile_buttons_save_finish),
+                    isLoading: controller.isLoading.value,
+                    onTap: controller.saveDataAndFinish,
+                    gradient: AppGradients.purple,
+                    shadowColor: AppGradients.purpleShadow,
+                  )),
                 ],
               ),
             ),
