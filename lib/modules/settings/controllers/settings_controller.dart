@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../app/data/profile_model.dart';
-import '../../../app/services/storage_service.dart';
+import '../../../generated/locale_keys.g.dart';
 
 class SettingsController extends GetxController {
-  // ========== Services ==========
-  // final StorageService _storage = Get.find<StorageService>();
-  // final AuthService _auth = Get.find<AuthService>();
-
   // ========== Loading States ==========
   final RxBool isLoading = false.obs;
   final RxBool isSavingProfile = false.obs;
@@ -39,21 +36,10 @@ class SettingsController extends GetxController {
     _loadUserProfile();
   }
 
-  // ========== Load Settings ==========
+  // ========== Load ==========
   Future<void> _loadSettings() async {
     isLoading(true);
     try {
-      // TODO: Load from storage
-      // final savedTheme = _storage.read('theme_mode');
-      // if (savedTheme != null) {
-      //   themeMode.value = ThemeMode.values[savedTheme];
-      // }
-
-      // final savedLang = _storage.read('language');
-      // if (savedLang != null) {
-      //   currentLanguage.value = savedLang;
-      // }
-
       await Future.delayed(const Duration(milliseconds: 500));
     } catch (e) {
       debugPrint('Error loading settings: $e');
@@ -63,49 +49,41 @@ class SettingsController extends GetxController {
     }
   }
 
-  // ========== Load User Profile ==========
   Future<void> _loadUserProfile() async {
     try {
-      // TODO: Load from API
-      // final response = await _api.getUserProfile();
-      // profile.value = ProfileModel.fromJson(response.data);
-
-      // For now, using mock data
       await Future.delayed(const Duration(milliseconds: 300));
     } catch (e) {
       debugPrint('Error loading profile: $e');
     }
   }
 
-  // ========== Theme Management ==========
+  // ========== Theme ==========
   void changeTheme(ThemeMode mode) {
     themeMode.value = mode;
     Get.changeThemeMode(mode);
+    _showSuccessSnackbar('Theme changed to ${_getThemeModeName(mode)}');
+  }
 
-    // Save to storage
-    // _storage.write('theme_mode', mode.index);
-
-    _showSuccessSnackbar(
-      'Theme changed to ${_getThemeModeName(mode)}',
-    );
+  /// Localized theme name — for UI subtitle display.
+  String getThemeName(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.system: return tr(LocaleKeys.settings_theme_system);
+      case ThemeMode.light:  return tr(LocaleKeys.settings_theme_light);
+      case ThemeMode.dark:   return tr(LocaleKeys.settings_theme_dark);
+    }
   }
 
   String _getThemeModeName(ThemeMode mode) {
     switch (mode) {
-      case ThemeMode.light:
-        return 'Light';
-      case ThemeMode.dark:
-        return 'Dark';
-      case ThemeMode.system:
-        return 'System Default';
+      case ThemeMode.light:  return 'Light';
+      case ThemeMode.dark:   return 'Dark';
+      case ThemeMode.system: return 'System Default';
     }
   }
 
-  // ========== Language Management ==========
+  // ========== Language ==========
   void changeLanguage(String languageCode) {
     currentLanguage.value = languageCode;
-
-    // Change app locale
     if (languageCode == 'ar') {
       Get.updateLocale(const Locale('ar'));
       Get.context?.setLocale(const Locale('ar'));
@@ -113,29 +91,17 @@ class SettingsController extends GetxController {
       Get.updateLocale(const Locale('en'));
       Get.context?.setLocale(const Locale('en'));
     }
-
-    // Save to storage
-    // _storage.write('language', languageCode);
-
     _showSuccessSnackbar(
       'Language changed to ${languageCode == 'ar' ? 'Arabic' : 'English'}',
     );
   }
 
-  // ========== Profile Management ==========
+  // ========== Profile ==========
   Future<void> updateProfile(ProfileModel newProfile) async {
     isSavingProfile(true);
-
     try {
-      // Simulate API call
       await Future.delayed(const Duration(milliseconds: 1500));
-
-      // TODO: Send to API
-      // await _api.updateProfile(newProfile.toJson());
-
-      // Update local state
       profile.value = newProfile;
-
       _showSuccessSnackbar('Profile updated successfully');
     } catch (e) {
       debugPrint('Error updating profile: $e');
@@ -147,13 +113,7 @@ class SettingsController extends GetxController {
 
   Future<void> uploadAvatar(String imagePath) async {
     try {
-      // TODO: Upload to server
-      // final response = await _api.uploadAvatar(imagePath);
-      // final avatarUrl = response.data['url'];
-
-      // Update profile
       profile.value = profile.value.copyWith(avatar: imagePath);
-
       _showSuccessSnackbar('Avatar updated successfully');
     } catch (e) {
       debugPrint('Error uploading avatar: $e');
@@ -161,53 +121,24 @@ class SettingsController extends GetxController {
     }
   }
 
-  // ========== Notification Settings ==========
+  // ========== Notifications ==========
   void toggleAppNotifications(bool value) {
     appNotificationsEnabled.value = value;
-    // _storage.write('app_notifications', value);
-
-    // If turning off, disable all sub-notifications
     if (!value) {
       appointmentReminders.value = false;
       promotionalNotifications.value = false;
     }
   }
 
-  void toggleEmailNotifications(bool value) {
-    emailNotificationsEnabled.value = value;
-    // _storage.write('email_notifications', value);
-  }
+  void toggleEmailNotifications(bool value) => emailNotificationsEnabled.value = value;
+  void toggleSmsNotifications(bool value)   => smsNotificationsEnabled.value = value;
+  void toggleAppointmentReminders(bool v)   => appointmentReminders.value = v;
+  void togglePromotionalNotifications(bool v) => promotionalNotifications.value = v;
 
-  void toggleSmsNotifications(bool value) {
-    smsNotificationsEnabled.value = value;
-    // _storage.write('sms_notifications', value);
-  }
-
-  void toggleAppointmentReminders(bool value) {
-    appointmentReminders.value = value;
-    // _storage.write('appointment_reminders', value);
-  }
-
-  void togglePromotionalNotifications(bool value) {
-    promotionalNotifications.value = value;
-    // _storage.write('promotional_notifications', value);
-  }
-
-  // ========== Privacy Settings ==========
-  void toggleProfilePublic(bool value) {
-    profilePublic.value = value;
-    // _storage.write('profile_public', value);
-  }
-
-  void toggleShowPhone(bool value) {
-    showPhone.value = value;
-    // _storage.write('show_phone', value);
-  }
-
-  void toggleShowEmail(bool value) {
-    showEmail.value = value;
-    // _storage.write('show_email', value);
-  }
+  // ========== Privacy ==========
+  void toggleProfilePublic(bool v) => profilePublic.value = v;
+  void toggleShowPhone(bool v)     => showPhone.value = v;
+  void toggleShowEmail(bool v)     => showEmail.value = v;
 
   // ========== Account Actions ==========
   Future<void> changePassword({
@@ -216,14 +147,9 @@ class SettingsController extends GetxController {
   }) async {
     try {
       isLoading(true);
-
-      // TODO: Send to API
-      // await _api.changePassword(currentPassword, newPassword);
-
       await Future.delayed(const Duration(milliseconds: 1000));
-
       _showSuccessSnackbar('Password changed successfully');
-      Get.back(); // Close dialog
+      Get.back();
     } catch (e) {
       debugPrint('Error changing password: $e');
       _showErrorSnackbar('Failed to change password');
@@ -235,16 +161,7 @@ class SettingsController extends GetxController {
   Future<void> deleteAccount() async {
     try {
       isLoading(true);
-
-      // TODO: Send to API
-      // await _api.deleteAccount();
-
       await Future.delayed(const Duration(milliseconds: 1000));
-
-      // Clear storage and logout
-      // _storage.erase();
-      // Get.offAllNamed('/login');
-
       _showSuccessSnackbar('Account deleted successfully');
     } catch (e) {
       debugPrint('Error deleting account: $e');
@@ -257,18 +174,7 @@ class SettingsController extends GetxController {
   Future<void> logout() async {
     try {
       isLoading(true);
-
-      // TODO: Call logout API
-      // await _auth.logout();
-
       await Future.delayed(const Duration(milliseconds: 800));
-
-      // Clear storage
-      // _storage.erase();
-
-      // Navigate to login
-      // Get.offAllNamed('/login');
-
       _showSuccessSnackbar('Logged out successfully');
     } catch (e) {
       debugPrint('Error logging out: $e');
@@ -278,43 +184,64 @@ class SettingsController extends GetxController {
     }
   }
 
-  // ========== Helper Methods ==========
-  void _showSuccessSnackbar(String message) {
-    Get.snackbar(
-      'Success',
-      message,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.green.shade100,
-      colorText: Colors.green.shade900,
-      icon: Icon(Icons.check_circle_outline, color: Colors.green.shade700),
-      margin: EdgeInsets.all(16),
-      borderRadius: 12,
-      duration: const Duration(seconds: 2),
+  // ========== Logout Dialog ==========
+  void showLogoutDialog() {
+    Get.dialog(
+      AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.r),
+              decoration: BoxDecoration(
+                color: const Color(0xFFEF4444).withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.logout_rounded,
+                color: const Color(0xFFEF4444),
+                size: 20.sp,
+              ),
+            ),
+            12.horizontalSpace,
+            Text(
+              tr(LocaleKeys.settings_logout),
+              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18.sp),
+            ),
+          ],
+        ),
+        content: Text(tr(LocaleKeys.settings_confirm_logout)),
+        actions: [
+          TextButton(
+            onPressed: Get.back,
+            child: Text(tr(LocaleKeys.settings_cancel)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+              logout();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFEF4444),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+            child: Text(tr(LocaleKeys.settings_confirm)),
+          ),
+        ],
+      ),
     );
   }
 
-  void _showErrorSnackbar(String message) {
-    Get.snackbar(
-      'Error',
-      message,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.red.shade100,
-      colorText: Colors.red.shade900,
-      icon: Icon(Icons.error_outline, color: Colors.red.shade700),
-      margin: EdgeInsets.all(16),
-      borderRadius: 12,
-      duration: const Duration(seconds: 3),
-    );
-  }
-
-  // ========== Data Export ==========
+  // ========== Data / Cache ==========
   Future<void> exportData() async {
     try {
       isLoading(true);
-
-      // TODO: Generate and download data export
       await Future.delayed(const Duration(seconds: 2));
-
       _showSuccessSnackbar('Data exported successfully');
     } catch (e) {
       _showErrorSnackbar('Failed to export data');
@@ -323,14 +250,10 @@ class SettingsController extends GetxController {
     }
   }
 
-  // ========== Cache Management ==========
   Future<void> clearCache() async {
     try {
       isLoading(true);
-
-      // TODO: Clear app cache
       await Future.delayed(const Duration(milliseconds: 800));
-
       _showSuccessSnackbar('Cache cleared successfully');
     } catch (e) {
       _showErrorSnackbar('Failed to clear cache');
@@ -343,11 +266,30 @@ class SettingsController extends GetxController {
   String get appVersion => '1.0.0';
   String get buildNumber => '1';
 
-  Map<String, dynamic> get appInfo => {
-    'version': appVersion,
-    'build': buildNumber,
-    'platform': GetPlatform.isIOS ? 'iOS' : 'Android',
-    'language': currentLanguage.value,
-    'theme': themeMode.value.toString(),
-  };
+  // ========== Snackbars ==========
+  void _showSuccessSnackbar(String message) {
+    Get.snackbar(
+      'Success', message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.green.shade100,
+      colorText: Colors.green.shade900,
+      icon: Icon(Icons.check_circle_outline, color: Colors.green.shade700),
+      margin: const EdgeInsets.all(16),
+      borderRadius: 12,
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  void _showErrorSnackbar(String message) {
+    Get.snackbar(
+      'Error', message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.red.shade100,
+      colorText: Colors.red.shade900,
+      icon: Icon(Icons.error_outline, color: Colors.red.shade700),
+      margin: const EdgeInsets.all(16),
+      borderRadius: 12,
+      duration: const Duration(seconds: 3),
+    );
+  }
 }

@@ -3,37 +3,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SettingsTile extends StatelessWidget {
   final IconData icon;
+  final Color iconColor;
   final String title;
   final String? subtitle;
-  final VoidCallback? onTap;
-  final Widget? trailing;
-  final bool isSwitch;
-  final bool? value;
-  final ValueChanged<bool>? onChanged;
+  final VoidCallback onTap;
 
   const SettingsTile({
     super.key,
     required this.icon,
+    required this.iconColor,
     required this.title,
     this.subtitle,
-    this.onTap,
-    this.trailing,
-    this.isSwitch = false,
-    this.value,
-    this.onChanged,
+    required this.onTap,
   });
-
-  // Constructor for switch tiles
-  const SettingsTile.switchTile({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.value,
-    required this.onChanged,
-    this.subtitle,
-  }) : isSwitch = true,
-        onTap = null,
-        trailing = null;
 
   @override
   Widget build(BuildContext context) {
@@ -41,49 +23,29 @@ class SettingsTile extends StatelessWidget {
     final cs = theme.colorScheme;
 
     return InkWell(
-      onTap: isSwitch ? null : onTap,
-      borderRadius: BorderRadius.circular(12.r),
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          color: cs.surface,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: cs.outlineVariant.withOpacity(0.2)),
-          boxShadow: [
-            BoxShadow(
-              color: cs.shadow.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(18.r),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         child: Row(
           children: [
-            // Icon
             Container(
-              width: 40.r,
-              height: 40.r,
+              width: 38.r,
+              height: 38.r,
               decoration: BoxDecoration(
-                color: cs.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10.r),
+                color: iconColor.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(11.r),
               ),
-              child: Icon(
-                icon,
-                color: cs.primary,
-                size: 20.sp,
-              ),
+              child: Icon(icon, color: iconColor, size: 20.sp),
             ),
-            16.horizontalSpace,
-
-            // Title and Subtitle
+            14.horizontalSpace,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -92,31 +54,18 @@ class SettingsTile extends StatelessWidget {
                     Text(
                       subtitle!,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: cs.onSurfaceVariant,
+                        color: cs.onSurfaceVariant.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
                 ],
               ),
             ),
-            12.horizontalSpace,
-
-            // Trailing (Switch or Arrow)
-            if (isSwitch)
-              Switch(
-                value: value ?? false,
-                onChanged: onChanged,
-                activeColor: cs.primary,
-                activeTrackColor: cs.primary.withOpacity(0.3),
-                inactiveThumbColor: cs.outline,
-                inactiveTrackColor: cs.outlineVariant,
-              )
-            else
-              trailing ?? Icon(
-                Icons.chevron_right,
-                color: cs.onSurfaceVariant,
-                size: 24.sp,
-              ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 15.sp,
+              color: cs.onSurfaceVariant.withValues(alpha: 0.4),
+            ),
           ],
         ),
       ),
