@@ -3,9 +3,10 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../../../../../app/data/report_model.dart';
+import '../../../../app/data/report_model.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../report_details_view.dart';
+import 'report_type_utils.dart';
 
 class ReportListItem extends StatelessWidget {
   final ReportModel report;
@@ -16,7 +17,7 @@ class ReportListItem extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
-    final color = _typeColor(report.type, cs);
+    final color = report.type.typeColor(cs);
     final date = DateFormat('dd MMM yyyy').format(report.generatedAt);
     final time = DateFormat('hh:mm a').format(report.generatedAt);
 
@@ -48,7 +49,6 @@ class ReportListItem extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Left accent bar
                 Container(
                   width: 4.w,
                   height: double.infinity,
@@ -71,7 +71,6 @@ class ReportListItem extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Icon
                             Container(
                               width: 44.r,
                               height: 44.r,
@@ -80,13 +79,12 @@ class ReportListItem extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Icon(
-                                _typeIcon(report.type),
+                                report.type.typeIcon,
                                 color: color,
                                 size: 20.sp,
                               ),
                             ),
                             12.horizontalSpace,
-                            // Title + date
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,8 +94,8 @@ class ReportListItem extends StatelessWidget {
                                       Expanded(
                                         child: Text(
                                           tr(report.type.key()),
-                                          style:
-                                              theme.textTheme.titleSmall?.copyWith(
+                                          style: theme.textTheme.titleSmall
+                                              ?.copyWith(
                                             fontWeight: FontWeight.w800,
                                           ),
                                           maxLines: 1,
@@ -123,8 +121,8 @@ class ReportListItem extends StatelessWidget {
                                       4.horizontalSpace,
                                       Text(
                                         date,
-                                        style:
-                                            theme.textTheme.labelSmall?.copyWith(
+                                        style: theme.textTheme.labelSmall
+                                            ?.copyWith(
                                           color: cs.onSurfaceVariant,
                                         ),
                                       ),
@@ -137,8 +135,8 @@ class ReportListItem extends StatelessWidget {
                                       4.horizontalSpace,
                                       Text(
                                         time,
-                                        style:
-                                            theme.textTheme.labelSmall?.copyWith(
+                                        style: theme.textTheme.labelSmall
+                                            ?.copyWith(
                                           color: cs.onSurfaceVariant,
                                         ),
                                       ),
@@ -147,7 +145,6 @@ class ReportListItem extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            // Arrow
                             Icon(
                               Icons.arrow_forward_ios_rounded,
                               size: 14.sp,
@@ -156,12 +153,8 @@ class ReportListItem extends StatelessWidget {
                           ],
                         ),
                         14.verticalSpace,
-
-                        // Progress bar
                         _SegmentedBar(report: report, color: color),
                         10.verticalSpace,
-
-                        // Stats badges
                         Row(
                           children: [
                             _StatBadge(
@@ -212,37 +205,8 @@ class ReportListItem extends StatelessWidget {
       ),
     );
   }
-
-  Color _typeColor(ReportType type, ColorScheme cs) {
-    switch (type) {
-      case ReportType.appointments:
-        return cs.primary;
-      case ReportType.labResults:
-        return const Color(0xFF6366F1);
-      case ReportType.revenue:
-        return const Color(0xFF10B981);
-      case ReportType.doctors:
-        return const Color(0xFFF59E0B);
-    }
-  }
-
-  IconData _typeIcon(ReportType type) {
-    switch (type) {
-      case ReportType.appointments:
-        return Icons.calendar_month_rounded;
-      case ReportType.labResults:
-        return Icons.biotech_rounded;
-      case ReportType.revenue:
-        return Icons.trending_up_rounded;
-      case ReportType.doctors:
-        return Icons.medical_services_rounded;
-    }
-  }
 }
 
-// ═══════════════════════════════════════════════
-// Segmented progress bar
-// ═══════════════════════════════════════════════
 class _SegmentedBar extends StatelessWidget {
   final ReportModel report;
   final Color color;
@@ -287,9 +251,6 @@ class _SegmentedBar extends StatelessWidget {
   }
 }
 
-// ═══════════════════════════════════════════════
-// Stat Badge
-// ═══════════════════════════════════════════════
 class _StatBadge extends StatelessWidget {
   final int value;
   final String label;
