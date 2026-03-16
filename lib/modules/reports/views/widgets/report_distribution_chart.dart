@@ -21,39 +21,39 @@ class _ReportDistributionChartState extends State<ReportDistributionChart> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final r = widget.report;
+    final rpt = widget.report;
 
     final sections = [
-      if (r.completed > 0)
+      if (rpt.completed > 0)
         PieChartSectionData(
-          value: r.completed.toDouble(),
+          value: rpt.completed.toDouble(),
           color: const Color(0xFF10B981),
           radius: touchedIndex == 0 ? 62.r : 54.r,
-          title: touchedIndex == 0 ? '${r.completed}' : '',
+          title: touchedIndex == 0 ? '${rpt.completed}' : '',
           titleStyle: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w800,
             fontSize: 14.sp,
           ),
         ),
-      if (r.pending > 0)
+      if (rpt.pending > 0)
         PieChartSectionData(
-          value: r.pending.toDouble(),
+          value: rpt.pending.toDouble(),
           color: const Color(0xFFF59E0B),
           radius: touchedIndex == 1 ? 62.r : 54.r,
-          title: touchedIndex == 1 ? '${r.pending}' : '',
+          title: touchedIndex == 1 ? '${rpt.pending}' : '',
           titleStyle: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w800,
             fontSize: 14.sp,
           ),
         ),
-      if (r.cancelled > 0)
+      if (rpt.cancelled > 0)
         PieChartSectionData(
-          value: r.cancelled.toDouble(),
+          value: rpt.cancelled.toDouble(),
           color: const Color(0xFFEF4444),
           radius: touchedIndex == 2 ? 62.r : 54.r,
-          title: touchedIndex == 2 ? '${r.cancelled}' : '',
+          title: touchedIndex == 2 ? '${rpt.cancelled}' : '',
           titleStyle: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w800,
@@ -131,22 +131,22 @@ class _ReportDistributionChartState extends State<ReportDistributionChart> {
                     _PieLegendRow(
                       color: const Color(0xFF10B981),
                       label: tr(LocaleKeys.reports_cards_completed),
-                      value: r.completed,
-                      total: r.total,
+                      value: rpt.completed,
+                      total: rpt.total,
                     ),
                     16.verticalSpace,
                     _PieLegendRow(
                       color: const Color(0xFFF59E0B),
                       label: tr(LocaleKeys.reports_cards_pending),
-                      value: r.pending,
-                      total: r.total,
+                      value: rpt.pending,
+                      total: rpt.total,
                     ),
                     16.verticalSpace,
                     _PieLegendRow(
                       color: const Color(0xFFEF4444),
                       label: tr(LocaleKeys.reports_cards_cancelled),
-                      value: r.cancelled,
-                      total: r.total,
+                      value: rpt.cancelled,
+                      total: rpt.total,
                     ),
                   ],
                 ),
