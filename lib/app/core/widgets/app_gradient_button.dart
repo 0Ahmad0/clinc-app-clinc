@@ -14,6 +14,7 @@ class AppGradientButton extends StatelessWidget {
   final double height;
   final double borderRadius;
   final Widget? prefixIcon;
+  final Color textColor;
 
   const AppGradientButton({
     super.key,
@@ -26,6 +27,7 @@ class AppGradientButton extends StatelessWidget {
     this.height = 52,
     this.borderRadius = 14,
     this.prefixIcon,
+    this.textColor = Colors.white,
   });
 
   @override
@@ -70,7 +72,7 @@ class AppGradientButton extends StatelessWidget {
                     Text(
                       label,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: textColor,
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.3,
