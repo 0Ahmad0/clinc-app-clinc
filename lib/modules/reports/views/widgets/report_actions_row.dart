@@ -5,6 +5,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../app/data/report_model.dart';
 import '../../../../generated/locale_keys.g.dart';
 
+Future<void> _openUrl(String url) async {
+  final uri = Uri.tryParse(url);
+  if (uri != null) await launchUrl(uri);
+}
+
 class ReportActionsRow extends StatelessWidget {
   final ReportModel report;
   const ReportActionsRow({super.key, required this.report});
@@ -37,13 +42,10 @@ class ReportActionsRow extends StatelessWidget {
           12.horizontalSpace,
           Expanded(
             child: FilledButton.icon(
-              onPressed: () async {
-                if (report.pdfPathOrUrl != null &&
-                    report.pdfPathOrUrl!.isNotEmpty) {
-                  final uri = Uri.tryParse(report.pdfPathOrUrl!);
-                  if (uri != null) await launchUrl(uri);
-                }
-              },
+              onPressed: report.pdfPathOrUrl != null &&
+                      report.pdfPathOrUrl!.isNotEmpty
+                  ? () => _openUrl(report.pdfPathOrUrl!)
+                  : null,
               icon: Icon(Icons.picture_as_pdf_rounded, size: 18.sp),
               label: Text(
                 tr(LocaleKeys.reports_details_view_pdf),
