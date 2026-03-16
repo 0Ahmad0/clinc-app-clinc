@@ -1,42 +1,48 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
-
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import '../../../generated/locale_keys.g.dart';
 
 class PendingApprovalController extends GetxController {
+  // ── State ──────────────────────────────────────────────────────────────────
 
   final RxBool isLoading = false.obs;
 
-  // فحص حالة الطلب يدوياً
+  // ── Lifecycle ──────────────────────────────────────────────────────────────
+
+  @override
+  void onReady() {
+    super.onReady();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+  }
+
+  // ── Commands ───────────────────────────────────────────────────────────────
+
   Future<void> checkStatus() async {
     try {
       isLoading.value = true;
-
-      // Simulate API Call
       await Future.delayed(const Duration(seconds: 2));
 
-      // TODO: Call API -> Check if status changed from 'pending' to 'approved'
-      bool isApproved = false; // غيّرها لـ true للتجربة
+      // TODO: replace with real API call
+      const isApproved = false;
 
       if (isApproved) {
         Get.snackbar(
           'Success',
           tr(LocaleKeys.pending_approval_messages_approved),
-          backgroundColor: Colors.green.withOpacity(0.1),
+          backgroundColor: Colors.green.withValues(alpha: 0.1),
           colorText: Colors.green,
         );
-        // الانتقال لاستكمال البيانات
         // Get.offAllNamed(Routes.COMPLETE_PROFILE);
       } else {
         Get.snackbar(
           'Info',
           tr(LocaleKeys.pending_approval_messages_still_pending),
-          backgroundColor: Colors.orange.withOpacity(0.1),
+          backgroundColor: Colors.orange.withValues(alpha: 0.1),
           colorText: Colors.orange,
         );
       }
-
     } catch (e) {
       Get.snackbar('Error', e.toString());
     } finally {
@@ -45,11 +51,10 @@ class PendingApprovalController extends GetxController {
   }
 
   void contactSupport() {
-    // فتح واتساب أو اتصال
+    // TODO: open WhatsApp / phone call
   }
 
   void logout() {
-    // مسح التوكن والعودة للبداية
-    // Get.offAllNamed(Routes.LOGIN);
+    // TODO: clear token → Get.offAllNamed(Routes.LOGIN);
   }
 }
