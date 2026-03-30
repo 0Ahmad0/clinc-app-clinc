@@ -683,7 +683,8 @@ class _KpiCard extends StatelessWidget {
 class _WeeklyBarChart extends StatelessWidget {
   final ReportsController controller;
 
-  const _WeeklyBarChart({required this.controller});
+  const _WeeklyBarChart({super.key, required this.controller});
+
 
   @override
   Widget build(BuildContext context) {
@@ -878,7 +879,8 @@ class _ChartLegend extends StatelessWidget {
 // ═══════════════════════════════════════════════
 class _MonthlyRevenueChart extends StatelessWidget {
   final ReportsController controller;
-  const _MonthlyRevenueChart({required this.controller});
+
+  const _MonthlyRevenueChart({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
