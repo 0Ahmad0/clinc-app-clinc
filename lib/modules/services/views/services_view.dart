@@ -11,8 +11,8 @@ class SubTestModel {
   RxBool isSelected;
 
   SubTestModel(this.id, this.code, this.title, this.subtitle, int p, bool sel)
-      : price = p.obs,
-        isSelected = sel.obs;
+    : price = p.obs,
+      isSelected = sel.obs;
 }
 
 class MainLabCategoryModel {
@@ -22,7 +22,13 @@ class MainLabCategoryModel {
   final Color color;
   final List<SubTestModel> subTests;
 
-  MainLabCategoryModel(this.id, this.title, this.icon, this.color, this.subTests);
+  MainLabCategoryModel(
+    this.id,
+    this.title,
+    this.icon,
+    this.color,
+    this.subTests,
+  );
 
   int get activeTestsCount => subTests.where((t) => t.isSelected.value).length;
 }
@@ -32,8 +38,30 @@ class SpecialtyModel {
   final String title;
   final IconData icon;
   final Color color;
+  final RxList<SpecialtyServiceModel> services;
 
-  SpecialtyModel(this.id, this.title, this.icon, this.color);
+  SpecialtyModel(
+    this.id,
+    this.title,
+    this.icon,
+    this.color, [
+    List<SpecialtyServiceModel> initialServices = const [],
+  ]) : services = initialServices.obs;
+
+  int get servicesCount => services.length;
+}
+
+class SpecialtyServiceModel {
+  final String id;
+  final RxString name;
+  final RxInt price;
+
+  SpecialtyServiceModel({
+    required this.id,
+    required String name,
+    required int price,
+  }) : name = name.obs,
+       price = price.obs;
 }
 
 class ServicesController extends GetxController {
@@ -64,33 +92,129 @@ class ServicesController extends GetxController {
   final activeLabCategories = <MainLabCategoryModel>[].obs;
 
   final availableLabCategories = [
-    MainLabCategoryModel("1", "الهرمونات", Icons.biotech, const Color(0xFF8B5CF6), [
-      SubTestModel("11", "TSH", "فحص الغدة الدرقية", "نشاط الغدة الدرقية (Free T4)", 0, false),
-      SubTestModel("12", "PRL", "هرمون الحليب", "Prolactin", 0, false),
-      SubTestModel("13", "TEST", "هرمون الذكورة", "Testosterone", 0, false),
-      SubTestModel("14", "FSH/LH", "هرمونات الخصوبة", "الخصوبة والتبويض", 0, false),
-      SubTestModel("15", "INS", "هرمون الأنسولين", "تمثيل السكر", 0, false),
-      SubTestModel("16", "CORT", "هرمون التوتر", "الغدة الكظرية (Cortisol)", 0, false),
-    ]),
-    MainLabCategoryModel("2", "فحص الزواج", Icons.favorite, const Color(0xFFEC4899), [
-      SubTestModel("21", "SCD", "الأنيميا المنجلية", "فحص أمراض الدم الوراثية", 0, false),
-      SubTestModel("22", "THAL", "الثلاسيميا", "فحص وراثي لخلايا الدم", 0, false),
-      SubTestModel("23", "HBV", "التهاب الكبد B", "فحص الفيروسات المعدية", 0, false),
-      SubTestModel("24", "HCV", "التهاب الكبد C", "فحص الفيروسات المعدية", 0, false),
-      SubTestModel("25", "HIV", "نقص المناعة", "الإيدز", 0, false),
-    ]),
-    MainLabCategoryModel("3", "الفيتامينات", Icons.wb_sunny, const Color(0xFFF59E0B), [
-      SubTestModel("31", "VIT-D", "فيتامين د", "صحة العظام والمناعة", 0, false),
-      SubTestModel("32", "VIT-B12", "فيتامين ب12", "صحة الأعصاب والنشاط الذهني", 0, false),
-      SubTestModel("33", "FA", "حمض الفوليك", "نمو الخلايا وصحة الدم", 0, false),
-      SubTestModel("34", "VIT-C", "فيتامين سي", "مضاد أكسدة ومناعة", 0, false),
-    ]),
+    MainLabCategoryModel(
+      "1",
+      "الهرمونات",
+      Icons.biotech,
+      const Color(0xFF8B5CF6),
+      [
+        SubTestModel(
+          "11",
+          "TSH",
+          "فحص الغدة الدرقية",
+          "نشاط الغدة الدرقية (Free T4)",
+          0,
+          false,
+        ),
+        SubTestModel("12", "PRL", "هرمون الحليب", "Prolactin", 0, false),
+        SubTestModel("13", "TEST", "هرمون الذكورة", "Testosterone", 0, false),
+        SubTestModel(
+          "14",
+          "FSH/LH",
+          "هرمونات الخصوبة",
+          "الخصوبة والتبويض",
+          0,
+          false,
+        ),
+        SubTestModel("15", "INS", "هرمون الأنسولين", "تمثيل السكر", 0, false),
+        SubTestModel(
+          "16",
+          "CORT",
+          "هرمون التوتر",
+          "الغدة الكظرية (Cortisol)",
+          0,
+          false,
+        ),
+      ],
+    ),
+    MainLabCategoryModel(
+      "2",
+      "فحص الزواج",
+      Icons.favorite,
+      const Color(0xFFEC4899),
+      [
+        SubTestModel(
+          "21",
+          "SCD",
+          "الأنيميا المنجلية",
+          "فحص أمراض الدم الوراثية",
+          0,
+          false,
+        ),
+        SubTestModel(
+          "22",
+          "THAL",
+          "الثلاسيميا",
+          "فحص وراثي لخلايا الدم",
+          0,
+          false,
+        ),
+        SubTestModel(
+          "23",
+          "HBV",
+          "التهاب الكبد B",
+          "فحص الفيروسات المعدية",
+          0,
+          false,
+        ),
+        SubTestModel(
+          "24",
+          "HCV",
+          "التهاب الكبد C",
+          "فحص الفيروسات المعدية",
+          0,
+          false,
+        ),
+        SubTestModel("25", "HIV", "نقص المناعة", "الإيدز", 0, false),
+      ],
+    ),
+    MainLabCategoryModel(
+      "3",
+      "الفيتامينات",
+      Icons.wb_sunny,
+      const Color(0xFFF59E0B),
+      [
+        SubTestModel(
+          "31",
+          "VIT-D",
+          "فيتامين د",
+          "صحة العظام والمناعة",
+          0,
+          false,
+        ),
+        SubTestModel(
+          "32",
+          "VIT-B12",
+          "فيتامين ب12",
+          "صحة الأعصاب والنشاط الذهني",
+          0,
+          false,
+        ),
+        SubTestModel(
+          "33",
+          "FA",
+          "حمض الفوليك",
+          "نمو الخلايا وصحة الدم",
+          0,
+          false,
+        ),
+        SubTestModel(
+          "34",
+          "VIT-C",
+          "فيتامين سي",
+          "مضاد أكسدة ومناعة",
+          0,
+          false,
+        ),
+      ],
+    ),
   ];
 
-  List<MainLabCategoryModel> get unaddedLabCategories =>
-      availableLabCategories
-          .where((avail) => !activeLabCategories.any((active) => active.id == avail.id))
-          .toList();
+  List<MainLabCategoryModel> get unaddedLabCategories => availableLabCategories
+      .where(
+        (avail) => !activeLabCategories.any((active) => active.id == avail.id),
+      )
+      .toList();
 
   void addLabCategory(MainLabCategoryModel category) {
     if (!activeLabCategories.any((e) => e.id == category.id)) {
@@ -109,17 +233,33 @@ class ServicesController extends GetxController {
   final activeSpecialties = <SpecialtyModel>[].obs;
 
   final availableSpecialties = [
-    SpecialtyModel("1", "طب الأطفال", Icons.child_care, const Color(0xFF10B981)),
-    SpecialtyModel("2", "القلب والأوعية", Icons.monitor_heart, const Color(0xFFEF4444)),
+    SpecialtyModel(
+      "1",
+      "طب الأطفال",
+      Icons.child_care,
+      const Color(0xFF10B981),
+    ),
+    SpecialtyModel(
+      "2",
+      "القلب والأوعية",
+      Icons.monitor_heart,
+      const Color(0xFFEF4444),
+    ),
     SpecialtyModel("3", "طب العيون", Icons.visibility, const Color(0xFF3B82F6)),
-    SpecialtyModel("4", "العظام والمفاصل", Icons.accessibility_new, const Color(0xFFF59E0B)),
+    SpecialtyModel(
+      "4",
+      "العظام والمفاصل",
+      Icons.accessibility_new,
+      const Color(0xFFF59E0B),
+    ),
     SpecialtyModel("5", "الباطنية", Icons.healing, const Color(0xFF009688)),
   ];
 
-  List<SpecialtyModel> get unaddedSpecialties =>
-      availableSpecialties
-          .where((avail) => !activeSpecialties.any((active) => active.id == avail.id))
-          .toList();
+  List<SpecialtyModel> get unaddedSpecialties => availableSpecialties
+      .where(
+        (avail) => !activeSpecialties.any((active) => active.id == avail.id),
+      )
+      .toList();
 
   void addSpecialty(SpecialtyModel specialty) {
     if (!activeSpecialties.any((e) => e.id == specialty.id)) {
@@ -129,6 +269,29 @@ class ServicesController extends GetxController {
 
   void removeSpecialty(SpecialtyModel specialty) {
     activeSpecialties.removeWhere((e) => e.id == specialty.id);
+  }
+
+  void addSpecialtyService(
+    SpecialtyModel specialty, {
+    required String name,
+    required int price,
+  }) {
+    specialty.services.add(
+      SpecialtyServiceModel(
+        id: DateTime.now().microsecondsSinceEpoch.toString(),
+        name: name,
+        price: price,
+      ),
+    );
+    activeSpecialties.refresh();
+  }
+
+  void removeSpecialtyService(
+    SpecialtyModel specialty,
+    SpecialtyServiceModel service,
+  ) {
+    specialty.services.removeWhere((e) => e.id == service.id);
+    activeSpecialties.refresh();
   }
 }
 
@@ -188,8 +351,10 @@ class ServicesView extends GetView<ServicesController> {
                               ),
                             ),
                             Obx(() {
-                              final activeLabs = controller.activeLabCategories.length;
-                              final activeSpecs = controller.activeSpecialties.length;
+                              final activeLabs =
+                                  controller.activeLabCategories.length;
+                              final activeSpecs =
+                                  controller.activeSpecialties.length;
                               return Text(
                                 '${activeLabs + activeSpecs} خدمة نشطة',
                                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -201,13 +366,23 @@ class ServicesView extends GetView<ServicesController> {
                         ),
                       ),
                       Obx(() {
-                        final totalLabs = controller.availableLabCategories.length;
-                        final totalSpecs = controller.availableSpecialties.length;
+                        final totalLabs =
+                            controller.availableLabCategories.length;
+                        final totalSpecs =
+                            controller.availableSpecialties.length;
                         return Row(
                           children: [
-                            _ServiceMiniStat(count: totalLabs, label: 'تحاليل', theme: theme),
+                            _ServiceMiniStat(
+                              count: totalLabs,
+                              label: 'تحاليل',
+                              theme: theme,
+                            ),
                             8.horizontalSpace,
-                            _ServiceMiniStat(count: totalSpecs, label: 'تخصصات', theme: theme),
+                            _ServiceMiniStat(
+                              count: totalSpecs,
+                              label: 'تخصصات',
+                              theme: theme,
+                            ),
                           ],
                         );
                       }),
@@ -222,13 +397,15 @@ class ServicesView extends GetView<ServicesController> {
           children: [
             _buildTabBar(theme, cs),
             Expanded(
-              child: Obx(() => IndexedStack(
-                index: controller.currentTab.value,
-                children: [
-                  _buildLabsGrid(context),
-                  _buildSpecialtiesGrid(context),
-                ],
-              )),
+              child: Obx(
+                () => IndexedStack(
+                  index: controller.currentTab.value,
+                  children: [
+                    _buildLabsGrid(context),
+                    _buildSpecialtiesGrid(context),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -244,16 +421,32 @@ class ServicesView extends GetView<ServicesController> {
         color: cs.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(14.r),
       ),
-      child: Obx(() => Row(
-        children: [
-          _buildTabItem(theme, cs, title: 'التحاليل المخبرية', icon: Icons.biotech_rounded, index: 0),
-          _buildTabItem(theme, cs, title: 'التخصصات الطبية', icon: Icons.local_hospital_rounded, index: 1),
-        ],
-      )),
+      child: Obx(
+        () => Row(
+          children: [
+            _buildTabItem(
+              theme,
+              cs,
+              title: 'التحاليل المخبرية',
+              icon: Icons.biotech_rounded,
+              index: 0,
+            ),
+            _buildTabItem(
+              theme,
+              cs,
+              title: 'التخصصات الطبية',
+              icon: Icons.local_hospital_rounded,
+              index: 1,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildTabItem(ThemeData theme, ColorScheme cs, {
+  Widget _buildTabItem(
+    ThemeData theme,
+    ColorScheme cs, {
     required String title,
     required IconData icon,
     required int index,
@@ -308,57 +501,77 @@ class ServicesView extends GetView<ServicesController> {
   }
 
   Widget _buildLabsGrid(BuildContext context) {
-    return Obx(() => GridView.builder(
-      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 100.h),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 14.w,
-        mainAxisSpacing: 14.h,
-        childAspectRatio: 0.88,
+    return Obx(
+      () => GridView.builder(
+        padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 100.h),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 14.w,
+          mainAxisSpacing: 14.h,
+          childAspectRatio: 0.88,
+        ),
+        itemCount: controller.activeLabCategories.length + 1,
+        itemBuilder: (context, index) {
+          if (index == controller.activeLabCategories.length) {
+            return _buildAddCard(
+              'إضافة قسم تحاليل',
+              () => _showAddLabSheet(context),
+            );
+          }
+          final cat = controller.activeLabCategories[index];
+          return Obx(
+            () => _buildServiceCard(
+              title: cat.title,
+              subtitle: '${cat.activeTestsCount} تحليل مفعل',
+              icon: cat.icon,
+              color: cat.color,
+              onTap: () => Get.to(() => SubTestsView(category: cat)),
+              onDelete: () => _confirmDelete(
+                cat.title,
+                () => controller.removeLabCategory(cat),
+              ),
+            ),
+          );
+        },
       ),
-      itemCount: controller.activeLabCategories.length + 1,
-      itemBuilder: (context, index) {
-        if (index == controller.activeLabCategories.length) {
-          return _buildAddCard('إضافة قسم تحاليل', () => _showAddLabSheet(context));
-        }
-        final cat = controller.activeLabCategories[index];
-        return Obx(() => _buildServiceCard(
-          title: cat.title,
-          subtitle: '${cat.activeTestsCount} تحليل مفعل',
-          icon: cat.icon,
-          color: cat.color,
-          onTap: () => Get.to(() => SubTestsView(category: cat)),
-          onDelete: () => _confirmDelete(cat.title, () => controller.removeLabCategory(cat)),
-        ));
-      },
-    ));
+    );
   }
 
   Widget _buildSpecialtiesGrid(BuildContext context) {
-    return Obx(() => GridView.builder(
-      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 100.h),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 14.w,
-        mainAxisSpacing: 14.h,
-        childAspectRatio: 0.88,
+    return Obx(
+      () => GridView.builder(
+        padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 100.h),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 14.w,
+          mainAxisSpacing: 14.h,
+          childAspectRatio: 0.88,
+        ),
+        itemCount: controller.activeSpecialties.length + 1,
+        itemBuilder: (context, index) {
+          if (index == controller.activeSpecialties.length) {
+            return _buildAddCard(
+              'إضافة تخصص',
+              () => _showAddSpecialtySheet(context),
+            );
+          }
+          final spec = controller.activeSpecialties[index];
+          return Obx(
+            () => _buildServiceCard(
+              title: spec.title,
+              subtitle: '${spec.servicesCount} خدمة',
+              icon: spec.icon,
+              color: spec.color,
+              onTap: () => Get.to(() => SpecialtyServicesView(specialty: spec)),
+              onDelete: () => _confirmDelete(
+                spec.title,
+                () => controller.removeSpecialty(spec),
+              ),
+            ),
+          );
+        },
       ),
-      itemCount: controller.activeSpecialties.length + 1,
-      itemBuilder: (context, index) {
-        if (index == controller.activeSpecialties.length) {
-          return _buildAddCard('إضافة تخصص', () => _showAddSpecialtySheet(context));
-        }
-        final spec = controller.activeSpecialties[index];
-        return _buildServiceCard(
-          title: spec.title,
-          subtitle: 'تخصص متاح',
-          icon: spec.icon,
-          color: spec.color,
-          onTap: () {},
-          onDelete: () => _confirmDelete(spec.title, () => controller.removeSpecialty(spec)),
-        );
-      },
-    ));
+    );
   }
 
   Widget _buildServiceCard({
@@ -427,7 +640,10 @@ class ServicesView extends GetView<ServicesController> {
                 ),
                 8.verticalSpace,
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 4.h,
+                  ),
                   decoration: BoxDecoration(
                     color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20.r),
@@ -551,47 +767,61 @@ class ServicesView extends GetView<ServicesController> {
   void _showAddLabSheet(BuildContext context) {
     MainLabCategoryModel? selected;
     Get.bottomSheet(
-      StatefulBuilder(builder: (context, setState) {
-        final options = controller.unaddedLabCategories;
-        return _buildBottomSheet(
-          title: 'إضافة قسم تحاليل',
-          subtitle: 'اختر القسم لإضافته وإدارة أسعار تحاليله',
-          isEmpty: options.isEmpty,
-          dropdown: DropdownButtonHideUnderline(
-            child: DropdownButton<MainLabCategoryModel>(
-              isExpanded: true,
-              hint: const Text('اختر قسم التحاليل...'),
-              value: selected,
-              icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF2563EB)),
-              items: options
-                  .map((cat) => DropdownMenuItem(
+      StatefulBuilder(
+        builder: (context, setState) {
+          final options = controller.unaddedLabCategories;
+          return _buildBottomSheet(
+            title: 'إضافة قسم تحاليل',
+            subtitle: 'اختر القسم لإضافته وإدارة أسعار تحاليله',
+            isEmpty: options.isEmpty,
+            dropdown: DropdownButtonHideUnderline(
+              child: DropdownButton<MainLabCategoryModel>(
+                isExpanded: true,
+                hint: const Text('اختر قسم التحاليل...'),
+                value: selected,
+                icon: const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: Color(0xFF2563EB),
+                ),
+                items: options
+                    .map(
+                      (cat) => DropdownMenuItem(
                         value: cat,
-                        child: Row(children: [
-                          Icon(cat.icon, color: cat.color, size: 20),
-                          const SizedBox(width: 12),
-                          Text(cat.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        ]),
-                      ))
-                  .toList(),
-              onChanged: (val) => setState(() => selected = val),
+                        child: Row(
+                          children: [
+                            Icon(cat.icon, color: cat.color, size: 20),
+                            const SizedBox(width: 12),
+                            Text(
+                              cat.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (val) => setState(() => selected = val),
+              ),
             ),
-          ),
-          onSave: selected == null
-              ? null
-              : () {
-                  controller.addLabCategory(selected!);
-                  Get.back();
-                  Get.snackbar(
-                    'تمت الإضافة',
-                    'تم إضافة ${selected!.title} بنجاح',
-                    backgroundColor: const Color(0xFF10B981),
-                    colorText: Colors.white,
-                    snackPosition: SnackPosition.TOP,
-                    margin: EdgeInsets.all(16.r),
-                  );
-                },
-        );
-      }),
+            onSave: selected == null
+                ? null
+                : () {
+                    controller.addLabCategory(selected!);
+                    Get.back();
+                    Get.snackbar(
+                      'تمت الإضافة',
+                      'تم إضافة ${selected!.title} بنجاح',
+                      backgroundColor: const Color(0xFF10B981),
+                      colorText: Colors.white,
+                      snackPosition: SnackPosition.TOP,
+                      margin: EdgeInsets.all(16.r),
+                    );
+                  },
+          );
+        },
+      ),
       isScrollControlled: true,
     );
   }
@@ -599,47 +829,61 @@ class ServicesView extends GetView<ServicesController> {
   void _showAddSpecialtySheet(BuildContext context) {
     SpecialtyModel? selected;
     Get.bottomSheet(
-      StatefulBuilder(builder: (context, setState) {
-        final options = controller.unaddedSpecialties;
-        return _buildBottomSheet(
-          title: 'إضافة تخصص طبي',
-          subtitle: 'اختر التخصص من القائمة لإضافته',
-          isEmpty: options.isEmpty,
-          dropdown: DropdownButtonHideUnderline(
-            child: DropdownButton<SpecialtyModel>(
-              isExpanded: true,
-              hint: const Text('اضغط لاختيار تخصص...'),
-              value: selected,
-              icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF2563EB)),
-              items: options
-                  .map((spec) => DropdownMenuItem(
+      StatefulBuilder(
+        builder: (context, setState) {
+          final options = controller.unaddedSpecialties;
+          return _buildBottomSheet(
+            title: 'إضافة تخصص طبي',
+            subtitle: 'اختر التخصص من القائمة لإضافته',
+            isEmpty: options.isEmpty,
+            dropdown: DropdownButtonHideUnderline(
+              child: DropdownButton<SpecialtyModel>(
+                isExpanded: true,
+                hint: const Text('اضغط لاختيار تخصص...'),
+                value: selected,
+                icon: const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: Color(0xFF2563EB),
+                ),
+                items: options
+                    .map(
+                      (spec) => DropdownMenuItem(
                         value: spec,
-                        child: Row(children: [
-                          Icon(spec.icon, color: spec.color, size: 20),
-                          const SizedBox(width: 12),
-                          Text(spec.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                        ]),
-                      ))
-                  .toList(),
-              onChanged: (val) => setState(() => selected = val),
+                        child: Row(
+                          children: [
+                            Icon(spec.icon, color: spec.color, size: 20),
+                            const SizedBox(width: 12),
+                            Text(
+                              spec.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (val) => setState(() => selected = val),
+              ),
             ),
-          ),
-          onSave: selected == null
-              ? null
-              : () {
-                  controller.addSpecialty(selected!);
-                  Get.back();
-                  Get.snackbar(
-                    'تمت الإضافة',
-                    'تم إضافة ${selected!.title} بنجاح',
-                    backgroundColor: const Color(0xFF10B981),
-                    colorText: Colors.white,
-                    snackPosition: SnackPosition.TOP,
-                    margin: EdgeInsets.all(16.r),
-                  );
-                },
-        );
-      }),
+            onSave: selected == null
+                ? null
+                : () {
+                    controller.addSpecialty(selected!);
+                    Get.back();
+                    Get.snackbar(
+                      'تمت الإضافة',
+                      'تم إضافة ${selected!.title} بنجاح',
+                      backgroundColor: const Color(0xFF10B981),
+                      colorText: Colors.white,
+                      snackPosition: SnackPosition.TOP,
+                      margin: EdgeInsets.all(16.r),
+                    );
+                  },
+          );
+        },
+      ),
       isScrollControlled: true,
     );
   }
@@ -691,12 +935,18 @@ class ServicesView extends GetView<ServicesController> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.check_circle_rounded, color: Color(0xFF10B981)),
+                  const Icon(
+                    Icons.check_circle_rounded,
+                    color: Color(0xFF10B981),
+                  ),
                   12.horizontalSpace,
                   const Expanded(
                     child: Text(
                       'تم إضافة جميع العناصر المتاحة!',
-                      style: TextStyle(color: Color(0xFF10B981), fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        color: Color(0xFF10B981),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -761,7 +1011,10 @@ class SubTestsView extends StatelessWidget {
             elevation: 0,
             leading: IconButton(
               onPressed: () => Get.back(),
-              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white,
+              ),
             ),
             flexibleSpace: FlexibleSpaceBar(
               collapseMode: CollapseMode.pin,
@@ -788,7 +1041,11 @@ class SubTestsView extends StatelessWidget {
                             color: Colors.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(12.r),
                           ),
-                          child: Icon(category.icon, color: Colors.white, size: 22.sp),
+                          child: Icon(
+                            category.icon,
+                            color: Colors.white,
+                            size: 22.sp,
+                          ),
                         ),
                         14.horizontalSpace,
                         Column(
@@ -900,10 +1157,7 @@ class SubTestsView extends StatelessWidget {
                 4.verticalSpace,
                 Text(
                   test.subtitle,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12.sp,
-                  ),
+                  style: TextStyle(color: Colors.grey, fontSize: 12.sp),
                 ),
               ],
             ),
@@ -930,15 +1184,21 @@ class SubTestsView extends StatelessWidget {
                     ),
                     Expanded(
                       child: TextField(
-                        controller: TextEditingController(text: test.price.value.toString()),
+                        controller: TextEditingController(
+                          text: test.price.value.toString(),
+                        ),
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.center,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           isDense: true,
                         ),
-                        style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
-                        onChanged: (val) => test.price.value = int.tryParse(val) ?? 0,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        onChanged: (val) =>
+                            test.price.value = int.tryParse(val) ?? 0,
                       ),
                     ),
                   ],
@@ -970,6 +1230,420 @@ class SubTestsView extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SpecialtyServicesView extends GetView<ServicesController> {
+  final SpecialtyModel specialty;
+
+  const SpecialtyServicesView({super.key, required this.specialty});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return Scaffold(
+      backgroundColor: cs.surface,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showAddServiceSheet(context),
+        backgroundColor: specialty.color,
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('إضافة خدمة'),
+      ),
+      body: NestedScrollView(
+        headerSliverBuilder: (context, _) => [
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 132.h,
+            backgroundColor: specialty.color,
+            elevation: 0,
+            leading: IconButton(
+              onPressed: () => Get.back(),
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white,
+              ),
+            ),
+            title: Text(
+              specialty.title,
+              style: theme.textTheme.titleMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              collapseMode: CollapseMode.pin,
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      specialty.color,
+                      specialty.color.withValues(alpha: 0.72),
+                    ],
+                  ),
+                ),
+                child: SafeArea(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 0),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 46.r,
+                          height: 46.r,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          child: Icon(
+                            specialty.icon,
+                            color: Colors.white,
+                            size: 24.sp,
+                          ),
+                        ),
+                        14.horizontalSpace,
+                        Expanded(
+                          child: Obx(
+                            () => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  specialty.title,
+                                  style: theme.textTheme.headlineSmall
+                                      ?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                4.verticalSpace,
+                                Text(
+                                  '${specialty.servicesCount} خدمات ضمن الاختصاص',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: Colors.white.withValues(alpha: 0.82),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+        body: Obx(() {
+          final services = specialty.services;
+          if (services.isEmpty) {
+            return _SpecialtyEmptyState(
+              color: specialty.color,
+              onAdd: () => _showAddServiceSheet(context),
+            );
+          }
+
+          return ListView.separated(
+            padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 100.h),
+            itemCount: services.length,
+            separatorBuilder: (_, __) => 12.verticalSpace,
+            itemBuilder: (context, index) {
+              final service = services[index];
+              return Obx(
+                () => _SpecialtyServiceTile(
+                  service: service,
+                  color: specialty.color,
+                  onDelete: () =>
+                      controller.removeSpecialtyService(specialty, service),
+                ),
+              );
+            },
+          );
+        }),
+      ),
+    );
+  }
+
+  void _showAddServiceSheet(BuildContext context) {
+    final nameController = TextEditingController();
+    final priceController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    Get.bottomSheet(
+      Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 32.h),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 44.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                ),
+                20.verticalSpace,
+                Text(
+                  'إضافة خدمة ضمن ${specialty.title}',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                20.verticalSpace,
+                TextFormField(
+                  controller: nameController,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    labelText: 'اسم الخدمة',
+                    hintText: 'مثال: فحص عيون',
+                    prefixIcon: const Icon(Icons.medical_services_rounded),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                    ),
+                  ),
+                  validator: (value) {
+                    if ((value ?? '').trim().isEmpty) {
+                      return 'ادخل اسم الخدمة';
+                    }
+                    return null;
+                  },
+                ),
+                14.verticalSpace,
+                TextFormField(
+                  controller: priceController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'السعر',
+                    hintText: 'مثال: 200',
+                    prefixIcon: const Icon(Icons.payments_rounded),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                    ),
+                  ),
+                  validator: (value) {
+                    final price = int.tryParse((value ?? '').trim());
+                    if (price == null || price <= 0) {
+                      return 'ادخل سعر صحيح';
+                    }
+                    return null;
+                  },
+                ),
+                24.verticalSpace,
+                SizedBox(
+                  width: double.infinity,
+                  height: 52.h,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      if (!formKey.currentState!.validate()) {
+                        return;
+                      }
+                      controller.addSpecialtyService(
+                        specialty,
+                        name: nameController.text.trim(),
+                        price: int.parse(priceController.text.trim()),
+                      );
+                      Get.back();
+                      Get.snackbar(
+                        'تمت الإضافة',
+                        'تمت إضافة الخدمة بنجاح',
+                        backgroundColor: const Color(0xFF10B981),
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.TOP,
+                        margin: EdgeInsets.all(16.r),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: specialty.color,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                    ),
+                    icon: const Icon(Icons.add_rounded),
+                    label: Text(
+                      'حفظ الخدمة',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      isScrollControlled: true,
+    ).whenComplete(() {
+      nameController.dispose();
+      priceController.dispose();
+    });
+  }
+}
+
+class _SpecialtyServiceTile extends StatelessWidget {
+  final SpecialtyServiceModel service;
+  final Color color;
+  final VoidCallback onDelete;
+
+  const _SpecialtyServiceTile({
+    required this.service,
+    required this.color,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return Container(
+      padding: EdgeInsets.all(16.r),
+      decoration: BoxDecoration(
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: color.withValues(alpha: 0.18)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 42.r,
+            height: 42.r,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Icon(
+              Icons.medical_services_rounded,
+              color: color,
+              size: 20.sp,
+            ),
+          ),
+          12.horizontalSpace,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  service.name.value,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                4.verticalSpace,
+                Text(
+                  '${service.price.value} ل.س',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: color,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: onDelete,
+            icon: const Icon(Icons.delete_outline_rounded),
+            color: const Color(0xFFEF4444),
+            tooltip: 'حذف',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SpecialtyEmptyState extends StatelessWidget {
+  final Color color;
+  final VoidCallback onAdd;
+
+  const _SpecialtyEmptyState({required this.color, required this.onAdd});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(28.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 88.r,
+              height: 88.r,
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.playlist_add_rounded,
+                color: color,
+                size: 42.sp,
+              ),
+            ),
+            18.verticalSpace,
+            Text(
+              'لا توجد خدمات ضمن هذا الاختصاص',
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            8.verticalSpace,
+            Text(
+              'اضف اسم الخدمة وسعرها مثل فحص عيون بسعر 200',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: cs.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            22.verticalSpace,
+            FilledButton.icon(
+              onPressed: onAdd,
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('إضافة خدمة'),
+              style: FilledButton.styleFrom(
+                backgroundColor: color,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 12.h),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../generated/locale_keys.g.dart';
+import '../../../app/routes/app_routes.dart';
 import '../controllers/settings_controller.dart';
 import 'widgets/language_dialog.dart';
 import 'widgets/theme_dialog.dart';
@@ -183,6 +184,17 @@ class SettingsView extends GetView<SettingsController> {
             subtitle: tr(LocaleKeys.settings_password_subtitle),
             onTap: () => Get.to(() => const PasswordView()),
           ),
+          _Divider(),
+          Obx(() => _SettingsTile(
+            icon: Icons.campaign_rounded,
+            iconColor: const Color(0xFF3498DB),
+            title: tr('ads.list.title'),
+            subtitle: tr('ads.list.role_label', args: [tr(controller.roleLabelKey)]),
+            onTap: () => Get.toNamed(
+              AppRoutes.ads,
+              arguments: {'role': controller.currentRole.value.name},
+            ),
+          )),
         ],
       ),
     );

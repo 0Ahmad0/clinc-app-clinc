@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:get_storage/get_storage.dart';
+import '../../../app/data/account_type.dart';
 import '../../../app/data/profile_model.dart';
-import '../../../app/services/storage_service.dart';
 
 class SettingsController extends GetxController {
+  final GetStorage _box = GetStorage();
   // ========== Services ==========
   // final StorageService _storage = Get.find<StorageService>();
   // final AuthService _auth = Get.find<AuthService>();
@@ -16,6 +18,7 @@ class SettingsController extends GetxController {
   // ========== Theme & Language ==========
   final Rx<ThemeMode> themeMode = ThemeMode.system.obs;
   final RxString currentLanguage = 'ar'.obs;
+  final Rx<AccountType> currentRole = AccountType.clinic.obs;
 
   // ========== User Profile ==========
   final Rx<ProfileModel> profile = ProfileModel.mock.obs;
@@ -55,6 +58,8 @@ class SettingsController extends GetxController {
       // }
 
       await Future.delayed(const Duration(milliseconds: 500));
+      final roleName = _box.read('account_type')?.toString() ?? '';
+      currentRole.value = _mapRole(roleName);
     } catch (e) {
       debugPrint('Error loading settings: $e');
       _showErrorSnackbar('Failed to load settings');
@@ -275,6 +280,29 @@ class SettingsController extends GetxController {
       _showErrorSnackbar('Failed to logout');
     } finally {
       isLoading(false);
+    }
+  }
+
+  String get roleLabelKey {
+    switch (currentRole.value) {
+      case AccountType.clinic:
+        return 'ads.roles.clinic';
+      case AccountType.clinicWithLab:
+        return 'ads.roles.clinic_with_lab';
+      case AccountType.lab:
+        return 'ads.roles.lab';
+    }
+  }
+
+  AccountType _mapRole(String value) {
+    switch (value) {
+      case 'clinicWithLab':
+      case 'clinic_with_lab':
+        return AccountType.clinicWithLab;
+      case 'lab':
+        return AccountType.lab;
+      default:
+        return AccountType.clinic;
     }
   }
 

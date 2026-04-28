@@ -526,6 +526,102 @@
     "validation_required": "This field is required",
     "validation_invalid_email": "Invalid email address"
   },
+  "ads": {
+    "roles": {
+      "clinic": "Clinic",
+      "clinic_with_lab": "Clinic With Lab",
+      "lab": "Lab"
+    },
+    "list": {
+      "title": "Your Ads",
+      "create": "Create Ad",
+      "create_short": "Create",
+      "role_label": "Current role: {}",
+      "start": "Start date",
+      "end": "End date",
+      "remaining": "Remaining"
+    },
+    "type": {
+      "title": "Choose ad type",
+      "single": "One-time ad",
+      "package": "Subscribe to package"
+    },
+    "create": {
+      "title": "Create Ad",
+      "publish": "Publish Ad"
+    },
+    "form": {
+      "title_hint": "Ad title",
+      "description_hint": "Description",
+      "upload_image": "Upload ad image",
+      "title_required": "Please enter ad title",
+      "description_required": "Please enter ad description",
+      "image_required": "Please upload an ad image",
+      "package_required": "Please choose a package"
+    },
+    "packages": {
+      "title": "Packages",
+      "subscribe_now": "Subscribe now",
+      "basic": {
+        "title": "Basic package",
+        "features": {
+          "one": "1 ad per month",
+          "two": "Standard visibility",
+          "three": "Technical support"
+        }
+      },
+      "advanced": {
+        "title": "Advanced package",
+        "features": {
+          "one": "3 ads per month",
+          "two": "Boosted visibility",
+          "three": "Priority support",
+          "four": "Analytics"
+        }
+      },
+      "pro": {
+        "title": "Professional package",
+        "features": {
+          "one": "Unlimited ads",
+          "two": "Premium visibility",
+          "three": "VIP support",
+          "four": "Advanced analytics",
+          "five": "Custom ads"
+        }
+      }
+    },
+    "payment": {
+      "title": "Payment",
+      "price": "Price",
+      "currency": "SAR",
+      "methods_title": "Payment methods",
+      "methods": {
+        "card": "Credit card",
+        "apple": "Apple Pay",
+        "mada": "Mada"
+      },
+      "pay_now": "Pay now"
+    },
+    "status": {
+      "active": "Active",
+      "finished": "Finished",
+      "remaining_days_hours": "{} days {} hours left",
+      "remaining_hours_minutes": "{} hours {} minutes left"
+    },
+    "messages": {
+      "not_available": "Option unavailable",
+      "not_available_for_role": "This option is not available for this role",
+      "validation_title": "Validation",
+      "success_title": "Ad created",
+      "success_body": "Your ad was submitted successfully and is ready to show"
+    },
+    "mock": {
+      "first_title": "Teeth Cleaning Offer",
+      "first_description": "Special discount for a limited time",
+      "second_title": "Teeth Whitening Discount",
+      "second_description": "Ad campaign ended"
+    }
+  },
   "services": {
     "title": "Services Management",
     "tabs": {

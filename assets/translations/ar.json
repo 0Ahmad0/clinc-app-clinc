@@ -527,6 +527,102 @@
     "validation_required": "هذا الحقل مطلوب",
     "validation_invalid_email": "البريد الإلكتروني غير صالح"
   },
+  "ads": {
+    "roles": {
+      "clinic": "عيادة",
+      "clinic_with_lab": "عيادة مع مختبر",
+      "lab": "مختبر"
+    },
+    "list": {
+      "title": "إعلاناتك",
+      "create": "إنشاء إعلان",
+      "create_short": "إنشاء",
+      "role_label": "الدور الحالي: {}",
+      "start": "تاريخ البداية",
+      "end": "تاريخ النهاية",
+      "remaining": "الوقت المتبقي"
+    },
+    "type": {
+      "title": "اختر نوع الإعلان",
+      "single": "إعلان لمرة واحدة",
+      "package": "الاشتراك في باقة"
+    },
+    "create": {
+      "title": "إنشاء إعلان",
+      "publish": "نشر الإعلان"
+    },
+    "form": {
+      "title_hint": "عنوان الإعلان",
+      "description_hint": "الوصف",
+      "upload_image": "رفع صورة الإعلان",
+      "title_required": "يرجى إدخال عنوان الإعلان",
+      "description_required": "يرجى إدخال وصف الإعلان",
+      "image_required": "يرجى رفع صورة للإعلان",
+      "package_required": "يرجى اختيار باقة"
+    },
+    "packages": {
+      "title": "الباقات",
+      "subscribe_now": "اشترك الآن",
+      "basic": {
+        "title": "الباقة الأساسية",
+        "features": {
+          "one": "إعلان واحد شهرياً",
+          "two": "ظهور عادي",
+          "three": "دعم فني"
+        }
+      },
+      "advanced": {
+        "title": "الباقة المتقدمة",
+        "features": {
+          "one": "3 إعلانات شهرياً",
+          "two": "ظهور متقدم",
+          "three": "دعم فني أولوية",
+          "four": "تحليلات"
+        }
+      },
+      "pro": {
+        "title": "الباقة الاحترافية",
+        "features": {
+          "one": "إعلانات غير محدودة",
+          "two": "ظهور مميز",
+          "three": "دعم فني VIP",
+          "four": "تحليلات متقدمة",
+          "five": "إعلانات مخصصة"
+        }
+      }
+    },
+    "payment": {
+      "title": "الدفع",
+      "price": "السعر",
+      "currency": "ريال",
+      "methods_title": "طرق الدفع",
+      "methods": {
+        "card": "بطاقة ائتمان",
+        "apple": "Apple Pay",
+        "mada": "مدى"
+      },
+      "pay_now": "الدفع الآن"
+    },
+    "status": {
+      "active": "نشط",
+      "finished": "منتهي",
+      "remaining_days_hours": "{} يوم {} ساعة متبقية",
+      "remaining_hours_minutes": "{} ساعة {} دقيقة متبقية"
+    },
+    "messages": {
+      "not_available": "الخيار غير متاح",
+      "not_available_for_role": "هذا الخيار غير متاح للدور الحالي",
+      "validation_title": "تحقق من البيانات",
+      "success_title": "تم إنشاء الإعلان",
+      "success_body": "تم إرسال إعلانك بنجاح وجاهز للعرض"
+    },
+    "mock": {
+      "first_title": "عرض تنظيف الأسنان",
+      "first_description": "خصم خاص لفترة محدودة",
+      "second_title": "خصم تبييض الأسنان",
+      "second_description": "انتهت مدة الإعلان"
+    }
+  },
   "services": {
     "title": "إدارة الخدمات",
     "tabs": {

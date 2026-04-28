@@ -231,7 +231,6 @@ class ReportsView extends GetView<ReportsController> {
     );
   }
 
-
   // ─────────────────────────────────────────────
   // Summary KPI Cards
   // ─────────────────────────────────────────────
@@ -288,8 +287,14 @@ class ReportsView extends GetView<ReportsController> {
           return AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: period == 0
-                ? _WeeklyBarChart(key: const ValueKey('weekly'), controller: controller)
-                : _MonthlyRevenueChart(key: const ValueKey('monthly'), controller: controller),
+                ? _WeeklyBarChart(
+                    key: const ValueKey('weekly'),
+                    controller: controller,
+                  )
+                : _MonthlyRevenueChart(
+                    key: const ValueKey('monthly'),
+                    controller: controller,
+                  ),
           );
         }),
       ),
@@ -315,8 +320,7 @@ class ReportsView extends GetView<ReportsController> {
               ),
               8.horizontalSpace,
               Container(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
                 decoration: BoxDecoration(
                   color: cs.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(999),
@@ -350,15 +354,17 @@ class ReportsView extends GetView<ReportsController> {
       }
       return SliverPadding(
         padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 100.h),
-        sliver: SliverList.separated(
-          itemBuilder: (_, i) => ReportListItem(report: list[i]),
-          separatorBuilder: (_, __) => 12.verticalSpace,
-          itemCount: list.length,
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            if (index.isOdd) {
+              return 12.verticalSpace;
+            }
+            return ReportListItem(report: list[index ~/ 2]);
+          }, childCount: list.length * 2 - 1),
         ),
       );
     });
   }
-
 
   Color _typeColor(ReportType type, ColorScheme cs) {
     switch (type) {
@@ -503,7 +509,9 @@ class _ExportButton extends StatelessWidget {
                     width: 16.r,
                     height: 16.r,
                     child: const CircularProgressIndicator(
-                        color: Colors.white, strokeWidth: 2),
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
                   )
                 else
                   Icon(icon, color: Colors.white, size: 18.sp),
@@ -601,7 +609,6 @@ class _TypeFilterChip extends StatelessWidget {
   }
 }
 
-
 // ═══════════════════════════════════════════════
 // KPI Card
 // ═══════════════════════════════════════════════
@@ -628,10 +635,7 @@ class _KpiCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: cs.surface,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: color.withValues(alpha: 0.18),
-          width: 1.5,
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.18), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: color.withValues(alpha: 0.08),
@@ -684,7 +688,6 @@ class _WeeklyBarChart extends StatelessWidget {
   final ReportsController controller;
 
   const _WeeklyBarChart({super.key, required this.controller});
-
 
   @override
   Widget build(BuildContext context) {
@@ -889,7 +892,10 @@ class _MonthlyRevenueChart extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final data = controller.monthlyRevenue;
     const lineColor = Color(0xFF009688);
-    final maxY = data.map((m) => m.amount).reduce((a, b) => a > b ? a : b).toDouble();
+    final maxY = data
+        .map((m) => m.amount)
+        .reduce((a, b) => a > b ? a : b)
+        .toDouble();
 
     final spots = data.asMap().entries.map((e) {
       return FlSpot(e.key.toDouble(), e.value.amount.toDouble());
@@ -944,8 +950,11 @@ class _MonthlyRevenueChart extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.trending_up_rounded,
-                        size: 14.sp, color: lineColor),
+                    Icon(
+                      Icons.trending_up_rounded,
+                      size: 14.sp,
+                      color: lineColor,
+                    ),
                     4.horizontalSpace,
                     Text(
                       '+14%',
@@ -1120,8 +1129,7 @@ class _EmptyState extends StatelessWidget {
               icon: const Icon(Icons.add_rounded),
               label: Text(tr(LocaleKeys.reports_actions_generate)),
               style: FilledButton.styleFrom(
-                padding:
-                    EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
+                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14.r),
                 ),
@@ -1138,7 +1146,11 @@ class _HeaderStat extends StatelessWidget {
   final String value;
   final String label;
   final Color color;
-  const _HeaderStat({required this.value, required this.label, required this.color});
+  const _HeaderStat({
+    required this.value,
+    required this.label,
+    required this.color,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(

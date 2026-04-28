@@ -1,4 +1,9 @@
 abstract class AppRoutes {
+  static const adsPayment = '/ads/payment';
+  static const adsPackages = '/ads/packages';
+  static const adsCreateSingle = '/ads/create-single';
+  static const adsType = '/ads/type';
+  static const ads = '/ads';
   static const settings = '/settings';
   static const notifications = '/notifications';
   static const reports = '/import';

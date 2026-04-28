@@ -9,11 +9,11 @@ class DoctorCard extends StatelessWidget {
   final VoidCallback onToggleStatus;
 
   const DoctorCard({
-    Key? key,
+    super.key,
     required this.doctor,
     required this.onTap,
     required this.onToggleStatus,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +28,7 @@ class DoctorCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: cs.surface,
           borderRadius: BorderRadius.circular(20.r),
-          border: Border(
-            right: BorderSide(color: specColor, width: 4),
-          ),
+          border: Border(right: BorderSide(color: specColor, width: 4)),
           boxShadow: [
             BoxShadow(
               color: specColor.withValues(alpha: 0.08),
@@ -49,7 +47,10 @@ class DoctorCard extends StatelessWidget {
           child: Row(
             children: [
               _Avatar(
-                  initials: initials, color: specColor, gender: doctor.gender),
+                initials: initials,
+                color: specColor,
+                gender: doctor.gender,
+              ),
               14.horizontalSpace,
               Expanded(
                 child: Column(
@@ -74,7 +75,9 @@ class DoctorCard extends StatelessWidget {
                     6.verticalSpace,
                     Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 10.w, vertical: 4.h),
+                        horizontal: 10.w,
+                        vertical: 4.h,
+                      ),
                       decoration: BoxDecoration(
                         color: specColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(999),
@@ -88,7 +91,9 @@ class DoctorCard extends StatelessWidget {
                       ),
                     ),
                     8.verticalSpace,
-                    Row(
+                    Wrap(
+                      spacing: 8.w,
+                      runSpacing: 6.h,
                       children: [
                         _StatBadge(
                           icon: Icons.workspace_premium_rounded,
@@ -97,7 +102,6 @@ class DoctorCard extends StatelessWidget {
                           cs: cs,
                           theme: theme,
                         ),
-                        8.horizontalSpace,
                         _StatBadge(
                           icon: Icons.payments_rounded,
                           value: '\$${doctor.fee.toInt()}',
@@ -173,8 +177,11 @@ class _Avatar extends StatelessWidget {
   final Color color;
   final String gender;
 
-  const _Avatar(
-      {required this.initials, required this.color, required this.gender});
+  const _Avatar({
+    required this.initials,
+    required this.color,
+    required this.gender,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -216,8 +223,9 @@ class _AvailabilityBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        isAvailable ? const Color(0xFF16B364) : const Color(0xFF6B7280);
+    final color = isAvailable
+        ? const Color(0xFF16B364)
+        : const Color(0xFF6B7280);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
       decoration: BoxDecoration(

@@ -5,7 +5,7 @@ import '../controllers/doctors_controller.dart';
 import 'widgets/doctor_card.dart';
 
 class DoctorsView extends GetView<DoctorsController> {
-  const DoctorsView({Key? key}) : super(key: key);
+  const DoctorsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +70,11 @@ class _DoctorsHeader extends GetView<DoctorsController> {
                   color: Colors.white.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(14.r),
                 ),
-                child:
-                    Icon(Icons.people_rounded, color: Colors.white, size: 26.sp),
+                child: Icon(
+                  Icons.people_rounded,
+                  color: Colors.white,
+                  size: 26.sp,
+                ),
               ),
               14.horizontalSpace,
               Expanded(
@@ -101,19 +104,24 @@ class _DoctorsHeader extends GetView<DoctorsController> {
                   ],
                 ),
               ),
-              Obx(() {
-                final total = controller.allDoctors.length;
-                final inactive =
-                    controller.allDoctors.where((d) => !d.isAvailable).length;
-                return Row(
-                  children: [
-                    _MiniStat(count: total, label: 'إجمالي', theme: theme),
-                    8.horizontalSpace,
-                    _MiniStat(
-                        count: inactive, label: 'غير متاح', theme: theme),
-                  ],
-                );
-              }),
+              if (MediaQuery.sizeOf(context).width >= 360)
+                Obx(() {
+                  final total = controller.allDoctors.length;
+                  final inactive = controller.allDoctors
+                      .where((d) => !d.isAvailable)
+                      .length;
+                  return Row(
+                    children: [
+                      _MiniStat(count: total, label: 'إجمالي', theme: theme),
+                      8.horizontalSpace,
+                      _MiniStat(
+                        count: inactive,
+                        label: 'غير متاح',
+                        theme: theme,
+                      ),
+                    ],
+                  );
+                }),
             ],
           ),
         ),
@@ -126,8 +134,11 @@ class _MiniStat extends StatelessWidget {
   final int count;
   final String label;
   final ThemeData theme;
-  const _MiniStat(
-      {required this.count, required this.label, required this.theme});
+  const _MiniStat({
+    required this.count,
+    required this.label,
+    required this.theme,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -140,13 +151,20 @@ class _MiniStat extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text('$count',
-              style: theme.textTheme.titleMedium?.copyWith(
-                  color: Colors.white, fontWeight: FontWeight.w900)),
-          Text(label,
-              style: theme.textTheme.labelSmall?.copyWith(
-                  color: Colors.white.withValues(alpha: 0.75),
-                  fontSize: 9.sp)),
+          Text(
+            '$count',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+          Text(
+            label,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: Colors.white.withValues(alpha: 0.75),
+              fontSize: 9.sp,
+            ),
+          ),
         ],
       ),
     );
@@ -160,16 +178,15 @@ class _SearchAndFilterDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => 56 + ScreenUtil().setHeight(40);
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     final cs = Theme.of(context).colorScheme;
     return ColoredBox(
       color: cs.surface,
-      child: const Column(
-        children: [
-          _SearchBar(),
-          _SpecialtyFilters(),
-        ],
-      ),
+      child: const Column(children: [_SearchBar(), _SpecialtyFilters()]),
     );
   }
 
@@ -198,13 +215,19 @@ class _SearchBar extends GetView<DoctorsController> {
           decoration: InputDecoration(
             hintText: 'ابحث عن طبيب أو تخصص...',
             hintStyle: TextStyle(
-                color: cs.onSurfaceVariant.withValues(alpha: 0.5),
-                fontSize: 14.sp),
-            prefixIcon:
-                Icon(Icons.search_rounded, color: cs.onSurfaceVariant, size: 20.sp),
+              color: cs.onSurfaceVariant.withValues(alpha: 0.5),
+              fontSize: 14.sp,
+            ),
+            prefixIcon: Icon(
+              Icons.search_rounded,
+              color: cs.onSurfaceVariant,
+              size: 20.sp,
+            ),
             border: InputBorder.none,
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 16.w,
+              vertical: 12.h,
+            ),
           ),
         ),
       ),
@@ -286,22 +309,33 @@ class _SpecialtyChip extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
           decoration: BoxDecoration(
             gradient: selected
-                ? LinearGradient(
-                    colors: [color.withValues(alpha: 0.85), color])
+                ? LinearGradient(colors: [color.withValues(alpha: 0.85), color])
                 : null,
-            color: selected ? null : cs.surfaceContainerHighest.withValues(alpha: 0.5),
+            color: selected
+                ? null
+                : cs.surfaceContainerHighest.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(999),
             border: Border.all(
-              color: selected ? Colors.transparent : cs.outlineVariant.withValues(alpha: 0.5),
+              color: selected
+                  ? Colors.transparent
+                  : cs.outlineVariant.withValues(alpha: 0.5),
             ),
             boxShadow: selected
-                ? [BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 3))]
+                ? [
+                    BoxShadow(
+                      color: color.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
                 : [],
           ),
           child: Text(
             label,
             style: theme.textTheme.labelMedium?.copyWith(
-              color: selected ? Colors.white : cs.onSurfaceVariant.withValues(alpha: 0.8),
+              color: selected
+                  ? Colors.white
+                  : cs.onSurfaceVariant.withValues(alpha: 0.8),
               fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
             ),
           ),
@@ -327,18 +361,26 @@ class _EmptyState extends StatelessWidget {
               color: const Color(0xFF3949AB).withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.person_search_rounded,
-                size: 44.sp,
-                color: const Color(0xFF3949AB).withValues(alpha: 0.5)),
+            child: Icon(
+              Icons.person_search_rounded,
+              size: 44.sp,
+              color: const Color(0xFF3949AB).withValues(alpha: 0.5),
+            ),
           ),
           20.verticalSpace,
-          Text('لا يوجد أطباء',
-              style: theme.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w800)),
+          Text(
+            'لا يوجد أطباء',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w800,
+            ),
+          ),
           10.verticalSpace,
-          Text('حاول تغيير كلمة البحث أو الفلتر',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                  color: cs.onSurfaceVariant.withValues(alpha: 0.7))),
+          Text(
+            'حاول تغيير كلمة البحث أو الفلتر',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: cs.onSurfaceVariant.withValues(alpha: 0.7),
+            ),
+          ),
         ],
       ),
     );
@@ -374,13 +416,20 @@ class _AddDoctorFab extends GetView<DoctorsController> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.person_add_rounded, color: Colors.white, size: 22.sp),
+                Icon(
+                  Icons.person_add_rounded,
+                  color: Colors.white,
+                  size: 22.sp,
+                ),
                 8.horizontalSpace,
-                Text('إضافة طبيب',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 14.sp)),
+                Text(
+                  'إضافة طبيب',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14.sp,
+                  ),
+                ),
               ],
             ),
           ),

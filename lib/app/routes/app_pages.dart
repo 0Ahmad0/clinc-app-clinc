@@ -1,5 +1,11 @@
 import 'package:clinc_app_clinc/modules/settings/views/settings_view.dart';
 import 'package:clinc_app_clinc/modules/settings/bindings/settings_binding.dart';
+import 'package:clinc_app_clinc/modules/ads/views/ads_view.dart';
+import 'package:clinc_app_clinc/modules/ads/views/ads_type_view.dart';
+import 'package:clinc_app_clinc/modules/ads/views/create_single_ad_view.dart';
+import 'package:clinc_app_clinc/modules/ads/views/ads_packages_view.dart';
+import 'package:clinc_app_clinc/modules/ads/views/ads_payment_view.dart';
+import 'package:clinc_app_clinc/modules/ads/bindings/ads_binding.dart';
 import 'package:clinc_app_clinc/modules/notifications/views/notifications_view.dart';
 import 'package:clinc_app_clinc/modules/notifications/bindings/notifications_binding.dart';
 import 'package:clinc_app_clinc/modules/appointments/views/appointments_view.dart';
@@ -41,6 +47,31 @@ import 'app_routes.dart';
 
 class AppPages {
   static final routes = [
+    GetPage(
+      name: AppRoutes.ads,
+      page: () => const AdsView(),
+      binding: AdsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.adsType,
+      page: () => const AdsTypeView(),
+      binding: AdsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.adsCreateSingle,
+      page: () => const CreateSingleAdView(),
+      binding: AdsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.adsPackages,
+      page: () => const AdsPackagesView(),
+      binding: AdsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.adsPayment,
+      page: () => const AdsPaymentView(),
+      binding: AdsBinding(),
+    ),
     GetPage(
       name: AppRoutes.settings,
       page: () => const SettingsView(),

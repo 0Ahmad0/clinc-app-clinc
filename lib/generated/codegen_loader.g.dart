@@ -543,6 +543,102 @@ class CodegenLoader extends AssetLoader{
     "validation_required": "هذا الحقل مطلوب",
     "validation_invalid_email": "البريد الإلكتروني غير صالح"
   },
+  "ads": {
+    "roles": {
+      "clinic": "عيادة",
+      "clinic_with_lab": "عيادة مع مختبر",
+      "lab": "مختبر"
+    },
+    "list": {
+      "title": "إعلاناتك",
+      "create": "إنشاء إعلان",
+      "create_short": "إنشاء",
+      "role_label": "الدور الحالي: {}",
+      "start": "تاريخ البداية",
+      "end": "تاريخ النهاية",
+      "remaining": "الوقت المتبقي"
+    },
+    "type": {
+      "title": "اختر نوع الإعلان",
+      "single": "إعلان لمرة واحدة",
+      "package": "الاشتراك في باقة"
+    },
+    "create": {
+      "title": "إنشاء إعلان",
+      "publish": "نشر الإعلان"
+    },
+    "form": {
+      "title_hint": "عنوان الإعلان",
+      "description_hint": "الوصف",
+      "upload_image": "رفع صورة الإعلان",
+      "title_required": "يرجى إدخال عنوان الإعلان",
+      "description_required": "يرجى إدخال وصف الإعلان",
+      "image_required": "يرجى رفع صورة للإعلان",
+      "package_required": "يرجى اختيار باقة"
+    },
+    "packages": {
+      "title": "الباقات",
+      "subscribe_now": "اشترك الآن",
+      "basic": {
+        "title": "الباقة الأساسية",
+        "features": {
+          "one": "إعلان واحد شهرياً",
+          "two": "ظهور عادي",
+          "three": "دعم فني"
+        }
+      },
+      "advanced": {
+        "title": "الباقة المتقدمة",
+        "features": {
+          "one": "3 إعلانات شهرياً",
+          "two": "ظهور متقدم",
+          "three": "دعم فني أولوية",
+          "four": "تحليلات"
+        }
+      },
+      "pro": {
+        "title": "الباقة الاحترافية",
+        "features": {
+          "one": "إعلانات غير محدودة",
+          "two": "ظهور مميز",
+          "three": "دعم فني VIP",
+          "four": "تحليلات متقدمة",
+          "five": "إعلانات مخصصة"
+        }
+      }
+    },
+    "payment": {
+      "title": "الدفع",
+      "price": "السعر",
+      "currency": "ريال",
+      "methods_title": "طرق الدفع",
+      "methods": {
+        "card": "بطاقة ائتمان",
+        "apple": "Apple Pay",
+        "mada": "مدى"
+      },
+      "pay_now": "الدفع الآن"
+    },
+    "status": {
+      "active": "نشط",
+      "finished": "منتهي",
+      "remaining_days_hours": "{} يوم {} ساعة متبقية",
+      "remaining_hours_minutes": "{} ساعة {} دقيقة متبقية"
+    },
+    "messages": {
+      "not_available": "الخيار غير متاح",
+      "not_available_for_role": "هذا الخيار غير متاح للدور الحالي",
+      "validation_title": "تحقق من البيانات",
+      "success_title": "تم إنشاء الإعلان",
+      "success_body": "تم إرسال إعلانك بنجاح وجاهز للعرض"
+    },
+    "mock": {
+      "first_title": "عرض تنظيف الأسنان",
+      "first_description": "خصم خاص لفترة محدودة",
+      "second_title": "خصم تبييض الأسنان",
+      "second_description": "انتهت مدة الإعلان"
+    }
+  },
   "services": {
     "title": "إدارة الخدمات",
     "tabs": {
@@ -1101,6 +1197,102 @@ static const Map<String,dynamic> _en = {
     "confirm": "Confirm",
     "validation_required": "This field is required",
     "validation_invalid_email": "Invalid email address"
+  },
+  "ads": {
+    "roles": {
+      "clinic": "Clinic",
+      "clinic_with_lab": "Clinic With Lab",
+      "lab": "Lab"
+    },
+    "list": {
+      "title": "Your Ads",
+      "create": "Create Ad",
+      "create_short": "Create",
+      "role_label": "Current role: {}",
+      "start": "Start date",
+      "end": "End date",
+      "remaining": "Remaining"
+    },
+    "type": {
+      "title": "Choose ad type",
+      "single": "One-time ad",
+      "package": "Subscribe to package"
+    },
+    "create": {
+      "title": "Create Ad",
+      "publish": "Publish Ad"
+    },
+    "form": {
+      "title_hint": "Ad title",
+      "description_hint": "Description",
+      "upload_image": "Upload ad image",
+      "title_required": "Please enter ad title",
+      "description_required": "Please enter ad description",
+      "image_required": "Please upload an ad image",
+      "package_required": "Please choose a package"
+    },
+    "packages": {
+      "title": "Packages",
+      "subscribe_now": "Subscribe now",
+      "basic": {
+        "title": "Basic package",
+        "features": {
+          "one": "1 ad per month",
+          "two": "Standard visibility",
+          "three": "Technical support"
+        }
+      },
+      "advanced": {
+        "title": "Advanced package",
+        "features": {
+          "one": "3 ads per month",
+          "two": "Boosted visibility",
+          "three": "Priority support",
+          "four": "Analytics"
+        }
+      },
+      "pro": {
+        "title": "Professional package",
+        "features": {
+          "one": "Unlimited ads",
+          "two": "Premium visibility",
+          "three": "VIP support",
+          "four": "Advanced analytics",
+          "five": "Custom ads"
+        }
+      }
+    },
+    "payment": {
+      "title": "Payment",
+      "price": "Price",
+      "currency": "SAR",
+      "methods_title": "Payment methods",
+      "methods": {
+        "card": "Credit card",
+        "apple": "Apple Pay",
+        "mada": "Mada"
+      },
+      "pay_now": "Pay now"
+    },
+    "status": {
+      "active": "Active",
+      "finished": "Finished",
+      "remaining_days_hours": "{} days {} hours left",
+      "remaining_hours_minutes": "{} hours {} minutes left"
+    },
+    "messages": {
+      "not_available": "Option unavailable",
+      "not_available_for_role": "This option is not available for this role",
+      "validation_title": "Validation",
+      "success_title": "Ad created",
+      "success_body": "Your ad was submitted successfully and is ready to show"
+    },
+    "mock": {
+      "first_title": "Teeth Cleaning Offer",
+      "first_description": "Special discount for a limited time",
+      "second_title": "Teeth Whitening Discount",
+      "second_description": "Ad campaign ended"
+    }
   },
   "services": {
     "title": "Services Management",
