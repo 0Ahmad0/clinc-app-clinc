@@ -1,115 +1,88 @@
-import 'package:clinc_app_clinc/app/routes/app_routes.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 import '../../../app/core/configuration/locator.dart';
 import '../../../app/core/helper/response_helper.dart';
 import '../../../app/domain/error_handler/network_exceptions.dart';
+import '../../../app/routes/app_routes.dart';
 import '../../../app/services/storage_service.dart';
 import '../../../generated/locale_keys.g.dart';
-import '../domain/repositories/auth_repository.dart';
+import '../data/login_model.dart';
+import '../domain/repositories/clinic_login_repository.dart';
 
 class LoginController extends GetxController {
-  // ── Text Controllers ──
   final TextEditingController identifierController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // ── State Variables ──
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final RxBool isLoading = false.obs;
   final RxBool isPassHidden = true.obs;
-  late AuthRepository _repository;
+  late final ClinicLoginRepository _repository;
 
   @override
   void onInit() {
-    _repository = locator<AuthRepository>();
+    _repository = locator<ClinicLoginRepository>();
     super.onInit();
   }
-  // ── Actions ──
+
   void togglePassVisibility() => isPassHidden.toggle();
-
-
 
   Future<void> login() async {
     if (isLoading.value || !(formKey.currentState?.validate() ?? false)) {
       return;
     }
 
-
     isLoading.value = true;
-    final response = await _repository.Login(
-      identifierController.text,
-      passwordController.text,
+    final result = await _repository.login(
+      identifier: identifierController.text.trim(),
+      password: passwordController.text,
     );
+    isLoading.value = false;
 
-    response.when(
-      success: (data) async {
-        final result = data.result;
-        print("result $result");
+    result.when(
+      success: _handleResponse,
+      failure: (exception) => ResponseHelper.onFailure(
+        message: NetworkExceptions.getErrorMessage(exception),
+      ),
+    );
+  }
 
-        await saveUserAuth(result);
-        isLoading.value = false;
-        // ResponseHelper.onSuccess(message: data.message);
-        if (result?['token'] != null) {
-          await saveUserAuth(result);
-          isLoading.value = false;
-          // ResponseHelper.onSuccess(message: data.message);
-          _goToRoleHome();
-        }
-      },
-      failure: (networkException) {
-        isLoading.value = false;
-        ResponseHelper.onFailure(
-          message: NetworkExceptions.getErrorMessage(networkException),
+  Future<void> _handleResponse(ClinicLoginResponse response) async {
+    if (!response.isSuccess || response.data == null) {
+      if (response.error?['status'] == 'pending') {
+        await StorageService.instance.setPendingRegistrationReference(
+          identifierController.text.trim(),
         );
-      },
-    );
-  }
-
-  void _goToRoleHome() {
-    Get.offAllNamed(AppRoutes.mainLayout);
-
-  }
-  Future<void> saveUserAuth(Map<String, dynamic>? result) async {
-    if (result == null) return;
-
-    await StorageService.instance.setAccessToken(result['token']?['access_token']);
-
-
-    if (result['user'] != null) {
-      await StorageService.instance.cacheUserModel(
-        result['user'] as Map<String, dynamic>,
-      );
+        Get.offAllNamed(AppRoutes.pendingApproval);
+        return;
+      }
+      ResponseHelper.onFailure(message: response.message);
+      return;
     }
 
-    await StorageService.instance.writeData(
-      StorageService.REFRESH_TOKEN_EXPIRE,
-      result['refreshTokenExpireInSeconds'],
-    );
-    await StorageService.instance.writeData(
-      StorageService.REFRESH_TOKEN,
-      result['token']?['refresh_token'],
-    );
+    final data = response.data!;
+    await StorageService.instance.setAccessToken(data.token);
+    await StorageService.instance.cacheClinic(data.clinic.toJson());
+    await StorageService.instance.setProfileCompleted(!data.needsCompletion);
     await StorageService.instance.writeData(
       StorageService.LOGIN_TIME,
       DateTime.now().toIso8601String(),
     );
+
+    if (data.needsCompletion) {
+      Get.offAllNamed(AppRoutes.completeProfile);
+      return;
+    }
+    Get.offAllNamed(AppRoutes.mainLayout);
   }
 
+  void toRegister() => Get.offAllNamed(AppRoutes.register);
 
-  void toRegister() {
-    Get.offAllNamed(AppRoutes.register);
-  }
+  void toForgotPassword() => Get.toNamed(AppRoutes.forgotPassword);
 
-  void toForgotPassword() {
-    // التوجيه لصفحة استعادة كلمة المرور
-    Get.toNamed(AppRoutes.forgotPassword);
-  }
-
-  // ── Validators ──
   String? validateRequired(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       return tr(LocaleKeys.login_messages_required_field);
     }
     return null;

@@ -1,62 +1,65 @@
-enum ReportType { appointments, revenue, labResults, doctors }
-enum ReportRange { today, week, month, custom }
+enum ReportType { appointments, clinic, revenue, doctors }
+
+enum ReportRange { week, month, year }
+
+enum ReportFormat { pdf, excel }
 
 extension ReportTypeX on ReportType {
-  String key() {
-    switch (this) {
-      case ReportType.appointments:
-        return 'reports.types.appointments';
-      case ReportType.revenue:
-        return 'reports.types.revenue';
-      case ReportType.labResults:
-        return 'reports.types.lab_results';
-      case ReportType.doctors:
-        return 'reports.types.doctors';
-    }
-  }
+  String key() => 'reports.types.$name';
 }
 
 extension ReportRangeX on ReportRange {
-  String key() {
-    switch (this) {
-      case ReportRange.today:
-        return 'reports.filters.today';
-      case ReportRange.week:
-        return 'reports.filters.week';
-      case ReportRange.month:
-        return 'reports.filters.month';
-      case ReportRange.custom:
-        return 'reports.filters.custom';
-    }
-  }
+  String key() => 'reports.filters.$name';
 }
 
-
+extension ReportFormatX on ReportFormat {
+  String key() => 'reports.formats.$name';
+}
 
 class ReportModel {
-  final String id;
-  final ReportType type;
-  final DateTime generatedAt;
-
-  // Summary numbers (flexible)
-  final int total;
-  final int completed;
-  final int pending;
-  final int cancelled;
-
-  // PDF (اختياري)
-  final String? pdfPathOrUrl;
-
   const ReportModel({
     required this.id,
     required this.type,
+    required this.range,
+    required this.format,
     required this.generatedAt,
     required this.total,
     required this.completed,
     required this.pending,
     required this.cancelled,
-    this.pdfPathOrUrl,
+    required this.fileUrl,
   });
 
-  bool get hasPdf => (pdfPathOrUrl ?? '').isNotEmpty;
+  final String id;
+  final ReportType type;
+  final ReportRange range;
+  final ReportFormat format;
+  final DateTime generatedAt;
+  final int total;
+  final int completed;
+  final int pending;
+  final int cancelled;
+  final String fileUrl;
+
+  bool get hasPdf => format == ReportFormat.pdf && fileUrl.isNotEmpty;
+  String? get pdfPathOrUrl => hasPdf ? fileUrl : null;
+
+  factory ReportModel.fromJson(Map<String, dynamic> json) {
+    return ReportModel(
+      id: json['report_id'].toString(),
+      type: ReportType.values.firstWhere((value) => value.name == json['type']),
+      range: ReportRange.values.firstWhere(
+        (value) => value.name == json['range'],
+      ),
+      format: ReportFormat.values.firstWhere(
+        (value) => value.name == json['format'],
+      ),
+      generatedAt: DateTime.parse(json['generated_at'] as String),
+      total: json['summary']?['total'] as int? ?? 0,
+      completed: json['summary']?['completed'] as int? ?? 0,
+      pending: json['summary']?['pending'] as int? ?? 0,
+      cancelled: json['summary']?['cancelled'] as int? ?? 0,
+      fileUrl: json['file_url'] as String? ?? '',
+    );
+  }
 }

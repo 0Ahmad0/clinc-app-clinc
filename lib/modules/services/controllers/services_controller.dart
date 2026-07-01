@@ -1,57 +1,207 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-//
-// // --- Models ---
-// class CategoryModel {
-//   final String title;
-//   final String testsCount;
-//   final IconData icon;
-//   final Color color;
-//
-//   CategoryModel(this.title, this.testsCount, this.icon, this.color);
-// }
-//
-// class TestItemModel {
-//   final String code;
-//   final String titleAr;
-//   final String titleEn;
-//   int price;
-//   bool isSelected;
-//
-//   TestItemModel(this.code, this.titleAr, this.titleEn, this.price, this.isSelected);
-// }
-//
-// // --- Controller ---
-// class ServicesController extends GetxController {
-//   // بيانات الشاشة الأولى (الأقسام)
-//   final categories = [
-//     CategoryModel("أمراض الدم", "٢٤ تحليل", Icons.water_drop, Colors.redAccent),
-//     CategoryModel("الكيمياء الحيوية", "١٨ تحليل", Icons.science, Colors.blue),
-//     CategoryModel("الهرمونات", "١٢ تحليل", Icons.biotech, Colors.purpleAccent),
-//     CategoryModel("المناعة", "٩ تحاليل", Icons.coronavirus, Colors.teal),
-//     CategoryModel("الميكروبيولوجي", "٣٠ تحليل", Icons.mic_none_rounded, Colors.orange),
-//     CategoryModel("تحليل البول", "٥ تحاليل", Icons.water, Colors.amber),
-//     CategoryModel("باثولوجي", "١١ تحليل", Icons.folder_special, Colors.pinkAccent),
-//   ];
-//
-//   // بيانات الشاشة الثانية (التحاليل)
-//   final tests = <TestItemModel>[
-//     TestItemModel("CBC", "صورة دم كاملة", "Complete Blood Count", 50, true),
-//     TestItemModel("LFT", "وظائف كبد", "Liver Function Tests", 0, false),
-//     TestItemModel("KFT", "وظائف كلى", "Kidney Function Tests", 0, false),
-//     TestItemModel("TFT", "وظائف غدة درقية", "Thyroid Function Tests", 120, true),
-//     TestItemModel("BS", "سكر دم", "Blood Sugar", 0, false),
-//   ].obs;
-//
-//   // دوال الشاشة الثانية
-//   int get selectedTestsCount => tests.where((t) => t.isSelected).length;
-//
-//   void toggleTest(int index) {
-//     tests[index].isSelected = !tests[index].isSelected;
-//     tests.refresh();
-//   }
-//
-//   void updatePrice(int index, String val) {
-//     tests[index].price = int.tryParse(val) ?? 0;
-//   }
-// }
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../../app/core/configuration/locator.dart';
+import '../../../app/core/helper/response_helper.dart';
+import '../../../app/core/widgets/widgets_Informative/empty_data_view.dart';
+import '../../../app/core/widgets/widgets_Informative/error_view.dart';
+import '../../../app/core/widgets/widgets_Informative/loading_data_view.dart';
+import '../../../app/data/enums/loading.dart';
+import '../../../app/domain/error_handler/network_exceptions.dart';
+import '../../../app/services/storage_service.dart';
+import '../domain/services_repository.dart';
+import '../models/clinic_service_model.dart';
+
+class ServicesController extends GetxController {
+  final Rx<ClinicServiceTab> selectedTab = ClinicServiceTab.medical.obs;
+  final Rx<GeneralLoading> labLoading = GeneralLoading.initial.obs;
+  final Rx<GeneralLoading> medicalLoading = GeneralLoading.initial.obs;
+  final RxList<ClinicServiceSection> labSections = <ClinicServiceSection>[].obs;
+  final RxList<ClinicServiceSection> medicalSections =
+      <ClinicServiceSection>[].obs;
+  final RxSet<String> loadingSectionIds = <String>{}.obs;
+  final RxSet<String> loadingTestIds = <String>{}.obs;
+  final RxBool isLoadingMore = false.obs;
+  final ScrollController scrollController = ScrollController();
+  late final ServicesRepository _repository;
+  final Map<ClinicServiceTab, int> _currentPages = {
+    ClinicServiceTab.lab: 0,
+    ClinicServiceTab.medical: 0,
+  };
+  final Map<ClinicServiceTab, int> _totals = {
+    ClinicServiceTab.lab: 0,
+    ClinicServiceTab.medical: 0,
+  };
+
+  List<ClinicServiceTab> get allowedTabs {
+    final type = StorageService.instance.getCachedClinic()?['type'];
+    if (type == 'lab') return const [ClinicServiceTab.lab];
+    if (type == 'clinic') return const [ClinicServiceTab.medical];
+    return ClinicServiceTab.values;
+  }
+
+  List<ClinicServiceSection> sectionsFor(ClinicServiceTab tab) {
+    return tab == ClinicServiceTab.lab ? labSections : medicalSections;
+  }
+
+  Rx<GeneralLoading> loadingFor(ClinicServiceTab tab) {
+    return tab == ClinicServiceTab.lab ? labLoading : medicalLoading;
+  }
+
+  bool hasMore(ClinicServiceTab tab) {
+    return sectionsFor(tab).length < (_totals[tab] ?? 0);
+  }
+
+  @override
+  void onInit() {
+    _repository = locator<ServicesRepository>();
+    selectedTab.value = allowedTabs.first;
+    scrollController.addListener(_onScroll);
+    getSections(selectedTab.value, pageKey: 1);
+    super.onInit();
+  }
+
+  void _onScroll() {
+    final tab = selectedTab.value;
+    if (scrollController.position.extentAfter < 240 &&
+        hasMore(tab) &&
+        !isLoadingMore.value) {
+      getSections(tab, pageKey: (_currentPages[tab] ?? 0) + 1);
+    }
+  }
+
+  Future<void> selectTab(ClinicServiceTab tab) async {
+    if (selectedTab.value == tab) return;
+    selectedTab.value = tab;
+    if (sectionsFor(tab).isEmpty) await getSections(tab, pageKey: 1);
+  }
+
+  Future<void> onRefresh() => getSections(selectedTab.value, pageKey: 1);
+
+  Future<void> getSections(ClinicServiceTab tab, {required int pageKey}) async {
+    final firstPage = pageKey == 1;
+    if (firstPage) {
+      loadingFor(tab).value = GeneralLoading.loading;
+    } else {
+      isLoadingMore.value = true;
+    }
+
+    final result = await _repository.getSections(type: tab, page: pageKey);
+    result.when(
+      success: (model) {
+        if (model.status != 'success') {
+          _handleFailure(
+            tab,
+            NetworkExceptions.defaultError(model.message ?? ''),
+            firstPage,
+          );
+          return;
+        }
+        final items =
+            model.result?.list.whereType<ClinicServiceSection>() ?? [];
+        final target = sectionsFor(tab);
+        if (firstPage) target.clear();
+        target.addAll(items);
+        _currentPages[tab] = model.meta?.currentPage ?? pageKey;
+        _totals[tab] = model.meta?.total ?? target.length;
+        loadingFor(tab).value = target.isEmpty
+            ? GeneralLoading.empty
+            : GeneralLoading.success;
+        isLoadingMore.value = false;
+      },
+      failure: (exception) => _handleFailure(tab, exception, firstPage),
+    );
+  }
+
+  void _handleFailure(
+    ClinicServiceTab tab,
+    NetworkExceptions exception,
+    bool firstPage,
+  ) {
+    isLoadingMore.value = false;
+    if (firstPage) loadingFor(tab).value = GeneralLoading.failure;
+    ResponseHelper.onNetworkFailure(networkException: exception);
+  }
+
+  Future<void> addSection(ClinicServiceSection section) async {
+    final tab = selectedTab.value;
+    if (loadingSectionIds.contains(section.id)) return;
+    loadingSectionIds.add(section.id);
+    final result = await _repository.addSection(
+      type: tab,
+      sectionId: section.id,
+    );
+    loadingSectionIds.remove(section.id);
+    result.when(
+      success: (model) {
+        if (model.status != 'success' || model.result == null) {
+          ResponseHelper.onFailure(message: model.message);
+          return;
+        }
+        _replaceSection(tab, model.result!);
+        ResponseHelper.onSuccess(message: model.message);
+      },
+      failure: (exception) =>
+          ResponseHelper.onNetworkFailure(networkException: exception),
+    );
+  }
+
+  Future<void> updateLabTest({
+    required ClinicServiceSection section,
+    required LabTestOption test,
+    required bool isEnabled,
+    required num price,
+  }) async {
+    if (isEnabled && price <= 0) {
+      ResponseHelper.onFailure(
+        message: 'services_page.messages.price_required'.tr,
+      );
+      return;
+    }
+    if (loadingTestIds.contains(test.id)) return;
+    loadingTestIds.add(test.id);
+    final result = await _repository.updateLabTest(
+      sectionId: section.id,
+      testId: test.id,
+      isEnabled: isEnabled,
+      price: price,
+    );
+    loadingTestIds.remove(test.id);
+    result.when(
+      success: (model) {
+        if (model.status != 'success' || model.result == null) {
+          ResponseHelper.onFailure(message: model.message);
+          return;
+        }
+        _replaceSection(ClinicServiceTab.lab, model.result!);
+        ResponseHelper.onSuccess(message: model.message);
+      },
+      failure: (exception) =>
+          ResponseHelper.onNetworkFailure(networkException: exception),
+    );
+  }
+
+  void _replaceSection(ClinicServiceTab tab, ClinicServiceSection updated) {
+    final target = sectionsFor(tab);
+    final index = target.indexWhere((section) => section.id == updated.id);
+    if (index != -1) target[index] = updated;
+  }
+
+  Widget buildSections(ClinicServiceTab tab, Widget child) {
+    return loadingFor(tab).value.maybeWhen(
+      loading: () => const LoadingDataBaseView(),
+      failure: () => const ErrorView(),
+      empty: () => const EmptyDataView(text: 'services_page.messages.empty'),
+      success: () => child,
+      orElse: () => const SizedBox.shrink(),
+    );
+  }
+
+  @override
+  void onClose() {
+    scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    super.onClose();
+  }
+}

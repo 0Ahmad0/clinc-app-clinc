@@ -15,7 +15,7 @@ class AddDoctorView extends GetView<AddDoctorController> {
     return Scaffold(
       appBar: AppBar(
         title: Obx(
-              () => Text(
+          () => Text(
             controller.isEditMode.value
                 ? tr(LocaleKeys.add_doctor_edit_title)
                 : tr(LocaleKeys.add_doctor_title),
@@ -38,15 +38,18 @@ class AddDoctorView extends GetView<AddDoctorController> {
                     return CircleAvatar(
                       radius: 50.r,
                       backgroundColor: Colors.grey[200],
-                      backgroundImage: controller.selectedImage.value.isNotEmpty
-                          ? FileImage(File(controller.selectedImage.value))
-                          : null,
+                      backgroundImage: controller.selectedImage.value.isEmpty
+                          ? null
+                          : controller.selectedImage.value.startsWith('http')
+                          ? NetworkImage(controller.selectedImage.value)
+                          : FileImage(File(controller.selectedImage.value))
+                                as ImageProvider,
                       child: controller.selectedImage.value.isEmpty
                           ? Icon(
-                        Icons.camera_alt,
-                        size: 30.sp,
-                        color: Colors.grey,
-                      )
+                              Icons.camera_alt,
+                              size: 30.sp,
+                              color: Colors.grey,
+                            )
                           : null,
                     );
                   }),
@@ -76,21 +79,27 @@ class AddDoctorView extends GetView<AddDoctorController> {
 
               // Specialty Dropdown
               Obx(
-                    () => DropdownButtonFormField<String>(
+                () => DropdownButtonFormField<int>(
+                  key: ValueKey(controller.selectedSpecialtyId.value),
                   decoration: _inputDecoration(
                     tr(LocaleKeys.add_doctor_labels_specialty),
                   ),
                   hint: Text(tr(LocaleKeys.add_doctor_labels_specialty_hint)),
-                  value: controller.selectedSpecialty.value.isEmpty
-                      ? null
-                      : controller.selectedSpecialty.value,
-                  items: controller.specialties.map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
+                  initialValue: controller.selectedSpecialtyId.value,
+                  items: controller.specializations.map((specialization) {
+                    final isArabic = context.locale.languageCode == 'ar';
+                    return DropdownMenuItem<int>(
+                      value: specialization.id,
+                      child: Text(
+                        isArabic
+                            ? specialization.nameAr
+                            : specialization.nameEn,
+                      ),
                     );
                   }).toList(),
-                  onChanged: (val) => controller.selectedSpecialty.value = val!,
+                  onChanged: controller.isLoadingSpecializations.value
+                      ? null
+                      : (val) => controller.selectedSpecialtyId.value = val,
                   validator: (val) => val == null
                       ? tr(LocaleKeys.add_doctor_validations_required)
                       : null,
@@ -144,118 +153,153 @@ class AddDoctorView extends GetView<AddDoctorController> {
               ),
 
               // عرض الملفات المختارة
-              Obx(() => Column(
-                children: controller.qualificationFiles.asMap().entries.map((entry) {
-                  int idx = entry.key;
-                  String path = entry.value;
-                  return Card(
-                    child: ListTile(
-                      leading: Icon(Icons.picture_as_pdf, color: Colors.red),
-                      title: Text(path.split('/').last, maxLines: 1, overflow: TextOverflow.ellipsis),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => controller.removeFile(idx),
+              Obx(
+                () => Column(
+                  children: controller.qualificationFiles.asMap().entries.map((
+                    entry,
+                  ) {
+                    int idx = entry.key;
+                    String path = entry.value;
+                    return Card(
+                      child: ListTile(
+                        leading: Icon(Icons.picture_as_pdf, color: Colors.red),
+                        title: Text(
+                          path.split('/').last,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => controller.removeFile(idx),
+                        ),
                       ),
-                    ),
-                  );
-                }).toList(),
-              )),
-
+                    );
+                  }).toList(),
+                ),
+              ),
 
               // --- 5. Working Hours Section ---
               SizedBox(height: 20.h),
               Text(
                 tr(LocaleKeys.working_hours_title),
                 style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
               SizedBox(height: 10.h),
 
-              Obx(() => Column(
-                children: List.generate(controller.workingHoursList.length, (index) {
-                  var workDay = controller.workingHoursList[index];
-                  // Assuming "working_hours.days.Saturday" key format exists
-                  String dayNameKey = "working_hours.days.${workDay.day}";
-                  // Fallback to English day name if translation fails/is missing for now to prevent crash
-                  String dayName = tr(dayNameKey);
-                  if (dayName == dayNameKey) dayName = workDay.day;
+              Obx(
+                () => Column(
+                  children: List.generate(controller.workingHoursList.length, (
+                    index,
+                  ) {
+                    var workDay = controller.workingHoursList[index];
+                    // Assuming "working_hours.days.Saturday" key format exists
+                    String dayNameKey = "working_hours.days.${workDay.day}";
+                    // Fallback to English day name if translation fails/is missing for now to prevent crash
+                    String dayName = tr(dayNameKey);
+                    if (dayName == dayNameKey) dayName = workDay.day;
 
-                  return Card(
-                    margin: EdgeInsets.only(bottom: 8.h),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                dayName,
-                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    workDay.isDayOff
-                                        ? tr(LocaleKeys.working_hours_day_off)
-                                        : tr(LocaleKeys.working_hours_work_day),
-                                    style: TextStyle(
-                                        color: workDay.isDayOff ? Colors.red : Colors.green,
-                                        fontSize: 12.sp
-                                    ),
-                                  ),
-                                  Switch(
-                                    value: !workDay.isDayOff,
-                                    activeColor: Colors.green,
-                                    onChanged: (val) => controller.toggleDayOff(index, val),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          if (!workDay.isDayOff) ...[
-                            Divider(),
+                    return Card(
+                      margin: EdgeInsets.only(bottom: 8.h),
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 8.h,
+                        ),
+                        child: Column(
+                          children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Expanded(
-                                  child: _buildTimePicker(
-                                    context,
-                                    title: tr(LocaleKeys.working_hours_from),
-                                    time: workDay.startTime ?? "--:--",
-                                    onTap: () => controller.selectTime(context, index, true),
+                                Text(
+                                  dayName,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.sp,
                                   ),
                                 ),
-                                SizedBox(width: 10.w),
-                                Icon(Icons.arrow_forward, size: 16.sp, color: Colors.grey),
-                                SizedBox(width: 10.w),
-                                Expanded(
-                                  child: _buildTimePicker(
-                                    context,
-                                    title: tr(LocaleKeys.working_hours_to),
-                                    time: workDay.endTime ?? "--:--",
-                                    onTap: () => controller.selectTime(context, index, false),
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      workDay.isDayOff
+                                          ? tr(LocaleKeys.working_hours_day_off)
+                                          : tr(
+                                              LocaleKeys.working_hours_work_day,
+                                            ),
+                                      style: TextStyle(
+                                        color: workDay.isDayOff
+                                            ? Colors.red
+                                            : Colors.green,
+                                        fontSize: 12.sp,
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: !workDay.isDayOff,
+                                      activeThumbColor: Colors.green,
+                                      onChanged: (val) =>
+                                          controller.toggleDayOff(index, val),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
+                            if (!workDay.isDayOff) ...[
+                              Divider(),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildTimePicker(
+                                      context,
+                                      title: tr(LocaleKeys.working_hours_from),
+                                      time: workDay.startTime ?? "--:--",
+                                      onTap: () => controller.selectTime(
+                                        context,
+                                        index,
+                                        true,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    size: 16.sp,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(width: 10.w),
+                                  Expanded(
+                                    child: _buildTimePicker(
+                                      context,
+                                      title: tr(LocaleKeys.working_hours_to),
+                                      time: workDay.endTime ?? "--:--",
+                                      onTap: () => controller.selectTime(
+                                        context,
+                                        index,
+                                        false,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
-                    ),
-                  );
-                }),
-              )),
-
+                    );
+                  }),
+                ),
+              ),
 
               // --- 6. Availability ---
               SizedBox(height: 20.h),
               Obx(
-                    () => SwitchListTile(
+                () => SwitchListTile(
                   title: Text(tr(LocaleKeys.add_doctor_labels_availability)),
                   value: controller.isAvailable.value,
                   onChanged: (val) => controller.isAvailable.value = val,
@@ -268,17 +312,27 @@ class AddDoctorView extends GetView<AddDoctorController> {
                 width: double.infinity,
                 height: 50.h,
                 child: ElevatedButton(
-                  onPressed: controller.saveDoctor,
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : controller.saveDoctor,
                   child: Obx(
-                        () => Text(
-                      controller.isEditMode.value
-                          ? tr(LocaleKeys.add_doctor_buttons_update)
-                          : tr(LocaleKeys.add_doctor_buttons_save),
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    () => controller.isLoading.value
+                        ? SizedBox(
+                            width: 22.w,
+                            height: 22.w,
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text(
+                            controller.isEditMode.value
+                                ? tr(LocaleKeys.add_doctor_buttons_update)
+                                : tr(LocaleKeys.add_doctor_buttons_save),
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -291,17 +345,17 @@ class AddDoctorView extends GetView<AddDoctorController> {
   }
 
   Widget _buildTextField(
-      TextEditingController ctrl,
-      String label, {
-        bool isNumber = false,
-        int maxLines = 1,
-      }) {
+    TextEditingController ctrl,
+    String label, {
+    bool isNumber = false,
+    int maxLines = 1,
+  }) {
     return TextFormField(
       controller: ctrl,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       maxLines: maxLines,
       validator: (val) =>
-      val!.isEmpty ? tr(LocaleKeys.add_doctor_validations_required) : null,
+          val!.isEmpty ? tr(LocaleKeys.add_doctor_validations_required) : null,
       decoration: _inputDecoration(label),
     );
   }
@@ -314,7 +368,12 @@ class AddDoctorView extends GetView<AddDoctorController> {
     );
   }
 
-  Widget _buildTimePicker(BuildContext context, {required String title, required String time, required VoidCallback onTap}) {
+  Widget _buildTimePicker(
+    BuildContext context, {
+    required String title,
+    required String time,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8.r),
@@ -338,9 +397,16 @@ class AddDoctorView extends GetView<AddDoctorController> {
               children: [
                 Text(
                   time,
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                Icon(Icons.access_time, size: 16.sp, color: Theme.of(context).primaryColor),
+                Icon(
+                  Icons.access_time,
+                  size: 16.sp,
+                  color: Theme.of(context).primaryColor,
+                ),
               ],
             ),
           ],

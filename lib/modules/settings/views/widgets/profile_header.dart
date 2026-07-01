@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../app/data/profile_model.dart';
@@ -23,9 +25,11 @@ class ProfileHeader extends StatelessWidget {
               CircleAvatar(
                 radius: 50.r,
                 backgroundColor: cs.primaryContainer,
-                backgroundImage: profile.avatar != null
+                backgroundImage: profile.avatar == null
+                    ? null
+                    : profile.avatar!.startsWith('http')
                     ? NetworkImage(profile.avatar!)
-                    : null,
+                    : FileImage(File(profile.avatar!)) as ImageProvider,
                 child: profile.avatar == null
                     ? Text(
                         profile.name.isNotEmpty ? profile.name[0] : '?',
@@ -49,7 +53,7 @@ class ProfileHeader extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: cs.shadow.withOpacity(0.1),
+                          color: cs.shadow.withValues(alpha: 0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),

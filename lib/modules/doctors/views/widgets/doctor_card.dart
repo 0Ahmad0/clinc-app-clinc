@@ -1,155 +1,155 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:easy_localization/easy_localization.dart';
-import '../../../../app/data/doctor_model.dart';
 import 'dart:io';
 
-import '../../../../generated/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../models/doctors_list_model.dart';
 
 class DoctorCard extends StatelessWidget {
-  final DoctorModel doctor;
-  final VoidCallback onTap;
-  final VoidCallback onToggleStatus;
+  const DoctorCard({super.key, required this.doctor, required this.onTap});
 
-  const DoctorCard({
-    Key? key,
-    required this.doctor,
-    required this.onTap,
-    required this.onToggleStatus,
-  }) : super(key: key);
+  final ClinicDoctor doctor;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isArabic = context.locale.languageCode == 'ar';
+    final name = isArabic ? doctor.nameAr : doctor.nameEn;
+    final specialty = isArabic
+        ? doctor.specialization.nameAr
+        : doctor.specialization.nameEn;
+    final statusColor = doctor.isAvailable ? Colors.green : Colors.redAccent;
 
-    // تحديد اللغة لعرض الاسم المناسب
-    final bool isAr = context.locale.languageCode == 'ar';
-    final String displayName = isAr ? doctor.nameAr : doctor.nameEn;
-
-    return Container(
-      margin: EdgeInsets.only(bottom: 16.h),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
       child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(20.r),
+        color: theme.colorScheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.r),
+          side: BorderSide(color: theme.colorScheme.outlineVariant),
+        ),
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(18.r),
           child: Padding(
             padding: EdgeInsets.all(12.w),
             child: Row(
               children: [
-                // 1. الصورة مع مؤشر الحالة
-                Stack(
-                  children: [
-                    Container(
-                      width: 80.r,
-                      height: 80.r,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16.r),
-                        color: theme.primaryColor.withOpacity(0.1),
-                        image: doctor.imagePath.isNotEmpty
-                            ? DecorationImage(
-                          image: FileImage(File(doctor.imagePath)),
-                          fit: BoxFit.cover,
-                        )
-                            : const DecorationImage(
-                          image: NetworkImage('https://via.placeholder.com/150'), // Placeholder
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 6,
-                      right: 6,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                        decoration: BoxDecoration(
-                          color: doctor.isAvailable ? Colors.green : Colors.red,
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Text(
-                          doctor.isAvailable
-                              ? tr(LocaleKeys.doctors_page_status_active)
-                              : tr(LocaleKeys.doctors_page_status_inactive),
-                          style: TextStyle(color: Colors.white, fontSize: 8.sp, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(14.r),
+                  child: Container(
+                    width: 76.r,
+                    height: 76.r,
+                    color: theme.colorScheme.primaryContainer,
+                    child: doctor.image?.isNotEmpty == true
+                        ? doctor.image!.startsWith('http')
+                              ? Image.network(
+                                  doctor.image!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, _, _) =>
+                                      _DoctorPlaceholder(name: name),
+                                )
+                              : Image.file(
+                                  File(doctor.image!),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, _, _) =>
+                                      _DoctorPlaceholder(name: name),
+                                )
+                        : _DoctorPlaceholder(name: name),
+                  ),
                 ),
-                16.horizontalSpace,
-
-                // 2. المعلومات
+                14.horizontalSpace,
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        displayName,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.sp,
-                        ),
+                        name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                      ),
-                      6.verticalSpace,
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                        decoration: BoxDecoration(
-                          color: theme.primaryColor.withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(6.r),
-                        ),
-                        child: Text(
-                          doctor.specialty,
-                          style: TextStyle(
-                            color: theme.primaryColor,
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w600,
-                          ),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      6.verticalSpace,
+                      5.verticalSpace,
+                      Text(
+                        specialty,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      9.verticalSpace,
                       Row(
                         children: [
-                          Icon(Icons.star, color: Colors.amber, size: 14.sp),
+                          Icon(
+                            Icons.workspace_premium_outlined,
+                            size: 16.sp,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                           4.horizontalSpace,
                           Text(
-                            "${doctor.yearsOfExperience} ${tr(LocaleKeys.doctor_details_labels_experience)}", // يمكن تعديل النص ليظهر "5 سنوات" فقط
-                            style: theme.textTheme.bodySmall?.copyWith(color: Colors.grey),
+                            tr(
+                              'doctors_page.experience_years',
+                              args: [doctor.experienceYears.toString()],
+                            ),
+                            style: theme.textTheme.bodySmall,
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${doctor.consultationFee} '
+                            '${tr('dashboard.currency.sar')}',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-
-                // 3. زر التبديل السريع
-                Column(
-                  children: [
-                    IconButton(
-                      onPressed: onToggleStatus,
-                      icon: Icon(
-                        doctor.isAvailable ? Icons.check_circle : Icons.do_not_disturb_on,
-                        color: doctor.isAvailable ? Colors.green : Colors.grey,
-                      ),
+                10.horizontalSpace,
+                Tooltip(
+                  message: tr(
+                    doctor.isAvailable
+                        ? 'doctors_page.status.active'
+                        : 'doctors_page.status.inactive',
+                  ),
+                  child: Container(
+                    width: 10.r,
+                    height: 10.r,
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                      shape: BoxShape.circle,
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _DoctorPlaceholder extends StatelessWidget {
+  const _DoctorPlaceholder({required this.name});
+
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        name.characters.first,
+        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );

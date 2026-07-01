@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../app/core/widgets/app_app_bar_widget.dart';
-import '../../../app/core/widgets/app_padding_widget.dart';
 import '../../../app/core/widgets/app_scaffold_widget.dart';
 import '../controllers/forgot_password_controller.dart';
 import 'widgets/forgot_password_actions_widget.dart';

@@ -6,7 +6,6 @@ import 'dart:io';
 
 import '../../../app/data/doctor_model.dart';
 import '../../../generated/locale_keys.g.dart';
-import '../../add_doctor/views/add_doctor_view.dart';
 import '../controllers/doctors_controller.dart';
 
 class DoctorDetailsView extends GetView<DoctorsController> {
@@ -14,159 +13,173 @@ class DoctorDetailsView extends GetView<DoctorsController> {
 
   @override
   Widget build(BuildContext context) {
-    final DoctorModel doctor = Get.arguments as DoctorModel;
+    return Obx(() {
+      final doctor = controller.selectedDoctor.value;
+      if (doctor == null) {
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      }
 
-    final theme = Theme.of(context);
-    final isAr = context.locale.languageCode == 'ar';
-    final name = isAr ? doctor.nameAr : doctor.nameEn;
+      final theme = Theme.of(context);
+      final isAr = context.locale.languageCode == 'ar';
+      final name = isAr ? doctor.nameAr : doctor.nameEn;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 260.h,
-            pinned: true,
-            backgroundColor: theme.primaryColor,
-            elevation: 0,
-            leading: IconButton(
-              icon: Container(
-                padding: EdgeInsets.all(8.r),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.3),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.arrow_back, color: Colors.white),
-              ),
-              onPressed: () => Get.back(),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Get.to(() => const AddDoctorView(), arguments: doctor);
-                },
+      return Scaffold(
+        backgroundColor: const Color(0xFFF5F7FA),
+        body: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            SliverAppBar(
+              expandedHeight: 260.h,
+              pinned: true,
+              backgroundColor: theme.primaryColor,
+              elevation: 0,
+              leading: IconButton(
                 icon: Container(
                   padding: EdgeInsets.all(8.r),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.3),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.edit, color: Colors.white),
+                  child: const Icon(Icons.arrow_back, color: Colors.white),
                 ),
+                onPressed: () => Get.back(),
               ),
-              SizedBox(width: 8.w),
-              // زر الحذف
-              IconButton(
-                onPressed: () => _showDeleteDialog(context, doctor),
-                icon: Container(
-                  padding: EdgeInsets.all(8.r),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.8),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.delete_outline, color: Colors.white),
-                ),
-              ),
-              SizedBox(width: 16.w),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Hero(
-                    tag: 'doctor_img_${doctor.id}',
-                    child: doctor.imagePath.isNotEmpty
-                        ? Image.file(File(doctor.imagePath), fit: BoxFit.cover)
-                        : Image.network(
-                            'https://img.freepik.com/free-photo/doctor-offering-medical-advice_23-2147796524.jpg',
-                            // Placeholder احترافي
-                            fit: BoxFit.cover,
-                          ),
-                  ),
-                  Container(
+              actions: [
+                IconButton(
+                  onPressed: () => controller.goToEditDoctor(doctor),
+                  icon: Container(
+                    padding: EdgeInsets.all(8.r),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.black.withOpacity(0.2),
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.6),
-                        ],
-                      ),
+                      color: Colors.white.withOpacity(0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.edit, color: Colors.white),
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                // زر الحذف
+                IconButton(
+                  onPressed: () => _showDeleteDialog(context, doctor),
+                  icon: Container(
+                    padding: EdgeInsets.all(8.r),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.8),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.white,
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-
-          // 2. المحتوى الرئيسي
-          SliverToBoxAdapter(
-            child: Transform.translate(
-              offset: Offset(0, -30.h), // رفع المحتوى ليتداخل مع الصورة
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Column(
+                ),
+                SizedBox(width: 16.w),
+              ],
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    // --- بطاقة المعلومات الرئيسية ---
-                    _buildMainInfoCard(context, doctor, name),
-
-                    SizedBox(height: 20.h),
-
-                    // --- أزرار الاتصال السريع ---
-                    _buildQuickActions(context, doctor),
-
-                    SizedBox(height: 20.h),
-
-                    // --- النبذة ---
-                    _buildSectionHeader(
-                      context,
-                      tr(LocaleKeys.add_doctor_labels_about),
-                      Icons.person_outline,
+                    Hero(
+                      tag: 'doctor_img_${doctor.id}',
+                      child: doctor.imagePath.isNotEmpty
+                          ? doctor.imagePath.startsWith('http')
+                                ? Image.network(
+                                    doctor.imagePath,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.file(
+                                    File(doctor.imagePath),
+                                    fit: BoxFit.cover,
+                                  )
+                          : Image.network(
+                              'https://img.freepik.com/free-photo/doctor-offering-medical-advice_23-2147796524.jpg',
+                              // Placeholder احترافي
+                              fit: BoxFit.cover,
+                            ),
                     ),
-                    _buildContentCard(
-                      child: Text(
-                        doctor.about,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Colors.black87,
-                          height: 1.6,
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withOpacity(0.2),
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.6),
+                          ],
                         ),
                       ),
                     ),
-
-                    SizedBox(height: 20.h),
-
-                    // --- جدول المواعيد (Working Hours) ---
-                    _buildSectionHeader(
-                      context,
-                      tr(LocaleKeys.working_hours_title),
-                      Icons.access_time,
-                    ),
-                    _buildWorkingHoursCard(context, doctor),
-
-                    SizedBox(height: 20.h),
-
-                    // --- الملفات المرفقة (إن وجدت) ---
-                    if (doctor.qualificationFiles.isNotEmpty) ...[
-                      _buildSectionHeader(
-                        context,
-                        tr(LocaleKeys.add_doctor_labels_qualification_files),
-                        Icons.file_present,
-                      ),
-                      _buildDocumentsList(doctor),
-                      SizedBox(height: 30.h),
-                    ],
                   ],
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+
+            // 2. المحتوى الرئيسي
+            SliverToBoxAdapter(
+              child: Transform.translate(
+                offset: Offset(0, -30.h), // رفع المحتوى ليتداخل مع الصورة
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Column(
+                    children: [
+                      // --- بطاقة المعلومات الرئيسية ---
+                      _buildMainInfoCard(context, doctor, name),
+
+                      SizedBox(height: 20.h),
+
+                      // --- أزرار الاتصال السريع ---
+                      _buildQuickActions(context, doctor),
+
+                      SizedBox(height: 20.h),
+
+                      // --- النبذة ---
+                      _buildSectionHeader(
+                        context,
+                        tr(LocaleKeys.add_doctor_labels_about),
+                        Icons.person_outline,
+                      ),
+                      _buildContentCard(
+                        child: Text(
+                          doctor.about,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.black87,
+                            height: 1.6,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 20.h),
+
+                      // --- جدول المواعيد (Working Hours) ---
+                      _buildSectionHeader(
+                        context,
+                        tr(LocaleKeys.working_hours_title),
+                        Icons.access_time,
+                      ),
+                      _buildWorkingHoursCard(context, doctor),
+
+                      SizedBox(height: 20.h),
+
+                      // --- الملفات المرفقة (إن وجدت) ---
+                      if (doctor.qualificationFiles.isNotEmpty) ...[
+                        _buildSectionHeader(
+                          context,
+                          tr(LocaleKeys.add_doctor_labels_qualification_files),
+                          Icons.file_present,
+                        ),
+                        _buildDocumentsList(doctor),
+                        SizedBox(height: 30.h),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   // ===========================================================================
@@ -233,7 +246,7 @@ class DoctorDetailsView extends GetView<DoctorsController> {
               Container(width: 1, height: 40.h, color: Colors.grey[200]),
               _buildStatItem(
                 context,
-                value: "\$${doctor.fee.toInt()}",
+                value: "${doctor.fee.toInt()} ${tr('dashboard.currency.sar')}",
                 label: tr(LocaleKeys.add_doctor_labels_fee),
               ),
               Container(width: 1, height: 40.h, color: Colors.grey[200]),

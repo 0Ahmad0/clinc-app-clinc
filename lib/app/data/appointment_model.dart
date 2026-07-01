@@ -33,6 +33,31 @@ class AppointmentModel {
     this.resultPdfPathOrUrl,
   });
 
+  factory AppointmentModel.fromJson(Map<String, dynamic> json) {
+    return AppointmentModel(
+      id: json['appointment_id'].toString(),
+      patientName: json['patient_name'] as String,
+      patientPhone: json['patient_phone'] as String?,
+      title: json['title'] as String,
+      type: AppointmentType.values.firstWhere(
+        (value) => _typeValue(value) == json['type'],
+        orElse: () => AppointmentType.consultation,
+      ),
+      dateTime: DateTime.parse(json['date_time'] as String),
+      status: AppointmentStatus.values.firstWhere(
+        (value) => value.name == json['status'],
+        orElse: () => AppointmentStatus.pending,
+      ),
+      rejectReasonKey: json['reject_reason'] as String?,
+      rejectNote: json['reject_note'] as String?,
+      resultPdfPathOrUrl: json['result_file'] as String?,
+    );
+  }
+
+  static String _typeValue(AppointmentType type) {
+    return type == AppointmentType.labTest ? 'lab_test' : type.name;
+  }
+
   bool get hasResult => (resultPdfPathOrUrl ?? '').isNotEmpty;
 
   AppointmentModel copyWith({

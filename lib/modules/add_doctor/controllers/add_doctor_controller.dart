@@ -5,7 +5,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../generated/locale_keys.g.dart';
+import '../../../app/core/configuration/locator.dart';
 import '../../../app/data/doctor_model.dart';
+import '../../../app/domain/error_handler/network_exceptions.dart';
+import '../../doctors/domain/doctors_repository.dart';
+import '../../doctors/models/doctors_list_model.dart';
+import '../domain/add_doctor_repository.dart';
+import '../models/add_doctor_model.dart';
 
 class AddDoctorController extends GetxController {
   // --- Global Key for Form Validation ---
@@ -23,31 +29,24 @@ class AddDoctorController extends GetxController {
 
   // --- Observable Variables (Reactive) ---
   var selectedImage = ''.obs;
-  var selectedSpecialty = ''.obs;
+  final selectedSpecialtyId = RxnInt();
   var selectedGender = 'Male'.obs;
   var isAvailable = true.obs;
+  final isLoading = false.obs;
+  final isLoadingSpecializations = false.obs;
+  final specializations = <DoctorSpecialization>[].obs;
+  late final AddDoctorRepository _repository;
+  late final DoctorsRepository _doctorsRepository;
 
   // Lists
   var qualificationFiles = <String>[].obs;
   var workingHoursList = <WorkingHours>[].obs;
-
-  // --- Doctor Data Management ---
-  var doctorsList = <DoctorModel>[].obs;
-  var searchResults = <DoctorModel>[].obs;
 
   // --- Edit Mode Control ---
   var isEditMode = false.obs;
   String? editingDoctorId;
 
   // --- Static Data ---
-  final List<String> specialties = [
-    'Cardiology',
-    'Dermatology',
-    'Neurology',
-    'Pediatrics',
-    'Dentist',
-    'Surgery',
-  ];
   final List<String> weekDays = [
     'Saturday',
     'Sunday',
@@ -65,12 +64,32 @@ class AddDoctorController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _repository = locator<AddDoctorRepository>();
+    _doctorsRepository = locator<DoctorsRepository>();
     _initializeControllers();
     _initializeWorkingHours();
+    _loadSpecializations();
+  }
 
-    if (Get.arguments != null && Get.arguments is DoctorModel) {
-      _loadDoctorData(Get.arguments as DoctorModel);
-    }
+  Future<void> _loadSpecializations() async {
+    isLoadingSpecializations.value = true;
+    final result = await _doctorsRepository.getDoctors();
+    isLoadingSpecializations.value = false;
+    result.when(
+      success: (response) {
+        if (response.isSuccess && response.data != null) {
+          specializations.assignAll(response.data!.specializations);
+          if (Get.arguments is DoctorModel) {
+            _loadDoctorData(Get.arguments as DoctorModel);
+          }
+        } else {
+          _showError(response.message);
+        }
+      },
+      failure: (exception) {
+        _showError(NetworkExceptions.getErrorMessage(exception));
+      },
+    );
   }
 
   @override
@@ -132,7 +151,11 @@ class AddDoctorController extends GetxController {
     emailController.text = doctor.email;
 
     selectedImage.value = doctor.imagePath;
-    selectedSpecialty.value = doctor.specialty;
+    final matches = specializations.where(
+      (item) =>
+          item.nameAr == doctor.specialty || item.nameEn == doctor.specialty,
+    );
+    selectedSpecialtyId.value = matches.isEmpty ? null : matches.first.id;
     selectedGender.value = doctor.gender;
     isAvailable.value = doctor.isAvailable;
     qualificationFiles.value = List.from(doctor.qualificationFiles);
@@ -174,7 +197,7 @@ class AddDoctorController extends GetxController {
         qualificationFiles.addAll(paths);
       }
     } catch (e) {
-      print("Error picking files: $e");
+      debugPrint("Error picking files: $e");
       Get.snackbar("Error", "Could not pick files");
     }
   }
@@ -216,7 +239,7 @@ class AddDoctorController extends GetxController {
       },
     );
 
-    if (picked != null) {
+    if (picked != null && context.mounted) {
       String formattedTime = picked.format(context);
       var item = workingHoursList[index];
       if (isStartTime) {
@@ -233,28 +256,78 @@ class AddDoctorController extends GetxController {
   // Save & Update Logic
   // ===========================================================================
 
-  void saveDoctor() {
+  Future<void> saveDoctor() async {
     if (!formKey.currentState!.validate()) return;
 
-    if (selectedSpecialty.value.isEmpty) {
+    if (selectedSpecialtyId.value == null) {
       Get.snackbar(
         'خطأ',
         tr(LocaleKeys.add_doctor_validations_select_specialty),
-        backgroundColor: Colors.red.withOpacity(0.2),
+        backgroundColor: Colors.red.withValues(alpha: 0.2),
         colorText: Colors.red,
         snackPosition: SnackPosition.BOTTOM,
       );
       return;
     }
 
-    final doctor = DoctorModel(
-      id: isEditMode.value
-          ? editingDoctorId
-          : DateTime.now().millisecondsSinceEpoch.toString(),
+    isLoading.value = true;
+    final request = AddDoctorRequest(
+      nameAr: nameArController.text.trim(),
+      nameEn: nameEnController.text.trim(),
+      specializationId: selectedSpecialtyId.value!,
+      consultationFee: num.tryParse(feeController.text.trim()) ?? 0,
+      licenseNumber: licenseController.text.trim(),
+      experienceYears: int.tryParse(experienceController.text.trim()) ?? 0,
+      biography: aboutController.text.trim(),
+      phone: phoneController.text.trim(),
+      email: emailController.text.trim(),
+      imagePath: selectedImage.value.isEmpty ? null : selectedImage.value,
+      qualificationFiles: List<String>.from(qualificationFiles),
+      isAvailable: isAvailable.value,
+      schedule: workingHoursList
+          .map(DoctorScheduleRequest.fromWorkingHours)
+          .toList(),
+    );
+    final result = isEditMode.value
+        ? await _repository.updateDoctor(editingDoctorId!, request)
+        : await _repository.addDoctor(request);
+    isLoading.value = false;
+    result.when(
+      success: (response) {
+        if (response.status != 'success' || response.result == null) {
+          _showError(response.message ?? 'Unable to save doctor');
+          return;
+        }
+        Get.back(result: _buildDoctor(response.result!.doctorId));
+        Get.snackbar(
+          tr(LocaleKeys.add_doctor_alerts_success),
+          tr(
+            isEditMode.value
+                ? LocaleKeys.add_doctor_alerts_updated
+                : LocaleKeys.add_doctor_alerts_saved,
+          ),
+          backgroundColor: Colors.green.withValues(alpha: 0.2),
+          snackPosition: SnackPosition.TOP,
+        );
+      },
+      failure: (exception) {
+        _showError(NetworkExceptions.getErrorMessage(exception));
+      },
+    );
+  }
+
+  DoctorModel _buildDoctor(String id) {
+    final specialization = specializations.firstWhere(
+      (item) => item.id == selectedSpecialtyId.value,
+    );
+    return DoctorModel(
+      id: id,
       imagePath: selectedImage.value,
       nameAr: nameArController.text,
       nameEn: nameEnController.text,
-      specialty: selectedSpecialty.value,
+      specialty: Get.context?.locale.languageCode == 'ar'
+          ? specialization.nameAr
+          : specialization.nameEn,
       fee: double.tryParse(feeController.text) ?? 0.0,
       gender: selectedGender.value,
       licenseNumber: licenseController.text,
@@ -266,81 +339,15 @@ class AddDoctorController extends GetxController {
       isAvailable: isAvailable.value,
       workingHours: List.from(workingHoursList),
     );
-
-    if (isEditMode.value) {
-      _updateExistingDoctor(doctor);
-    } else {
-      _addNewDoctor(doctor);
-    }
   }
 
-  void _updateExistingDoctor(DoctorModel doctor) {
-    int index = doctorsList.indexWhere((d) => d.id == editingDoctorId);
-    if (index != -1) {
-      doctorsList[index] = doctor;
-      Get.back();
-      Get.snackbar(
-        tr(LocaleKeys.add_doctor_alerts_success),
-        tr(LocaleKeys.add_doctor_alerts_updated),
-        backgroundColor: Colors.green.withOpacity(0.2),
-        snackPosition: SnackPosition.TOP,
-      );
-      update();
-    }
-  }
-
-  void _addNewDoctor(DoctorModel doctor) {
-    doctorsList.add(doctor);
+  void _showError(String message) {
     Get.snackbar(
       tr(LocaleKeys.add_doctor_alerts_success),
-      tr(LocaleKeys.add_doctor_alerts_saved),
-      backgroundColor: Colors.green.withOpacity(0.2),
-      snackPosition: SnackPosition.TOP,
+      message,
+      backgroundColor: Colors.red.withValues(alpha: 0.2),
+      colorText: Colors.red,
+      snackPosition: SnackPosition.BOTTOM,
     );
-    _clearForm();
-  }
-
-  // ===========================================================================
-  // Reset Logic
-  // ===========================================================================
-
-  void _clearForm() {
-    nameArController.clear();
-    nameEnController.clear();
-    feeController.clear();
-    licenseController.clear();
-    experienceController.clear();
-    aboutController.clear();
-    phoneController.clear();
-    emailController.clear();
-
-    selectedImage.value = '';
-    selectedSpecialty.value = '';
-    selectedGender.value = 'Male';
-    isAvailable.value = true;
-    isEditMode.value = false;
-    editingDoctorId = null;
-
-    qualificationFiles.clear();
-    _initializeWorkingHours();
-  }
-
-  // ===========================================================================
-  // Search Logic
-  // ===========================================================================
-
-  void searchDoctors(String query) {
-    if (query.isEmpty) {
-      searchResults.assignAll(doctorsList);
-    } else {
-      searchResults.assignAll(
-        doctorsList.where((doc) {
-          final nameEn = doc.nameEn.toLowerCase();
-          final nameAr = doc.nameAr;
-          final q = query.toLowerCase();
-          return nameEn.contains(q) || nameAr.contains(q);
-        }).toList(),
-      );
-    }
   }
 }

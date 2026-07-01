@@ -11,9 +11,6 @@ class ReportSummaryGrid extends GetView<ReportsController> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
     return Obx(() {
       final s = controller.summary;
 
@@ -25,10 +22,22 @@ class ReportSummaryGrid extends GetView<ReportsController> {
         mainAxisSpacing: 12.h,
         childAspectRatio: 1.7,
         children: [
-          _StatCard(title: tr(LocaleKeys.reports_cards_total), value: s.total.toString()),
-          _StatCard(title: tr(LocaleKeys.reports_cards_completed), value: s.completed.toString()),
-          _StatCard(title: tr(LocaleKeys.reports_cards_pending), value: s.pending.toString()),
-          _StatCard(title: tr(LocaleKeys.reports_cards_cancelled), value: s.cancelled.toString()),
+          _StatCard(
+            title: tr(LocaleKeys.reports_cards_total),
+            value: s.total.toString(),
+          ),
+          _StatCard(
+            title: tr(LocaleKeys.reports_cards_completed),
+            value: s.completed.toString(),
+          ),
+          _StatCard(
+            title: tr(LocaleKeys.reports_cards_pending),
+            value: s.pending.toString(),
+          ),
+          _StatCard(
+            title: tr(LocaleKeys.reports_cards_cancelled),
+            value: s.cancelled.toString(),
+          ),
         ],
       );
     });
@@ -53,15 +62,30 @@ class _StatCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: cs.outlineVariant),
         boxShadow: [
-          BoxShadow(color: cs.shadow.withOpacity(0.03), blurRadius: 12, offset: const Offset(0, 6)),
+          BoxShadow(
+            color: cs.shadow.withValues(alpha: 0.03),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
+          ),
         ],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(value, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w800, color: cs.primary)),
+          Text(
+            value,
+            style: theme.textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: cs.primary,
+            ),
+          ),
           6.verticalSpace,
-          Text(title, style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant)),
+          Text(
+            title,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: cs.onSurfaceVariant,
+            ),
+          ),
         ],
       ),
     );

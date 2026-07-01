@@ -1,55 +1,87 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart';
 
+import '../../../app/core/configuration/locator.dart';
+import '../../../app/core/helper/response_helper.dart';
+import '../../../app/routes/app_routes.dart';
+import '../../../app/services/storage_service.dart';
 import '../../../generated/locale_keys.g.dart';
+import '../domain/pending_approval_repository.dart';
 
 class PendingApprovalController extends GetxController {
-
   final RxBool isLoading = false.obs;
+  late final PendingApprovalRepository _repository;
 
-  // فحص حالة الطلب يدوياً
+  @override
+  void onInit() {
+    _repository = locator<PendingApprovalRepository>();
+    super.onInit();
+  }
+
   Future<void> checkStatus() async {
-    try {
-      isLoading.value = true;
-
-      // Simulate API Call
-      await Future.delayed(const Duration(seconds: 2));
-
-      // TODO: Call API -> Check if status changed from 'pending' to 'approved'
-      bool isApproved = false; // غيّرها لـ true للتجربة
-
-      if (isApproved) {
-        Get.snackbar(
-          'Success',
-          tr(LocaleKeys.pending_approval_messages_approved),
-          backgroundColor: Colors.green.withOpacity(0.1),
-          colorText: Colors.green,
-        );
-        // الانتقال لاستكمال البيانات
-        // Get.offAllNamed(Routes.COMPLETE_PROFILE);
-      } else {
-        Get.snackbar(
-          'Info',
-          tr(LocaleKeys.pending_approval_messages_still_pending),
-          backgroundColor: Colors.orange.withOpacity(0.1),
-          colorText: Colors.orange,
-        );
-      }
-
-    } catch (e) {
-      Get.snackbar('Error', e.toString());
-    } finally {
-      isLoading.value = false;
+    if (isLoading.value) return;
+    final reference = StorageService.instance.getPendingRegistrationReference();
+    if (reference == null || reference.isEmpty) {
+      ResponseHelper.onFailure(
+        message: tr('pending_approval.messages.missing_reference'),
+      );
+      return;
     }
+
+    isLoading.value = true;
+    final result = await _repository.getRegistrationStatus(
+      reference: reference,
+    );
+    isLoading.value = false;
+
+    result.when(
+      success: (model) async {
+        if (model.status != 'success' || model.result == null) {
+          ResponseHelper.onFailure(message: model.message);
+          return;
+        }
+        switch (model.result!.status) {
+          case 'approved':
+            await StorageService.instance.setPendingRegistrationReference(null);
+            await StorageService.instance.setProfileCompleted(
+              !model.result!.needsCompletion,
+            );
+            ResponseHelper.onSuccess(
+              message: tr(LocaleKeys.pending_approval_messages_approved),
+            );
+            Get.offAllNamed(
+              model.result!.needsCompletion
+                  ? AppRoutes.completeProfile
+                  : AppRoutes.mainLayout,
+            );
+            break;
+          case 'rejected':
+            ResponseHelper.onFailure(
+              message:
+                  model.result!.rejectionReason ??
+                  tr('pending_approval.messages.rejected'),
+            );
+            await logout();
+            break;
+          default:
+            ResponseHelper.onWarning(
+              message: tr(LocaleKeys.pending_approval_messages_still_pending),
+            );
+        }
+      },
+      failure: (exception) =>
+          ResponseHelper.onNetworkFailure(networkException: exception),
+    );
   }
 
   void contactSupport() {
-    // فتح واتساب أو اتصال
+    ResponseHelper.onWarning(
+      message: tr('pending_approval.messages.support_not_configured'),
+    );
   }
 
-  void logout() {
-    // مسح التوكن والعودة للبداية
-    // Get.offAllNamed(Routes.LOGIN);
+  Future<void> logout() async {
+    await StorageService.instance.depose();
+    Get.offAllNamed(AppRoutes.login);
   }
 }

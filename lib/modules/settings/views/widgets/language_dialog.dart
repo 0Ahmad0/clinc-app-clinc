@@ -20,32 +20,32 @@ class LanguageDialog extends GetView<SettingsController> {
           fontWeight: FontWeight.w700,
         ),
       ),
-      content: Obx(() => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _LanguageOption(
-            title: 'العربية',
-            code: 'ar',
-            isSelected: controller.currentLanguage.value == 'ar',
-            onTap: () => controller.changeLanguage('ar'),
-          ),
-          12.verticalSpace,
-          _LanguageOption(
-            title: 'English',
-            code: 'en',
-            isSelected: controller.currentLanguage.value == 'en',
-            onTap: () => controller.changeLanguage('en'),
-          ),
-        ],
-      )),
+      content: Obx(
+        () => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _LanguageOption(
+              title: 'العربية',
+              code: 'ar',
+              isSelected: controller.currentLanguage.value == 'ar',
+              onTap: () => controller.changeLanguage('ar'),
+            ),
+            12.verticalSpace,
+            _LanguageOption(
+              title: 'English',
+              code: 'en',
+              isSelected: controller.currentLanguage.value == 'en',
+              onTap: () => controller.changeLanguage('en'),
+            ),
+          ],
+        ),
+      ),
       actions: [
         TextButton(
           onPressed: () => Get.back(),
           child: Text(
             tr(LocaleKeys.settings_close),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: cs.primary,
-            ),
+            style: theme.textTheme.bodyMedium?.copyWith(color: cs.primary),
           ),
         ),
       ],
@@ -77,7 +77,7 @@ class _LanguageOption extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: isSelected ? cs.primary.withOpacity(0.1) : cs.surface,
+          color: isSelected ? cs.primary.withValues(alpha: 0.1) : cs.surface,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: isSelected ? cs.primary : cs.outlineVariant,
@@ -101,11 +101,7 @@ class _LanguageOption extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            if (isSelected)
-              Icon(
-                Icons.check,
-                color: cs.primary,
-              ),
+            if (isSelected) Icon(Icons.check, color: cs.primary),
           ],
         ),
       ),

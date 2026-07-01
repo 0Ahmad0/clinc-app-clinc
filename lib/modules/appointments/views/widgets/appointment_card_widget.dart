@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../app/data/appointment_model.dart';
 import '../../../../app/extension/appointment_type_extensions.dart';
 import '../../../../app/routes/app_routes.dart';
-import '../../../../generated/locale_keys.g.dart';
 
 class AppointmentCardWidget extends StatelessWidget {
   final AppointmentModel item;
@@ -39,10 +37,7 @@ class AppointmentCardWidget extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              cs.surface,
-              cs.surface.withOpacity(0.9),
-            ],
+            colors: [cs.surface, cs.surface.withOpacity(0.9)],
           ),
         ),
         child: Column(
@@ -104,9 +99,7 @@ class AppointmentCardWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: statusColor.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(999),
-                    border: Border.all(
-                      color: statusColor.withOpacity(0.3),
-                    ),
+                    border: Border.all(color: statusColor.withOpacity(0.3)),
                   ),
                   child: Text(
                     tr(item.status.key()),
@@ -124,11 +117,7 @@ class AppointmentCardWidget extends StatelessWidget {
             // Date & Time
             Row(
               children: [
-                Icon(
-                  Icons.schedule,
-                  size: 18.sp,
-                  color: cs.onSurfaceVariant,
-                ),
+                Icon(Icons.schedule, size: 18.sp, color: cs.onSurfaceVariant),
                 8.horizontalSpace,
                 Text(
                   dt,
@@ -151,10 +140,7 @@ class AppointmentCardWidget extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.w,
-                    vertical: 4.h,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                   decoration: BoxDecoration(
                     color: cs.secondaryContainer.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(6.r),
@@ -168,11 +154,7 @@ class AppointmentCardWidget extends StatelessWidget {
                 ),
                 if (item.patientPhone != null) ...[
                   8.horizontalSpace,
-                  Icon(
-                    Icons.phone,
-                    size: 16.sp,
-                    color: cs.onSurfaceVariant,
-                  ),
+                  Icon(Icons.phone, size: 16.sp, color: cs.onSurfaceVariant),
                   4.horizontalSpace,
                   Text(
                     item.patientPhone!,

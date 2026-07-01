@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../app/core/widgets/app_app_bar_widget.dart';
-import '../../../app/core/widgets/app_padding_widget.dart';
 import '../../../app/core/widgets/app_scaffold_widget.dart';
 import '../controllers/pending_approval_controller.dart';
 import 'widgets/pending_actions_widget.dart';
@@ -22,7 +22,7 @@ class PendingApprovalView extends GetView<PendingApprovalController> {
           IconButton(
             onPressed: controller.logout,
             icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
+            tooltip: tr('pending_approval.buttons.logout'),
           ),
         ],
       ),

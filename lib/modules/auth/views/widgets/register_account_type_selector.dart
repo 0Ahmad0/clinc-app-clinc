@@ -13,14 +13,14 @@ class RegisterAccountTypeSelector extends GetView<RegisterController> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           tr(LocaleKeys.register_fields_account_type),
-          style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
+          style: theme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
         ),
         12.verticalSpace,
         Obx(() {
@@ -98,24 +98,38 @@ class _TypeTile extends StatelessWidget {
               width: 44.r,
               height: 44.r,
               decoration: BoxDecoration(
-                color: selected ? cs.primary.withOpacity(0.12) : cs.surfaceVariant,
+                color: selected
+                    ? cs.primary.withValues(alpha: 0.12)
+                    : cs.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(14.r),
               ),
-              child: Icon(icon, color: selected ? cs.primary : cs.onSurfaceVariant),
+              child: Icon(
+                icon,
+                color: selected ? cs.primary : cs.onSurfaceVariant,
+              ),
             ),
             12.horizontalSpace,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800)),
+                  Text(
+                    title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                   4.verticalSpace,
-                  Text(subtitle, style: theme.textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant)),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
                 ],
               ),
             ),
-            if (selected)
-              Icon(Icons.check_circle, color: cs.primary),
+            if (selected) Icon(Icons.check_circle, color: cs.primary),
           ],
         ),
       ),

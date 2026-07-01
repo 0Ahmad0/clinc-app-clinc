@@ -26,7 +26,15 @@ class StorageService extends GetxService {
   static const String REFRESH_TOKEN = 'refresh_token';
   static const String LOGIN_TIME = 'login_time';
   static const String USER = 'user';
+  static const String CLINIC = 'clinic';
+  static const String PROFILE_COMPLETED = 'profile_completed';
+  static const String ONBOARDING_SEEN = 'onboarding_seen';
+  static const String PENDING_REGISTRATION_REFERENCE =
+      'pending_registration_reference';
   static const String ROLE = 'role';
+  static const String APP_NOTIFICATIONS = 'app_notifications';
+  static const String EMAIL_NOTIFICATIONS = 'email_notifications';
+  static const String SMS_NOTIFICATIONS = 'sms_notifications';
 
   // دالة لتهيئة الخدمة (سيتم استدعاؤها تلقائياً)
   Future<StorageService> init() async {
@@ -51,6 +59,12 @@ class StorageService extends GetxService {
 
     return result;
   }
+
+  bool readBool(String key, {required bool fallback}) {
+    return _box.read<bool>(key) ?? fallback;
+  }
+
+  Future<void> saveBool(String key, bool value) => _box.write(key, value);
 
   removeData(String key) async {
     if (_box.hasData(key)) {
@@ -88,6 +102,40 @@ class StorageService extends GetxService {
     await writeData(USER, jsonEncode(userInfo));
   }
 
+  Future cacheClinic(Map<String, dynamic> clinic) async {
+    await writeData(CLINIC, jsonEncode(clinic));
+  }
+
+  Map<String, dynamic>? getCachedClinic() {
+    try {
+      final value = _box.read(CLINIC);
+      if (value == null) return null;
+      return Map<String, dynamic>.from(jsonDecode(value.toString()) as Map);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future setProfileCompleted(bool value) async {
+    await writeData(PROFILE_COMPLETED, value);
+  }
+
+  bool get isProfileCompleted => _box.read(PROFILE_COMPLETED) == true;
+
+  Future setOnboardingSeen() async {
+    await writeData(ONBOARDING_SEEN, true);
+  }
+
+  bool get hasSeenOnboarding => _box.read(ONBOARDING_SEEN) == true;
+
+  Future setPendingRegistrationReference(String? value) async {
+    await writeData(PENDING_REGISTRATION_REFERENCE, value);
+  }
+
+  String? getPendingRegistrationReference() {
+    return _box.read(PENDING_REGISTRATION_REFERENCE)?.toString();
+  }
+
   UserModel? getCachedUserModel() {
     try {
       final data = readData(USER);
@@ -102,12 +150,20 @@ class StorageService extends GetxService {
     }
   }
 
-  depose() async {
-    removeData(TOKEN);
-    removeData(LOGIN_TIME);
-    removeData(REFRESH_TOKEN);
-    removeData(REFRESH_TOKEN_EXPIRE);
-    removeData(USER);
-    removeData(ROLE);
+  Future<void> depose() async {
+    await Future.wait(
+      [
+            removeData(TOKEN),
+            removeData(LOGIN_TIME),
+            removeData(REFRESH_TOKEN),
+            removeData(REFRESH_TOKEN_EXPIRE),
+            removeData(USER),
+            removeData(CLINIC),
+            removeData(PROFILE_COMPLETED),
+            removeData(PENDING_REGISTRATION_REFERENCE),
+            removeData(ROLE),
+          ]
+          as Iterable<Future>,
+    );
   }
 }

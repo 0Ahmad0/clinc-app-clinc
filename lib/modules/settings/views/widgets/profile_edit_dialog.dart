@@ -35,9 +35,15 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
     nameController = TextEditingController(text: widget.profile.name);
     emailController = TextEditingController(text: widget.profile.email);
     phoneController = TextEditingController(text: widget.profile.phone);
-    clinicNameController = TextEditingController(text: widget.profile.clinicName);
-    clinicAddressController = TextEditingController(text: widget.profile.clinicAddress);
-    licenseController = TextEditingController(text: widget.profile.licenseNumber ?? '');
+    clinicNameController = TextEditingController(
+      text: widget.profile.clinicName,
+    );
+    clinicAddressController = TextEditingController(
+      text: widget.profile.clinicAddress,
+    );
+    licenseController = TextEditingController(
+      text: widget.profile.licenseNumber ?? '',
+    );
   }
 
   @override

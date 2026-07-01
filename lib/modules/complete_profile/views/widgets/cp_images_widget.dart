@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:io';
 
 import '../../../../generated/locale_keys.g.dart';
 import '../../controllers/complete_profile_controller.dart';
@@ -28,15 +29,17 @@ class CPImagesWidget extends GetView<CompleteProfileController> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   // لون الخلفية من الثيم (surfaceVariant عادة رمادي فاتح)
-                  color: colorScheme.surfaceVariant,
-                  image: controller.bannerImagePath.value != null
+                  color: colorScheme.surfaceContainerHighest,
+                  image: controller.coverImage.value != null
                       ? DecorationImage(
-                          image: AssetImage(controller.bannerImagePath.value!),
+                          image: FileImage(
+                            File(controller.coverImage.value!.path),
+                          ),
                           fit: BoxFit.cover,
                         )
                       : null,
                 ),
-                child: controller.bannerImagePath.value == null
+                child: controller.coverImage.value == null
                     ? Center(
                         child: Text(
                           tr(LocaleKeys.complete_profile_fields_banner_hint),
@@ -76,19 +79,19 @@ class CPImagesWidget extends GetView<CompleteProfileController> {
                           boxShadow: [
                             BoxShadow(
                               blurRadius: 5,
-                              color: colorScheme.shadow.withOpacity(0.1),
+                              color: colorScheme.shadow.withValues(alpha: 0.1),
                             ),
                           ],
-                          image: controller.profileImagePath.value != null
+                          image: controller.logoImage.value != null
                               ? DecorationImage(
-                                  image: AssetImage(
-                                    controller.profileImagePath.value!,
+                                  image: FileImage(
+                                    File(controller.logoImage.value!.path),
                                   ),
                                   fit: BoxFit.cover,
                                 )
                               : null,
                         ),
-                        child: controller.profileImagePath.value == null
+                        child: controller.logoImage.value == null
                             ? Icon(
                                 Icons.add_a_photo,
                                 color: colorScheme.onSurfaceVariant,

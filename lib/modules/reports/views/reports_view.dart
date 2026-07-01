@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:clinc_app_clinc/generated/locale_keys.g.dart';
+import '../../../app/data/report_model.dart';
 import '../controllers/reports_controller.dart';
 import 'widgets/report_filters_widget.dart';
 import 'widgets/report_list_item.dart';
@@ -18,15 +20,30 @@ class ReportsView extends GetView<ReportsController> {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Generate new report
-        },
-        backgroundColor: cs.primary,
-        child: Icon(Icons.add, color: cs.onPrimary),
+      floatingActionButton: Obx(
+        () => FloatingActionButton(
+          heroTag: 'reports_generate_fab',
+          onPressed: controller.isGenerating.value
+              ? null
+              : () => _showFormatSheet(context),
+          backgroundColor: cs.primary,
+          child: controller.isGenerating.value
+              ? SizedBox(
+                  width: 22.r,
+                  height: 22.r,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: cs.onPrimary,
+                  ),
+                )
+              : Icon(Icons.add, color: cs.onPrimary),
+        ),
       ),
       body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
+        controller: controller.scrollController,
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
         slivers: [
           // 1. Sliver App Bar with Gradient Background
           SliverAppBar(
@@ -41,10 +58,7 @@ class ReportsView extends GetView<ReportsController> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      cs.primary.withOpacity(0.1),
-                      cs.surface,
-                    ],
+                    colors: [cs.primary.withValues(alpha: 0.1), cs.surface],
                   ),
                 ),
                 child: Center(
@@ -76,6 +90,7 @@ class ReportsView extends GetView<ReportsController> {
             ),
             centerTitle: true,
           ),
+          CupertinoSliverRefreshControl(onRefresh: controller.onRefresh),
 
           // 2. Filters Section
           SliverPadding(
@@ -115,26 +130,61 @@ class ReportsView extends GetView<ReportsController> {
           ),
 
           Obx(() {
-            final list = controller.filteredReports;
-            if (list.isEmpty) {
-              return SliverFillRemaining(
-                hasScrollBody: false,
-                child: const _EmptyReportsState(),
-              );
-            }
-
-            return SliverPadding(
-              padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 80.h),
-              sliver: SliverList.separated(
-                itemBuilder: (_, i) => ReportListItem(report: list[i]),
-                separatorBuilder: (_, __) => 16.verticalSpace,
-                itemCount: list.length,
+            final loadingMore = controller.isLoadingMore.value;
+            return controller.buildReports(
+              SliverPadding(
+                padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 80.h),
+                sliver: SliverList.separated(
+                  itemBuilder: (_, index) {
+                    if (index == controller.reports.length) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    return ReportListItem(report: controller.reports[index]);
+                  },
+                  separatorBuilder: (_, __) => 16.verticalSpace,
+                  itemCount: controller.reports.length + (loadingMore ? 1 : 0),
+                ),
               ),
             );
           }),
         ],
       ),
     );
+  }
+
+  Future<void> _showFormatSheet(BuildContext context) async {
+    final format = await showModalBottomSheet<ReportFormat>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(20.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                tr('reports.formats.title'),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              16.verticalSpace,
+              for (final format in ReportFormat.values)
+                ListTile(
+                  leading: Icon(
+                    format == ReportFormat.pdf
+                        ? Icons.picture_as_pdf_outlined
+                        : Icons.table_chart_outlined,
+                  ),
+                  title: Text(tr(format.key())),
+                  onTap: () => Navigator.pop(context, format),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (format != null) await controller.generateReport(format);
   }
 }
 
@@ -154,10 +204,10 @@ class _ReportSummaryChart extends GetView<ReportsController> {
         decoration: BoxDecoration(
           color: cs.surface,
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: cs.outlineVariant.withOpacity(0.2)),
+          border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.2)),
           boxShadow: [
             BoxShadow(
-              color: cs.shadow.withOpacity(0.05),
+              color: cs.shadow.withValues(alpha: 0.05),
               blurRadius: 15,
               offset: const Offset(0, 5),
             ),
@@ -213,11 +263,20 @@ class _ReportSummaryChart extends GetView<ReportsController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _LegendItem(color: Colors.green, label: tr(LocaleKeys.reports_cards_completed)),
+                _LegendItem(
+                  color: Colors.green,
+                  label: tr(LocaleKeys.reports_cards_completed),
+                ),
                 16.horizontalSpace,
-                _LegendItem(color: cs.tertiary, label: tr(LocaleKeys.reports_cards_pending)),
+                _LegendItem(
+                  color: cs.tertiary,
+                  label: tr(LocaleKeys.reports_cards_pending),
+                ),
                 16.horizontalSpace,
-                _LegendItem(color: cs.error, label: tr(LocaleKeys.reports_cards_cancelled)),
+                _LegendItem(
+                  color: cs.error,
+                  label: tr(LocaleKeys.reports_cards_cancelled),
+                ),
               ],
             ),
           ],
@@ -242,10 +301,7 @@ class _LegendItem extends StatelessWidget {
         Container(
           width: 12.w,
           height: 12.h,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         6.horizontalSpace,
         Text(
@@ -255,57 +311,6 @@ class _LegendItem extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _EmptyReportsState extends StatelessWidget {
-  const _EmptyReportsState();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.insert_chart_outlined,
-            size: 80.sp,
-            color: cs.onSurface.withOpacity(0.3),
-          ),
-          24.verticalSpace,
-          Text(
-            tr(LocaleKeys.reports_messages_empty_title),
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          8.verticalSpace,
-          Text(
-            tr(LocaleKeys.reports_messages_empty_subtitle),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: cs.onSurface.withOpacity(0.6),
-            ),
-            textAlign: TextAlign.center,
-          ),
-          24.verticalSpace,
-          ElevatedButton.icon(
-            onPressed: () {
-              // TODO: Generate first report
-            },
-            icon: const Icon(Icons.add),
-            label: Text(tr(LocaleKeys.reports_actions_generate)),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: cs.primary,
-              foregroundColor: cs.onPrimary,
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

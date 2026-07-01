@@ -18,7 +18,7 @@ class EmptyNotifications extends StatelessWidget {
           Icon(
             Icons.notifications_off_outlined,
             size: 80.sp,
-            color: cs.onSurface.withOpacity(0.3),
+            color: cs.onSurface.withValues(alpha: 0.3),
           ),
           24.verticalSpace,
           Text(
@@ -31,7 +31,7 @@ class EmptyNotifications extends StatelessWidget {
           Text(
             tr(LocaleKeys.notifications_empty_subtitle),
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: cs.onSurface.withOpacity(0.6),
+              color: cs.onSurface.withValues(alpha: 0.6),
             ),
             textAlign: TextAlign.center,
           ),

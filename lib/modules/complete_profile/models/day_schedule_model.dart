@@ -1,5 +1,5 @@
 class DaySchedule {
-  String dayKey; // 'sat', 'sun'...
+  String dayKey;
   bool isDayOff;
   String startTime;
   String endTime;
@@ -7,7 +7,24 @@ class DaySchedule {
   DaySchedule({
     required this.dayKey,
     this.isDayOff = false,
-    this.startTime = "09:00 AM",
-    this.endTime = "05:00 PM",
+    this.startTime = '09:00',
+    this.endTime = '17:00',
   });
+
+  Map<String, dynamic> toJson() => {
+    'day': _apiDayNames[dayKey],
+    'is_active': !isDayOff,
+    'from': isDayOff ? null : startTime,
+    'to': isDayOff ? null : endTime,
+  };
+
+  static const _apiDayNames = {
+    'sat': 'saturday',
+    'sun': 'sunday',
+    'mon': 'monday',
+    'tue': 'tuesday',
+    'wed': 'wednesday',
+    'thu': 'thursday',
+    'fri': 'friday',
+  };
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../app/routes/app_routes.dart';
+import '../../../app/services/storage_service.dart';
 
 class OnboardingController extends GetxController {
   static const int pagesCount = 3;
@@ -21,13 +22,13 @@ class OnboardingController extends GetxController {
     );
   }
 
-  void skip() {
-    // TODO: save onboarding seen flag
+  Future<void> skip() async {
+    await StorageService.instance.setOnboardingSeen();
     Get.offAllNamed(AppRoutes.login);
   }
 
-  void getStarted() {
-    // TODO: save onboarding seen flag
+  Future<void> getStarted() async {
+    await StorageService.instance.setOnboardingSeen();
     Get.offAllNamed(AppRoutes.login);
   }
 

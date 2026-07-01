@@ -20,39 +20,39 @@ class ThemeDialog extends GetView<SettingsController> {
           fontWeight: FontWeight.w700,
         ),
       ),
-      content: Obx(() => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _ThemeOption(
-            title: tr(LocaleKeys.settings_theme_system),
-            icon: Icons.brightness_auto_outlined,
-            isSelected: controller.themeMode.value == ThemeMode.system,
-            onTap: () => controller.changeTheme(ThemeMode.system),
-          ),
-          12.verticalSpace,
-          _ThemeOption(
-            title: tr(LocaleKeys.settings_theme_light),
-            icon: Icons.brightness_5_outlined,
-            isSelected: controller.themeMode.value == ThemeMode.light,
-            onTap: () => controller.changeTheme(ThemeMode.light),
-          ),
-          12.verticalSpace,
-          _ThemeOption(
-            title: tr(LocaleKeys.settings_theme_dark),
-            icon: Icons.brightness_2_outlined,
-            isSelected: controller.themeMode.value == ThemeMode.dark,
-            onTap: () => controller.changeTheme(ThemeMode.dark),
-          ),
-        ],
-      )),
+      content: Obx(
+        () => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _ThemeOption(
+              title: tr(LocaleKeys.settings_theme_system),
+              icon: Icons.brightness_auto_outlined,
+              isSelected: controller.themeMode.value == ThemeMode.system,
+              onTap: () => controller.changeTheme(ThemeMode.system),
+            ),
+            12.verticalSpace,
+            _ThemeOption(
+              title: tr(LocaleKeys.settings_theme_light),
+              icon: Icons.brightness_5_outlined,
+              isSelected: controller.themeMode.value == ThemeMode.light,
+              onTap: () => controller.changeTheme(ThemeMode.light),
+            ),
+            12.verticalSpace,
+            _ThemeOption(
+              title: tr(LocaleKeys.settings_theme_dark),
+              icon: Icons.brightness_2_outlined,
+              isSelected: controller.themeMode.value == ThemeMode.dark,
+              onTap: () => controller.changeTheme(ThemeMode.dark),
+            ),
+          ],
+        ),
+      ),
       actions: [
         TextButton(
           onPressed: () => Get.back(),
           child: Text(
             tr(LocaleKeys.settings_close),
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: cs.primary,
-            ),
+            style: theme.textTheme.bodyMedium?.copyWith(color: cs.primary),
           ),
         ),
       ],
@@ -84,7 +84,7 @@ class _ThemeOption extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: isSelected ? cs.primary.withOpacity(0.1) : cs.surface,
+          color: isSelected ? cs.primary.withValues(alpha: 0.1) : cs.surface,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: isSelected ? cs.primary : cs.outlineVariant,
@@ -92,10 +92,7 @@ class _ThemeOption extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(
-              icon,
-              color: isSelected ? cs.primary : cs.onSurfaceVariant,
-            ),
+            Icon(icon, color: isSelected ? cs.primary : cs.onSurfaceVariant),
             12.horizontalSpace,
             Text(
               title,
@@ -105,11 +102,7 @@ class _ThemeOption extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            if (isSelected)
-              Icon(
-                Icons.check,
-                color: cs.primary,
-              ),
+            if (isSelected) Icon(Icons.check, color: cs.primary),
           ],
         ),
       ),

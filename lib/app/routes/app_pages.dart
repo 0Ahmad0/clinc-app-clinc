@@ -37,6 +37,12 @@ import '../../modules/pending_approval/bindings/pending_approval_binding.dart';
 import '../../modules/pending_approval/views/pending_approval_view.dart';
 import '../../modules/reports/bindings/reports_binding.dart';
 import '../../modules/reports/views/reports_view.dart';
+import '../../modules/settings/bindings/change_password_binding.dart';
+import '../../modules/settings/views/about_view.dart';
+import '../../modules/settings/views/change_password_view.dart';
+import '../../modules/settings/views/contact_support_view.dart';
+import '../../modules/settings/views/help_view.dart';
+import '../../modules/settings/views/privacy_policy_view.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -46,6 +52,21 @@ class AppPages {
       page: () => const SettingsView(),
       binding: SettingsBinding(),
     ),
+    GetPage(
+      name: AppRoutes.changePassword,
+      page: () => const ChangePasswordView(),
+      binding: ChangePasswordBinding(),
+    ),
+    GetPage(name: AppRoutes.about, page: () => const AboutView()),
+    GetPage(
+      name: AppRoutes.privacyPolicy,
+      page: () => const PrivacyPolicyView(),
+    ),
+    GetPage(
+      name: AppRoutes.contactSupport,
+      page: () => const ContactSupportView(),
+    ),
+    GetPage(name: AppRoutes.help, page: () => const HelpView()),
     GetPage(
       name: AppRoutes.notifications,
       page: () => const NotificationsView(),

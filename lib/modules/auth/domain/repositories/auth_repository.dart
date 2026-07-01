@@ -17,7 +17,7 @@ class AuthRepository {
   Future<ApiResponse<BaseModel>> Login(String email, String password) async {
     try {
       final response = await _remoteDataSource.Login(email, password);
-      if (response.status == false) {
+      if (response.status == 'error') {
         return ApiResponse.failure(
           NetworkExceptions.defaultError(response.message ?? ''),
         );
@@ -38,7 +38,7 @@ class AuthRepository {
         idToken: idToken,
         role: role,
       );
-      if (response.status == false) {
+      if (response.status == 'error') {
         return ApiResponse.failure(
           NetworkExceptions.defaultError(response.message ?? ''),
         );
@@ -157,7 +157,7 @@ class AuthRepository {
   Future<ApiResponse<BaseModel>> requestAppPasswordReset(String? email) async {
     try {
       final response = await _remoteDataSource.requestAppPasswordReset(email);
-      if (response.status == false) {
+      if (response.status == 'error') {
         return ApiResponse.failure(
           NetworkExceptions.defaultError(response.message ?? ''),
         );
@@ -178,7 +178,7 @@ class AuthRepository {
         email: email,
         code: code,
       );
-      if (response.status == false) {
+      if (response.status == 'error') {
         return ApiResponse.failure(
           NetworkExceptions.defaultError(response.message ?? ''),
         );
@@ -193,7 +193,7 @@ class AuthRepository {
   Future<ApiResponse<BaseModel>> resendPasswordResetOtp(String? email) async {
     try {
       final response = await _remoteDataSource.resendPasswordResetOtp(email);
-      if (response.status == false) {
+      if (response.status == 'error') {
         return ApiResponse.failure(
           NetworkExceptions.defaultError(response.message ?? ''),
         );
@@ -217,7 +217,7 @@ class AuthRepository {
         confirmPassword: confirmPassword,
       );
 
-      if (response.status == false) {
+      if (response.status == 'error') {
         return ApiResponse.failure(
           NetworkExceptions.defaultError(response.message ?? ''),
         );
@@ -256,7 +256,7 @@ class AuthRepository {
         password: password,
         passwordConfirmation: passwordConfirmation,
       );
-      if (response.status == false) {
+      if (response.status == 'error') {
         return ApiResponse.failure(
           NetworkExceptions.defaultError(response.message ?? ''),
         );

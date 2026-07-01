@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../app/core/configuration/locator.dart';
+import '../../../app/controllers/settings_app_controller.dart';
 import '../../../app/core/helper/response_helper.dart';
 import '../../../app/data/profile_model.dart';
 import '../../../app/data/user.dart';
@@ -50,18 +51,20 @@ class SettingsController extends GetxController {
   Future<void> _loadSettings() async {
     isLoading(true);
     try {
-      // TODO: Load from storage
-      // final savedTheme = _storage.read('theme_mode');
-      // if (savedTheme != null) {
-      //   themeMode.value = ThemeMode.values[savedTheme];
-      // }
-
-      // final savedLang = _storage.read('language');
-      // if (savedLang != null) {
-      //   currentLanguage.value = savedLang;
-      // }
-
-      await Future.delayed(const Duration(milliseconds: 500));
+      themeMode.value = SettingsAppController.instance.themeMode;
+      currentLanguage.value = StorageService.instance.languageCode;
+      appNotificationsEnabled.value = StorageService.instance.readBool(
+        StorageService.APP_NOTIFICATIONS,
+        fallback: true,
+      );
+      emailNotificationsEnabled.value = StorageService.instance.readBool(
+        StorageService.EMAIL_NOTIFICATIONS,
+        fallback: false,
+      );
+      smsNotificationsEnabled.value = StorageService.instance.readBool(
+        StorageService.SMS_NOTIFICATIONS,
+        fallback: true,
+      );
     } catch (e) {
       debugPrint('Error loading settings: $e');
       _showErrorSnackbar('Failed to load settings');
@@ -73,7 +76,6 @@ class SettingsController extends GetxController {
   // ========== Load User Profile ==========
   Future<void> _loadUserProfile() async {
     try {
-      print("object");
       // TODO: Load from API
       // final response = await _api.getUserProfile();
       // profile.value = ProfileModel.fromJson(response.data);
@@ -88,14 +90,9 @@ class SettingsController extends GetxController {
   // ========== Theme Management ==========
   void changeTheme(ThemeMode mode) {
     themeMode.value = mode;
-    Get.changeThemeMode(mode);
+    SettingsAppController.instance.changeTheme(mode);
 
-    // Save to storage
-    // _storage.write('theme_mode', mode.index);
-
-    _showSuccessSnackbar(
-      'Theme changed to ${_getThemeModeName(mode)}',
-    );
+    _showSuccessSnackbar('Theme changed to ${_getThemeModeName(mode)}');
   }
 
   String _getThemeModeName(ThemeMode mode) {
@@ -110,20 +107,17 @@ class SettingsController extends GetxController {
   }
 
   // ========== Language Management ==========
-  void changeLanguage(String languageCode) {
+  Future<void> changeLanguage(String languageCode) async {
     currentLanguage.value = languageCode;
-
-    // Change app locale
-    if (languageCode == 'ar') {
-      Get.updateLocale(const Locale('ar'));
-      Get.context?.setLocale(const Locale('ar'));
+    final context = Get.context;
+    if (context != null) {
+      await SettingsAppController.instance.changeLanguage(
+        context,
+        languageCode,
+      );
     } else {
-      Get.updateLocale(const Locale('en'));
-      Get.context?.setLocale(const Locale('en'));
+      StorageService.instance.saveLanguage(languageCode);
     }
-
-    // Save to storage
-    // _storage.write('language', languageCode);
 
     _showSuccessSnackbar(
       'Language changed to ${languageCode == 'ar' ? 'Arabic' : 'English'}',
@@ -169,10 +163,16 @@ class SettingsController extends GetxController {
     }
   }
 
+  Future<void> pickProfileImage(ImageSource source) async {
+    final image = await ImagePicker().pickImage(source: source);
+    if (image == null) return;
+    await uploadAvatar(image.path);
+  }
+
   // ========== Notification Settings ==========
   void toggleAppNotifications(bool value) {
     appNotificationsEnabled.value = value;
-    // _storage.write('app_notifications', value);
+    StorageService.instance.saveBool(StorageService.APP_NOTIFICATIONS, value);
 
     // If turning off, disable all sub-notifications
     if (!value) {
@@ -183,12 +183,12 @@ class SettingsController extends GetxController {
 
   void toggleEmailNotifications(bool value) {
     emailNotificationsEnabled.value = value;
-    // _storage.write('email_notifications', value);
+    StorageService.instance.saveBool(StorageService.EMAIL_NOTIFICATIONS, value);
   }
 
   void toggleSmsNotifications(bool value) {
     smsNotificationsEnabled.value = value;
-    // _storage.write('sms_notifications', value);
+    StorageService.instance.saveBool(StorageService.SMS_NOTIFICATIONS, value);
   }
 
   void toggleAppointmentReminders(bool value) {
@@ -262,8 +262,6 @@ class SettingsController extends GetxController {
     }
   }
 
-
-
   Future<bool?> getProfile({bool isSplash = true}) async {
     final response = await _repository.getProfile();
 
@@ -279,17 +277,11 @@ class SettingsController extends GetxController {
           updateUser(fetchedUser);
         }
 
-        print('=== PROFILE LOADED ===');
-        print('profileImage: ${fetchedUser?.profileImage}');
-        print('personalPhoto: ${fetchedUser?.personalPhoto}');
-        print('user full json: ${fetchedUser?.toJson()}');
-
         isGetProfile = true;
 
         Get.offNamed(AppRoutes.mainLayout);
       },
       failure: (networkException) async {
-
         if (isSplash) Get.offAllNamed(AppRoutes.login);
       },
     );
@@ -304,7 +296,7 @@ class SettingsController extends GetxController {
         isLoading(false);
         await StorageService.instance.depose();
         ResponseHelper.onSuccess(
-          message: data.message ,
+          message: data.message,
           // message: data.message ?? "navbar.profile.success".tr,
         );
         Get.offAllNamed(AppRoutes.login);
@@ -317,6 +309,7 @@ class SettingsController extends GetxController {
       },
     );
   }
+
   void updateUser(UserModel userModel) {
     // user = userModel;
     update();

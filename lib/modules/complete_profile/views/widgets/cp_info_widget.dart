@@ -15,34 +15,39 @@ class CPInfoWidget extends GetView<CompleteProfileController> {
 
     return Column(
       children: [
-        DropdownButtonFormField<String>(
-          decoration: InputDecoration(
-            labelText: tr(LocaleKeys.complete_profile_fields_specialty),
-            labelStyle: theme.textTheme.bodyMedium,
-            prefixIcon: Icon(
-                Icons.medical_services_outlined,
-                color: theme.colorScheme.primary
-            ),
-            // نعتمد على الـ InputDecorationTheme المعرف في main.dart
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: theme.colorScheme.outline),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(
+            tr('complete_profile.fields.insurances'),
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
             ),
           ),
-          dropdownColor: theme.colorScheme.surface,
-          style: theme.textTheme.bodyLarge, // لون النص المختار
-          items: controller.specialties.map((String val) {
-            return DropdownMenuItem(
-                value: val,
-                child: Text(
-                  val,
-                  style: theme.textTheme.bodyMedium, // لون نصوص القائمة
-                )
-            );
-          }).toList(),
-          onChanged: (val) => controller.selectedSpecialty.value = val ?? '',
         ),
+        8.verticalSpace,
+        Obx(() {
+          if (controller.isLoadingInsurances.value) {
+            return const LinearProgressIndicator();
+          }
+          return Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Wrap(
+              spacing: 8.w,
+              runSpacing: 8.h,
+              children: controller.insurances.map((insurance) {
+                final selected = controller.selectedInsuranceIds.contains(
+                  insurance.id,
+                );
+                return FilterChip(
+                  label: Text(insurance.name),
+                  selected: selected,
+                  onSelected: (value) =>
+                      controller.toggleInsurance(insurance.id, value),
+                );
+              }).toList(),
+            ),
+          );
+        }),
         16.verticalSpace,
 
         AppTextFormFieldWidget(
@@ -50,7 +55,7 @@ class CPInfoWidget extends GetView<CompleteProfileController> {
           hintText: tr(LocaleKeys.complete_profile_fields_phone_hint),
           prefixIcon: Icons.phone_outlined,
           keyboardType: TextInputType.phone,
-          // الويدجت الأساسية لديك يجب أن تدعم الثيم تلقائياً
+          validator: controller.validatePhone,
         ),
       ],
     );

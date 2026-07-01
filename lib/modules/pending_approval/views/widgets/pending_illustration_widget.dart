@@ -10,11 +10,11 @@ class PendingIllustrationWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(30.r),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withOpacity(0.05),
+        color: Theme.of(context).primaryColor.withValues(alpha: 0.05),
         shape: BoxShape.circle,
       ),
       child: AppSvgWidget(
-        path: 'assets/icons/processing.svg', // صورة ساعة أو ملف قيد المراجعة
+        path: 'assets/icons/waiting.svg',
         height: 150.h,
         width: 150.w,
       ),

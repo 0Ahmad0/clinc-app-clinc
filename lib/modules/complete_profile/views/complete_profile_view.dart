@@ -31,47 +31,55 @@ class CompleteProfileView extends GetView<CompleteProfileController> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.only(bottom: 40.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // 1. قسم الصور (بانر + بروفايل)
-            const CPImagesWidget(),
+      body: Form(
+        key: controller.formKey,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.only(bottom: 40.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 1. قسم الصور (بانر + بروفايل)
+              const CPImagesWidget(),
 
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  24.verticalSpace,
-                  // 2. قسم المعلومات (اختصاص + هاتف)
-                  const CPInfoWidget(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    24.verticalSpace,
+                    // 2. قسم المعلومات (اختصاص + هاتف)
+                    const CPInfoWidget(),
 
-                  32.verticalSpace,
-                  Text(
-                    tr(LocaleKeys.complete_profile_sections_schedule),
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                    32.verticalSpace,
+                    Text(
+                      tr(LocaleKeys.complete_profile_sections_schedule),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  16.verticalSpace,
+                    16.verticalSpace,
 
-                  // 3. جدول الدوام (الوحش)
-                  const CPScheduleWidget(),
+                    // 3. جدول الدوام (الوحش)
+                    const CPScheduleWidget(),
 
-                  40.verticalSpace,
+                    40.verticalSpace,
 
-                  // زر الحفظ
-                  AppButtonWidget(
-                    text: tr(LocaleKeys.complete_profile_buttons_save_finish),
-                    onPressed: controller.saveDataAndFinish,
-                  ),
-                ],
+                    // زر الحفظ
+                    Obx(
+                      () => AppButtonWidget(
+                        isLoading: controller.isLoading.value,
+                        text: tr(
+                          LocaleKeys.complete_profile_buttons_save_finish,
+                        ),
+                        onPressed: controller.saveDataAndFinish,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

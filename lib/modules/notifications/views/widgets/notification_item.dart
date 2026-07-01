@@ -1,128 +1,112 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../app/data/notification_model.dart';
-import '../../controllers/notifications_controller.dart';
 
-class NotificationItem extends GetView<NotificationsController> {
+import '../../../../app/data/notification_model.dart';
+
+class NotificationItem extends StatelessWidget {
+  const NotificationItem({
+    super.key,
+    required this.notification,
+    required this.onTap,
+    required this.onDelete,
+    required this.isReading,
+    required this.isDeleting,
+  });
+
   final NotificationModel notification;
-
-  const NotificationItem({super.key, required this.notification});
+  final VoidCallback onTap;
+  final VoidCallback onDelete;
+  final bool isReading;
+  final bool isDeleting;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
+    final colors = theme.colorScheme;
+    final accent = _notificationColor(notification.type, colors);
 
     return InkWell(
-      onTap: () {
-        // وضع الإشعار كمقروء عند النقر عليه
-        if (notification.status == NotificationStatus.unread) {
-          controller.markAsRead(notification.id);
-        }
-
-        // TODO: الانتقال إلى الصفحة المرتبطة بالإشعار
-        // مثال: إذا كان إشعار موعد، انتقل إلى تفاصيل الموعد
-        // Get.toNamed(Routes.appointmentDetails, arguments: notification.relatedId);
-      },
+      onTap: isReading ? null : onTap,
       borderRadius: BorderRadius.circular(16.r),
       child: Container(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.all(14.w),
         margin: EdgeInsets.symmetric(horizontal: 16.w),
         decoration: BoxDecoration(
-          color: notification.status == NotificationStatus.unread
-              ? cs.primary.withOpacity(0.05)
-              : cs.surface,
+          color: notification.isRead
+              ? colors.surface
+              : colors.primary.withValues(alpha: .05),
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: notification.status == NotificationStatus.unread
-                ? cs.primary.withOpacity(0.2)
-                : cs.outlineVariant.withOpacity(0.2),
+            color: notification.isRead
+                ? colors.outlineVariant
+                : colors.primary.withValues(alpha: .22),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: cs.shadow.withOpacity(0.03),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         child: Row(
           children: [
-            // أيقونة الإشعار
             Container(
-              width: 48.r,
-              height: 48.r,
+              width: 46.r,
+              height: 46.r,
               decoration: BoxDecoration(
-                color: _getNotificationColor(notification.type, cs).withOpacity(0.15),
+                color: accent.withValues(alpha: .14),
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Icon(
-                _getNotificationIcon(notification.type),
-                color: _getNotificationColor(notification.type, cs),
-                size: 24.sp,
-              ),
+              child: Icon(_notificationIcon(notification.type), color: accent),
             ),
             12.horizontalSpace,
-
-            // محتوى الإشعار
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // العنوان والوقت
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          notification.title,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: notification.status == NotificationStatus.unread
-                                ? cs.onSurface
-                                : cs.onSurfaceVariant,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      8.horizontalSpace,
-                      Text(
-                        notification.formattedTime,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: cs.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    notification.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: notification.isRead
+                          ? FontWeight.w600
+                          : FontWeight.w800,
+                    ),
                   ),
-                  4.verticalSpace,
-
-                  // نص الإشعار
+                  5.verticalSpace,
                   Text(
                     notification.body,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: notification.status == NotificationStatus.unread
-                          ? cs.onSurface
-                          : cs.onSurfaceVariant,
-                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
+                  ),
+                  7.verticalSpace,
+                  Text(
+                    TimeOfDay.fromDateTime(
+                      notification.createdAt.toLocal(),
+                    ).format(context),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: colors.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
             ),
-
-            // مؤشر غير مقروء
-            if (notification.status == NotificationStatus.unread)
-              Padding(
-                padding: EdgeInsets.only(left: 8.w),
-                child: Container(
-                  width: 8.r,
-                  height: 8.r,
-                  decoration: BoxDecoration(
-                    color: cs.primary,
-                    shape: BoxShape.circle,
-                  ),
+            if (isReading || isDeleting)
+              SizedBox(
+                width: 22.r,
+                height: 22.r,
+                child: const CircularProgressIndicator(strokeWidth: 2),
+              )
+            else
+              IconButton(
+                onPressed: onDelete,
+                icon: Icon(Icons.delete_outline, color: colors.error),
+              ),
+            if (!notification.isRead)
+              Container(
+                width: 8.r,
+                height: 8.r,
+                decoration: BoxDecoration(
+                  color: colors.primary,
+                  shape: BoxShape.circle,
                 ),
               ),
           ],
@@ -131,7 +115,7 @@ class NotificationItem extends GetView<NotificationsController> {
     );
   }
 
-  IconData _getNotificationIcon(NotificationType type) {
+  IconData _notificationIcon(NotificationType type) {
     switch (type) {
       case NotificationType.appointment:
         return Icons.event_note_outlined;
@@ -141,19 +125,23 @@ class NotificationItem extends GetView<NotificationsController> {
         return Icons.payments_outlined;
       case NotificationType.message:
         return Icons.message_outlined;
+      case NotificationType.system:
+        return Icons.info_outline;
     }
   }
 
-  Color _getNotificationColor(NotificationType type, ColorScheme cs) {
+  Color _notificationColor(NotificationType type, ColorScheme colors) {
     switch (type) {
       case NotificationType.appointment:
-        return cs.primary;
+        return colors.primary;
       case NotificationType.labResult:
-        return cs.secondary;
+        return colors.secondary;
       case NotificationType.payment:
         return Colors.green;
       case NotificationType.message:
-        return cs.tertiary;
+        return colors.tertiary;
+      case NotificationType.system:
+        return Colors.blueGrey;
     }
   }
 }

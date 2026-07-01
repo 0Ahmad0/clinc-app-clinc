@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../../app/core/helper/response_helper.dart';
 import '../../../app/data/report_model.dart';
 import '../../../generated/locale_keys.g.dart';
 
@@ -17,7 +18,9 @@ class ReportDetailsView extends StatelessWidget {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
 
-    final generated = DateFormat('EEE, MMM d • hh:mm a').format(report.generatedAt);
+    final generated = DateFormat(
+      'EEE, MMM d • hh:mm a',
+    ).format(report.generatedAt);
 
     return Scaffold(
       backgroundColor: cs.surface,
@@ -39,7 +42,7 @@ class ReportDetailsView extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        _getTypeColor(report.type, cs).withOpacity(0.1),
+                        _getTypeColor(report.type, cs).withValues(alpha: 0.1),
                         cs.surface,
                       ],
                     ),
@@ -112,14 +115,17 @@ class ReportDetailsView extends StatelessWidget {
                 24.verticalSpace,
 
                 // Actions
-                if (report.hasPdf)
+                if (report.fileUrl.isNotEmpty)
                   ElevatedButton.icon(
-                    onPressed: () async {
-                      await OpenFilex.open(report.pdfPathOrUrl!);
-                    },
-                    icon: Icon(Icons.picture_as_pdf, color: cs.onPrimary),
+                    onPressed: () => _openFile(report),
+                    icon: Icon(
+                      report.format == ReportFormat.pdf
+                          ? Icons.picture_as_pdf
+                          : Icons.table_chart,
+                      color: cs.onPrimary,
+                    ),
                     label: Text(
-                      tr(LocaleKeys.reports_actions_view_pdf),
+                      tr('reports.actions.view_file'),
                       style: theme.textTheme.labelLarge?.copyWith(
                         color: cs.onPrimary,
                         fontWeight: FontWeight.w700,
@@ -146,8 +152,8 @@ class ReportDetailsView extends StatelessWidget {
     switch (type) {
       case ReportType.appointments:
         return Icons.event_note_outlined;
-      case ReportType.labResults:
-        return Icons.science_outlined;
+      case ReportType.clinic:
+        return Icons.local_hospital_outlined;
       case ReportType.revenue:
         return Icons.payments_outlined;
       case ReportType.doctors:
@@ -155,11 +161,24 @@ class ReportDetailsView extends StatelessWidget {
     }
   }
 
+  Future<void> _openFile(ReportModel report) async {
+    if (report.fileUrl.startsWith('mock://')) {
+      ResponseHelper.onWarning(message: tr('reports.messages.mock_file'));
+      return;
+    }
+    final uri = Uri.tryParse(report.fileUrl);
+    if (uri != null && (uri.scheme == 'http' || uri.scheme == 'https')) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+      return;
+    }
+    await OpenFilex.open(report.fileUrl);
+  }
+
   Color _getTypeColor(ReportType type, ColorScheme cs) {
     switch (type) {
       case ReportType.appointments:
         return cs.primary;
-      case ReportType.labResults:
+      case ReportType.clinic:
         return cs.secondary;
       case ReportType.revenue:
         return Colors.green;
@@ -184,10 +203,10 @@ class _SummaryCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: cs.surface,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: cs.outlineVariant.withOpacity(0.2)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withOpacity(0.05),
+            color: cs.shadow.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -284,10 +303,10 @@ class _ReportChart extends StatelessWidget {
       decoration: BoxDecoration(
         color: cs.surface,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: cs.outlineVariant.withOpacity(0.2)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withOpacity(0.05),
+            color: cs.shadow.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -347,11 +366,20 @@ class _ReportChart extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _LegendItem(color: Colors.green, label: tr(LocaleKeys.reports_cards_completed)),
+              _LegendItem(
+                color: Colors.green,
+                label: tr(LocaleKeys.reports_cards_completed),
+              ),
               16.horizontalSpace,
-              _LegendItem(color: cs.tertiary, label: tr(LocaleKeys.reports_cards_pending)),
+              _LegendItem(
+                color: cs.tertiary,
+                label: tr(LocaleKeys.reports_cards_pending),
+              ),
               16.horizontalSpace,
-              _LegendItem(color: cs.error, label: tr(LocaleKeys.reports_cards_cancelled)),
+              _LegendItem(
+                color: cs.error,
+                label: tr(LocaleKeys.reports_cards_cancelled),
+              ),
             ],
           ),
         ],
@@ -375,10 +403,7 @@ class _LegendItem extends StatelessWidget {
         Container(
           width: 12.w,
           height: 12.h,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         6.horizontalSpace,
         Text(
@@ -403,10 +428,10 @@ class _NotesSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: cs.surface,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: cs.outlineVariant.withOpacity(0.2)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withOpacity(0.05),
+            color: cs.shadow.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),

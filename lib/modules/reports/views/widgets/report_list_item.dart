@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../../../../../app/data/report_model.dart';
 import '../../../../generated/locale_keys.g.dart';
@@ -24,16 +23,19 @@ class ReportListItem extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16.r),
-          onTap: () => Get.to(() => const ReportDetailsView(), arguments: report),
+          onTap: () =>
+              Get.to(() => const ReportDetailsView(), arguments: report),
           child: Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
               color: cs.surface,
               borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(color: cs.outlineVariant.withOpacity(0.2)),
+              border: Border.all(
+                color: cs.outlineVariant.withValues(alpha: 0.2),
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: cs.shadow.withOpacity(0.05),
+                  color: cs.shadow.withValues(alpha: 0.05),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -41,10 +43,7 @@ class ReportListItem extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  cs.surface,
-                  cs.surface.withOpacity(0.9),
-                ],
+                colors: [cs.surface, cs.surface.withValues(alpha: 0.9)],
               ),
             ),
             child: Column(
@@ -57,7 +56,10 @@ class ReportListItem extends StatelessWidget {
                       width: 48.r,
                       height: 48.r,
                       decoration: BoxDecoration(
-                        color: _getTypeColor(report.type, cs).withOpacity(0.15),
+                        color: _getTypeColor(
+                          report.type,
+                          cs,
+                        ).withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(14.r),
                       ),
                       child: Icon(
@@ -87,13 +89,28 @@ class ReportListItem extends StatelessWidget {
                               color: cs.onSurfaceVariant,
                             ),
                           ),
+                          3.verticalSpace,
+                          Text(
+                            '${tr(report.range.key())} • '
+                            '${tr(report.format.key())}',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: cs.onSurfaceVariant,
+                            ),
+                          ),
                         ],
                       ),
                     ),
 
                     // PDF Icon and Arrow
-                    if (report.hasPdf)
-                      Icon(Icons.picture_as_pdf, color: cs.error, size: 20.sp),
+                    Icon(
+                      report.format == ReportFormat.pdf
+                          ? Icons.picture_as_pdf
+                          : Icons.table_chart,
+                      color: report.format == ReportFormat.pdf
+                          ? cs.error
+                          : Colors.green,
+                      size: 20.sp,
+                    ),
                     8.horizontalSpace,
                     Icon(
                       Icons.arrow_forward_ios,
@@ -144,8 +161,8 @@ class ReportListItem extends StatelessWidget {
     switch (type) {
       case ReportType.appointments:
         return Icons.event_note_outlined;
-      case ReportType.labResults:
-        return Icons.science_outlined;
+      case ReportType.clinic:
+        return Icons.local_hospital_outlined;
       case ReportType.revenue:
         return Icons.payments_outlined;
       case ReportType.doctors:
@@ -157,7 +174,7 @@ class ReportListItem extends StatelessWidget {
     switch (type) {
       case ReportType.appointments:
         return cs.primary;
-      case ReportType.labResults:
+      case ReportType.clinic:
         return cs.secondary;
       case ReportType.revenue:
         return Colors.green;
@@ -190,7 +207,7 @@ class _ReportProgressBar extends StatelessWidget {
           height: 6.h,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(3.r),
-            color: cs.outlineVariant.withOpacity(0.3),
+            color: cs.outlineVariant.withValues(alpha: 0.3),
           ),
           child: Row(
             children: [
@@ -235,21 +252,15 @@ class _ReportProgressBar extends StatelessWidget {
           children: [
             Text(
               '${report.completed} ${tr(LocaleKeys.reports_cards_completed)}',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: Colors.green,
-              ),
+              style: theme.textTheme.labelSmall?.copyWith(color: Colors.green),
             ),
             Text(
               '${report.pending} ${tr(LocaleKeys.reports_cards_pending)}',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: cs.tertiary,
-              ),
+              style: theme.textTheme.labelSmall?.copyWith(color: cs.tertiary),
             ),
             Text(
               '${report.cancelled} ${tr(LocaleKeys.reports_cards_cancelled)}',
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: cs.error,
-              ),
+              style: theme.textTheme.labelSmall?.copyWith(color: cs.error),
             ),
           ],
         ),

@@ -1,4 +1,3 @@
-import 'package:clinc_app_clinc/app/core/widgets/app_app_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

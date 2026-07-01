@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../app/core/widgets/app_button_widget.dart';
-import '../../../../app/core/widgets/app_loading_widget.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../controllers/forgot_password_controller.dart';
 
@@ -15,10 +14,12 @@ class ForgotPasswordActionsWidget extends GetView<ForgotPasswordController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppButtonWidget(
-          isLoading: controller.isLoading.value,
-          text: tr(LocaleKeys.forgot_password_buttons_submit),
-          onPressed: controller.sendResetLink,
+        Obx(
+          () => AppButtonWidget(
+            isLoading: controller.isLoading.value,
+            text: tr(LocaleKeys.forgot_password_buttons_submit),
+            onPressed: controller.sendResetLink,
+          ),
         ),
 
         24.verticalSpace,

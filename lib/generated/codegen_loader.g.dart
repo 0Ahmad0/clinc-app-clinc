@@ -96,7 +96,7 @@ class CodegenLoader extends AssetLoader{
       "back_to_login": "Back to Login"
     },
     "messages": {
-      "success": "Reset link sent successfully, please check your inbox.",
+      "success": "Verification code sent successfully. Check your inbox.",
       "required_field": "Please enter the required data"
     }
   },
@@ -125,7 +125,10 @@ class CodegenLoader extends AssetLoader{
     },
     "messages": {
       "still_pending": "Application is still pending, please wait.",
-      "approved": "Approved! Redirecting..."
+      "approved": "Approved! Redirecting...",
+      "rejected": "The clinic registration request was rejected",
+      "missing_reference": "Registration reference is missing. Please log in again.",
+      "support_not_configured": "Support contact details are not configured yet"
     }
   },
   "complete_profile": {
@@ -140,6 +143,7 @@ class CodegenLoader extends AssetLoader{
       "banner_hint": "Tap to add banner",
       "specialty": "Medical Specialty",
       "specialty_hint": "Select specialty",
+      "insurances": "Accepted Insurances",
       "phone": "Clinic Phone",
       "phone_hint": "For patient contact"
     },
@@ -160,6 +164,12 @@ class CodegenLoader extends AssetLoader{
     },
     "buttons": {
       "save_finish": "Save & Finish"
+    },
+    "messages": {
+      "phone_required": "Clinic phone number is required",
+      "phone_invalid": "Enter a valid phone number",
+      "images_required": "Clinic logo and cover image are required",
+      "schedule_invalid": "Add at least one work day with a valid start and end time"
     }
   },
   "home": {
@@ -176,16 +186,31 @@ class CodegenLoader extends AssetLoader{
     "appointments": "Appointments",
     "reports": "Reports"
   },
+  "main_layout": {
+    "cancel": "Cancel"
+  },
   "dashboard": {
     "welcome": "Welcome",
     "stats": {
       "doctors": "Doctors",
+      "patients": "Patients",
+      "today_appointments": "Today's Appointments",
+      "daily_income": "Daily Income",
       "reports": "Reports",
       "appointments": "Appointments",
       "services": "Services"
     },
     "todays_appointments": "Today's Appointments",
     "view_all": "View All",
+    "no_appointments": "No appointments scheduled for today",
+    "retry": "Try Again",
+    "clinic": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "currency": {
+      "sar": "SAR"
+    },
     "status": {
       "upcoming": "Upcoming",
       "cancelled": "Cancelled",
@@ -202,6 +227,15 @@ class CodegenLoader extends AssetLoader{
     "add_button": "Add New Doctor",
     "no_doctors": "No doctors added yet",
     "no_doctors_desc": "You can add a new doctor by pressing the button below",
+    "retry": "Try Again",
+    "experience_years": "{} years",
+    "filters": {
+      "all": "All"
+    },
+    "messages": {
+      "status_from_details": "Doctor availability can be changed from doctor details",
+      "delete_from_details": "Doctor deletion is available from doctor details"
+    },
     "status": {
       "active": "Active",
       "inactive": "Unavailable"
@@ -289,8 +323,26 @@ class CodegenLoader extends AssetLoader{
   "services_page": {
     "title": "Services & Specialties List",
     "tabs": {
+      "labs": "Lab Tests",
       "services": "Test Packages",
       "specialties": "Clinics & Specialties"
+    },
+    "add": "Add",
+    "save": "Save",
+    "cancel": "Cancel",
+    "currency": "SAR",
+    "price_dialog": {
+      "title": "Set Test Price",
+      "label": "Price"
+    },
+    "messages": {
+      "empty": "No service sections are available",
+      "not_added": "Not added to the clinic",
+      "not_enabled": "Not enabled",
+      "enabled_tests": "{} enabled tests",
+      "specialty_added": "Specialty added",
+      "doctor_required": "Add a doctor in this specialty first",
+      "price_required": "Enter a price greater than zero"
     },
     "headers": {
       "active_services": "Active Packages",
@@ -455,13 +507,20 @@ class CodegenLoader extends AssetLoader{
       "today": "Today",
       "week": "This Week",
       "month": "This Month",
+      "year": "This Year",
       "custom": "Custom"
     },
     "types": {
       "appointments": "Appointments Report",
+      "clinic": "Clinic Report",
       "revenue": "Revenue Report",
       "lab_results": "Lab Results Report",
       "doctors": "Doctors Report"
+    },
+    "formats": {
+      "title": "Export Format",
+      "pdf": "PDF",
+      "excel": "Excel"
     },
     "sections": {
       "summary": "Summary",
@@ -484,10 +543,12 @@ class CodegenLoader extends AssetLoader{
     "actions": {
       "generate": "Generate New Report",
       "save": "Save",
-      "view_pdf": "View PDF"
+      "view_pdf": "View PDF",
+      "view_file": "Open Report File"
     },
     "messages": {
       "empty": "No Reports",
+      "mock_file": "The mock report file was generated successfully",
       "empty_title": "No reports have been created yet",
       "empty_subtitle": "You can create a new report by clicking the button below"
     }
@@ -501,6 +562,14 @@ class CodegenLoader extends AssetLoader{
     "confirm": "Confirm",
     "cancel": "Cancel",
     "delete": "Delete",
+    "confirm_delete": "Do you want to delete this notification?",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "read": "Read"
+    },
     "empty_title": "No notifications",
     "empty_subtitle": "New notifications will appear here when you receive them"
   },
@@ -542,7 +611,30 @@ class CodegenLoader extends AssetLoader{
     "close": "Close",
     "confirm": "Confirm",
     "validation_required": "This field is required",
-    "validation_invalid_email": "Invalid email address"
+    "validation_invalid_email": "Invalid email address",
+    "version": "Version",
+    "about_content": "Clinic App helps clinics manage doctors, appointments, services, notifications, and reports in one place.",
+    "privacy_content": "We use clinic and account information only to provide application features. Access is limited to authorized clinic users. Medical and account data must not be shared outside approved workflows.",
+    "contact_support_content": "Contact the support team using the details below.",
+    "help_doctors_title": "Managing doctors",
+    "help_doctors_body": "Open Doctors to add, review, or edit clinic doctors and their schedules.",
+    "help_appointments_title": "Managing appointments",
+    "help_appointments_body": "Open Appointments to search bookings and update their status.",
+    "help_reports_title": "Generating reports",
+    "help_reports_body": "Open Reports, select the report type and period, then choose an export format.",
+    "image_picker": {
+      "gallery": "Choose from gallery",
+      "camera": "Take a photo"
+    },
+    "change_password": {
+      "title": "Change Password",
+      "current": "Current Password",
+      "new": "New Password",
+      "confirmation": "Confirm New Password",
+      "submit": "Update Password",
+      "min_length": "Password must be at least 8 characters",
+      "confirmation_mismatch": "Password confirmation does not match"
+    }
   },
   "services": {
     "title": "Services Management",
@@ -657,7 +749,7 @@ static const Map<String,dynamic> _ar = {
       "back_to_login": "العودة لتسجيل الدخول"
     },
     "messages": {
-      "success": "تم إرسال رابط الاستعادة بنجاح، تفقد بريدك الوارد.",
+      "success": "تم إرسال رمز التحقق بنجاح، تفقد بريدك الوارد.",
       "required_field": "الرجاء إدخال البيانات المطلوبة"
     }
   },
@@ -686,7 +778,10 @@ static const Map<String,dynamic> _ar = {
     },
     "messages": {
       "still_pending": "الطلب لا يزال قيد المراجعة، يرجى الانتظار.",
-      "approved": "تمت الموافقة! جاري تحويلك..."
+      "approved": "تمت الموافقة! جاري تحويلك...",
+      "rejected": "تم رفض طلب تسجيل العيادة",
+      "missing_reference": "مرجع طلب التسجيل غير موجود. يرجى تسجيل الدخول مجدداً.",
+      "support_not_configured": "بيانات التواصل مع الدعم غير مهيأة بعد"
     }
   },
   "complete_profile": {
@@ -701,6 +796,7 @@ static const Map<String,dynamic> _ar = {
       "banner_hint": "اضغط لإضافة صورة غلاف",
       "specialty": "الاختصاص الطبي",
       "specialty_hint": "اختر الاختصاص",
+      "insurances": "التأمينات المقبولة",
       "phone": "رقم هاتف العيادة",
       "phone_hint": "للتواصل مع المرضى"
     },
@@ -721,6 +817,12 @@ static const Map<String,dynamic> _ar = {
     },
     "buttons": {
       "save_finish": "حفظ وإنهاء"
+    },
+    "messages": {
+      "phone_required": "رقم هاتف العيادة مطلوب",
+      "phone_invalid": "أدخل رقم هاتف صحيح",
+      "images_required": "شعار العيادة وصورة الغلاف مطلوبان",
+      "schedule_invalid": "أضف يوم دوام واحداً على الأقل مع وقت بداية ونهاية صحيح"
     }
   },
   "home": {
@@ -737,16 +839,31 @@ static const Map<String,dynamic> _ar = {
     "appointments": "المواعيد",
     "reports": "التقارير"
   },
+  "main_layout": {
+    "cancel": "إلغاء"
+  },
   "dashboard": {
     "welcome": "مرحباً",
     "stats": {
       "doctors": "طبيب",
+      "patients": "مريض",
+      "today_appointments": "مواعيد اليوم",
+      "daily_income": "الدخل اليومي",
       "reports": "تقرير",
       "appointments": "موعد",
       "services": "خدمة"
     },
     "todays_appointments": "مواعيد اليوم",
     "view_all": "عرض الكل",
+    "no_appointments": "لا توجد مواعيد مجدولة اليوم",
+    "retry": "إعادة المحاولة",
+    "clinic": {
+      "open": "مفتوحة",
+      "closed": "مغلقة"
+    },
+    "currency": {
+      "sar": "ر.س"
+    },
     "status": {
       "upcoming": "قادم",
       "cancelled": "ملغي",
@@ -763,6 +880,15 @@ static const Map<String,dynamic> _ar = {
     "add_button": "إضافة طبيب جديد",
     "no_doctors": "لا يوجد أطباء مضافين حالياً",
     "no_doctors_desc": "يمكنك إضافة طبيب جديد بالضغط على الزر في الأسفل",
+    "retry": "إعادة المحاولة",
+    "experience_years": "{} سنوات",
+    "filters": {
+      "all": "الكل"
+    },
+    "messages": {
+      "status_from_details": "يمكن تغيير توفر الطبيب من تفاصيل الطبيب",
+      "delete_from_details": "حذف الطبيب متاح من تفاصيل الطبيب"
+    },
     "status": {
       "active": "نشط",
       "inactive": "غير متاح"
@@ -850,8 +976,26 @@ static const Map<String,dynamic> _ar = {
   "services_page": {
     "title": "قائمة الخدمات والتخصصات",
     "tabs": {
+      "labs": "التحاليل المخبرية",
       "services": "باقات التحاليل",
       "specialties": "العيادات والتخصصات"
+    },
+    "add": "إضافة",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "currency": "ر.س",
+    "price_dialog": {
+      "title": "تحديد سعر التحليل",
+      "label": "السعر"
+    },
+    "messages": {
+      "empty": "لا توجد أقسام خدمات متاحة",
+      "not_added": "غير مضاف إلى العيادة",
+      "not_enabled": "غير مفعل",
+      "enabled_tests": "{} تحاليل مفعلة",
+      "specialty_added": "تمت إضافة التخصص",
+      "doctor_required": "أضف طبيباً بهذا الاختصاص أولاً",
+      "price_required": "أدخل سعراً أكبر من صفر"
     },
     "headers": {
       "active_services": "الباقات المفعلة",
@@ -1016,13 +1160,20 @@ static const Map<String,dynamic> _ar = {
       "today": "اليوم",
       "week": "هذا الأسبوع",
       "month": "هذا الشهر",
+      "year": "هذه السنة",
       "custom": "مخصص"
     },
     "types": {
       "appointments": "تقرير المواعيد",
+      "clinic": "تقرير العيادة",
       "revenue": "تقرير الإيرادات",
       "lab_results": "تقرير التحاليل",
       "doctors": "تقرير الأطباء"
+    },
+    "formats": {
+      "title": "صيغة التصدير",
+      "pdf": "PDF",
+      "excel": "Excel"
     },
     "sections": {
       "summary": "ملخص",
@@ -1046,10 +1197,12 @@ static const Map<String,dynamic> _ar = {
     "actions": {
       "generate": "إنشاء تقرير جديد",
       "save": "حفظ",
-      "view_pdf": "عرض PDF"
+      "view_pdf": "عرض PDF",
+      "view_file": "فتح ملف التقرير"
     },
     "messages": {
       "empty": "لا توجد تقارير",
+      "mock_file": "تم إنشاء ملف التقرير التجريبي بنجاح",
       "empty_title": "لم يتم إنشاء أي تقارير بعد",
       "empty_subtitle": "يمكنك إنشاء تقرير جديد بالضغط على الزر أدناه"
     }
@@ -1063,6 +1216,14 @@ static const Map<String,dynamic> _ar = {
     "confirm": "تأكيد",
     "cancel": "إلغاء",
     "delete": "حذف",
+    "confirm_delete": "هل تريد حذف هذا الإشعار؟",
+    "today": "اليوم",
+    "yesterday": "البارحة",
+    "filters": {
+      "all": "الكل",
+      "unread": "غير المقروءة",
+      "read": "المقروءة"
+    },
     "empty_title": "لا توجد إشعارات",
     "empty_subtitle": "ستظهر الإشعارات الجديدة هنا عندما تتلقاها"
   },
@@ -1104,7 +1265,30 @@ static const Map<String,dynamic> _ar = {
     "close": "إغلاق",
     "confirm": "تأكيد",
     "validation_required": "هذا الحقل مطلوب",
-    "validation_invalid_email": "البريد الإلكتروني غير صالح"
+    "validation_invalid_email": "البريد الإلكتروني غير صالح",
+    "version": "الإصدار",
+    "about_content": "يساعد تطبيق العيادة في إدارة الأطباء والمواعيد والخدمات والإشعارات والتقارير من مكان واحد.",
+    "privacy_content": "نستخدم معلومات العيادة والحساب فقط لتقديم وظائف التطبيق. يقتصر الوصول على مستخدمي العيادة المصرح لهم، ولا يجوز مشاركة البيانات الطبية وبيانات الحساب خارج الإجراءات المعتمدة.",
+    "contact_support_content": "تواصل مع فريق الدعم باستخدام المعلومات أدناه.",
+    "help_doctors_title": "إدارة الأطباء",
+    "help_doctors_body": "افتح قسم الأطباء لإضافة أطباء العيادة أو مراجعتهم أو تعديل جداولهم.",
+    "help_appointments_title": "إدارة المواعيد",
+    "help_appointments_body": "افتح قسم المواعيد للبحث عن الحجوزات وتحديث حالتها.",
+    "help_reports_title": "إنشاء التقارير",
+    "help_reports_body": "افتح قسم التقارير، ثم حدد نوع التقرير والفترة وصيغة التصدير.",
+    "image_picker": {
+      "gallery": "اختيار من المعرض",
+      "camera": "التقاط صورة"
+    },
+    "change_password": {
+      "title": "تغيير كلمة المرور",
+      "current": "كلمة المرور الحالية",
+      "new": "كلمة المرور الجديدة",
+      "confirmation": "تأكيد كلمة المرور الجديدة",
+      "submit": "تحديث كلمة المرور",
+      "min_length": "يجب ألا تقل كلمة المرور عن 8 أحرف",
+      "confirmation_mismatch": "تأكيد كلمة المرور غير متطابق"
+    }
   },
   "services": {
     "title": "إدارة الخدمات",

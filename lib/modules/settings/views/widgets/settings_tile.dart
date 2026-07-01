@@ -32,8 +32,8 @@ class SettingsTile extends StatelessWidget {
     required this.onChanged,
     this.subtitle,
   }) : isSwitch = true,
-        onTap = null,
-        trailing = null;
+       onTap = null,
+       trailing = null;
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +49,10 @@ class SettingsTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: cs.surface,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: cs.outlineVariant.withOpacity(0.2)),
+          border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.2)),
           boxShadow: [
             BoxShadow(
-              color: cs.shadow.withOpacity(0.03),
+              color: cs.shadow.withValues(alpha: 0.03),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -65,14 +65,10 @@ class SettingsTile extends StatelessWidget {
               width: 40.r,
               height: 40.r,
               decoration: BoxDecoration(
-                color: cs.primary.withOpacity(0.1),
+                color: cs.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10.r),
               ),
-              child: Icon(
-                icon,
-                color: cs.primary,
-                size: 20.sp,
-              ),
+              child: Icon(icon, color: cs.primary, size: 20.sp),
             ),
             16.horizontalSpace,
 
@@ -106,13 +102,15 @@ class SettingsTile extends StatelessWidget {
               Switch(
                 value: value ?? false,
                 onChanged: onChanged,
-                activeColor: cs.primary,
-                activeTrackColor: cs.primary.withOpacity(0.3),
-                inactiveThumbColor: cs.outline,
-                inactiveTrackColor: cs.outlineVariant,
+                activeThumbColor: cs.primary,
+                activeTrackColor: cs.primary.withValues(alpha: 0.3),
+                inactiveThumbColor: cs.onSurface,
+                inactiveTrackColor: cs.surface,
               )
-            else
-              trailing ?? Icon(
+            else if (trailing != null)
+              trailing!
+            else if (onTap != null)
+              Icon(
                 Icons.chevron_right,
                 color: cs.onSurfaceVariant,
                 size: 24.sp,

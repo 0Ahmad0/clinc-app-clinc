@@ -1,8 +1,13 @@
 abstract class AppRoutes {
   static const settings = '/settings';
+  static const changePassword = '/settings/change-password';
+  static const about = '/settings/about';
+  static const privacyPolicy = '/settings/privacy-policy';
+  static const contactSupport = '/settings/contact-support';
+  static const help = '/settings/help';
   static const notifications = '/notifications';
-  static const reports = '/import';
-  static const appointmentsDetails = '/appointment_detalis';
+  static const reports = '/reports';
+  static const appointmentsDetails = '/appointment-details';
   static const appointments = '/appointments';
   static const services = '/services';
   static const addDoctor = '/add_doctor';

@@ -2,7 +2,6 @@ import 'package:clinc_app_clinc/app/core/widgets/app_text_filed_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../controllers/forgot_password_controller.dart';
 

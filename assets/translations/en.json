@@ -80,7 +80,7 @@
       "back_to_login": "Back to Login"
     },
     "messages": {
-      "success": "Reset link sent successfully, please check your inbox.",
+      "success": "Verification code sent successfully. Check your inbox.",
       "required_field": "Please enter the required data"
     }
   },
@@ -109,7 +109,10 @@
     },
     "messages": {
       "still_pending": "Application is still pending, please wait.",
-      "approved": "Approved! Redirecting..."
+      "approved": "Approved! Redirecting...",
+      "rejected": "The clinic registration request was rejected",
+      "missing_reference": "Registration reference is missing. Please log in again.",
+      "support_not_configured": "Support contact details are not configured yet"
     }
   },
   "complete_profile": {
@@ -124,6 +127,7 @@
       "banner_hint": "Tap to add banner",
       "specialty": "Medical Specialty",
       "specialty_hint": "Select specialty",
+      "insurances": "Accepted Insurances",
       "phone": "Clinic Phone",
       "phone_hint": "For patient contact"
     },
@@ -144,6 +148,12 @@
     },
     "buttons": {
       "save_finish": "Save & Finish"
+    },
+    "messages": {
+      "phone_required": "Clinic phone number is required",
+      "phone_invalid": "Enter a valid phone number",
+      "images_required": "Clinic logo and cover image are required",
+      "schedule_invalid": "Add at least one work day with a valid start and end time"
     }
   },
   "home": {
@@ -160,16 +170,31 @@
     "appointments": "Appointments",
     "reports": "Reports"
   },
+  "main_layout": {
+    "cancel": "Cancel"
+  },
   "dashboard": {
     "welcome": "Welcome",
     "stats": {
       "doctors": "Doctors",
+      "patients": "Patients",
+      "today_appointments": "Today's Appointments",
+      "daily_income": "Daily Income",
       "reports": "Reports",
       "appointments": "Appointments",
       "services": "Services"
     },
     "todays_appointments": "Today's Appointments",
     "view_all": "View All",
+    "no_appointments": "No appointments scheduled for today",
+    "retry": "Try Again",
+    "clinic": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "currency": {
+      "sar": "SAR"
+    },
     "status": {
       "upcoming": "Upcoming",
       "cancelled": "Cancelled",
@@ -186,6 +211,15 @@
     "add_button": "Add New Doctor",
     "no_doctors": "No doctors added yet",
     "no_doctors_desc": "You can add a new doctor by pressing the button below",
+    "retry": "Try Again",
+    "experience_years": "{} years",
+    "filters": {
+      "all": "All"
+    },
+    "messages": {
+      "status_from_details": "Doctor availability can be changed from doctor details",
+      "delete_from_details": "Doctor deletion is available from doctor details"
+    },
     "status": {
       "active": "Active",
       "inactive": "Unavailable"
@@ -273,8 +307,26 @@
   "services_page": {
     "title": "Services & Specialties List",
     "tabs": {
+      "labs": "Lab Tests",
       "services": "Test Packages",
       "specialties": "Clinics & Specialties"
+    },
+    "add": "Add",
+    "save": "Save",
+    "cancel": "Cancel",
+    "currency": "SAR",
+    "price_dialog": {
+      "title": "Set Test Price",
+      "label": "Price"
+    },
+    "messages": {
+      "empty": "No service sections are available",
+      "not_added": "Not added to the clinic",
+      "not_enabled": "Not enabled",
+      "enabled_tests": "{} enabled tests",
+      "specialty_added": "Specialty added",
+      "doctor_required": "Add a doctor in this specialty first",
+      "price_required": "Enter a price greater than zero"
     },
     "headers": {
       "active_services": "Active Packages",
@@ -439,13 +491,20 @@
       "today": "Today",
       "week": "This Week",
       "month": "This Month",
+      "year": "This Year",
       "custom": "Custom"
     },
     "types": {
       "appointments": "Appointments Report",
+      "clinic": "Clinic Report",
       "revenue": "Revenue Report",
       "lab_results": "Lab Results Report",
       "doctors": "Doctors Report"
+    },
+    "formats": {
+      "title": "Export Format",
+      "pdf": "PDF",
+      "excel": "Excel"
     },
     "sections": {
       "summary": "Summary",
@@ -468,10 +527,12 @@
     "actions": {
       "generate": "Generate New Report",
       "save": "Save",
-      "view_pdf": "View PDF"
+      "view_pdf": "View PDF",
+      "view_file": "Open Report File"
     },
     "messages": {
       "empty": "No Reports",
+      "mock_file": "The mock report file was generated successfully",
       "empty_title": "No reports have been created yet",
       "empty_subtitle": "You can create a new report by clicking the button below"
     }
@@ -485,6 +546,14 @@
     "confirm": "Confirm",
     "cancel": "Cancel",
     "delete": "Delete",
+    "confirm_delete": "Do you want to delete this notification?",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "filters": {
+      "all": "All",
+      "unread": "Unread",
+      "read": "Read"
+    },
     "empty_title": "No notifications",
     "empty_subtitle": "New notifications will appear here when you receive them"
   },
@@ -526,7 +595,30 @@
     "close": "Close",
     "confirm": "Confirm",
     "validation_required": "This field is required",
-    "validation_invalid_email": "Invalid email address"
+    "validation_invalid_email": "Invalid email address",
+    "version": "Version",
+    "about_content": "Clinic App helps clinics manage doctors, appointments, services, notifications, and reports in one place.",
+    "privacy_content": "We use clinic and account information only to provide application features. Access is limited to authorized clinic users. Medical and account data must not be shared outside approved workflows.",
+    "contact_support_content": "Contact the support team using the details below.",
+    "help_doctors_title": "Managing doctors",
+    "help_doctors_body": "Open Doctors to add, review, or edit clinic doctors and their schedules.",
+    "help_appointments_title": "Managing appointments",
+    "help_appointments_body": "Open Appointments to search bookings and update their status.",
+    "help_reports_title": "Generating reports",
+    "help_reports_body": "Open Reports, select the report type and period, then choose an export format.",
+    "image_picker": {
+      "gallery": "Choose from gallery",
+      "camera": "Take a photo"
+    },
+    "change_password": {
+      "title": "Change Password",
+      "current": "Current Password",
+      "new": "New Password",
+      "confirmation": "Confirm New Password",
+      "submit": "Update Password",
+      "min_length": "Password must be at least 8 characters",
+      "confirmation_mismatch": "Password confirmation does not match"
+    }
   },
   "services": {
     "title": "Services Management",

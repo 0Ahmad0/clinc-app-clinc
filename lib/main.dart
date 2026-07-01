@@ -12,6 +12,7 @@ import 'app/core/constants/app_constants.dart';
 import 'app/core/theme/app_theme.dart';
 import 'app/routes/app_pages.dart';
 import 'app/routes/app_routes.dart';
+import 'app/services/storage_service.dart';
 import 'generated/codegen_loader.g.dart';
 
 Future<void> main() async {
@@ -20,7 +21,6 @@ Future<void> main() async {
     EasyLocalization.ensureInitialized(),
     ScreenUtil.ensureScreenSize(),
     GetStorage.init(),
-
   ]);
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -35,7 +35,7 @@ Future<void> main() async {
         Locale(AppConstants.arLang),
         Locale(AppConstants.enLang),
       ],
-      startLocale: Locale(AppConstants.arLang),
+      startLocale: StorageService.instance.locale,
       fallbackLocale: const Locale(AppConstants.arLang),
       path: AppConstants.translationPath,
       assetLoader: const CodegenLoader(),

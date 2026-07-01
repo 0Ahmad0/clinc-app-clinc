@@ -106,9 +106,9 @@ class CPScheduleWidget extends GetView<CompleteProfileController> {
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
         decoration: BoxDecoration(
           // لون خلفية التشيب (افتح قليلاً من الخلفية العادية)
-          color: colorScheme.surfaceVariant.withOpacity(0.3),
+          color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: colorScheme.outline.withOpacity(0.5)),
+          border: Border.all(color: colorScheme.outline.withValues(alpha: 0.5)),
         ),
         child: Text(
           time,

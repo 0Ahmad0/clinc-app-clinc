@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart'; // تأكد من المكتبة
-import '../../../app/core/widgets/app_app_bar_widget.dart';
-import '../../../app/core/widgets/app_padding_widget.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../app/core/widgets/app_scaffold_widget.dart';
 import '../controllers/register_controller.dart';
 import 'widgets/register_account_type_selector.dart';

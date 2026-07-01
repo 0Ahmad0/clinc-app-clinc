@@ -15,7 +15,7 @@ class PendingInfoWidget extends StatelessWidget {
           tr(LocaleKeys.pending_approval_title),
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
           textAlign: TextAlign.center,
         ),

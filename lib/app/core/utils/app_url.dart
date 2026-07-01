@@ -1,7 +1,4 @@
-
-
 // const baseServ = "http://192.168.1.114/";
-
 
 const baseServ = "https://api-dev.litaskunu.com/";
 const baseServSlashLess = "https://api-dev.litaskunu.com/";
@@ -19,6 +16,21 @@ const psychologist = "psychologist/";
 const app = "app/";
 
 class AppUrl {
+  static const clinicRegister = "${baseUrl}clinic/register";
+  static const clinicForgotPassword = "${baseUrl}clinic/forgot-password";
+  static const clinicVerifyOtp = "${baseUrl}clinic/verify-otp";
+  static const clinicResendOtp = "${baseUrl}clinic/resend-otp";
+  static const completeClinicProfile = "${baseUrl}clinic/complete-profile";
+  static const insurances = "${baseUrl}insurances";
+  static const clinicDashboard = "${baseUrl}clinic/dashboard";
+  static const clinicDoctors = "${baseUrl}clinic/doctors";
+  static const clinicAppointments = "${baseUrl}clinic/appointments";
+  static const clinicNotifications = "${baseUrl}clinic/notifications";
+  static const clinicRegistrationStatus =
+      "${baseUrl}clinic/registration-status";
+  static const clinicReports = "${baseUrl}clinic/reports";
+  static const clinicServices = "${baseUrl}clinic/services";
+
   /// User
   ///*******************************************************************************
   ///<------------------------------------------------------------------------------
@@ -28,7 +40,6 @@ class AppUrl {
   static const signup = "${baseUrl}register";
 
   static const logout = "${baseUrl}logout/";
-
 
   static const getProfile = '${baseUrl}profile';
   static const forgotPassword = '${baseUrl}forgot-password';

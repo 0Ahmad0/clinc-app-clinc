@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../app/core/widgets/app_padding_widget.dart';
 import '../../../app/core/widgets/app_scaffold_widget.dart';
 import '../controllers/otp_controller.dart';
 import 'widgets/otp_actions_widget.dart';

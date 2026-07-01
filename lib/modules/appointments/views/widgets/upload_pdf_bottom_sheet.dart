@@ -58,30 +58,37 @@ class UploadPdfBottomSheet extends StatelessWidget {
             14.verticalSpace,
             Text(
               tr(LocaleKeys.appointments_upload_title),
-              style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w800,
+              ),
             ),
             16.verticalSpace,
 
-            Obx(() => Container(
-              padding: EdgeInsets.all(14.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: cs.outlineVariant),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.picture_as_pdf, color: cs.error),
-                  10.horizontalSpace,
-                  Expanded(
-                    child: Text(
-                      fileName.value ?? tr(LocaleKeys.appointments_upload_no_file),
-                      style: theme.textTheme.bodyMedium?.copyWith(color: cs.onSurfaceVariant),
-                      overflow: TextOverflow.ellipsis,
+            Obx(
+              () => Container(
+                padding: EdgeInsets.all(14.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: cs.outlineVariant),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.picture_as_pdf, color: cs.error),
+                    10.horizontalSpace,
+                    Expanded(
+                      child: Text(
+                        fileName.value ??
+                            tr(LocaleKeys.appointments_upload_no_file),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            )),
+            ),
 
             12.verticalSpace,
 
@@ -96,22 +103,32 @@ class UploadPdfBottomSheet extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 if (filePath.value == null) {
-                  Get.snackbar('Error', tr(LocaleKeys.appointments_upload_validation_pdf_required));
+                  Get.snackbar(
+                    'Error',
+                    tr(LocaleKeys.appointments_upload_validation_pdf_required),
+                  );
                   return;
                 }
                 await controller.uploadPdfResult(filePath.value!);
                 Get.back();
-                Get.snackbar('Success', tr(LocaleKeys.appointments_upload_success));
+                Get.snackbar(
+                  'Success',
+                  tr(LocaleKeys.appointments_upload_success),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: cs.primary,
                 foregroundColor: cs.onPrimary,
                 padding: EdgeInsets.symmetric(vertical: 14.h),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
               ),
               child: Text(
                 tr(LocaleKeys.appointments_actions_save),
-                style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w800),
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
               ),
             ),
           ],

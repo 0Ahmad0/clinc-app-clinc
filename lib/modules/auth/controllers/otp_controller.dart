@@ -1,95 +1,97 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:easy_localization/easy_localization.dart';
 
-import '../../../generated/locale_keys.g.dart';
+import '../../../app/core/configuration/locator.dart';
+import '../../../app/core/helper/response_helper.dart';
+import '../../../app/domain/error_handler/network_exceptions.dart';
+import '../../../app/routes/app_routes.dart';
+import '../data/clinic_auth_model.dart';
+import '../domain/repositories/clinic_auth_repository.dart';
 
 class OtpController extends GetxController {
-  // ── Arguments ──
-  // نستقبل البريد أو الهاتف الذي تم إرسال الكود له
-  final String emailOrPhone = Get.arguments ?? "info@clinic.com";
-
-  // ── Controllers ──
   final TextEditingController otpController = TextEditingController();
-
-  // ── State Variables ──
   final RxBool isLoading = false.obs;
-  final RxInt remainingSeconds = 60.obs; // العداد يبدأ من 60 ثانية
+  final RxInt remainingSeconds = 60.obs;
   final RxBool canResend = false.obs;
+  late final ClinicAuthRepository _repository;
   Timer? _timer;
+
+  String get identifier {
+    final arguments = Get.arguments;
+    if (arguments is Map) return arguments['identifier']?.toString() ?? '';
+    return arguments?.toString() ?? '';
+  }
 
   @override
   void onInit() {
-    super.onInit();
+    _repository = locator<ClinicAuthRepository>();
     startTimer();
+    super.onInit();
   }
 
-  // ── Timer Logic ──
   void startTimer() {
     remainingSeconds.value = 60;
     canResend.value = false;
     _timer?.cancel();
-
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (remainingSeconds.value > 0) {
         remainingSeconds.value--;
       } else {
         canResend.value = true;
-        _timer?.cancel();
+        timer.cancel();
       }
     });
   }
 
-  // ── Actions ──
   Future<void> verifyOtp() async {
-    if (otpController.text.length < 4) return;
+    if (isLoading.value || otpController.text.length != 4) return;
 
-    try {
-      isLoading.value = true;
-      // Simulate API verification
-      await Future.delayed(const Duration(seconds: 2));
+    isLoading.value = true;
+    final result = await _repository.verifyOtp(
+      VerifyOtpRequest(identifier: identifier, otp: otpController.text),
+    );
+    isLoading.value = false;
 
-      // TODO: Verify Logic Here
-
-      Get.snackbar(
-        'Success',
-        tr(LocaleKeys.otp_messages_success),
-        backgroundColor: Colors.green.withOpacity(0.1),
-        colorText: Colors.green,
-      );
-
-      // Go to Complete Profile or Home
-      // Get.offAllNamed(Routes.COMPLETE_PROFILE);
-
-    } catch (e) {
-      Get.snackbar('Error', tr(LocaleKeys.otp_messages_invalid_code));
-    } finally {
-      isLoading.value = false;
-    }
+    result.when(
+      success: (response) {
+        if (!response.isSuccess) {
+          ResponseHelper.onFailure(message: response.message);
+          return;
+        }
+        ResponseHelper.onSuccess(message: response.message);
+        Get.offAllNamed(AppRoutes.login);
+      },
+      failure: (exception) => ResponseHelper.onFailure(
+        message: NetworkExceptions.getErrorMessage(exception),
+      ),
+    );
   }
 
   Future<void> resendCode() async {
-    if (!canResend.value) return;
+    if (!canResend.value || isLoading.value) return;
 
-    try {
-      // Simulate API Resend
-      await Future.delayed(const Duration(seconds: 1));
+    isLoading.value = true;
+    final result = await _repository.resendOtp(
+      ResendOtpRequest(identifier: identifier),
+    );
+    isLoading.value = false;
 
-      Get.snackbar(
-        'Sent',
-        tr(LocaleKeys.otp_messages_resend_success),
-        backgroundColor: Colors.blue.withOpacity(0.1),
-        colorText: Colors.blue,
-      );
-
-      // Restart Timer
-      startTimer();
-      otpController.clear();
-
-    } catch (e) {
-      Get.snackbar('Error', e.toString());
-    }
+    result.when(
+      success: (response) {
+        if (!response.isSuccess) {
+          ResponseHelper.onFailure(message: response.message);
+          return;
+        }
+        ResponseHelper.onSuccess(message: response.message);
+        otpController.clear();
+        startTimer();
+      },
+      failure: (exception) => ResponseHelper.onFailure(
+        message: NetworkExceptions.getErrorMessage(exception),
+      ),
+    );
   }
 
   @override

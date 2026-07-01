@@ -1,57 +1,61 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:easy_localization/easy_localization.dart';
 
+import '../../../app/core/configuration/locator.dart';
+import '../../../app/core/helper/response_helper.dart';
+import '../../../app/domain/error_handler/network_exceptions.dart';
+import '../../../app/routes/app_routes.dart';
 import '../../../generated/locale_keys.g.dart';
+import '../data/clinic_auth_model.dart';
+import '../domain/repositories/clinic_auth_repository.dart';
 
 class ForgotPasswordController extends GetxController {
-  // ── Text Controllers ──
   final TextEditingController identifierController = TextEditingController();
-
-  // ── State Variables ──
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final RxBool isLoading = false.obs;
+  late final ClinicAuthRepository _repository;
 
-  // ── Actions ──
+  @override
+  void onInit() {
+    _repository = locator<ClinicAuthRepository>();
+    super.onInit();
+  }
 
   Future<void> sendResetLink() async {
-    if (!formKey.currentState!.validate()) return;
+    if (isLoading.value || !(formKey.currentState?.validate() ?? false)) return;
 
-    try {
-      isLoading.value = true;
+    final identifier = identifierController.text.trim();
+    isLoading.value = true;
+    final result = await _repository.forgotPassword(
+      ForgotPasswordRequest(identifier: identifier),
+    );
+    isLoading.value = false;
 
-      // Simulate API Call
-      await Future.delayed(const Duration(seconds: 2));
-
-      // TODO: Call API to send OTP or Reset Link
-
-      Get.snackbar(
-        tr(LocaleKeys.forgot_password_title),
-        tr(LocaleKeys.forgot_password_messages_success),
-        backgroundColor: Colors.green.withOpacity(0.1),
-        colorText: Colors.green,
-        duration: const Duration(seconds: 4),
-      );
-
-      // يمكن التوجيه لصفحة إدخال الـ OTP
-      // Get.toNamed(Routes.OTP_VERIFICATION, arguments: identifierController.text);
-    } catch (e) {
-      Get.snackbar('Error', e.toString());
-    } finally {
-      isLoading.value = false;
-    }
+    result.when(
+      success: (response) {
+        if (!response.isSuccess) {
+          ResponseHelper.onFailure(message: response.message);
+          return;
+        }
+        ResponseHelper.onSuccess(message: response.message);
+        Get.toNamed(
+          AppRoutes.otp,
+          arguments: {'identifier': identifier, 'purpose': 'password_reset'},
+        );
+      },
+      failure: (exception) => ResponseHelper.onFailure(
+        message: NetworkExceptions.getErrorMessage(exception),
+      ),
+    );
   }
 
-  void backToLogin() {
-    Get.back();
-  }
+  void backToLogin() => Get.back();
 
-  // ── Validators ──
   String? validateRequired(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.trim().isEmpty) {
       return tr(LocaleKeys.forgot_password_messages_required_field);
     }
-    // يمكن إضافة تحقق من صحة البريد الإلكتروني هنا إذا لزم الأمر
     return null;
   }
 

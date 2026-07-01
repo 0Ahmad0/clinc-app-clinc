@@ -1,59 +1,70 @@
-enum NotificationType {
-  appointment,
-  labResult,
-  payment,
-  message,
-}
+enum NotificationType { appointment, labResult, payment, message, system }
 
-enum NotificationStatus {
-  unread,
-  read,
-}
+enum NotificationStatus { unread, read }
 
 class NotificationModel {
-  final String id;
-  final String title;
-  final String body;
-  final NotificationType type;
-  final NotificationStatus status;
-  final DateTime createdAt;
-  final String? relatedId; // ID للموعد أو الفاتورة المرتبطة
-
-  NotificationModel({
+  const NotificationModel({
     required this.id,
     required this.title,
     required this.body,
     required this.type,
     required this.status,
     required this.createdAt,
+    this.icon,
     this.relatedId,
   });
 
-  // للتحقق إذا كان الإشعار اليوم
-  bool get isToday {
-    final now = DateTime.now();
-    return createdAt.year == now.year &&
-        createdAt.month == now.month &&
-        createdAt.day == now.day;
+  final String id;
+  final String title;
+  final String body;
+  final NotificationType type;
+  final NotificationStatus status;
+  final DateTime createdAt;
+  final String? icon;
+  final String? relatedId;
+
+  bool get isRead => status == NotificationStatus.read;
+
+  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    return NotificationModel(
+      id: json['notification_id'].toString(),
+      title: json['title'] as String,
+      body: json['subtitle'] as String? ?? json['body'] as String? ?? '',
+      type: _typeFromJson(json['type'] as String?),
+      status: json['is_read'] == true
+          ? NotificationStatus.read
+          : NotificationStatus.unread,
+      createdAt: DateTime.parse(json['created_at'] as String),
+      icon: json['icon'] as String?,
+      relatedId: json['related_id']?.toString(),
+    );
   }
 
-  // للتحقق إذا كان الإشعار البارحة
-  bool get isYesterday {
-    final yesterday = DateTime.now().subtract(const Duration(days: 1));
-    return createdAt.year == yesterday.year &&
-        createdAt.month == yesterday.month &&
-        createdAt.day == yesterday.day;
+  NotificationModel copyWith({NotificationStatus? status}) {
+    return NotificationModel(
+      id: id,
+      title: title,
+      body: body,
+      type: type,
+      status: status ?? this.status,
+      createdAt: createdAt,
+      icon: icon,
+      relatedId: relatedId,
+    );
   }
 
-  // للحصول على التاريخ المنسق
-  String get formattedDate {
-    if (isToday) return 'اليوم';
-    if (isYesterday) return 'البارحة';
-    return '${createdAt.day}/${createdAt.month}/${createdAt.year}';
-  }
-
-  // للحصول على الوقت المنسق
-  String get formattedTime {
-    return '${createdAt.hour}:${createdAt.minute.toString().padLeft(2, '0')}';
+  static NotificationType _typeFromJson(String? value) {
+    switch (value) {
+      case 'appointment':
+        return NotificationType.appointment;
+      case 'lab_result':
+        return NotificationType.labResult;
+      case 'payment':
+        return NotificationType.payment;
+      case 'message':
+        return NotificationType.message;
+      default:
+        return NotificationType.system;
+    }
   }
 }

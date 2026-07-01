@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../../app/routes/app_routes.dart';
 import '../../../generated/locale_keys.g.dart';
 import '../controllers/settings_controller.dart';
 import 'widgets/profile_header.dart';
@@ -41,10 +44,12 @@ class SettingsView extends GetView<SettingsController> {
 
           // 2. Profile Header
           SliverToBoxAdapter(
-            child: Obx(() => ProfileHeader(
-              profile: controller.profile.value,
-              onEdit: () => _showEditProfileDialog(context),
-            )),
+            child: Obx(
+              () => ProfileHeader(
+                profile: controller.profile.value,
+                onEdit: () => _showImagePickerDialog(context),
+              ),
+            ),
           ),
 
           // 3. Settings Sections
@@ -66,9 +71,7 @@ class SettingsView extends GetView<SettingsController> {
                       icon: Icons.lock_outline,
                       title: tr(LocaleKeys.settings_password),
                       subtitle: tr(LocaleKeys.settings_password_subtitle),
-                      onTap: () {
-                        // TODO: الانتقال لصفحة تغيير كلمة المرور
-                      },
+                      onTap: () => Get.toNamed(AppRoutes.changePassword),
                     ),
                   ],
                 ),
@@ -77,24 +80,30 @@ class SettingsView extends GetView<SettingsController> {
                 SettingsSection(
                   title: tr(LocaleKeys.settings_sections_notifications),
                   children: [
-                    Obx(() => SettingsTile.switchTile(
-                      icon: Icons.notifications_outlined,
-                      title: tr(LocaleKeys.settings_app_notifications),
-                      value: controller.appNotificationsEnabled.value,
-                      onChanged: controller.toggleAppNotifications,
-                    )),
-                    Obx(() => SettingsTile.switchTile(
-                      icon: Icons.email_outlined,
-                      title: tr(LocaleKeys.settings_email_notifications),
-                      value: controller.emailNotificationsEnabled.value,
-                      onChanged: controller.toggleEmailNotifications,
-                    )),
-                    Obx(() => SettingsTile.switchTile(
-                      icon: Icons.sms_outlined,
-                      title: tr(LocaleKeys.settings_sms_notifications),
-                      value: controller.smsNotificationsEnabled.value,
-                      onChanged: controller.toggleSmsNotifications,
-                    )),
+                    Obx(
+                      () => SettingsTile.switchTile(
+                        icon: Icons.notifications_outlined,
+                        title: tr(LocaleKeys.settings_app_notifications),
+                        value: controller.appNotificationsEnabled.value,
+                        onChanged: controller.toggleAppNotifications,
+                      ),
+                    ),
+                    Obx(
+                      () => SettingsTile.switchTile(
+                        icon: Icons.email_outlined,
+                        title: tr(LocaleKeys.settings_email_notifications),
+                        value: controller.emailNotificationsEnabled.value,
+                        onChanged: controller.toggleEmailNotifications,
+                      ),
+                    ),
+                    Obx(
+                      () => SettingsTile.switchTile(
+                        icon: Icons.sms_outlined,
+                        title: tr(LocaleKeys.settings_sms_notifications),
+                        value: controller.smsNotificationsEnabled.value,
+                        onChanged: controller.toggleSmsNotifications,
+                      ),
+                    ),
                   ],
                 ),
 
@@ -102,19 +111,23 @@ class SettingsView extends GetView<SettingsController> {
                 SettingsSection(
                   title: tr(LocaleKeys.settings_sections_appearance),
                   children: [
-                    SettingsTile(
-                      icon: Icons.language_outlined,
-                      title: tr(LocaleKeys.settings_language),
-                      subtitle: controller.currentLanguage.value == 'ar'
-                          ? 'العربية'
-                          : 'English',
-                      onTap: () => _showLanguageDialog(context),
+                    Obx(
+                      () => SettingsTile(
+                        icon: Icons.language_outlined,
+                        title: tr(LocaleKeys.settings_language),
+                        subtitle: controller.currentLanguage.value == 'ar'
+                            ? 'العربية'
+                            : 'English',
+                        onTap: () => _showLanguageDialog(context),
+                      ),
                     ),
-                    SettingsTile(
-                      icon: Icons.brightness_6_outlined,
-                      title: tr(LocaleKeys.settings_theme),
-                      subtitle: _getThemeName(controller.themeMode.value),
-                      onTap: () => _showThemeDialog(context),
+                    Obx(
+                      () => SettingsTile(
+                        icon: Icons.brightness_6_outlined,
+                        title: tr(LocaleKeys.settings_theme),
+                        subtitle: _getThemeName(controller.themeMode.value),
+                        onTap: () => _showThemeDialog(context),
+                      ),
                     ),
                   ],
                 ),
@@ -126,75 +139,61 @@ class SettingsView extends GetView<SettingsController> {
                     SettingsTile(
                       icon: Icons.help_outline,
                       title: tr(LocaleKeys.settings_help),
-                      onTap: () {
-                        // TODO: الانتقال لصفحة المساعدة
-                      },
+                      onTap: () => Get.toNamed(AppRoutes.help),
                     ),
                     SettingsTile(
                       icon: Icons.contact_support_outlined,
                       title: tr(LocaleKeys.settings_contact_support),
-                      onTap: () {
-                        // TODO: فتح شات الدعم
-                      },
+                      onTap: () => Get.toNamed(AppRoutes.contactSupport),
                     ),
                     SettingsTile(
                       icon: Icons.privacy_tip_outlined,
                       title: tr(LocaleKeys.settings_privacy_policy),
-                      onTap: () {
-                        // TODO: فتح سياسة الخصوصية
-                      },
+                      onTap: () => Get.toNamed(AppRoutes.privacyPolicy),
                     ),
                     SettingsTile(
                       icon: Icons.info_outline,
                       title: tr(LocaleKeys.settings_about),
-                      onTap: () {
-                        // TODO: فتح صفحة حول التطبيق
-                      },
+                      onTap: () => Get.toNamed(AppRoutes.about),
                     ),
                   ],
                 ),
 
                 // Logout Button
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Get.dialog(
-                        AlertDialog(
-                          title: Text(tr(LocaleKeys.settings_logout)),
-                          content: Text(tr(LocaleKeys.settings_confirm_logout)),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Get.back(),
-                              child: Text(tr(LocaleKeys.settings_cancel)),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Get.back();
-                                // TODO: تنفيذ عملية تسجيل الخروج
-                              },
-                              child: Text(
-                                tr(LocaleKeys.settings_confirm),
-                                style: TextStyle(color: cs.error),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 8.h,
+                  ),
+                  child: Obx(
+                    () => ElevatedButton.icon(
+                      onPressed: controller.isLoading.value
+                          ? null
+                          : () => _confirmLogout(context),
+                      icon: controller.isLoading.value
+                          ? SizedBox(
+                              width: 20.w,
+                              height: 20.w,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: cs.onPrimary,
                               ),
-                            ),
-                          ],
+                            )
+                          : Icon(Icons.logout, color: cs.onPrimary),
+                      label: Text(
+                        tr(LocaleKeys.settings_logout),
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: cs.onPrimary,
+                          fontWeight: FontWeight.w700,
                         ),
-                      );
-                    },
-                    icon: Icon(Icons.logout, color: cs.onPrimary),
-                    label: Text(
-                      tr(LocaleKeys.settings_logout),
-                      style: theme.textTheme.labelLarge?.copyWith(
-                        color: cs.onPrimary,
-                        fontWeight: FontWeight.w700,
                       ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: cs.error,
-                      padding: EdgeInsets.symmetric(vertical: 14.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: cs.error,
+                        disabledBackgroundColor: cs.error.withValues(alpha: .6),
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
                       ),
                     ),
                   ),
@@ -228,17 +227,60 @@ class SettingsView extends GetView<SettingsController> {
     );
   }
 
-  void _showLanguageDialog(BuildContext context) {
-    showDialog(
+  Future<void> _showImagePickerDialog(BuildContext context) async {
+    final source = await showModalBottomSheet<ImageSource>(
       context: context,
-      builder: (context) => const LanguageDialog(),
+      builder: (sheetContext) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: Text(tr('settings.image_picker.gallery')),
+              onTap: () => Navigator.of(sheetContext).pop(ImageSource.gallery),
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt_outlined),
+              title: Text(tr('settings.image_picker.camera')),
+              onTap: () => Navigator.of(sheetContext).pop(ImageSource.camera),
+            ),
+          ],
+        ),
+      ),
     );
+    if (source != null) await controller.pickProfileImage(source);
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    showDialog(context: context, builder: (context) => const LanguageDialog());
   }
 
   void _showThemeDialog(BuildContext context) {
-    showDialog(
+    showDialog(context: context, builder: (context) => const ThemeDialog());
+  }
+
+  Future<void> _confirmLogout(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => const ThemeDialog(),
+      builder: (dialogContext) => AlertDialog(
+        title: Text(tr(LocaleKeys.settings_logout)),
+        content: Text(tr(LocaleKeys.settings_confirm_logout)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(tr(LocaleKeys.settings_cancel)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(
+              tr(LocaleKeys.settings_confirm),
+              style: TextStyle(
+                color: Theme.of(dialogContext).colorScheme.error,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
+    if (confirmed == true) await controller.logout();
   }
 }

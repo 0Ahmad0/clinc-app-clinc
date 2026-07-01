@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../app/core/widgets/app_svg_widget.dart';
+import '../../../../app/core/constants/app_assets.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../controllers/otp_controller.dart';
 
@@ -15,16 +16,16 @@ class OtpHeaderWidget extends GetView<OtpController> {
     return Column(
       children: [
         AppSvgWidget(
-          path: 'assets/icons/otp_verification.svg',
+          path: AppAssets.emailSendIcon,
           height: 120.h,
           width: 120.w,
         ),
         32.verticalSpace,
         Text(
           tr(LocaleKeys.otp_title),
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         12.verticalSpace,
@@ -32,13 +33,12 @@ class OtpHeaderWidget extends GetView<OtpController> {
           textAlign: TextAlign.center,
           text: TextSpan(
             text: '${tr(LocaleKeys.otp_subtitle)}\n',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey,
-              height: 1.5,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: Colors.grey, height: 1.5),
             children: [
               TextSpan(
-                text: controller.emailOrPhone,
+                text: controller.identifier,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).primaryColor,

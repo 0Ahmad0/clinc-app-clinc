@@ -63,7 +63,7 @@ class ReportFiltersWidget extends GetView<ReportsController> {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                for (final r in [ReportRange.today, ReportRange.week, ReportRange.month])
+                for (final r in ReportRange.values)
                   Padding(
                     padding: EdgeInsets.only(right: 8.w),
                     child: _FilterChip(
@@ -72,23 +72,6 @@ class ReportFiltersWidget extends GetView<ReportsController> {
                       onTap: () => controller.changeRange(r),
                     ),
                   ),
-                _FilterChip(
-                  title: tr(ReportRange.custom.key()),
-                  selected: selected == ReportRange.custom,
-                  onTap: () async {
-                    final now = DateTime.now();
-                    final range = await showDateRangePicker(
-                      context: context,
-                      firstDate: DateTime(now.year - 1),
-                      lastDate: DateTime(now.year + 1),
-                      initialDateRange: DateTimeRange(
-                        start: now.subtract(const Duration(days: 7)),
-                        end: now,
-                      ),
-                    );
-                    if (range != null) controller.setCustomRange(range);
-                  },
-                ),
               ],
             ),
           );
@@ -101,7 +84,7 @@ class ReportFiltersWidget extends GetView<ReportsController> {
     switch (type) {
       case ReportType.appointments:
         return cs.primary;
-      case ReportType.labResults:
+      case ReportType.clinic:
         return cs.secondary;
       case ReportType.revenue:
         return Colors.green;
@@ -140,16 +123,18 @@ class _FilterChip extends StatelessWidget {
           color: selected ? chipColor : cs.surface,
           borderRadius: BorderRadius.circular(999),
           border: Border.all(
-            color: selected ? chipColor.withOpacity(0.5) : cs.outlineVariant,
+            color: selected
+                ? chipColor.withValues(alpha: 0.5)
+                : cs.outlineVariant,
           ),
           boxShadow: selected
               ? [
-            BoxShadow(
-              color: chipColor.withOpacity(0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ]
+                  BoxShadow(
+                    color: chipColor.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
               : [],
         ),
         child: Text(

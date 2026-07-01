@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../app/core/widgets/app_button_widget.dart';
-import '../../../../app/core/widgets/app_loading_widget.dart';
 import '../../../../app/core/widgets/app_text_button_widget.dart';
 import '../../../../generated/locale_keys.g.dart';
 import '../../controllers/register_controller.dart';
@@ -17,13 +16,14 @@ class RegisterActionsWidget extends GetView<RegisterController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Obx(()=>
-        AppButtonWidget(
-          isLoading: controller.isLoading.value,
-          text: tr(LocaleKeys.register_buttons_submit),
-          onPressed: controller.register,
-          // height: 50.h,
-        )),
+        Obx(
+          () => AppButtonWidget(
+            isLoading: controller.isLoading.value,
+            text: tr(LocaleKeys.register_buttons_submit),
+            onPressed: controller.register,
+            // height: 50.h,
+          ),
+        ),
 
         14.verticalSpace,
 

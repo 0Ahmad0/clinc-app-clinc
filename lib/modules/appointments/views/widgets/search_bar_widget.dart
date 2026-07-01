@@ -20,21 +20,23 @@ class SearchBarWidget extends GetView<AppointmentsController> {
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withOpacity(0.05),
+            color: cs.shadow.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: TextField(
-        onChanged: (value) {
-          // TODO: Implement search functionality
-        },
+        controller: controller.searchController,
+        onChanged: controller.search,
         decoration: InputDecoration(
           hintText: tr(LocaleKeys.appointments_search_hint),
           prefixIcon: Icon(Icons.search, color: cs.primary),
           border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 14.h,
+          ),
         ),
       ),
     );
