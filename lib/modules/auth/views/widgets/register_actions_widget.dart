@@ -17,12 +17,13 @@ class RegisterActionsWidget extends GetView<RegisterController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        Obx(()=>
         AppButtonWidget(
           isLoading: controller.isLoading.value,
           text: tr(LocaleKeys.register_buttons_submit),
           onPressed: controller.register,
           // height: 50.h,
-        ),
+        )),
 
         14.verticalSpace,
 

@@ -27,6 +27,7 @@
       "clinic_name_hint": "مثال: عيادة الشفاء / مخبر الأمل",
       "license_number": "رقم الترخيص",
       "license_hint": "رقم الترخيص المعتمد",
+      "email_hint": "البريد الإلكتروني",
       "account_type": "نوع الحساب",
       "password": "كلمة المرور",
       "confirm_password": "تأكيد كلمة المرور"
@@ -43,6 +44,7 @@
     },
     "messages": {
       "required_field": "هذا الحقل مطلوب",
+      "email_invalid": "الرجاء إدخال عنوان بريد إلكتروني صحيح",
       "password_mismatch": "كلمتا المرور غير متطابقتين",
       "type_required": "اختر نوع الحساب"
     }

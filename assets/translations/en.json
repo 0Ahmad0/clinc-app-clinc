@@ -27,6 +27,7 @@
       "clinic_name_hint": "e.g. Al-Shifa Clinic / Hope Lab",
       "license_number": "License Number",
       "license_hint": "Official license number",
+      "email_hint": "Official email",
       "account_type": "Account Type",
       "password": "Password",
       "confirm_password": "Confirm Password"
@@ -43,6 +44,7 @@
     },
     "messages": {
       "required_field": "This field is required",
+      "email_invalid": "Please enter a valid email address",
       "password_mismatch": "Passwords do not match",
       "type_required": "Please select account type"
     }

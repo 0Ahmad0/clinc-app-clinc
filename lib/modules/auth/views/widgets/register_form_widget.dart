@@ -26,6 +26,16 @@ class RegisterFormWidget extends GetView<RegisterController> {
           ),
           16.verticalSpace,
 
+
+          // Email
+          AppTextFormFieldWidget(
+            controller: controller.emailController,
+            hintText: tr(LocaleKeys.register_fields_email_hint),
+            prefixIcon: Icons.email_outlined,
+            validator: controller.validateEmail,
+            textInputAction: TextInputAction.next,
+          ),
+          16.verticalSpace,
           // License
           AppTextFormFieldWidget(
             controller: controller.licenseController,

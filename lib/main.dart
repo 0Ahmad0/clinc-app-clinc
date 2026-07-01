@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 
 import 'app/bindings/initial_binding.dart';
 import 'app/controllers/settings_app_controller.dart';
+import 'app/core/configuration/locator.dart';
 import 'app/core/constants/app_constants.dart';
 import 'app/core/theme/app_theme.dart';
 import 'app/routes/app_pages.dart';
@@ -19,12 +20,15 @@ Future<void> main() async {
     EasyLocalization.ensureInitialized(),
     ScreenUtil.ensureScreenSize(),
     GetStorage.init(),
+
   ]);
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  setupLocator();
   Get.put(SettingsAppController(), permanent: true);
+
   runApp(
     EasyLocalization(
       supportedLocales: const [
@@ -71,7 +75,7 @@ class App extends StatelessWidget {
               defaultTransition: Transition.upToDown,
               debugShowCheckedModeBanner: false,
               getPages: AppPages.routes,
-              initialRoute: AppRoutes.mainLayout,
+              initialRoute: AppRoutes.initial,
               builder: (context, child) {
                 return MediaQuery(
                   data: MediaQuery.of(

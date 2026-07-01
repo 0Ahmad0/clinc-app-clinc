@@ -5,7 +5,7 @@ extension AccountTypeX on AccountType {
     switch (this) {
       case AccountType.clinic:
         return 'register.account_type.clinic';
-      case AccountType.clinicWithLab:
+      case AccountType.both:
         return 'register.account_type.clinic_with_lab';
       case AccountType.lab:
         return 'register.account_type.lab';

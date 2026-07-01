@@ -67,4 +67,20 @@ abstract class AppAssets {
   static const String healthAnalysisAnimation =
       '$_lottiePath/health_analysis_lottie.json';
   static const String calendarAnimation = '$_lottiePath/calendar_lottie.json';
+
+
+
+  /// information
+  static const String snackbarSuccess = '$_iconsPath/ep-success.svg';
+  static const String snackbarFailure = '$_iconsPath/ep-alert.svg';
+  static const String snackbarWarning = '$_iconsPath/ep-caution.svg';
+
+  static const String dialogWarning = '$_iconsPath/typcn_warning.svg';
+  static const String dialogSuccess = '$_iconsPath/icon-park-solid_success.svg';
+  static const String dialogSafety = '$_iconsPath/Safety.svg';
+  static const String errorData = '$_iconsPath/folder.gif';
+  static const String emptyData = '$_iconsPath/no-data.gif';
+  static const String notFoundIcon = '$_iconsPath/not_found.svg';
+  static const String imageDefaultIcon = '$_iconsPath/image_default.svg';
+  static const String profileInfo = '$_iconsPath/profile_info.png';
 }

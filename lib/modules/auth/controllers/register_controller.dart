@@ -8,6 +8,7 @@ import '../../../generated/locale_keys.g.dart';
 class RegisterController extends GetxController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController licenseController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
@@ -24,6 +25,16 @@ class RegisterController extends GetxController {
   String? validateRequired(String? value) {
     if (value == null || value.trim().isEmpty) {
       return tr(LocaleKeys.register_messages_required_field);
+    }
+    return null;
+  }
+
+  String? validateEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return tr(LocaleKeys.register_messages_required_field);
+    }
+    if (!GetUtils.isEmail(value.trim())) {
+      return tr(LocaleKeys.register_messages_email_invalid);
     }
     return null;
   }
@@ -72,6 +83,7 @@ class RegisterController extends GetxController {
   void onClose() {
     nameController.dispose();
     licenseController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.onClose();

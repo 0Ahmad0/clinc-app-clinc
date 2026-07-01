@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:easy_localization/easy_localization.dart';
+import '../../../app/core/configuration/locator.dart';
+import '../../../app/core/helper/response_helper.dart';
 import '../../../app/data/profile_model.dart';
+import '../../../app/data/user.dart';
+import '../../../app/domain/error_handler/network_exceptions.dart';
+import '../../../app/routes/app_routes.dart';
 import '../../../app/services/storage_service.dart';
+import '../../auth/domain/repositories/auth_repository.dart';
 
 class SettingsController extends GetxController {
   // ========== Services ==========
   // final StorageService _storage = Get.find<StorageService>();
   // final AuthService _auth = Get.find<AuthService>();
-
+  late AuthRepository _repository;
   // ========== Loading States ==========
   final RxBool isLoading = false.obs;
   final RxBool isSavingProfile = false.obs;
@@ -35,6 +41,7 @@ class SettingsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _repository = locator<AuthRepository>();
     _loadSettings();
     _loadUserProfile();
   }
@@ -66,6 +73,7 @@ class SettingsController extends GetxController {
   // ========== Load User Profile ==========
   Future<void> _loadUserProfile() async {
     try {
+      print("object");
       // TODO: Load from API
       // final response = await _api.getUserProfile();
       // profile.value = ProfileModel.fromJson(response.data);
@@ -254,28 +262,64 @@ class SettingsController extends GetxController {
     }
   }
 
+
+
+  Future<bool?> getProfile({bool isSplash = true}) async {
+    final response = await _repository.getProfile();
+
+    bool isGetProfile = false;
+    await response.when(
+      success: (data) async {
+        final fetchedUser = data.result;
+        // user = fetchedUser;
+
+        if (fetchedUser != null) {
+          // الآن الـ Compiler متأكد أن fetchedUser ليس null
+          await StorageService.instance.cacheUserModel(fetchedUser.toJson());
+          updateUser(fetchedUser);
+        }
+
+        print('=== PROFILE LOADED ===');
+        print('profileImage: ${fetchedUser?.profileImage}');
+        print('personalPhoto: ${fetchedUser?.personalPhoto}');
+        print('user full json: ${fetchedUser?.toJson()}');
+
+        isGetProfile = true;
+
+        Get.offNamed(AppRoutes.mainLayout);
+      },
+      failure: (networkException) async {
+
+        if (isSplash) Get.offAllNamed(AppRoutes.login);
+      },
+    );
+    return isGetProfile;
+  }
+
   Future<void> logout() async {
-    try {
-      isLoading(true);
-
-      // TODO: Call logout API
-      // await _auth.logout();
-
-      await Future.delayed(const Duration(milliseconds: 800));
-
-      // Clear storage
-      // _storage.erase();
-
-      // Navigate to login
-      // Get.offAllNamed('/login');
-
-      _showSuccessSnackbar('Logged out successfully');
-    } catch (e) {
-      debugPrint('Error logging out: $e');
-      _showErrorSnackbar('Failed to logout');
-    } finally {
-      isLoading(false);
-    }
+    isLoading(true);
+    final result = await _repository.logout();
+    result.when(
+      success: (data) async {
+        isLoading(false);
+        await StorageService.instance.depose();
+        ResponseHelper.onSuccess(
+          message: data.message ,
+          // message: data.message ?? "navbar.profile.success".tr,
+        );
+        Get.offAllNamed(AppRoutes.login);
+      },
+      failure: (error) {
+        isLoading(false);
+        ResponseHelper.onFailure(
+          message: NetworkExceptions.getErrorMessage(error),
+        );
+      },
+    );
+  }
+  void updateUser(UserModel userModel) {
+    // user = userModel;
+    update();
   }
 
   // ========== Helper Methods ==========

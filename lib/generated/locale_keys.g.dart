@@ -25,6 +25,7 @@ abstract class  LocaleKeys {
   static const register_fields_clinic_name_hint = 'register.fields.clinic_name_hint';
   static const register_fields_license_number = 'register.fields.license_number';
   static const register_fields_license_hint = 'register.fields.license_hint';
+  static const register_fields_email_hint = 'register.fields.email_hint';
   static const register_fields_account_type = 'register.fields.account_type';
   static const register_fields_password = 'register.fields.password';
   static const register_fields_confirm_password = 'register.fields.confirm_password';
@@ -38,6 +39,7 @@ abstract class  LocaleKeys {
   static const register_buttons_login_action = 'register.buttons.login_action';
   static const register_buttons = 'register.buttons';
   static const register_messages_required_field = 'register.messages.required_field';
+  static const register_messages_email_invalid = 'register.messages.email_invalid';
   static const register_messages_password_mismatch = 'register.messages.password_mismatch';
   static const register_messages_type_required = 'register.messages.type_required';
   static const register_messages = 'register.messages';
@@ -287,16 +289,13 @@ abstract class  LocaleKeys {
   static const services_module_forms = 'services_module.forms';
   static const services_module = 'services_module';
   static const appointments_title = 'appointments.title';
-  static const appointments_search_hint = 'appointments.search_hint';
   static const appointments_tabs_all = 'appointments.tabs.all';
   static const appointments_tabs_pending = 'appointments.tabs.pending';
   static const appointments_tabs_approved = 'appointments.tabs.approved';
   static const appointments_tabs_completed = 'appointments.tabs.completed';
   static const appointments_tabs_rejected = 'appointments.tabs.rejected';
   static const appointments_tabs = 'appointments.tabs';
-  static const appointments_empty_title = 'appointments.empty.title';
-  static const appointments_empty_subtitle = 'appointments.empty.subtitle';
-  static const appointments_empty = 'appointments.empty';
+  static const appointments_search_hint = 'appointments.search_hint';
   static const appointments_card_patient = 'appointments.card.patient';
   static const appointments_card_service = 'appointments.card.service';
   static const appointments_card_type = 'appointments.card.type';
@@ -306,6 +305,9 @@ abstract class  LocaleKeys {
   static const appointments_type_service = 'appointments.type.service';
   static const appointments_type_lab_test = 'appointments.type.lab_test';
   static const appointments_type = 'appointments.type';
+  static const appointments_empty_title = 'appointments.empty.title';
+  static const appointments_empty_subtitle = 'appointments.empty.subtitle';
+  static const appointments_empty = 'appointments.empty';
   static const appointments_status_pending = 'appointments.status.pending';
   static const appointments_status_approved = 'appointments.status.approved';
   static const appointments_status_completed = 'appointments.status.completed';
@@ -314,9 +316,9 @@ abstract class  LocaleKeys {
   static const appointments_details_title = 'appointments.details.title';
   static const appointments_details_patient_info = 'appointments.details.patient_info';
   static const appointments_details_appointment_info = 'appointments.details.appointment_info';
+  static const appointments_details_result = 'appointments.details.result';
   static const appointments_details_notes = 'appointments.details.notes';
   static const appointments_details_add_notes = 'appointments.details.add_notes';
-  static const appointments_details_result = 'appointments.details.result';
   static const appointments_details_result_missing = 'appointments.details.result_missing';
   static const appointments_details_result_uploaded = 'appointments.details.result_uploaded';
   static const appointments_details = 'appointments.details';
@@ -379,7 +381,6 @@ abstract class  LocaleKeys {
   static const reports_details_title = 'reports.details.title';
   static const reports_details_generated_at = 'reports.details.generated_at';
   static const reports_details_download_pdf = 'reports.details.download_pdf';
-  static const reports_details_view_pdf = 'reports.details.view_pdf';
   static const reports_details_visual_summary = 'reports.details.visual_summary';
   static const reports_details_notes = 'reports.details.notes';
   static const reports_details_add_notes = 'reports.details.add_notes';

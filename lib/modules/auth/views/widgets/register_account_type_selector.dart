@@ -40,8 +40,8 @@ class RegisterAccountTypeSelector extends GetView<RegisterController> {
                 title: tr(LocaleKeys.register_account_type_clinic_with_lab),
                 subtitle: 'Services: Medical + Lab',
                 icon: Icons.apartment_outlined,
-                selected: selected == AccountType.clinicWithLab,
-                onTap: () => controller.selectAccountType(AccountType.clinicWithLab),
+                selected: selected == AccountType.both,
+                onTap: () => controller.selectAccountType(AccountType.both),
               ),
               10.verticalSpace,
               _TypeTile(

@@ -1,2 +1,2 @@
-enum AccountType { clinic, clinicWithLab, lab }
+enum AccountType { clinic, both, lab }
 

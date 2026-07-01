@@ -119,7 +119,7 @@ class ReportDetailsView extends StatelessWidget {
                     },
                     icon: Icon(Icons.picture_as_pdf, color: cs.onPrimary),
                     label: Text(
-                      tr(LocaleKeys.reports_details_view_pdf),
+                      tr(LocaleKeys.reports_actions_view_pdf),
                       style: theme.textTheme.labelLarge?.copyWith(
                         color: cs.onPrimary,
                         fontWeight: FontWeight.w700,
