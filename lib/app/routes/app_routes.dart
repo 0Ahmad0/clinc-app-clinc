@@ -5,6 +5,7 @@ abstract class AppRoutes {
   static const privacyPolicy = '/settings/privacy-policy';
   static const contactSupport = '/settings/contact-support';
   static const help = '/settings/help';
+  static const mapPicker = '/settings/map-picker';
   static const notifications = '/notifications';
   static const reports = '/reports';
   static const appointmentsDetails = '/appointment-details';

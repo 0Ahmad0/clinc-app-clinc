@@ -48,6 +48,8 @@ class SettingsView extends GetView<SettingsController> {
               () => ProfileHeader(
                 profile: controller.profile.value,
                 onEdit: () => _showImagePickerDialog(context),
+                onEditCover: () => _showCoverPickerDialog(context),
+                hasPendingUpdate: controller.pendingProfileUpdate.value != null,
               ),
             ),
           ),
@@ -248,6 +250,33 @@ class SettingsView extends GetView<SettingsController> {
       ),
     );
     if (source != null) await controller.pickProfileImage(source);
+  }
+
+  Future<void> _showCoverPickerDialog(BuildContext context) async {
+    final source = await _selectImageSource(context);
+    if (source != null) await controller.pickCoverImage(source);
+  }
+
+  Future<ImageSource?> _selectImageSource(BuildContext context) {
+    return showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (sheetContext) => SafeArea(
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: Text(tr('settings.image_picker.gallery')),
+              onTap: () => Navigator.of(sheetContext).pop(ImageSource.gallery),
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt_outlined),
+              title: Text(tr('settings.image_picker.camera')),
+              onTap: () => Navigator.of(sheetContext).pop(ImageSource.camera),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _showLanguageDialog(BuildContext context) {

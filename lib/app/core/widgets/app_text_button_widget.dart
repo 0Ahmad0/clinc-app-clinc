@@ -30,6 +30,7 @@ class AppTextButtonWidget extends StatelessWidget {
         foregroundColor: effectiveColor, // 3. تطبيق اللون
         textStyle: Theme.of(context).textTheme.bodyMedium,
       ),
+
       child: isLoading
           ? _buildLoading(effectiveColor) // 4. عرض مؤشر تحميل
           : Text(text), // 5. عرض النص

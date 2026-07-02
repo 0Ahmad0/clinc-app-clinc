@@ -6,16 +6,19 @@ import '../../../app/controllers/settings_app_controller.dart';
 import '../../../app/core/helper/response_helper.dart';
 import '../../../app/data/profile_model.dart';
 import '../../../app/data/user.dart';
-import '../../../app/domain/error_handler/network_exceptions.dart';
 import '../../../app/routes/app_routes.dart';
 import '../../../app/services/storage_service.dart';
+import '../../auth/bindings/login_binding.dart';
 import '../../auth/domain/repositories/auth_repository.dart';
+import '../../auth/views/login_view.dart';
+import '../domain/settings_repository.dart';
 
 class SettingsController extends GetxController {
   // ========== Services ==========
   // final StorageService _storage = Get.find<StorageService>();
   // final AuthService _auth = Get.find<AuthService>();
   late AuthRepository _repository;
+  late SettingsRepository _settingsRepository;
   // ========== Loading States ==========
   final RxBool isLoading = false.obs;
   final RxBool isSavingProfile = false.obs;
@@ -26,6 +29,7 @@ class SettingsController extends GetxController {
 
   // ========== User Profile ==========
   final Rx<ProfileModel> profile = ProfileModel.mock.obs;
+  final Rxn<ProfileModel> pendingProfileUpdate = Rxn<ProfileModel>();
 
   // ========== Notification Settings ==========
   final RxBool appNotificationsEnabled = true.obs;
@@ -43,6 +47,7 @@ class SettingsController extends GetxController {
   void onInit() {
     super.onInit();
     _repository = locator<AuthRepository>();
+    _settingsRepository = locator<SettingsRepository>();
     _loadSettings();
     _loadUserProfile();
   }
@@ -126,47 +131,39 @@ class SettingsController extends GetxController {
 
   // ========== Profile Management ==========
   Future<void> updateProfile(ProfileModel newProfile) async {
-    isSavingProfile(true);
-
-    try {
-      // Simulate API call
-      await Future.delayed(const Duration(milliseconds: 1500));
-
-      // TODO: Send to API
-      // await _api.updateProfile(newProfile.toJson());
-
-      // Update local state
-      profile.value = newProfile;
-
-      _showSuccessSnackbar('Profile updated successfully');
-    } catch (e) {
-      debugPrint('Error updating profile: $e');
-      _showErrorSnackbar('Failed to update profile: ${e.toString()}');
-    } finally {
-      isSavingProfile(false);
-    }
+    if (isSavingProfile.value) return;
+    isSavingProfile.value = true;
+    final result = await _settingsRepository.submitProfileUpdate(newProfile);
+    isSavingProfile.value = false;
+    result.when(
+      success: (model) {
+        if (model.status != 'success' || model.result == null) {
+          _showErrorSnackbar(model.message ?? 'Failed to submit profile');
+          return;
+        }
+        pendingProfileUpdate.value = model.result;
+        _showSuccessSnackbar('Profile update request sent for admin approval');
+      },
+      failure: (_) {
+        _showErrorSnackbar('Failed to submit profile update');
+      },
+    );
   }
 
   Future<void> uploadAvatar(String imagePath) async {
-    try {
-      // TODO: Upload to server
-      // final response = await _api.uploadAvatar(imagePath);
-      // final avatarUrl = response.data['url'];
-
-      // Update profile
-      profile.value = profile.value.copyWith(avatar: imagePath);
-
-      _showSuccessSnackbar('Avatar updated successfully');
-    } catch (e) {
-      debugPrint('Error uploading avatar: $e');
-      _showErrorSnackbar('Failed to upload avatar');
-    }
+    await updateProfile(profile.value.copyWith(avatar: imagePath));
   }
 
   Future<void> pickProfileImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(source: source);
     if (image == null) return;
     await uploadAvatar(image.path);
+  }
+
+  Future<void> pickCoverImage(ImageSource source) async {
+    final image = await ImagePicker().pickImage(source: source);
+    if (image == null) return;
+    await updateProfile(profile.value.copyWith(cover: image.path));
   }
 
   // ========== Notification Settings ==========
@@ -289,25 +286,26 @@ class SettingsController extends GetxController {
   }
 
   Future<void> logout() async {
-    isLoading(true);
+    if (isLoading.value) return;
+    isLoading.value = true;
+
+    String? successMessage;
     final result = await _repository.logout();
     result.when(
-      success: (data) async {
-        isLoading(false);
-        await StorageService.instance.depose();
-        ResponseHelper.onSuccess(
-          message: data.message,
-          // message: data.message ?? "navbar.profile.success".tr,
-        );
-        Get.offAllNamed(AppRoutes.login);
-      },
-      failure: (error) {
-        isLoading(false);
-        ResponseHelper.onFailure(
-          message: NetworkExceptions.getErrorMessage(error),
-        );
-      },
+      success: (data) => successMessage = data.message,
+      failure: (_) {},
     );
+
+    await StorageService.instance.depose();
+    profile.value = ProfileModel.mock;
+    pendingProfileUpdate.value = null;
+    isLoading.value = false;
+
+    Get.closeAllSnackbars();
+    Get.offAll<void>(() => const LoginView(), binding: LoginBinding());
+    if ((successMessage ?? '').isNotEmpty) {
+      ResponseHelper.onSuccess(message: successMessage);
+    }
   }
 
   void updateUser(UserModel userModel) {

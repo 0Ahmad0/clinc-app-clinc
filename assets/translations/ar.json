@@ -417,7 +417,9 @@
       "patient": "المريض",
       "service": "الخدمة",
       "type": "النوع",
-      "time": "الوقت"
+      "time": "الوقت",
+      "date": "التاريخ",
+      "specialization": "الاختصاص"
     },
     "type": {
       "consultation": "استشارة",
@@ -574,6 +576,17 @@
     "profile_clinic_name": "اسم العيادة",
     "profile_clinic_address": "عنوان العيادة",
     "profile_license": "رقم الترخيص الطبي",
+    "profile_cover": "غلاف العيادة",
+    "profile_cover_empty": "لم يتم اختيار غلاف",
+    "profile_google_maps": "رابط الموقع على خرائط Google",
+    "profile_google_maps_invalid": "أدخل رابط خرائط Google صالحاً",
+    "profile_update_pending": "التعديلات بانتظار موافقة الإدارة",
+    "map_picker": {
+      "title": "اختيار موقع العيادة",
+      "resolving": "جارٍ تحديد العنوان...",
+      "confirm": "اعتماد هذا الموقع",
+      "not_selected": "لم يتم اختيار موقع"
+    },
     "edit_profile": "تعديل الملف الشخصي",
     "password": "كلمة المرور",
     "password_subtitle": "تغيير كلمة المرور",
@@ -601,6 +614,22 @@
     "about_content": "يساعد تطبيق العيادة في إدارة الأطباء والمواعيد والخدمات والإشعارات والتقارير من مكان واحد.",
     "privacy_content": "نستخدم معلومات العيادة والحساب فقط لتقديم وظائف التطبيق. يقتصر الوصول على مستخدمي العيادة المصرح لهم، ولا يجوز مشاركة البيانات الطبية وبيانات الحساب خارج الإجراءات المعتمدة.",
     "contact_support_content": "تواصل مع فريق الدعم باستخدام المعلومات أدناه.",
+    "support": {
+      "subject": "عنوان البلاغ",
+      "subject_required": "اختر عنوان البلاغ",
+      "custom_subject": "عنوان مخصص",
+      "description": "الوصف",
+      "add_images": "إرفاق صور",
+      "submit": "إرسال البلاغ",
+      "subjects": {
+        "technical": "مشكلة تقنية",
+        "account": "مشكلة في الحساب",
+        "appointment": "مشكلة في موعد",
+        "payment": "مشكلة في الدفع",
+        "suggestion": "اقتراح",
+        "other": "أخرى"
+      }
+    },
     "help_doctors_title": "إدارة الأطباء",
     "help_doctors_body": "افتح قسم الأطباء لإضافة أطباء العيادة أو مراجعتهم أو تعديل جداولهم.",
     "help_appointments_title": "إدارة المواعيد",

@@ -34,5 +34,10 @@ void main() {
           .hasResult,
       isTrue,
     );
+    final approvedLab = approvedList.result?.list.firstWhere(
+      (item) => item.id == 'A-002',
+    );
+    expect(approvedLab?.specialization, 'Laboratory');
+    expect(approvedLab?.patientImage, isNotEmpty);
   });
 }

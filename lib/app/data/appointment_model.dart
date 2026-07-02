@@ -5,8 +5,10 @@ class AppointmentModel {
 
   final String patientName;
   final String? patientPhone;
+  final String? patientImage;
 
   final String title; // service/visit name
+  final String? specialization;
   final AppointmentType type;
 
   final DateTime dateTime;
@@ -24,7 +26,9 @@ class AppointmentModel {
     required this.id,
     required this.patientName,
     this.patientPhone,
+    this.patientImage,
     required this.title,
+    this.specialization,
     required this.type,
     required this.dateTime,
     required this.status,
@@ -38,7 +42,9 @@ class AppointmentModel {
       id: json['appointment_id'].toString(),
       patientName: json['patient_name'] as String,
       patientPhone: json['patient_phone'] as String?,
+      patientImage: json['patient_image'] as String?,
       title: json['title'] as String,
+      specialization: json['specialization'] as String?,
       type: AppointmentType.values.firstWhere(
         (value) => _typeValue(value) == json['type'],
         orElse: () => AppointmentType.consultation,
@@ -64,7 +70,9 @@ class AppointmentModel {
     String? id,
     String? patientName,
     String? patientPhone,
+    String? patientImage,
     String? title,
+    String? specialization,
     AppointmentType? type,
     DateTime? dateTime,
     AppointmentStatus? status,
@@ -76,7 +84,9 @@ class AppointmentModel {
       id: id ?? this.id,
       patientName: patientName ?? this.patientName,
       patientPhone: patientPhone ?? this.patientPhone,
+      patientImage: patientImage ?? this.patientImage,
       title: title ?? this.title,
+      specialization: specialization ?? this.specialization,
       type: type ?? this.type,
       dateTime: dateTime ?? this.dateTime,
       status: status ?? this.status,

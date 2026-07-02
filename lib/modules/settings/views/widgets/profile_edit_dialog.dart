@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../../generated/locale_keys.g.dart';
 import '../../../../app/data/profile_model.dart';
+import '../../../../app/routes/app_routes.dart';
+import '../../models/clinic_location_model.dart';
 
 class ProfileEditDialog extends StatefulWidget {
   final ProfileModel profile;
@@ -26,6 +29,9 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
   late TextEditingController clinicNameController;
   late TextEditingController clinicAddressController;
   late TextEditingController licenseController;
+  String? coverPath;
+  double? latitude;
+  double? longitude;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -44,6 +50,9 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
     licenseController = TextEditingController(
       text: widget.profile.licenseNumber ?? '',
     );
+    coverPath = widget.profile.cover;
+    latitude = widget.profile.latitude;
+    longitude = widget.profile.longitude;
   }
 
   @override
@@ -75,6 +84,21 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.image_outlined),
+                title: Text(tr('settings.profile_cover')),
+                subtitle: Text(
+                  coverPath == null
+                      ? tr('settings.profile_cover_empty')
+                      : coverPath!.split('/').last,
+                ),
+                trailing: IconButton(
+                  onPressed: _pickCover,
+                  icon: const Icon(Icons.upload_outlined),
+                ),
+              ),
+              12.verticalSpace,
               // Name
               TextFormField(
                 controller: nameController,
@@ -160,12 +184,29 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
               ),
               12.verticalSpace,
 
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.map_outlined),
+                title: Text(tr('settings.profile_google_maps')),
+                subtitle: Text(
+                  latitude == null || longitude == null
+                      ? tr('settings.map_picker.not_selected')
+                      : '${latitude!.toStringAsFixed(5)}, '
+                            '${longitude!.toStringAsFixed(5)}',
+                ),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: _pickLocation,
+              ),
+              12.verticalSpace,
+
               // License Number
               TextFormField(
                 controller: licenseController,
+                readOnly: true,
                 decoration: InputDecoration(
                   labelText: tr(LocaleKeys.settings_profile_license),
                   prefixIcon: const Icon(Icons.badge_outlined),
+                  suffixIcon: const Icon(Icons.lock_outline),
                 ),
               ),
             ],
@@ -185,17 +226,18 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
         TextButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              final updatedProfile = ProfileModel(
-                id: widget.profile.id,
+              final updatedProfile = widget.profile.copyWith(
                 name: nameController.text,
                 email: emailController.text,
                 phone: phoneController.text,
-                avatar: widget.profile.avatar,
                 clinicName: clinicNameController.text,
                 clinicAddress: clinicAddressController.text,
-                licenseNumber: licenseController.text.isEmpty
-                    ? null
-                    : licenseController.text,
+                googleMapsUrl: latitude == null || longitude == null
+                    ? widget.profile.googleMapsUrl
+                    : 'https://maps.google.com/?q=$latitude,$longitude',
+                latitude: latitude,
+                longitude: longitude,
+                cover: coverPath,
               );
               widget.onSave(updatedProfile);
               Get.back();
@@ -211,5 +253,28 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
         ),
       ],
     );
+  }
+
+  Future<void> _pickCover() async {
+    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image == null || !mounted) return;
+    setState(() => coverPath = image.path);
+  }
+
+  Future<void> _pickLocation() async {
+    final result = await Get.toNamed(
+      AppRoutes.mapPicker,
+      arguments: ClinicLocationModel(
+        address: clinicAddressController.text,
+        latitude: latitude ?? 24.7136,
+        longitude: longitude ?? 46.6753,
+      ),
+    );
+    if (result is! ClinicLocationModel || !mounted) return;
+    setState(() {
+      latitude = result.latitude;
+      longitude = result.longitude;
+      clinicAddressController.text = result.address;
+    });
   }
 }

@@ -429,7 +429,9 @@ class CodegenLoader extends AssetLoader{
       "patient": "Patient",
       "service": "Service",
       "type": "Type",
-      "time": "Time"
+      "time": "Time",
+      "date": "Date",
+      "specialization": "Specialization"
     },
     "type": {
       "consultation": "Consultation",
@@ -589,6 +591,17 @@ class CodegenLoader extends AssetLoader{
     "profile_clinic_name": "Clinic Name",
     "profile_clinic_address": "Clinic Address",
     "profile_license": "Medical License Number",
+    "profile_cover": "Clinic Cover",
+    "profile_cover_empty": "No cover selected",
+    "profile_google_maps": "Google Maps Link",
+    "profile_google_maps_invalid": "Enter a valid Google Maps link",
+    "profile_update_pending": "Changes are pending admin approval",
+    "map_picker": {
+      "title": "Select Clinic Location",
+      "resolving": "Finding address...",
+      "confirm": "Use This Location",
+      "not_selected": "No location selected"
+    },
     "edit_profile": "Edit Profile",
     "password": "Password",
     "password_subtitle": "Change your password",
@@ -616,6 +629,22 @@ class CodegenLoader extends AssetLoader{
     "about_content": "Clinic App helps clinics manage doctors, appointments, services, notifications, and reports in one place.",
     "privacy_content": "We use clinic and account information only to provide application features. Access is limited to authorized clinic users. Medical and account data must not be shared outside approved workflows.",
     "contact_support_content": "Contact the support team using the details below.",
+    "support": {
+      "subject": "Report Subject",
+      "subject_required": "Select a report subject",
+      "custom_subject": "Custom Subject",
+      "description": "Description",
+      "add_images": "Attach Images",
+      "submit": "Send Report",
+      "subjects": {
+        "technical": "Technical Issue",
+        "account": "Account Issue",
+        "appointment": "Appointment Issue",
+        "payment": "Payment Issue",
+        "suggestion": "Suggestion",
+        "other": "Other"
+      }
+    },
     "help_doctors_title": "Managing doctors",
     "help_doctors_body": "Open Doctors to add, review, or edit clinic doctors and their schedules.",
     "help_appointments_title": "Managing appointments",
@@ -1086,7 +1115,9 @@ static const Map<String,dynamic> _ar = {
       "patient": "المريض",
       "service": "الخدمة",
       "type": "النوع",
-      "time": "الوقت"
+      "time": "الوقت",
+      "date": "التاريخ",
+      "specialization": "الاختصاص"
     },
     "type": {
       "consultation": "استشارة",
@@ -1243,6 +1274,17 @@ static const Map<String,dynamic> _ar = {
     "profile_clinic_name": "اسم العيادة",
     "profile_clinic_address": "عنوان العيادة",
     "profile_license": "رقم الترخيص الطبي",
+    "profile_cover": "غلاف العيادة",
+    "profile_cover_empty": "لم يتم اختيار غلاف",
+    "profile_google_maps": "رابط الموقع على خرائط Google",
+    "profile_google_maps_invalid": "أدخل رابط خرائط Google صالحاً",
+    "profile_update_pending": "التعديلات بانتظار موافقة الإدارة",
+    "map_picker": {
+      "title": "اختيار موقع العيادة",
+      "resolving": "جارٍ تحديد العنوان...",
+      "confirm": "اعتماد هذا الموقع",
+      "not_selected": "لم يتم اختيار موقع"
+    },
     "edit_profile": "تعديل الملف الشخصي",
     "password": "كلمة المرور",
     "password_subtitle": "تغيير كلمة المرور",
@@ -1270,6 +1312,22 @@ static const Map<String,dynamic> _ar = {
     "about_content": "يساعد تطبيق العيادة في إدارة الأطباء والمواعيد والخدمات والإشعارات والتقارير من مكان واحد.",
     "privacy_content": "نستخدم معلومات العيادة والحساب فقط لتقديم وظائف التطبيق. يقتصر الوصول على مستخدمي العيادة المصرح لهم، ولا يجوز مشاركة البيانات الطبية وبيانات الحساب خارج الإجراءات المعتمدة.",
     "contact_support_content": "تواصل مع فريق الدعم باستخدام المعلومات أدناه.",
+    "support": {
+      "subject": "عنوان البلاغ",
+      "subject_required": "اختر عنوان البلاغ",
+      "custom_subject": "عنوان مخصص",
+      "description": "الوصف",
+      "add_images": "إرفاق صور",
+      "submit": "إرسال البلاغ",
+      "subjects": {
+        "technical": "مشكلة تقنية",
+        "account": "مشكلة في الحساب",
+        "appointment": "مشكلة في موعد",
+        "payment": "مشكلة في الدفع",
+        "suggestion": "اقتراح",
+        "other": "أخرى"
+      }
+    },
     "help_doctors_title": "إدارة الأطباء",
     "help_doctors_body": "افتح قسم الأطباء لإضافة أطباء العيادة أو مراجعتهم أو تعديل جداولهم.",
     "help_appointments_title": "إدارة المواعيد",

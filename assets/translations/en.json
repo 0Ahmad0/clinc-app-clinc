@@ -413,7 +413,9 @@
       "patient": "Patient",
       "service": "Service",
       "type": "Type",
-      "time": "Time"
+      "time": "Time",
+      "date": "Date",
+      "specialization": "Specialization"
     },
     "type": {
       "consultation": "Consultation",
@@ -573,6 +575,17 @@
     "profile_clinic_name": "Clinic Name",
     "profile_clinic_address": "Clinic Address",
     "profile_license": "Medical License Number",
+    "profile_cover": "Clinic Cover",
+    "profile_cover_empty": "No cover selected",
+    "profile_google_maps": "Google Maps Link",
+    "profile_google_maps_invalid": "Enter a valid Google Maps link",
+    "profile_update_pending": "Changes are pending admin approval",
+    "map_picker": {
+      "title": "Select Clinic Location",
+      "resolving": "Finding address...",
+      "confirm": "Use This Location",
+      "not_selected": "No location selected"
+    },
     "edit_profile": "Edit Profile",
     "password": "Password",
     "password_subtitle": "Change your password",
@@ -600,6 +613,22 @@
     "about_content": "Clinic App helps clinics manage doctors, appointments, services, notifications, and reports in one place.",
     "privacy_content": "We use clinic and account information only to provide application features. Access is limited to authorized clinic users. Medical and account data must not be shared outside approved workflows.",
     "contact_support_content": "Contact the support team using the details below.",
+    "support": {
+      "subject": "Report Subject",
+      "subject_required": "Select a report subject",
+      "custom_subject": "Custom Subject",
+      "description": "Description",
+      "add_images": "Attach Images",
+      "submit": "Send Report",
+      "subjects": {
+        "technical": "Technical Issue",
+        "account": "Account Issue",
+        "appointment": "Appointment Issue",
+        "payment": "Payment Issue",
+        "suggestion": "Suggestion",
+        "other": "Other"
+      }
+    },
     "help_doctors_title": "Managing doctors",
     "help_doctors_body": "Open Doctors to add, review, or edit clinic doctors and their schedules.",
     "help_appointments_title": "Managing appointments",

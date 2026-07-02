@@ -4,9 +4,14 @@ class ProfileModel {
   final String email;
   final String phone;
   final String? avatar;
+  final String? cover;
   final String clinicName;
   final String clinicAddress;
+  final String? googleMapsUrl;
+  final double? latitude;
+  final double? longitude;
   final String? licenseNumber;
+  final String? updateStatus;
 
   // ========== NEW FIELDS ==========
   final String? bio; // Bio/Description of the clinic
@@ -24,9 +29,14 @@ class ProfileModel {
     required this.email,
     required this.phone,
     this.avatar,
+    this.cover,
     required this.clinicName,
     required this.clinicAddress,
+    this.googleMapsUrl,
+    this.latitude,
+    this.longitude,
     this.licenseNumber,
+    this.updateStatus,
     this.bio,
     this.website,
     this.specialty,
@@ -45,9 +55,14 @@ class ProfileModel {
       email: json['email'] as String,
       phone: json['phone'] as String,
       avatar: json['avatar'] as String?,
+      cover: json['cover'] as String?,
       clinicName: json['clinicName'] as String,
       clinicAddress: json['clinicAddress'] as String,
+      googleMapsUrl: json['googleMapsUrl'] as String?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
       licenseNumber: json['licenseNumber'] as String?,
+      updateStatus: json['updateStatus'] as String?,
       bio: json['bio'] as String?,
       website: json['website'] as String?,
       specialty: json['specialty'] as String?,
@@ -71,9 +86,14 @@ class ProfileModel {
       'email': email,
       'phone': phone,
       'avatar': avatar,
+      'cover': cover,
       'clinicName': clinicName,
       'clinicAddress': clinicAddress,
+      'googleMapsUrl': googleMapsUrl,
+      'latitude': latitude,
+      'longitude': longitude,
       'licenseNumber': licenseNumber,
+      'updateStatus': updateStatus,
       'bio': bio,
       'website': website,
       'specialty': specialty,
@@ -92,9 +112,14 @@ class ProfileModel {
     String? email,
     String? phone,
     String? avatar,
+    String? cover,
     String? clinicName,
     String? clinicAddress,
+    String? googleMapsUrl,
+    double? latitude,
+    double? longitude,
     String? licenseNumber,
+    String? updateStatus,
     String? bio,
     String? website,
     String? specialty,
@@ -110,9 +135,14 @@ class ProfileModel {
       email: email ?? this.email,
       phone: phone ?? this.phone,
       avatar: avatar ?? this.avatar,
+      cover: cover ?? this.cover,
       clinicName: clinicName ?? this.clinicName,
       clinicAddress: clinicAddress ?? this.clinicAddress,
+      googleMapsUrl: googleMapsUrl ?? this.googleMapsUrl,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       licenseNumber: licenseNumber ?? this.licenseNumber,
+      updateStatus: updateStatus ?? this.updateStatus,
       bio: bio ?? this.bio,
       website: website ?? this.website,
       specialty: specialty ?? this.specialty,
@@ -131,10 +161,15 @@ class ProfileModel {
     email: 'dr.ahmed@clinicapp.com',
     phone: '+966 50 123 4567',
     avatar: null,
+    cover: null,
     clinicName: 'Hassan Medical Center',
     clinicAddress: 'King Fahd Road, Riyadh, Saudi Arabia',
+    googleMapsUrl: 'https://maps.google.com/?q=24.7136,46.6753',
+    latitude: 24.7136,
+    longitude: 46.6753,
     licenseNumber: 'MC-2024-1234',
-    bio: 'Experienced family physician with over 15 years of practice. '
+    bio:
+        'Experienced family physician with over 15 years of practice. '
         'Specialized in preventive medicine and chronic disease management. '
         'Committed to providing compassionate and comprehensive healthcare to all patients.',
     website: 'https://hassanmedical.com',
@@ -197,8 +232,18 @@ class ProfileModel {
   String get joinedDateDisplay {
     if (joinedDate == null) return 'N/A';
     final months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${months[joinedDate!.month - 1]} ${joinedDate!.year}';
   }
@@ -212,9 +257,7 @@ class ProfileModel {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is ProfileModel &&
-        other.id == id &&
-        other.email == email;
+    return other is ProfileModel && other.id == id && other.email == email;
   }
 
   @override

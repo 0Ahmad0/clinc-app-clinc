@@ -38,10 +38,12 @@ import '../../modules/pending_approval/views/pending_approval_view.dart';
 import '../../modules/reports/bindings/reports_binding.dart';
 import '../../modules/reports/views/reports_view.dart';
 import '../../modules/settings/bindings/change_password_binding.dart';
+import '../../modules/settings/bindings/contact_support_binding.dart';
 import '../../modules/settings/views/about_view.dart';
 import '../../modules/settings/views/change_password_view.dart';
 import '../../modules/settings/views/contact_support_view.dart';
 import '../../modules/settings/views/help_view.dart';
+import '../../modules/settings/views/google_map_picker_view.dart';
 import '../../modules/settings/views/privacy_policy_view.dart';
 import 'app_routes.dart';
 
@@ -65,8 +67,10 @@ class AppPages {
     GetPage(
       name: AppRoutes.contactSupport,
       page: () => const ContactSupportView(),
+      binding: ContactSupportBinding(),
     ),
     GetPage(name: AppRoutes.help, page: () => const HelpView()),
+    GetPage(name: AppRoutes.mapPicker, page: () => const GoogleMapPickerView()),
     GetPage(
       name: AppRoutes.notifications,
       page: () => const NotificationsView(),

@@ -20,7 +20,12 @@ class AppointmentDetailsView extends GetView<AppointmentDetailsController> {
     return Scaffold(
       body: Obx(() {
         final a = controller.appointment.value;
-        final dt = DateFormat('EEE, MMM d • hh:mm a').format(a.dateTime);
+        final date = DateFormat.yMMMMd(
+          context.locale.languageCode,
+        ).format(a.dateTime);
+        final time = DateFormat.jm(
+          context.locale.languageCode,
+        ).format(a.dateTime);
         final statusColor = _getStatusColor(context, a.status);
 
         return CustomScrollView(
@@ -38,7 +43,7 @@ class AppointmentDetailsView extends GetView<AppointmentDetailsController> {
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [cs.primary.withOpacity(0.1), cs.surface],
+                      colors: [cs.primary.withValues(alpha: 0.1), cs.surface],
                     ),
                   ),
                   child: Center(
@@ -50,15 +55,21 @@ class AppointmentDetailsView extends GetView<AppointmentDetailsController> {
                           child: CircleAvatar(
                             radius: 40.r,
                             backgroundColor: cs.primaryContainer,
-                            child: Text(
-                              a.patientName.isNotEmpty
-                                  ? a.patientName[0].toUpperCase()
-                                  : '?',
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                color: cs.onPrimaryContainer,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
+                            backgroundImage: (a.patientImage ?? '').isNotEmpty
+                                ? NetworkImage(a.patientImage!)
+                                : null,
+                            child: (a.patientImage ?? '').isEmpty
+                                ? Text(
+                                    a.patientName.isNotEmpty
+                                        ? a.patientName[0].toUpperCase()
+                                        : '?',
+                                    style: theme.textTheme.headlineMedium
+                                        ?.copyWith(
+                                          color: cs.onPrimaryContainer,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                  )
+                                : null,
                           ),
                         ),
                         12.verticalSpace,
@@ -75,10 +86,10 @@ class AppointmentDetailsView extends GetView<AppointmentDetailsController> {
                             vertical: 6.h,
                           ),
                           decoration: BoxDecoration(
-                            color: statusColor.withOpacity(0.15),
+                            color: statusColor.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(999),
                             border: Border.all(
-                              color: statusColor.withOpacity(0.3),
+                              color: statusColor.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Text(
@@ -136,10 +147,21 @@ class AppointmentDetailsView extends GetView<AppointmentDetailsController> {
                         label: tr(LocaleKeys.appointments_card_type),
                         value: tr(a.type.key()),
                       ),
+                      if ((a.specialization ?? '').isNotEmpty)
+                        _KVRow(
+                          icon: Icons.medical_information_outlined,
+                          label: tr('appointments.card.specialization'),
+                          value: a.specialization!,
+                        ),
                       _KVRow(
-                        icon: Icons.schedule_outlined,
+                        icon: Icons.calendar_today_outlined,
+                        label: tr('appointments.card.date'),
+                        value: date,
+                      ),
+                      _KVRow(
+                        icon: Icons.access_time_outlined,
                         label: tr(LocaleKeys.appointments_card_time),
-                        value: dt,
+                        value: time,
                       ),
                     ],
                   ),
@@ -150,14 +172,19 @@ class AppointmentDetailsView extends GetView<AppointmentDetailsController> {
                     _InfoCard(
                       icon: Icons.cancel_outlined,
                       title: tr(LocaleKeys.appointments_reject_title),
-                      color: cs.error.withOpacity(0.1),
+                      color: cs.error.withValues(alpha: 0.1),
                       children: [
                         _KVRow(
                           icon: Icons.info_outline,
                           label: tr(
                             LocaleKeys.appointments_reject_reason_label,
                           ),
-                          value: a.rejectReasonKey ?? '-',
+                          value: a.rejectReasonKey == null
+                              ? '-'
+                              : tr(
+                                  'appointments.reject.reasons.'
+                                  '${a.rejectReasonKey}',
+                                ),
                         ),
                         8.verticalSpace,
                         Text(
@@ -176,7 +203,7 @@ class AppointmentDetailsView extends GetView<AppointmentDetailsController> {
                     _InfoCard(
                       icon: Icons.science_outlined,
                       title: tr(LocaleKeys.appointments_details_result),
-                      color: cs.primary.withOpacity(0.1),
+                      color: cs.primary.withValues(alpha: 0.1),
                       children: [
                         Row(
                           children: [
@@ -283,7 +310,8 @@ class _ActionsSection extends GetView<AppointmentDetailsController> {
       final canComplete = a.status == AppointmentStatus.approved;
       final canUploadResult =
           a.type.isLab &&
-          a.status == AppointmentStatus.completed &&
+          (a.status == AppointmentStatus.approved ||
+              a.status == AppointmentStatus.completed) &&
           !a.hasResult;
 
       return Column(
@@ -294,7 +322,7 @@ class _ActionsSection extends GetView<AppointmentDetailsController> {
               padding: EdgeInsets.only(bottom: 16.h),
               child: LinearProgressIndicator(
                 color: cs.primary,
-                backgroundColor: cs.surfaceVariant,
+                backgroundColor: cs.surfaceContainerHighest,
               ),
             ),
 
@@ -412,7 +440,7 @@ class _ActionButton extends StatelessWidget {
               ),
             ),
             style: OutlinedButton.styleFrom(
-              side: BorderSide(color: color.withOpacity(0.4)),
+              side: BorderSide(color: color.withValues(alpha: 0.4)),
               padding: EdgeInsets.symmetric(vertical: 14.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
@@ -464,10 +492,10 @@ class _InfoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: cs.outlineVariant.withOpacity(0.2)),
+        border: Border.all(color: cs.outlineVariant.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: cs.shadow.withOpacity(0.05),
+            color: cs.shadow.withValues(alpha: 0.05),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),

@@ -12,7 +12,9 @@ class AppointmentsMockDataSource implements AppointmentsDataSource {
       'appointment_id': 'A-001',
       'patient_name': 'Liam Harper',
       'patient_phone': '+963999000111',
+      'patient_image': 'https://i.pravatar.cc/300?img=11',
       'title': 'ECG',
+      'specialization': 'Cardiology',
       'type': 'service',
       'date_time': DateTime.now()
           .add(const Duration(hours: 2))
@@ -23,7 +25,9 @@ class AppointmentsMockDataSource implements AppointmentsDataSource {
       'appointment_id': 'A-002',
       'patient_name': 'Olivia Bennett',
       'patient_phone': '+963999000222',
+      'patient_image': 'https://i.pravatar.cc/300?img=32',
       'title': 'Blood Test',
+      'specialization': 'Laboratory',
       'type': 'lab_test',
       'date_time': DateTime.now()
           .add(const Duration(hours: 5))
@@ -34,7 +38,9 @@ class AppointmentsMockDataSource implements AppointmentsDataSource {
       'appointment_id': 'A-003',
       'patient_name': 'Noah Thompson',
       'patient_phone': '+963999000333',
+      'patient_image': 'https://i.pravatar.cc/300?img=12',
       'title': 'Consultation',
+      'specialization': 'General Medicine',
       'type': 'consultation',
       'date_time': DateTime.now()
           .subtract(const Duration(days: 1))
@@ -46,7 +52,9 @@ class AppointmentsMockDataSource implements AppointmentsDataSource {
       'appointment_id': 'A-004',
       'patient_name': 'Sarah Connor',
       'patient_phone': '+963999000444',
+      'patient_image': 'https://i.pravatar.cc/300?img=47',
       'title': 'Vitamin D Test',
+      'specialization': 'Laboratory',
       'type': 'lab_test',
       'date_time': DateTime.now()
           .subtract(const Duration(days: 2))
@@ -58,7 +66,9 @@ class AppointmentsMockDataSource implements AppointmentsDataSource {
       'appointment_id': 'A-005',
       'patient_name': 'Mike Ross',
       'patient_phone': '+963999000555',
+      'patient_image': 'https://i.pravatar.cc/300?img=14',
       'title': 'X-Ray',
+      'specialization': 'Radiology',
       'type': 'service',
       'date_time': DateTime.now()
           .add(const Duration(days: 1, hours: 1))
