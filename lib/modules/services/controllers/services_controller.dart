@@ -11,8 +11,47 @@ import '../../../app/domain/error_handler/network_exceptions.dart';
 import '../../../app/services/storage_service.dart';
 import '../domain/services_repository.dart';
 import '../models/clinic_service_model.dart';
+import '../views/services_view.dart';
 
 class ServicesController extends GetxController {
+  final RxInt currentTab = 0.obs;
+  final RxList<MainLabCategoryModel> activeLabCategories =
+      <MainLabCategoryModel>[].obs;
+  final RxList<MainLabCategoryModel> availableLabCategories =
+      <MainLabCategoryModel>[].obs;
+  final RxList<SpecialtyModel> activeSpecialties = <SpecialtyModel>[].obs;
+  final RxList<SpecialtyModel> availableSpecialties = <SpecialtyModel>[].obs;
+
+  List<MainLabCategoryModel> get unaddedLabCategories => availableLabCategories
+      .where((item) => !activeLabCategories.contains(item))
+      .toList();
+  List<SpecialtyModel> get unaddedSpecialties => availableSpecialties
+      .where((item) => !activeSpecialties.contains(item))
+      .toList();
+
+  void changeTab(int index) => currentTab.value = index;
+  void addLabCategory(MainLabCategoryModel item) =>
+      activeLabCategories.add(item);
+  void removeLabCategory(MainLabCategoryModel item) =>
+      activeLabCategories.remove(item);
+  void addSpecialty(SpecialtyModel item) => activeSpecialties.add(item);
+  void removeSpecialty(SpecialtyModel item) => activeSpecialties.remove(item);
+  void removeSpecialtyService(
+    SpecialtyModel specialty,
+    SpecialtyServiceModel service,
+  ) => specialty.services.remove(service);
+  void addSpecialtyService(
+    SpecialtyModel specialty, {
+    required String name,
+    required int price,
+  }) => specialty.services.add(
+    SpecialtyServiceModel(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      name: name,
+      price: price,
+    ),
+  );
+
   final Rx<ClinicServiceTab> selectedTab = ClinicServiceTab.medical.obs;
   final Rx<GeneralLoading> labLoading = GeneralLoading.initial.obs;
   final Rx<GeneralLoading> medicalLoading = GeneralLoading.initial.obs;

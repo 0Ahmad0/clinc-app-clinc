@@ -36,20 +36,62 @@ class ForgotPasswordRequest {
 }
 
 class VerifyOtpRequest {
-  const VerifyOtpRequest({required this.identifier, required this.otp});
+  const VerifyOtpRequest({
+    required this.identifier,
+    required this.otp,
+    required this.purpose,
+  });
 
   final String identifier;
   final String otp;
+  final String purpose;
 
-  Map<String, dynamic> toJson() => {'identifier': identifier, 'otp': otp};
+  Map<String, dynamic> toJson() => {
+    'identifier': identifier,
+    'otp': otp,
+    'purpose': purpose,
+  };
 }
 
 class ResendOtpRequest {
-  const ResendOtpRequest({required this.identifier});
+  const ResendOtpRequest({required this.identifier, required this.purpose});
 
   final String identifier;
+  final String purpose;
 
-  Map<String, dynamic> toJson() => {'identifier': identifier};
+  Map<String, dynamic> toJson() => {
+    'identifier': identifier,
+    'purpose': purpose,
+  };
+}
+
+class ResetPasswordRequest {
+  const ResetPasswordRequest({
+    required this.identifier,
+    required this.resetToken,
+    required this.password,
+    required this.passwordConfirmation,
+  });
+
+  final String identifier;
+  final String resetToken;
+  final String password;
+  final String passwordConfirmation;
+
+  Map<String, dynamic> toJson() => {
+    'identifier': identifier,
+    'reset_token': resetToken,
+    'password': password,
+    'password_confirmation': passwordConfirmation,
+  };
+}
+
+class SocialLoginRequest {
+  const SocialLoginRequest({required this.provider});
+
+  final String provider;
+
+  Map<String, dynamic> toJson() => {'provider': provider};
 }
 
 class ClinicAuthActionResponse {

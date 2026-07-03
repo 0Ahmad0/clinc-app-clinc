@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../app/core/configuration/locator.dart';
 import '../../../app/controllers/settings_app_controller.dart';
 import '../../../app/core/helper/response_helper.dart';
+import '../../../app/data/account_type.dart';
 import '../../../app/data/profile_model.dart';
 import '../../../app/data/user.dart';
 import '../../../app/routes/app_routes.dart';
@@ -14,18 +16,24 @@ import '../../auth/views/login_view.dart';
 import '../domain/settings_repository.dart';
 
 class SettingsController extends GetxController {
-  // ========== Services ==========
-  // final StorageService _storage = Get.find<StorageService>();
-  // final AuthService _auth = Get.find<AuthService>();
+  // ربط جديد: تخزين محلي لقراءة نوع الحساب (مستخدم في ميزة الأدوار/الإعلانات)
+  final GetStorage _box = GetStorage();
+
+  // ========== Repositories (ربط حقيقي من الكود القديم) ==========
   late AuthRepository _repository;
   late SettingsRepository _settingsRepository;
+
   // ========== Loading States ==========
   final RxBool isLoading = false.obs;
   final RxBool isSavingProfile = false.obs;
+  final RxBool isSyncingNotificationSettings = false.obs;
 
   // ========== Theme & Language ==========
   final Rx<ThemeMode> themeMode = ThemeMode.system.obs;
   final RxString currentLanguage = 'ar'.obs;
+
+  // ميزة جديدة من الواجهة الجديدة: الدور الحالي للحساب (لعرض تبويب الإعلانات)
+  final Rx<AccountType> currentRole = AccountType.clinic.obs;
 
   // ========== User Profile ==========
   final Rx<ProfileModel> profile = ProfileModel.mock.obs;
@@ -70,6 +78,19 @@ class SettingsController extends GetxController {
         StorageService.SMS_NOTIFICATIONS,
         fallback: true,
       );
+      appointmentReminders.value = StorageService.instance.readBool(
+        StorageService.APPOINTMENT_REMINDERS,
+        fallback: true,
+      );
+      promotionalNotifications.value = StorageService.instance.readBool(
+        StorageService.PROMOTIONAL_NOTIFICATIONS,
+        fallback: false,
+      );
+
+      // ميزة جديدة: قراءة نوع الحساب المخزّن محليًا لتحديد الدور
+      final roleName = _box.read('account_type')?.toString() ?? '';
+      currentRole.value = _mapRole(roleName);
+      await _loadNotificationSettings();
     } catch (e) {
       debugPrint('Error loading settings: $e');
       _showErrorSnackbar('Failed to load settings');
@@ -80,16 +101,15 @@ class SettingsController extends GetxController {
 
   // ========== Load User Profile ==========
   Future<void> _loadUserProfile() async {
-    try {
-      // TODO: Load from API
-      // final response = await _api.getUserProfile();
-      // profile.value = ProfileModel.fromJson(response.data);
-
-      // For now, using mock data
-      await Future.delayed(const Duration(milliseconds: 300));
-    } catch (e) {
-      debugPrint('Error loading profile: $e');
-    }
+    final result = await _settingsRepository.getProfile();
+    result.when(
+      success: (model) {
+        if (model.status == 'success' && model.result != null) {
+          profile.value = model.result!;
+        }
+      },
+      failure: (_) => _showErrorSnackbar('Failed to load profile'),
+    );
   }
 
   // ========== Theme Management ==========
@@ -129,7 +149,7 @@ class SettingsController extends GetxController {
     );
   }
 
-  // ========== Profile Management ==========
+  // ========== Profile Management (ربط حقيقي: يرسل طلب تحديث بانتظار موافقة الأدمن) ==========
   Future<void> updateProfile(ProfileModel newProfile) async {
     if (isSavingProfile.value) return;
     isSavingProfile.value = true;
@@ -154,6 +174,7 @@ class SettingsController extends GetxController {
     await updateProfile(profile.value.copyWith(avatar: imagePath));
   }
 
+  // مطلوبة من الواجهة (settings_view.dart) لفتح منتقي الصور وتحديث الصورة الرمزية
   Future<void> pickProfileImage(ImageSource source) async {
     final image = await ImagePicker().pickImage(source: source);
     if (image == null) return;
@@ -167,35 +188,109 @@ class SettingsController extends GetxController {
   }
 
   // ========== Notification Settings ==========
-  void toggleAppNotifications(bool value) {
-    appNotificationsEnabled.value = value;
-    StorageService.instance.saveBool(StorageService.APP_NOTIFICATIONS, value);
+  Future<void> _loadNotificationSettings() async {
+    final result = await _settingsRepository.getNotificationSettings();
+    result.when(
+      success: (model) {
+        if (model.status != 'success' || model.result == null) return;
+        _applyNotificationSettings(model.result!);
+        _persistNotificationSettings();
+      },
+      failure: (_) {},
+    );
+  }
 
-    // If turning off, disable all sub-notifications
+  Future<void> toggleAppNotifications(bool value) async {
+    final previous = _notificationSettingsMap();
+    appNotificationsEnabled.value = value;
     if (!value) {
       appointmentReminders.value = false;
       promotionalNotifications.value = false;
     }
+    await _syncNotificationSettings(previous);
   }
 
-  void toggleEmailNotifications(bool value) {
+  Future<void> toggleEmailNotifications(bool value) async {
+    final previous = _notificationSettingsMap();
     emailNotificationsEnabled.value = value;
-    StorageService.instance.saveBool(StorageService.EMAIL_NOTIFICATIONS, value);
+    await _syncNotificationSettings(previous);
   }
 
-  void toggleSmsNotifications(bool value) {
+  Future<void> toggleSmsNotifications(bool value) async {
+    final previous = _notificationSettingsMap();
     smsNotificationsEnabled.value = value;
-    StorageService.instance.saveBool(StorageService.SMS_NOTIFICATIONS, value);
+    await _syncNotificationSettings(previous);
   }
 
-  void toggleAppointmentReminders(bool value) {
+  Future<void> toggleAppointmentReminders(bool value) async {
+    final previous = _notificationSettingsMap();
     appointmentReminders.value = value;
-    // _storage.write('appointment_reminders', value);
+    await _syncNotificationSettings(previous);
   }
 
-  void togglePromotionalNotifications(bool value) {
+  Future<void> togglePromotionalNotifications(bool value) async {
+    final previous = _notificationSettingsMap();
     promotionalNotifications.value = value;
-    // _storage.write('promotional_notifications', value);
+    await _syncNotificationSettings(previous);
+  }
+
+  Future<void> _syncNotificationSettings(Map<String, bool> previous) async {
+    _persistNotificationSettings();
+    isSyncingNotificationSettings.value = true;
+    final result = await _settingsRepository.updateNotificationSettings(
+      settings: _notificationSettingsMap(),
+    );
+    isSyncingNotificationSettings.value = false;
+    result.when(
+      success: (model) {
+        if (model.status != 'success' || model.result == null) {
+          _applyNotificationSettings(previous);
+          _persistNotificationSettings();
+          _showErrorSnackbar(model.message ?? 'Failed to update settings');
+          return;
+        }
+        _applyNotificationSettings(model.result!);
+        _persistNotificationSettings();
+      },
+      failure: (_) {
+        _applyNotificationSettings(previous);
+        _persistNotificationSettings();
+        _showErrorSnackbar('Failed to update notification settings');
+      },
+    );
+  }
+
+  Map<String, bool> _notificationSettingsMap() => {
+    StorageService.APP_NOTIFICATIONS: appNotificationsEnabled.value,
+    StorageService.EMAIL_NOTIFICATIONS: emailNotificationsEnabled.value,
+    StorageService.SMS_NOTIFICATIONS: smsNotificationsEnabled.value,
+    StorageService.APPOINTMENT_REMINDERS: appointmentReminders.value,
+    StorageService.PROMOTIONAL_NOTIFICATIONS: promotionalNotifications.value,
+  };
+
+  void _applyNotificationSettings(Map<String, dynamic> settings) {
+    appNotificationsEnabled.value =
+        settings[StorageService.APP_NOTIFICATIONS] as bool? ??
+        appNotificationsEnabled.value;
+    emailNotificationsEnabled.value =
+        settings[StorageService.EMAIL_NOTIFICATIONS] as bool? ??
+        emailNotificationsEnabled.value;
+    smsNotificationsEnabled.value =
+        settings[StorageService.SMS_NOTIFICATIONS] as bool? ??
+        smsNotificationsEnabled.value;
+    appointmentReminders.value =
+        settings[StorageService.APPOINTMENT_REMINDERS] as bool? ??
+        appointmentReminders.value;
+    promotionalNotifications.value =
+        settings[StorageService.PROMOTIONAL_NOTIFICATIONS] as bool? ??
+        promotionalNotifications.value;
+  }
+
+  void _persistNotificationSettings() {
+    final settings = _notificationSettingsMap();
+    for (final entry in settings.entries) {
+      StorageService.instance.saveBool(entry.key, entry.value);
+    }
   }
 
   // ========== Privacy Settings ==========
@@ -266,10 +361,8 @@ class SettingsController extends GetxController {
     await response.when(
       success: (data) async {
         final fetchedUser = data.result;
-        // user = fetchedUser;
 
         if (fetchedUser != null) {
-          // الآن الـ Compiler متأكد أن fetchedUser ليس null
           await StorageService.instance.cacheUserModel(fetchedUser.toJson());
           updateUser(fetchedUser);
         }
@@ -285,6 +378,7 @@ class SettingsController extends GetxController {
     return isGetProfile;
   }
 
+  // ربط حقيقي: تسجيل خروج فعلي عبر الـ Repository + تنظيف الجلسة + الانتقال لصفحة تسجيل الدخول
   Future<void> logout() async {
     if (isLoading.value) return;
     isLoading.value = true;
@@ -299,6 +393,11 @@ class SettingsController extends GetxController {
     await StorageService.instance.depose();
     profile.value = ProfileModel.mock;
     pendingProfileUpdate.value = null;
+    appNotificationsEnabled.value = true;
+    emailNotificationsEnabled.value = false;
+    smsNotificationsEnabled.value = true;
+    appointmentReminders.value = true;
+    promotionalNotifications.value = false;
     isLoading.value = false;
 
     Get.closeAllSnackbars();
@@ -309,8 +408,31 @@ class SettingsController extends GetxController {
   }
 
   void updateUser(UserModel userModel) {
-    // user = userModel;
     update();
+  }
+
+  // ميزة جديدة: تسمية الدور المعروضة في تبويب الإعلانات بالواجهة الجديدة
+  String get roleLabelKey {
+    switch (currentRole.value) {
+      case AccountType.clinic:
+        return 'ads.roles.clinic';
+      case AccountType.both:
+        return 'ads.roles.clinic_with_lab';
+      case AccountType.lab:
+        return 'ads.roles.lab';
+    }
+  }
+
+  AccountType _mapRole(String value) {
+    switch (value) {
+      case 'clinicWithLab':
+      case 'clinic_with_lab':
+        return AccountType.both;
+      case 'lab':
+        return AccountType.lab;
+      default:
+        return AccountType.clinic;
+    }
   }
 
   // ========== Helper Methods ==========
@@ -344,34 +466,38 @@ class SettingsController extends GetxController {
 
   // ========== Data Export ==========
   Future<void> exportData() async {
-    try {
-      isLoading(true);
-
-      // TODO: Generate and download data export
-      await Future.delayed(const Duration(seconds: 2));
-
-      _showSuccessSnackbar('Data exported successfully');
-    } catch (e) {
-      _showErrorSnackbar('Failed to export data');
-    } finally {
-      isLoading(false);
-    }
+    if (isLoading.value) return;
+    isLoading(true);
+    final result = await _settingsRepository.exportData();
+    isLoading(false);
+    result.when(
+      success: (model) {
+        if (model.status != 'success') {
+          _showErrorSnackbar(model.message ?? 'Failed to export data');
+          return;
+        }
+        _showSuccessSnackbar(model.message ?? 'Data exported successfully');
+      },
+      failure: (_) => _showErrorSnackbar('Failed to export data'),
+    );
   }
 
   // ========== Cache Management ==========
   Future<void> clearCache() async {
-    try {
-      isLoading(true);
-
-      // TODO: Clear app cache
-      await Future.delayed(const Duration(milliseconds: 800));
-
-      _showSuccessSnackbar('Cache cleared successfully');
-    } catch (e) {
-      _showErrorSnackbar('Failed to clear cache');
-    } finally {
-      isLoading(false);
-    }
+    if (isLoading.value) return;
+    isLoading(true);
+    final result = await _settingsRepository.clearCache();
+    isLoading(false);
+    result.when(
+      success: (model) {
+        if (model.status != 'success') {
+          _showErrorSnackbar(model.message ?? 'Failed to clear cache');
+          return;
+        }
+        _showSuccessSnackbar(model.message ?? 'Cache cleared successfully');
+      },
+      failure: (_) => _showErrorSnackbar('Failed to clear cache'),
+    );
   }
 
   // ========== App Info ==========

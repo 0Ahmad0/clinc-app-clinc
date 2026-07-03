@@ -1,5 +1,11 @@
 import 'package:clinc_app_clinc/modules/settings/views/settings_view.dart';
 import 'package:clinc_app_clinc/modules/settings/bindings/settings_binding.dart';
+import 'package:clinc_app_clinc/modules/ads/views/ads_view.dart';
+import 'package:clinc_app_clinc/modules/ads/views/ads_type_view.dart';
+import 'package:clinc_app_clinc/modules/ads/views/create_single_ad_view.dart';
+import 'package:clinc_app_clinc/modules/ads/views/ads_packages_view.dart';
+import 'package:clinc_app_clinc/modules/ads/views/ads_payment_view.dart';
+import 'package:clinc_app_clinc/modules/ads/bindings/ads_binding.dart';
 import 'package:clinc_app_clinc/modules/notifications/views/notifications_view.dart';
 import 'package:clinc_app_clinc/modules/notifications/bindings/notifications_binding.dart';
 import 'package:clinc_app_clinc/modules/appointments/views/appointments_view.dart';
@@ -29,6 +35,8 @@ import '../../modules/appointments/bindings/appointment_details_binding.dart';
 import '../../modules/appointments/views/appointment_details_view.dart';
 import '../../modules/auth/bindings/forgot_password_binding.dart';
 import '../../modules/auth/views/forgot_password_view.dart';
+import '../../modules/auth/bindings/reset_password_binding.dart';
+import '../../modules/auth/views/reset_password_view.dart';
 import '../../modules/complete_profile/bindings/complete_profile_binding.dart';
 import '../../modules/complete_profile/views/complete_profile_view.dart';
 import '../../modules/main_layout/bindings/main_layout_binding.dart';
@@ -45,10 +53,36 @@ import '../../modules/settings/views/contact_support_view.dart';
 import '../../modules/settings/views/help_view.dart';
 import '../../modules/settings/views/google_map_picker_view.dart';
 import '../../modules/settings/views/privacy_policy_view.dart';
+import '../../modules/settings/views/notification_settings_view.dart';
 import 'app_routes.dart';
 
 class AppPages {
   static final routes = [
+    GetPage(
+      name: AppRoutes.ads,
+      page: () => const AdsView(),
+      binding: AdsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.adsType,
+      page: () => const AdsTypeView(),
+      binding: AdsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.adsCreateSingle,
+      page: () => const CreateSingleAdView(),
+      binding: AdsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.adsPackages,
+      page: () => const AdsPackagesView(),
+      binding: AdsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.adsPayment,
+      page: () => const AdsPaymentView(),
+      binding: AdsBinding(),
+    ),
     GetPage(
       name: AppRoutes.settings,
       page: () => const SettingsView(),
@@ -58,6 +92,11 @@ class AppPages {
       name: AppRoutes.changePassword,
       page: () => const ChangePasswordView(),
       binding: ChangePasswordBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.notificationSettings,
+      page: () => const NotificationSettingsView(),
+      binding: SettingsBinding(),
     ),
     GetPage(name: AppRoutes.about, page: () => const AboutView()),
     GetPage(
@@ -137,6 +176,11 @@ class AppPages {
       name: AppRoutes.forgotPassword,
       page: () => const ForgotPasswordView(),
       binding: ForgotPasswordBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.resetPassword,
+      page: () => const ResetPasswordView(),
+      binding: ResetPasswordBinding(),
     ),
     GetPage(
       name: AppRoutes.register,

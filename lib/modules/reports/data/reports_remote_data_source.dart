@@ -44,4 +44,34 @@ class ReportsRemoteDataSource implements ReportsDataSource {
       (json) => ReportModel.fromJson(Map<String, dynamic>.from(json as Map)),
     );
   }
+
+  @override
+  Future<BaseModel<Map<String, dynamic>>> downloadReport(
+    ReportModel report,
+  ) async {
+    final response = await _apiServices.post(
+      '${AppUrl.clinicReports}/${report.id}/download',
+      body: {'format': report.format.name},
+      hasToken: true,
+    );
+    return BaseModel.fromJson(
+      response,
+      (json) => Map<String, dynamic>.from(json as Map),
+    );
+  }
+
+  @override
+  Future<BaseModel<Map<String, dynamic>>> shareReport(
+    ReportModel report,
+  ) async {
+    final response = await _apiServices.post(
+      '${AppUrl.clinicReports}/${report.id}/share',
+      body: const <String, dynamic>{},
+      hasToken: true,
+    );
+    return BaseModel.fromJson(
+      response,
+      (json) => Map<String, dynamic>.from(json as Map),
+    );
+  }
 }

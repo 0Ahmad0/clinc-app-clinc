@@ -10,4 +10,6 @@ abstract class ClinicAuthDataSource {
   Future<ClinicAuthActionResponse> verifyOtp(VerifyOtpRequest request);
 
   Future<ClinicAuthActionResponse> resendOtp(ResendOtpRequest request);
+
+  Future<ClinicAuthActionResponse> resetPassword(ResetPasswordRequest request);
 }

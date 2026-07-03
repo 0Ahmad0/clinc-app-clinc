@@ -24,6 +24,10 @@ class ClinicAuthRepository {
     ResendOtpRequest request,
   ) => _execute(() => _dataSource.resendOtp(request));
 
+  Future<ApiResponse<ClinicAuthActionResponse>> resetPassword(
+    ResetPasswordRequest request,
+  ) => _execute(() => _dataSource.resetPassword(request));
+
   Future<ApiResponse<ClinicAuthActionResponse>> _execute(
     Future<ClinicAuthActionResponse> Function() action,
   ) async {

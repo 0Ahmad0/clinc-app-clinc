@@ -61,4 +61,36 @@ void main() {
       expect(response.result?.imagePaths.length, 2);
     },
   );
+
+  test(
+    'settings mock syncs profile notifications export and cache actions',
+    () async {
+      final dataSource = SettingsMockDataSource();
+
+      final profile = await dataSource.getProfile();
+      expect(profile.status, 'success');
+      expect(profile.result?.email, isNotEmpty);
+
+      final updatedSettings = await dataSource.updateNotificationSettings(
+        settings: const {
+          'app_notifications': false,
+          'email_notifications': true,
+          'sms_notifications': false,
+          'appointment_reminders': false,
+          'promotional_notifications': false,
+        },
+      );
+      expect(updatedSettings.status, 'success');
+      expect(updatedSettings.result?['email_notifications'], isTrue);
+
+      final loadedSettings = await dataSource.getNotificationSettings();
+      expect(loadedSettings.result?['app_notifications'], isFalse);
+
+      final export = await dataSource.exportData();
+      expect(export.result?['file_url'], startsWith('mock://settings/export-'));
+
+      final cache = await dataSource.clearCache();
+      expect(cache.result?['cleared'], isTrue);
+    },
+  );
 }

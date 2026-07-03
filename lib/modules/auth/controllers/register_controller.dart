@@ -35,6 +35,10 @@ class RegisterController extends GetxController {
 
   void selectAccountType(AccountType type) => selectedAccountType.value = type;
 
+  void togglePassVisibility() => isPassHidden.toggle();
+
+  void toggleConfirmPassVisibility() => isConfirmPassHidden.toggle();
+
   String? validateRequired(String? value) {
     if (value == null || value.trim().isEmpty) {
       return tr(LocaleKeys.register_messages_required_field);
@@ -51,9 +55,18 @@ class RegisterController extends GetxController {
     return null;
   }
 
-  String? validateConfirmPassword(String? value) {
+  String? validatePassword(String? value) {
     final requiredError = validateRequired(value);
     if (requiredError != null) return requiredError;
+    if (value!.length < 8) {
+      return tr(LocaleKeys.settings_change_password_min_length);
+    }
+    return null;
+  }
+
+  String? validateConfirmPassword(String? value) {
+    final passwordError = validatePassword(value);
+    if (passwordError != null) return passwordError;
     if (value != passwordController.text) {
       return tr(LocaleKeys.register_messages_password_mismatch);
     }
@@ -96,6 +109,7 @@ class RegisterController extends GetxController {
           return;
         }
         final clinic = response.data?['clinic'];
+        final identifier = emailController.text.trim();
         if (clinic is Map) {
           await StorageService.instance.cacheClinic(
             Map<String, dynamic>.from(clinic),
@@ -104,7 +118,11 @@ class RegisterController extends GetxController {
             clinic['clinic_id']?.toString(),
           );
         }
-        Get.offAllNamed(AppRoutes.pendingApproval);
+        ResponseHelper.onSuccess(message: response.message);
+        Get.toNamed(
+          AppRoutes.otp,
+          arguments: {'identifier': identifier, 'purpose': 'registration'},
+        );
       },
       failure: (exception) => ResponseHelper.onFailure(
         message: NetworkExceptions.getErrorMessage(exception),

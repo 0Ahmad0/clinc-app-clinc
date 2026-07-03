@@ -190,6 +190,9 @@ class CodegenLoader extends AssetLoader{
     "cancel": "Cancel"
   },
   "dashboard": {
+    "title": "Dashboard",
+    "new_appointment": "New Appointment",
+    "stats_title": "Clinic Statistics",
     "welcome": "Welcome",
     "stats": {
       "doctors": "Doctors",
@@ -272,6 +275,9 @@ class CodegenLoader extends AssetLoader{
   "add_doctor": {
     "title": "Add New Doctor",
     "edit_title": "Edit Doctor Information",
+    "basic_info": "Basic Information",
+    "professional_info": "Professional Information",
+    "subtitle": "Enter the complete doctor information",
     "labels": {
       "name_ar": "Name (Arabic)",
       "name_en": "Name (English)",
@@ -415,8 +421,18 @@ class CodegenLoader extends AssetLoader{
       "success_edit": "Updated Successfully"
     }
   },
+  "appointment": {
+    "status": {
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "upcoming": "Upcoming"
+    }
+  },
   "appointments": {
     "title": "Appointments",
+    "count": "{} appointments",
+    "pending_count": "{} pending",
+    "add_button": "Add Appointment",
     "tabs": {
       "all": "All",
       "pending": "Pending",
@@ -440,7 +456,15 @@ class CodegenLoader extends AssetLoader{
     },
     "empty": {
       "title": "No Appointments",
-      "subtitle": "No appointments found matching the search criteria"
+      "subtitle": "No appointments found matching the search criteria",
+      "pending_title": "No pending appointments",
+      "pending_subtitle": "Pending appointments will appear here",
+      "approved_title": "No approved appointments",
+      "approved_subtitle": "Approved appointments will appear here",
+      "completed_title": "No completed appointments",
+      "completed_subtitle": "Completed appointments will appear here",
+      "rejected_title": "No rejected appointments",
+      "rejected_subtitle": "Rejected appointments will appear here"
     },
     "status": {
       "pending": "Pending",
@@ -450,6 +474,7 @@ class CodegenLoader extends AssetLoader{
     },
     "details": {
       "title": "Appointment Details",
+      "actions": "Actions",
       "patient_info": "Patient Info",
       "appointment_info": "Appointment Info",
       "result": "Lab Result",
@@ -536,6 +561,7 @@ class CodegenLoader extends AssetLoader{
     },
     "details": {
       "title": "Report Details",
+      "view_pdf": "View PDF",
       "generated_at": "Generated at",
       "download_pdf": "Download PDF",
       "visual_summary": "Visual Summary",
@@ -663,6 +689,102 @@ class CodegenLoader extends AssetLoader{
       "submit": "Update Password",
       "min_length": "Password must be at least 8 characters",
       "confirmation_mismatch": "Password confirmation does not match"
+    }
+  },
+  "ads": {
+    "roles": {
+      "clinic": "Clinic",
+      "clinic_with_lab": "Clinic With Lab",
+      "lab": "Lab"
+    },
+    "list": {
+      "title": "Your Ads",
+      "create": "Create Ad",
+      "create_short": "Create",
+      "role_label": "Current role: {}",
+      "start": "Start date",
+      "end": "End date",
+      "remaining": "Remaining"
+    },
+    "type": {
+      "title": "Choose ad type",
+      "single": "One-time ad",
+      "package": "Subscribe to package"
+    },
+    "create": {
+      "title": "Create Ad",
+      "publish": "Publish Ad"
+    },
+    "form": {
+      "title_hint": "Ad title",
+      "description_hint": "Description",
+      "upload_image": "Upload ad image",
+      "title_required": "Please enter ad title",
+      "description_required": "Please enter ad description",
+      "image_required": "Please upload an ad image",
+      "package_required": "Please choose a package"
+    },
+    "packages": {
+      "title": "Packages",
+      "subscribe_now": "Subscribe now",
+      "basic": {
+        "title": "Basic package",
+        "features": {
+          "one": "1 ad per month",
+          "two": "Standard visibility",
+          "three": "Technical support"
+        }
+      },
+      "advanced": {
+        "title": "Advanced package",
+        "features": {
+          "one": "3 ads per month",
+          "two": "Boosted visibility",
+          "three": "Priority support",
+          "four": "Analytics"
+        }
+      },
+      "pro": {
+        "title": "Professional package",
+        "features": {
+          "one": "Unlimited ads",
+          "two": "Premium visibility",
+          "three": "VIP support",
+          "four": "Advanced analytics",
+          "five": "Custom ads"
+        }
+      }
+    },
+    "payment": {
+      "title": "Payment",
+      "price": "Price",
+      "currency": "SAR",
+      "methods_title": "Payment methods",
+      "methods": {
+        "card": "Credit card",
+        "apple": "Apple Pay",
+        "mada": "Mada"
+      },
+      "pay_now": "Pay now"
+    },
+    "status": {
+      "active": "Active",
+      "finished": "Finished",
+      "remaining_days_hours": "{} days {} hours left",
+      "remaining_hours_minutes": "{} hours {} minutes left"
+    },
+    "messages": {
+      "not_available": "Option unavailable",
+      "not_available_for_role": "This option is not available for this role",
+      "validation_title": "Validation",
+      "success_title": "Ad created",
+      "success_body": "Your ad was submitted successfully and is ready to show"
+    },
+    "mock": {
+      "first_title": "Teeth Cleaning Offer",
+      "first_description": "Special discount for a limited time",
+      "second_title": "Teeth Whitening Discount",
+      "second_description": "Ad campaign ended"
     }
   },
   "services": {
@@ -872,6 +994,9 @@ static const Map<String,dynamic> _ar = {
     "cancel": "إلغاء"
   },
   "dashboard": {
+    "title": "لوحة التحكم",
+    "new_appointment": "موعد جديد",
+    "stats_title": "إحصائيات العيادة",
     "welcome": "مرحباً",
     "stats": {
       "doctors": "طبيب",
@@ -954,6 +1079,9 @@ static const Map<String,dynamic> _ar = {
   "add_doctor": {
     "title": "إضافة طبيب جديد",
     "edit_title": "تعديل بيانات الطبيب",
+    "basic_info": "المعلومات الأساسية",
+    "professional_info": "المعلومات المهنية",
+    "subtitle": "أدخل بيانات الطبيب كاملة",
     "labels": {
       "name_ar": "الاسم (بالعربية)",
       "name_en": "الاسم (بالانجليزية)",
@@ -1097,8 +1225,18 @@ static const Map<String,dynamic> _ar = {
       "success_edit": "تم التعديل بنجاح"
     }
   },
+  "appointment": {
+    "status": {
+      "completed": "مكتمل",
+      "cancelled": "ملغي",
+      "upcoming": "قادم"
+    }
+  },
   "appointments": {
     "title": "المواعيد",
+    "count": "{} مواعيد",
+    "pending_count": "{} قيد الانتظار",
+    "add_button": "إضافة موعد",
     "search_hint": "بحث عن موعد أو مريض...",
     "tabs": {
       "all": "الكل",
@@ -1109,7 +1247,15 @@ static const Map<String,dynamic> _ar = {
     },
     "empty": {
       "title": "لا توجد مواعيد",
-      "subtitle": "لم يتم العثور على أي مواعيد تطابق معايير البحث"
+      "subtitle": "لم يتم العثور على أي مواعيد تطابق معايير البحث",
+      "pending_title": "لا توجد مواعيد معلقة",
+      "pending_subtitle": "ستظهر المواعيد المعلقة هنا",
+      "approved_title": "لا توجد مواعيد مقبولة",
+      "approved_subtitle": "ستظهر المواعيد المقبولة هنا",
+      "completed_title": "لا توجد مواعيد مكتملة",
+      "completed_subtitle": "ستظهر المواعيد المكتملة هنا",
+      "rejected_title": "لا توجد مواعيد مرفوضة",
+      "rejected_subtitle": "ستظهر المواعيد المرفوضة هنا"
     },
     "card": {
       "patient": "المريض",
@@ -1132,6 +1278,7 @@ static const Map<String,dynamic> _ar = {
     },
     "details": {
       "title": "تفاصيل الموعد",
+      "actions": "الإجراءات",
       "patient_info": "معلومات المريض",
       "appointment_info": "معلومات الموعد",
       "notes": "ملاحظات",
@@ -1218,9 +1365,9 @@ static const Map<String,dynamic> _ar = {
     },
     "details": {
       "title": "تفاصيل التقرير",
+      "view_pdf": "عرض PDF",
       "generated_at": "تاريخ الإنشاء",
       "download_pdf": "تحميل PDF",
-      "view_pdf": "عرض PDF",
       "visual_summary": "ملخص مرئي",
       "notes": "ملاحظات",
       "add_notes": "أضف ملاحظاتك هنا..."
@@ -1346,6 +1493,102 @@ static const Map<String,dynamic> _ar = {
       "submit": "تحديث كلمة المرور",
       "min_length": "يجب ألا تقل كلمة المرور عن 8 أحرف",
       "confirmation_mismatch": "تأكيد كلمة المرور غير متطابق"
+    }
+  },
+  "ads": {
+    "roles": {
+      "clinic": "عيادة",
+      "clinic_with_lab": "عيادة مع مختبر",
+      "lab": "مختبر"
+    },
+    "list": {
+      "title": "إعلاناتك",
+      "create": "إنشاء إعلان",
+      "create_short": "إنشاء",
+      "role_label": "الدور الحالي: {}",
+      "start": "تاريخ البداية",
+      "end": "تاريخ النهاية",
+      "remaining": "الوقت المتبقي"
+    },
+    "type": {
+      "title": "اختر نوع الإعلان",
+      "single": "إعلان لمرة واحدة",
+      "package": "الاشتراك في باقة"
+    },
+    "create": {
+      "title": "إنشاء إعلان",
+      "publish": "نشر الإعلان"
+    },
+    "form": {
+      "title_hint": "عنوان الإعلان",
+      "description_hint": "الوصف",
+      "upload_image": "رفع صورة الإعلان",
+      "title_required": "يرجى إدخال عنوان الإعلان",
+      "description_required": "يرجى إدخال وصف الإعلان",
+      "image_required": "يرجى رفع صورة للإعلان",
+      "package_required": "يرجى اختيار باقة"
+    },
+    "packages": {
+      "title": "الباقات",
+      "subscribe_now": "اشترك الآن",
+      "basic": {
+        "title": "الباقة الأساسية",
+        "features": {
+          "one": "إعلان واحد شهرياً",
+          "two": "ظهور عادي",
+          "three": "دعم فني"
+        }
+      },
+      "advanced": {
+        "title": "الباقة المتقدمة",
+        "features": {
+          "one": "3 إعلانات شهرياً",
+          "two": "ظهور متقدم",
+          "three": "دعم فني أولوية",
+          "four": "تحليلات"
+        }
+      },
+      "pro": {
+        "title": "الباقة الاحترافية",
+        "features": {
+          "one": "إعلانات غير محدودة",
+          "two": "ظهور مميز",
+          "three": "دعم فني VIP",
+          "four": "تحليلات متقدمة",
+          "five": "إعلانات مخصصة"
+        }
+      }
+    },
+    "payment": {
+      "title": "الدفع",
+      "price": "السعر",
+      "currency": "ريال",
+      "methods_title": "طرق الدفع",
+      "methods": {
+        "card": "بطاقة ائتمان",
+        "apple": "Apple Pay",
+        "mada": "مدى"
+      },
+      "pay_now": "الدفع الآن"
+    },
+    "status": {
+      "active": "نشط",
+      "finished": "منتهي",
+      "remaining_days_hours": "{} يوم {} ساعة متبقية",
+      "remaining_hours_minutes": "{} ساعة {} دقيقة متبقية"
+    },
+    "messages": {
+      "not_available": "الخيار غير متاح",
+      "not_available_for_role": "هذا الخيار غير متاح للدور الحالي",
+      "validation_title": "تحقق من البيانات",
+      "success_title": "تم إنشاء الإعلان",
+      "success_body": "تم إرسال إعلانك بنجاح وجاهز للعرض"
+    },
+    "mock": {
+      "first_title": "عرض تنظيف الأسنان",
+      "first_description": "خصم خاص لفترة محدودة",
+      "second_title": "خصم تبييض الأسنان",
+      "second_description": "انتهت مدة الإعلان"
     }
   },
   "services": {

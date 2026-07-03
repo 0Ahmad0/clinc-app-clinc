@@ -5,6 +5,50 @@ import 'settings_data_source.dart';
 
 class SettingsMockDataSource implements SettingsDataSource {
   ProfileModel? pendingProfileUpdate;
+  ProfileModel _profile = ProfileModel.mock;
+  final Map<String, bool> _notificationSettings = {
+    'app_notifications': true,
+    'email_notifications': false,
+    'sms_notifications': true,
+    'appointment_reminders': true,
+    'promotional_notifications': false,
+  };
+
+  @override
+  Future<BaseModel<ProfileModel>> getProfile() async {
+    await Future<void>.delayed(const Duration(milliseconds: 450));
+    return BaseModel.fromJson({
+      'status': 'success',
+      'message': 'Clinic profile retrieved successfully',
+      'data': _profile.toJson(),
+      'meta': null,
+    }, (json) => ProfileModel.fromJson(Map<String, dynamic>.from(json as Map)));
+  }
+
+  @override
+  Future<BaseModel<Map<String, dynamic>>> getNotificationSettings() async {
+    await Future<void>.delayed(const Duration(milliseconds: 350));
+    return _response(
+      status: 'success',
+      message: 'Notification settings retrieved successfully',
+      data: Map<String, dynamic>.from(_notificationSettings),
+    );
+  }
+
+  @override
+  Future<BaseModel<Map<String, dynamic>>> updateNotificationSettings({
+    required Map<String, bool> settings,
+  }) async {
+    await Future<void>.delayed(const Duration(milliseconds: 450));
+    _notificationSettings
+      ..clear()
+      ..addAll(settings);
+    return _response(
+      status: 'success',
+      message: 'Notification settings updated successfully',
+      data: Map<String, dynamic>.from(_notificationSettings),
+    );
+  }
 
   @override
   Future<BaseModel<Map<String, dynamic>>> changePassword({
@@ -37,6 +81,7 @@ class SettingsMockDataSource implements SettingsDataSource {
   ) async {
     await Future<void>.delayed(const Duration(milliseconds: 700));
     pendingProfileUpdate = profile.copyWith(updateStatus: 'pending');
+    _profile = profile;
     return BaseModel.fromJson({
       'status': 'success',
       'message': 'Profile update request sent for admin approval',
@@ -70,14 +115,39 @@ class SettingsMockDataSource implements SettingsDataSource {
     );
   }
 
+  @override
+  Future<BaseModel<Map<String, dynamic>>> exportData() async {
+    await Future<void>.delayed(const Duration(milliseconds: 700));
+    return _response(
+      status: 'success',
+      message: 'Clinic data export generated successfully',
+      data: {
+        'file_url':
+            'mock://settings/export-${DateTime.now().millisecondsSinceEpoch}.json',
+        'generated_at': DateTime.now().toIso8601String(),
+      },
+    );
+  }
+
+  @override
+  Future<BaseModel<Map<String, dynamic>>> clearCache() async {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    return _response(
+      status: 'success',
+      message: 'App cache cleared successfully',
+      data: {'cleared': true},
+    );
+  }
+
   BaseModel<Map<String, dynamic>> _response({
     required String status,
     required String message,
+    Map<String, dynamic>? data,
   }) {
     return BaseModel.fromJson({
       'status': status,
       'message': message,
-      'data': <String, dynamic>{},
+      'data': data ?? <String, dynamic>{},
       'error': null,
     }, (json) => Map<String, dynamic>.from(json as Map));
   }

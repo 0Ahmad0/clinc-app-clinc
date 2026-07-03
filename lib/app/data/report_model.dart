@@ -1,11 +1,13 @@
-enum ReportType { appointments, clinic, revenue, doctors }
+enum ReportType { appointments, clinic, revenue, doctors, labResults }
 
-enum ReportRange { week, month, year }
+enum ReportRange { week, month, year, custom }
 
 enum ReportFormat { pdf, excel }
 
 extension ReportTypeX on ReportType {
-  String key() => 'reports.types.$name';
+  String key() => this == ReportType.labResults
+      ? 'reports.types.lab_results'
+      : 'reports.types.$name';
 }
 
 extension ReportRangeX on ReportRange {
@@ -17,32 +19,43 @@ extension ReportFormatX on ReportFormat {
 }
 
 class ReportModel {
+  final String id;
+  final ReportType type;
+  final DateTime generatedAt;
+
+  final int total;
+  final int completed;
+  final int pending;
+  final int cancelled;
+
+  final String? pdfPathOrUrl;
+
+  final double? totalRevenue;
+
   const ReportModel({
     required this.id,
     required this.type,
-    required this.range,
-    required this.format,
+    this.range = ReportRange.month,
+    this.format = ReportFormat.pdf,
     required this.generatedAt,
     required this.total,
     required this.completed,
     required this.pending,
     required this.cancelled,
+    this.pdfPathOrUrl,
+    this.totalRevenue,
     required this.fileUrl,
   });
 
-  final String id;
-  final ReportType type;
+  double get completionRate => total == 0 ? 0 : (completed / total * 100);
+
   final ReportRange range;
   final ReportFormat format;
-  final DateTime generatedAt;
-  final int total;
-  final int completed;
-  final int pending;
-  final int cancelled;
+
   final String fileUrl;
 
   bool get hasPdf => format == ReportFormat.pdf && fileUrl.isNotEmpty;
-  String? get pdfPathOrUrl => hasPdf ? fileUrl : null;
+  // String? get pdfPathOrUrl => hasPdf ? fileUrl : null;
 
   factory ReportModel.fromJson(Map<String, dynamic> json) {
     return ReportModel(

@@ -23,7 +23,9 @@ class OtpTimerWidget extends GetView<OtpController> {
             5.horizontalSpace,
             Text(
               '${tr(LocaleKeys.otp_buttons_resend_wait)} ',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
             ),
             Text(
               '00:${seconds.toString().padLeft(2, '0')}',

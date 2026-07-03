@@ -48,6 +48,8 @@ class AppUrl {
   static const verifyOtp = '${baseUrl}verify-otp';
   static const resendOtp = '${baseUrl}resend-otp';
   static const appResetPassword = '$baseUrl${app}reset-password';
+  static const clinicResetPassword = '${baseUrl}clinic/reset-password';
+  static const clinicSocialLogin = '${baseUrl}clinic/social-login';
   static const changePassword = '${baseUrl}change-password';
   static const changeEmail = '$baseUrl${user}change_email/';
   static const changeUsername = '$baseUrl${user}change_username/';

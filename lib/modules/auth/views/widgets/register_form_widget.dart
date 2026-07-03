@@ -26,7 +26,6 @@ class RegisterFormWidget extends GetView<RegisterController> {
           ),
           16.verticalSpace,
 
-
           // Email
           AppTextFormFieldWidget(
             controller: controller.emailController,
@@ -47,26 +46,30 @@ class RegisterFormWidget extends GetView<RegisterController> {
           16.verticalSpace,
 
           // Password
-          Obx(() => AppTextFormFieldWidget(
-            controller: controller.passwordController,
-            prefixIcon: Icons.lock_outline,
-            isPassword: controller.isPassHidden.value,
-            hintText: tr(LocaleKeys.register_fields_password),
-            validator: controller.validateRequired,
-            textInputAction: TextInputAction.next,
-          )),
+          Obx(
+            () => AppTextFormFieldWidget(
+              controller: controller.passwordController,
+              prefixIcon: Icons.lock_outline,
+              isPassword: controller.isPassHidden.value,
+              hintText: tr(LocaleKeys.register_fields_password),
+              validator: controller.validateRequired,
+              textInputAction: TextInputAction.next,
+            ),
+          ),
           16.verticalSpace,
 
           // Confirm Password
-          Obx(() => AppTextFormFieldWidget(
-            controller: controller.confirmPasswordController,
-            prefixIcon: Icons.lock_reset_outlined,
-            hintText: tr(LocaleKeys.register_fields_confirm_password),
-            isPassword: controller.isConfirmPassHidden.value,
-            validator: controller.validateConfirmPassword,
-            textInputAction: TextInputAction.done,
-            onFieldSubmitted: (_) => controller.register(),
-          )),
+          Obx(
+            () => AppTextFormFieldWidget(
+              controller: controller.confirmPasswordController,
+              prefixIcon: Icons.lock_reset_outlined,
+              hintText: tr(LocaleKeys.register_fields_confirm_password),
+              isPassword: controller.isConfirmPassHidden.value,
+              validator: controller.validateConfirmPassword,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => controller.register(),
+            ),
+          ),
         ],
       ),
     );

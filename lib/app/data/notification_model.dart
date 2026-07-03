@@ -25,6 +25,16 @@ class NotificationModel {
 
   bool get isRead => status == NotificationStatus.read;
 
+  String get formattedDate {
+    final now = DateTime.now();
+    final date = DateTime(createdAt.year, createdAt.month, createdAt.day);
+    final today = DateTime(now.year, now.month, now.day);
+    final difference = today.difference(date).inDays;
+    if (difference == 0) return 'اليوم';
+    if (difference == 1) return 'البارحة';
+    return '${createdAt.day}/${createdAt.month}/${createdAt.year}';
+  }
+
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
       id: json['notification_id'].toString(),

@@ -36,6 +36,9 @@ class ClinicAuthMockDataSource implements ClinicAuthDataSource {
           'type': request.type.name,
           'status': 'pending',
         },
+        'identifier': request.email,
+        'delivery_method': 'email',
+        'expires_in': 60,
       },
       'meta': <String, dynamic>{},
     });
@@ -82,7 +85,11 @@ class ClinicAuthMockDataSource implements ClinicAuthDataSource {
     return _response({
       'status': 'success',
       'message': 'Verification code verified successfully',
-      'data': {'verified': true, 'reset_token': 'mock-password-reset-token'},
+      'data': {
+        'verified': true,
+        if (request.purpose == 'password_reset')
+          'reset_token': 'mock-password-reset-token',
+      },
       'meta': <String, dynamic>{},
     });
   }
@@ -94,6 +101,35 @@ class ClinicAuthMockDataSource implements ClinicAuthDataSource {
       'status': 'success',
       'message': 'Verification code resent successfully',
       'data': {'identifier': request.identifier, 'expires_in': 60},
+      'meta': <String, dynamic>{},
+    });
+  }
+
+  @override
+  Future<ClinicAuthActionResponse> resetPassword(
+    ResetPasswordRequest request,
+  ) async {
+    await Future<void>.delayed(_delay);
+    if (request.resetToken != 'mock-password-reset-token') {
+      return _response({
+        'status': 'error',
+        'message': 'Invalid or expired reset token',
+        'error': null,
+      });
+    }
+    if (request.password != request.passwordConfirmation) {
+      return _response({
+        'status': 'error',
+        'message': 'Validation failed',
+        'error': {
+          'password_confirmation': ['Password confirmation does not match.'],
+        },
+      });
+    }
+    return _response({
+      'status': 'success',
+      'message': 'Password reset successfully',
+      'data': {'reset': true},
       'meta': <String, dynamic>{},
     });
   }

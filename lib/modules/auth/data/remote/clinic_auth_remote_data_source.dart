@@ -51,4 +51,16 @@ class ClinicAuthRemoteDataSource implements ClinicAuthDataSource {
     );
     return ClinicAuthActionResponse.fromJson(response);
   }
+
+  @override
+  Future<ClinicAuthActionResponse> resetPassword(
+    ResetPasswordRequest request,
+  ) async {
+    final response = await _apiServices.post(
+      AppUrl.clinicResetPassword,
+      body: request.toJson(),
+      hasToken: false,
+    );
+    return ClinicAuthActionResponse.fromJson(response);
+  }
 }

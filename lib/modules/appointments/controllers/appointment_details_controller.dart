@@ -11,6 +11,9 @@ import '../domain/appointments_repository.dart';
 import 'appointments_controller.dart';
 
 class AppointmentDetailsController extends GetxController {
+  AppointmentsController get listController =>
+      Get.find<AppointmentsController>();
+
   late final AppointmentModel initial;
   late final AppointmentsRepository _repository;
   final Rx<AppointmentModel> appointment = AppointmentModel(

@@ -1,4 +1,9 @@
 abstract class AppRoutes {
+  static const adsPayment = '/ads/payment';
+  static const adsPackages = '/ads/packages';
+  static const adsCreateSingle = '/ads/create-single';
+  static const adsType = '/ads/type';
+  static const ads = '/ads';
   static const settings = '/settings';
   static const changePassword = '/settings/change-password';
   static const about = '/settings/about';
@@ -19,6 +24,8 @@ abstract class AppRoutes {
   static const pendingApproval = '/pending_approval';
   static const otp = '/otp';
   static const forgotPassword = '/forgot-password';
+  static const resetPassword = '/reset-password';
+  static const notificationSettings = '/settings/notifications';
   static const register = '/register';
   static const login = '/login';
   static const onboarding = '/onboarding';

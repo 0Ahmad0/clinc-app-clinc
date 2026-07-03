@@ -32,9 +32,12 @@ class StorageService extends GetxService {
   static const String PENDING_REGISTRATION_REFERENCE =
       'pending_registration_reference';
   static const String ROLE = 'role';
+  static const String ACCOUNT_TYPE = 'account_type';
   static const String APP_NOTIFICATIONS = 'app_notifications';
   static const String EMAIL_NOTIFICATIONS = 'email_notifications';
   static const String SMS_NOTIFICATIONS = 'sms_notifications';
+  static const String APPOINTMENT_REMINDERS = 'appointment_reminders';
+  static const String PROMOTIONAL_NOTIFICATIONS = 'promotional_notifications';
 
   // دالة لتهيئة الخدمة (سيتم استدعاؤها تلقائياً)
   Future<StorageService> init() async {
@@ -162,6 +165,7 @@ class StorageService extends GetxService {
             removeData(PROFILE_COMPLETED),
             removeData(PENDING_REGISTRATION_REFERENCE),
             removeData(ROLE),
+            removeData(ACCOUNT_TYPE),
           ]
           as Iterable<Future>,
     );

@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 import '../../../../app/data/base_model.dart';
 import '../../../../app/data/remote/api_response.dart';
 import '../../../../app/data/user.dart';
@@ -14,9 +13,9 @@ class AuthRepository {
 
   AuthRepository(this._remoteDataSource);
 
-  Future<ApiResponse<BaseModel>> Login(String email, String password) async {
+  Future<ApiResponse<BaseModel>> login(String email, String password) async {
     try {
-      final response = await _remoteDataSource.Login(email, password);
+      final response = await _remoteDataSource.login(email, password);
       if (response.status == 'error') {
         return ApiResponse.failure(
           NetworkExceptions.defaultError(response.message ?? ''),

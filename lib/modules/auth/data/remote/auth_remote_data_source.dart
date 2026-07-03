@@ -1,7 +1,6 @@
 import 'package:clinc_app_clinc/app/services/storage_service.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../app/core/utils/app_url.dart';
 import '../../../../app/data/base_model.dart';
@@ -9,13 +8,12 @@ import '../../../../app/data/user.dart';
 import '../../../../app/domain/services/api_service.dart';
 import '../password_reset_response_model.dart';
 
-
 class AuthRemoteDataSource {
   final ApiServices _apiServices;
 
   AuthRemoteDataSource(this._apiServices);
 
-  Future<BaseModel> Login(String email, String password) async {
+  Future<BaseModel> login(String email, String password) async {
     final response = await _apiServices.post(
       AppUrl.login,
       body: {"email": email, "password": password},
@@ -75,7 +73,7 @@ class AuthRemoteDataSource {
       "password_confirmation": passwordConfirmation,
       "phone": phone,
       "gender": gender,
-      "birth_day": DateFormat('yyyy-MM-dd').format(birthDay),
+      "birth_day": _formatDate(birthDay),
       "country_id": countryId,
       "city_id": cityId,
       "role": role,
@@ -96,14 +94,17 @@ class AuthRemoteDataSource {
     return BaseModel.fromJson(response, (json) => json as Map<String, dynamic>);
   }
 
+  String _formatDate(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
+  }
+
   Future<BaseModel> getProfile() async {
-    final response = await _apiServices.get(
-      AppUrl.getProfile,
-      hasToken: true,
-    );
+    final response = await _apiServices.get(AppUrl.getProfile, hasToken: true);
 
     response['message'] ??= 'successful';
-    
+
     // ✅ Map documents.personal_photo to profile_image for children users
     final data = response['data'];
     if (data is Map<String, dynamic>) {
@@ -115,11 +116,10 @@ class AuthRemoteDataSource {
         }
       }
     }
-    
+
     await _cacheRolesFromProfileResponse(response);
 
-      await _cacheUserFromProfileResponse(response);
-
+    await _cacheUserFromProfileResponse(response);
 
     return BaseModel.fromJson(response, (json) => UserModel.fromJson(json));
   }
@@ -146,7 +146,9 @@ class AuthRemoteDataSource {
     }
 
     if (data is Map) {
-      await StorageService.instance.cacheUserModel(Map<String, dynamic>.from(data));
+      await StorageService.instance.cacheUserModel(
+        Map<String, dynamic>.from(data),
+      );
     }
   }
 

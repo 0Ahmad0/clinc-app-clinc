@@ -1,5 +1,6 @@
 import '../data_sources/clinic_login_data_source.dart';
 import '../login_model.dart';
+import '../clinic_auth_model.dart';
 
 class ClinicLoginMockDataSource implements ClinicLoginDataSource {
   @override
@@ -39,20 +40,37 @@ class ClinicLoginMockDataSource implements ClinicLoginDataSource {
       });
     }
 
+    return _successResponse();
+  }
+
+  @override
+  Future<ClinicLoginResponse> socialLogin(SocialLoginRequest request) async {
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    if (!const {'google', 'apple', 'guest'}.contains(request.provider)) {
+      return ClinicLoginResponse.fromJson({
+        'status': 'error',
+        'message': 'Unsupported login provider',
+        'error': null,
+      });
+    }
+    return _successResponse(isGuest: request.provider == 'guest');
+  }
+
+  ClinicLoginResponse _successResponse({bool isGuest = false}) {
     return ClinicLoginResponse.fromJson({
       'status': 'success',
       'message': 'Clinic logged in successfully',
       'data': {
         'clinic': {
-          'clinic_id': 'C-001',
-          'name': 'عيادات النخبة الطبية',
+          'clinic_id': isGuest ? 'GUEST' : 'C-001',
+          'name': isGuest ? 'Guest Clinic' : 'عيادات النخبة الطبية',
           'location': 'الرياض - شمال الرياض - حي النرجس',
           'doctors_count': 3,
           'appointments_count': 1,
           'revenue': 0,
           'rating': 0,
           'status': 'approved',
-          'email': 'info@nukhba-clinic.com',
+          'email': isGuest ? 'guest@clinic.local' : 'info@nukhba-clinic.com',
           'phone': '966501111111',
           'type': 'both',
           'logo': 'clinics/logo1.png',
@@ -65,7 +83,7 @@ class ClinicLoginMockDataSource implements ClinicLoginDataSource {
         },
         'needs_completion': false,
         'missing_fields': <String>[],
-        'token': '',
+        'token': isGuest ? 'mock-guest-token' : 'mock-clinic-token',
       },
       'meta': <String, dynamic>{},
     });

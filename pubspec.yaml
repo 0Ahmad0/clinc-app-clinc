@@ -25,7 +25,7 @@ dependencies:
   easy_localization:
   get_storage:
   iconsax:
-  fl_chart:
+  fl_chart: ^0.68.0
   carousel_slider:
   animated_bottom_navigation_bar:
   skeletonizer:

@@ -14,6 +14,10 @@ class ReportListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+    final color = _typeColor(report.type, cs);
+
+    // تنسيق التاريخ والوقت (من الكود القديم)
     final date = DateFormat('EEE, MMM d').format(report.generatedAt);
     final time = DateFormat('hh:mm a').format(report.generatedAt);
 
@@ -22,134 +26,194 @@ class ReportListItem extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(18.r),
           onTap: () =>
               Get.to(() => const ReportDetailsView(), arguments: report),
           child: Container(
-            padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
               color: cs.surface,
-              borderRadius: BorderRadius.circular(16.r),
+              borderRadius: BorderRadius.circular(18.r),
               border: Border.all(
-                color: cs.outlineVariant.withValues(alpha: 0.2),
+                color: isDark
+                    ? cs.outlineVariant.withValues(alpha: 0.15)
+                    : cs.outlineVariant.withValues(alpha: 0.3),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: cs.shadow.withValues(alpha: 0.05),
-                  blurRadius: 15,
-                  offset: const Offset(0, 5),
+                  color: isDark
+                      ? Colors.black.withValues(alpha: 0.15)
+                      : color.withValues(alpha: 0.06),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
                 ),
               ],
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [cs.surface, cs.surface.withValues(alpha: 0.9)],
-              ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    // Icon with background
-                    Container(
-                      width: 48.r,
-                      height: 48.r,
-                      decoration: BoxDecoration(
-                        color: _getTypeColor(
-                          report.type,
-                          cs,
-                        ).withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(14.r),
-                      ),
-                      child: Icon(
-                        _getTypeIcon(report.type),
-                        color: _getTypeColor(report.type, cs),
+            child: IntrinsicHeight(
+              child: Row(
+                children: [
+                  // الشريط الجانبي الملون (من الجديد)
+                  Container(
+                    width: 4.w,
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(18.r),
+                        bottomRight: Radius.circular(18.r),
                       ),
                     ),
-                    12.horizontalSpace,
-
-                    // Report Info
-                    Expanded(
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: 14.h,
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            tr(report.type.key()),
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w800,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          // الصف العلوي: الأيقونة + العنوان + التاريخ + السهم
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // أيقونة مع خلفية (مدمج من القديم والجديد)
+                              Container(
+                                width: 44.r,
+                                height: 44.r,
+                                decoration: BoxDecoration(
+                                  color: color.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: Icon(
+                                  _getTypeIcon(report.type),
+                                  color: color,
+                                  size: 20.sp,
+                                ),
+                              ),
+                              12.horizontalSpace,
+                              // معلومات التقرير
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            tr(report.type.key()),
+                                            style: theme.textTheme.titleSmall
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w800,
+                                                ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        // أيقونة PDF (من الجديد)
+                                        if (report.format == ReportFormat.pdf)
+                                          Icon(
+                                            Icons.picture_as_pdf_rounded,
+                                            color: cs.error,
+                                            size: 16.sp,
+                                          ),
+                                      ],
+                                    ),
+                                    4.verticalSpace,
+                                    // التاريخ والوقت (من القديم)
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.calendar_today_rounded,
+                                          size: 11.sp,
+                                          color: cs.onSurfaceVariant,
+                                        ),
+                                        4.horizontalSpace,
+                                        Text(
+                                          date,
+                                          style: theme.textTheme.labelSmall
+                                              ?.copyWith(
+                                                color: cs.onSurfaceVariant,
+                                              ),
+                                        ),
+                                        8.horizontalSpace,
+                                        Icon(
+                                          Icons.access_time_rounded,
+                                          size: 11.sp,
+                                          color: cs.onSurfaceVariant,
+                                        ),
+                                        4.horizontalSpace,
+                                        Text(
+                                          time,
+                                          style: theme.textTheme.labelSmall
+                                              ?.copyWith(
+                                                color: cs.onSurfaceVariant,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // سهم التوجيه (من القديم)
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 14.sp,
+                                color: cs.onSurfaceVariant,
+                              ),
+                            ],
                           ),
-                          4.verticalSpace,
-                          Text(
-                            date,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: cs.onSurfaceVariant,
-                            ),
-                          ),
-                          3.verticalSpace,
-                          Text(
-                            '${tr(report.range.key())} • '
-                            '${tr(report.format.key())}',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: cs.onSurfaceVariant,
-                            ),
+                          14.verticalSpace,
+
+                          // شريط التقدم (مدمج من القديم والجديد)
+                          _SegmentedBar(report: report, color: color),
+                          10.verticalSpace,
+
+                          // إحصائيات (مدمجة من القديم والجديد)
+                          Row(
+                            children: [
+                              _StatBadge(
+                                value: report.completed,
+                                label: tr(LocaleKeys.reports_cards_completed),
+                                color: const Color(0xFF10B981),
+                              ),
+                              8.horizontalSpace,
+                              _StatBadge(
+                                value: report.pending,
+                                label: tr(LocaleKeys.reports_cards_pending),
+                                color: const Color(0xFFF59E0B),
+                              ),
+                              8.horizontalSpace,
+                              _StatBadge(
+                                value: report.cancelled,
+                                label: tr(LocaleKeys.reports_cards_cancelled),
+                                color: const Color(0xFFEF4444),
+                              ),
+                              const Spacer(),
+                              // المجموع (من القديم)
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: color.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(999.r),
+                                ),
+                                child: Text(
+                                  '${report.total} ${tr(LocaleKeys.reports_cards_total)}',
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: color,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-
-                    // PDF Icon and Arrow
-                    Icon(
-                      report.format == ReportFormat.pdf
-                          ? Icons.picture_as_pdf
-                          : Icons.table_chart,
-                      color: report.format == ReportFormat.pdf
-                          ? cs.error
-                          : Colors.green,
-                      size: 20.sp,
-                    ),
-                    8.horizontalSpace,
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16.sp,
-                      color: cs.onSurfaceVariant,
-                    ),
-                  ],
-                ),
-                12.verticalSpace,
-
-                // Progress Bar
-                _ReportProgressBar(report: report),
-                8.verticalSpace,
-
-                // Time and Stats
-                Row(
-                  children: [
-                    Icon(
-                      Icons.access_time,
-                      size: 16.sp,
-                      color: cs.onSurfaceVariant,
-                    ),
-                    6.horizontalSpace,
-                    Text(
-                      time,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: cs.onSurfaceVariant,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      '${report.total} ${tr(LocaleKeys.reports_cards_total)}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -157,112 +221,119 @@ class ReportListItem extends StatelessWidget {
     );
   }
 
+  // ===== دوال مساعدة (مدمجة من القديم والجديد) =====
   IconData _getTypeIcon(ReportType type) {
     switch (type) {
       case ReportType.appointments:
-        return Icons.event_note_outlined;
-      case ReportType.clinic:
-        return Icons.local_hospital_outlined;
+        return Icons.calendar_month_rounded;
+      case ReportType.labResults:
+        return Icons.biotech_rounded;
       case ReportType.revenue:
-        return Icons.payments_outlined;
+        return Icons.trending_up_rounded;
       case ReportType.doctors:
-        return Icons.badge_outlined;
+        return Icons.medical_services_rounded;
+      case ReportType.clinic:
+        return Icons.local_hospital_rounded;
     }
   }
 
-  Color _getTypeColor(ReportType type, ColorScheme cs) {
+  Color _typeColor(ReportType type, ColorScheme cs) {
     switch (type) {
       case ReportType.appointments:
         return cs.primary;
+      case ReportType.labResults:
+        return const Color(0xFF6366F1);
+      case ReportType.revenue:
+        return const Color(0xFF10B981);
+      case ReportType.doctors:
+        return const Color(0xFFF59E0B);
       case ReportType.clinic:
         return cs.secondary;
-      case ReportType.revenue:
-        return Colors.green;
-      case ReportType.doctors:
-        return cs.tertiary;
     }
   }
 }
 
-class _ReportProgressBar extends StatelessWidget {
+// ===== شريط التقدم المجزأ (من الجديد) =====
+class _SegmentedBar extends StatelessWidget {
   final ReportModel report;
+  final Color color;
+  const _SegmentedBar({required this.report, required this.color});
 
-  const _ReportProgressBar({required this.report});
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final total = report.total.toDouble();
+    if (total == 0) return const SizedBox.shrink();
+
+    final cF = report.completed / total;
+    final pF = report.pending / total;
+    final cxF = report.cancelled / total;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(4.r),
+      child: Container(
+        height: 6.h,
+        color: cs.outlineVariant.withValues(alpha: 0.2),
+        child: Row(
+          children: [
+            if (cF > 0)
+              Expanded(
+                flex: (cF * 100).round(),
+                child: Container(color: const Color(0xFF10B981)),
+              ),
+            if (pF > 0)
+              Expanded(
+                flex: (pF * 100).round(),
+                child: Container(color: const Color(0xFFF59E0B)),
+              ),
+            if (cxF > 0)
+              Expanded(
+                flex: (cxF * 100).round(),
+                child: Container(color: const Color(0xFFEF4444)),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ===== شارة الإحصائيات (من الجديد) =====
+class _StatBadge extends StatelessWidget {
+  final int value;
+  final String label;
+  final Color color;
+  const _StatBadge({
+    required this.value,
+    required this.label,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-
-    final total = report.total.toDouble();
-    final completed = report.completed.toDouble();
-    final pending = report.pending.toDouble();
-    final cancelled = report.cancelled.toDouble();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Row(
       children: [
-        // Progress Bar
         Container(
-          height: 6.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(3.r),
-            color: cs.outlineVariant.withValues(alpha: 0.3),
-          ),
-          child: Row(
-            children: [
-              if (completed > 0)
-                Expanded(
-                  flex: (completed / total * 100).round(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3.r),
-                      color: Colors.green,
-                    ),
-                  ),
-                ),
-              if (pending > 0)
-                Expanded(
-                  flex: (pending / total * 100).round(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3.r),
-                      color: cs.tertiary,
-                    ),
-                  ),
-                ),
-              if (cancelled > 0)
-                Expanded(
-                  flex: (cancelled / total * 100).round(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3.r),
-                      color: cs.error,
-                    ),
-                  ),
-                ),
-            ],
+          width: 6.r,
+          height: 6.r,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        4.horizontalSpace,
+        Text(
+          '$value',
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: color,
+            fontWeight: FontWeight.w700,
           ),
         ),
-        4.verticalSpace,
-
-        // Progress Labels
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '${report.completed} ${tr(LocaleKeys.reports_cards_completed)}',
-              style: theme.textTheme.labelSmall?.copyWith(color: Colors.green),
-            ),
-            Text(
-              '${report.pending} ${tr(LocaleKeys.reports_cards_pending)}',
-              style: theme.textTheme.labelSmall?.copyWith(color: cs.tertiary),
-            ),
-            Text(
-              '${report.cancelled} ${tr(LocaleKeys.reports_cards_cancelled)}',
-              style: theme.textTheme.labelSmall?.copyWith(color: cs.error),
-            ),
-          ],
+        2.horizontalSpace,
+        Text(
+          label,
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+            fontSize: 9.sp,
+          ),
         ),
       ],
     );

@@ -12,4 +12,8 @@ abstract class ReportsDataSource {
     required ReportRange range,
     required ReportFormat format,
   });
+
+  Future<BaseModel<Map<String, dynamic>>> downloadReport(ReportModel report);
+
+  Future<BaseModel<Map<String, dynamic>>> shareReport(ReportModel report);
 }

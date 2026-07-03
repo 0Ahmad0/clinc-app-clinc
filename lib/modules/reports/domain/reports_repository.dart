@@ -27,6 +27,18 @@ class ReportsRepository {
     );
   }
 
+  Future<ApiResponse<BaseModel<Map<String, dynamic>>>> downloadReport(
+    ReportModel report,
+  ) {
+    return _execute(() => _dataSource.downloadReport(report));
+  }
+
+  Future<ApiResponse<BaseModel<Map<String, dynamic>>>> shareReport(
+    ReportModel report,
+  ) {
+    return _execute(() => _dataSource.shareReport(report));
+  }
+
   Future<ApiResponse<T>> _execute<T>(Future<T> Function() action) async {
     try {
       return ApiResponse.success(await action());

@@ -24,6 +24,22 @@ class OtpController extends GetxController {
     return arguments?.toString() ?? '';
   }
 
+  String get emailOrPhone => identifier;
+
+  bool get isPasswordReset =>
+      Get.arguments is Map &&
+      (Get.arguments as Map)['purpose'] == 'password_reset';
+
+  bool get isRegistration =>
+      Get.arguments is Map &&
+      (Get.arguments as Map)['purpose'] == 'registration';
+
+  String get purpose {
+    if (isPasswordReset) return 'password_reset';
+    if (isRegistration) return 'registration';
+    return 'verification';
+  }
+
   @override
   void onInit() {
     _repository = locator<ClinicAuthRepository>();
@@ -50,7 +66,11 @@ class OtpController extends GetxController {
 
     isLoading.value = true;
     final result = await _repository.verifyOtp(
-      VerifyOtpRequest(identifier: identifier, otp: otpController.text),
+      VerifyOtpRequest(
+        identifier: identifier,
+        otp: otpController.text,
+        purpose: purpose,
+      ),
     );
     isLoading.value = false;
 
@@ -61,7 +81,19 @@ class OtpController extends GetxController {
           return;
         }
         ResponseHelper.onSuccess(message: response.message);
-        Get.offAllNamed(AppRoutes.login);
+        if (isPasswordReset) {
+          Get.offNamed(
+            AppRoutes.resetPassword,
+            arguments: {
+              'identifier': identifier,
+              'reset_token': response.data?['reset_token']?.toString() ?? '',
+            },
+          );
+        } else if (isRegistration) {
+          Get.offAllNamed(AppRoutes.pendingApproval);
+        } else {
+          Get.offAllNamed(AppRoutes.login);
+        }
       },
       failure: (exception) => ResponseHelper.onFailure(
         message: NetworkExceptions.getErrorMessage(exception),
@@ -74,7 +106,7 @@ class OtpController extends GetxController {
 
     isLoading.value = true;
     final result = await _repository.resendOtp(
-      ResendOtpRequest(identifier: identifier),
+      ResendOtpRequest(identifier: identifier, purpose: purpose),
     );
     isLoading.value = false;
 

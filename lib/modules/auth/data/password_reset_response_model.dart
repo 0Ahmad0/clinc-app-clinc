@@ -1,9 +1,7 @@
 class PasswordResetRequestData {
   final int? expiresInMinutes;
 
-  PasswordResetRequestData({
-    this.expiresInMinutes,
-  });
+  PasswordResetRequestData({this.expiresInMinutes});
 
   factory PasswordResetRequestData.fromJson(dynamic json) {
     final map = json is Map<String, dynamic> ? json : <String, dynamic>{};
@@ -18,10 +16,7 @@ class PasswordResetVerifyData {
   final String? resetToken;
   final int? expiresInMinutes;
 
-  PasswordResetVerifyData({
-    this.resetToken,
-    this.expiresInMinutes,
-  });
+  PasswordResetVerifyData({this.resetToken, this.expiresInMinutes});
 
   factory PasswordResetVerifyData.fromJson(dynamic json) {
     final map = json is Map<String, dynamic> ? json : <String, dynamic>{};

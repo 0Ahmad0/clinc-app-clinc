@@ -103,6 +103,39 @@ class ReportsMockDataSource implements ReportsDataSource {
     }, (json) => ReportModel.fromJson(Map<String, dynamic>.from(json as Map)));
   }
 
+  @override
+  Future<BaseModel<Map<String, dynamic>>> downloadReport(
+    ReportModel report,
+  ) async {
+    await Future<void>.delayed(_delay);
+    return BaseModel.fromJson({
+      'status': 'success',
+      'message': 'Report downloaded successfully',
+      'data': {
+        'report_id': report.id,
+        'file_url': report.fileUrl,
+        'local_path': 'mock://downloads/${report.id}.${report.format.name}',
+      },
+      'meta': <String, dynamic>{},
+    }, (json) => Map<String, dynamic>.from(json as Map));
+  }
+
+  @override
+  Future<BaseModel<Map<String, dynamic>>> shareReport(
+    ReportModel report,
+  ) async {
+    await Future<void>.delayed(_delay);
+    return BaseModel.fromJson({
+      'status': 'success',
+      'message': 'Report share link prepared successfully',
+      'data': {
+        'report_id': report.id,
+        'share_url': 'mock://share/reports/${report.id}',
+      },
+      'meta': <String, dynamic>{},
+    }, (json) => Map<String, dynamic>.from(json as Map));
+  }
+
   static Map<String, dynamic> _report({
     required String id,
     required String type,

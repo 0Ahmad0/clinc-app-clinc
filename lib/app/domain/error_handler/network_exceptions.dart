@@ -200,6 +200,9 @@ abstract class NetworkExceptions with _$NetworkExceptions implements Exception {
           print('response ${error.response}');
 
           switch (error.type) {
+            case DioExceptionType.transformTimeout:
+              networkExceptions = const NetworkExceptions.requestTimeout();
+              break;
             case DioExceptionType.cancel:
               networkExceptions = const NetworkExceptions.requestCancelled();
               break;

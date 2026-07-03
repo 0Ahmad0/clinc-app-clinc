@@ -48,6 +48,19 @@ class LoginController extends GetxController {
     );
   }
 
+  Future<void> socialLogin(String provider) async {
+    if (isLoading.value) return;
+    isLoading.value = true;
+    final result = await _repository.socialLogin(provider);
+    isLoading.value = false;
+    result.when(
+      success: _handleResponse,
+      failure: (exception) => ResponseHelper.onFailure(
+        message: NetworkExceptions.getErrorMessage(exception),
+      ),
+    );
+  }
+
   Future<void> _handleResponse(ClinicLoginResponse response) async {
     if (!response.isSuccess || response.data == null) {
       if (response.error?['status'] == 'pending') {

@@ -90,6 +90,8 @@ class ReportFiltersWidget extends GetView<ReportsController> {
         return Colors.green;
       case ReportType.doctors:
         return cs.tertiary;
+      case ReportType.labResults:
+        return const Color(0xFF6366F1);
     }
   }
 }

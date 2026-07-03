@@ -10,6 +10,34 @@ class SettingsRepository {
 
   final SettingsDataSource _dataSource;
 
+  Future<ApiResponse<BaseModel<ProfileModel>>> getProfile() async {
+    try {
+      return ApiResponse.success(await _dataSource.getProfile());
+    } catch (error) {
+      return ApiResponse.failure(NetworkExceptions.getException(error));
+    }
+  }
+
+  Future<ApiResponse<BaseModel<Map<String, dynamic>>>>
+  getNotificationSettings() async {
+    try {
+      return ApiResponse.success(await _dataSource.getNotificationSettings());
+    } catch (error) {
+      return ApiResponse.failure(NetworkExceptions.getException(error));
+    }
+  }
+
+  Future<ApiResponse<BaseModel<Map<String, dynamic>>>>
+  updateNotificationSettings({required Map<String, bool> settings}) async {
+    try {
+      return ApiResponse.success(
+        await _dataSource.updateNotificationSettings(settings: settings),
+      );
+    } catch (error) {
+      return ApiResponse.failure(NetworkExceptions.getException(error));
+    }
+  }
+
   Future<ApiResponse<BaseModel<Map<String, dynamic>>>> changePassword({
     required String currentPassword,
     required String newPassword,
@@ -53,6 +81,22 @@ class SettingsRepository {
           imagePaths: imagePaths,
         ),
       );
+    } catch (error) {
+      return ApiResponse.failure(NetworkExceptions.getException(error));
+    }
+  }
+
+  Future<ApiResponse<BaseModel<Map<String, dynamic>>>> exportData() async {
+    try {
+      return ApiResponse.success(await _dataSource.exportData());
+    } catch (error) {
+      return ApiResponse.failure(NetworkExceptions.getException(error));
+    }
+  }
+
+  Future<ApiResponse<BaseModel<Map<String, dynamic>>>> clearCache() async {
+    try {
+      return ApiResponse.success(await _dataSource.clearCache());
     } catch (error) {
       return ApiResponse.failure(NetworkExceptions.getException(error));
     }

@@ -174,6 +174,9 @@
     "cancel": "إلغاء"
   },
   "dashboard": {
+    "title": "لوحة التحكم",
+    "new_appointment": "موعد جديد",
+    "stats_title": "إحصائيات العيادة",
     "welcome": "مرحباً",
     "stats": {
       "doctors": "طبيب",
@@ -256,6 +259,9 @@
   "add_doctor": {
     "title": "إضافة طبيب جديد",
     "edit_title": "تعديل بيانات الطبيب",
+    "basic_info": "المعلومات الأساسية",
+    "professional_info": "المعلومات المهنية",
+    "subtitle": "أدخل بيانات الطبيب كاملة",
     "labels": {
       "name_ar": "الاسم (بالعربية)",
       "name_en": "الاسم (بالانجليزية)",
@@ -399,8 +405,18 @@
       "success_edit": "تم التعديل بنجاح"
     }
   },
+  "appointment": {
+    "status": {
+      "completed": "مكتمل",
+      "cancelled": "ملغي",
+      "upcoming": "قادم"
+    }
+  },
   "appointments": {
     "title": "المواعيد",
+    "count": "{} مواعيد",
+    "pending_count": "{} قيد الانتظار",
+    "add_button": "إضافة موعد",
     "search_hint": "بحث عن موعد أو مريض...",
     "tabs": {
       "all": "الكل",
@@ -411,7 +427,15 @@
     },
     "empty": {
       "title": "لا توجد مواعيد",
-      "subtitle": "لم يتم العثور على أي مواعيد تطابق معايير البحث"
+      "subtitle": "لم يتم العثور على أي مواعيد تطابق معايير البحث",
+      "pending_title": "لا توجد مواعيد معلقة",
+      "pending_subtitle": "ستظهر المواعيد المعلقة هنا",
+      "approved_title": "لا توجد مواعيد مقبولة",
+      "approved_subtitle": "ستظهر المواعيد المقبولة هنا",
+      "completed_title": "لا توجد مواعيد مكتملة",
+      "completed_subtitle": "ستظهر المواعيد المكتملة هنا",
+      "rejected_title": "لا توجد مواعيد مرفوضة",
+      "rejected_subtitle": "ستظهر المواعيد المرفوضة هنا"
     },
     "card": {
       "patient": "المريض",
@@ -434,6 +458,7 @@
     },
     "details": {
       "title": "تفاصيل الموعد",
+      "actions": "الإجراءات",
       "patient_info": "معلومات المريض",
       "appointment_info": "معلومات الموعد",
       "notes": "ملاحظات",
@@ -520,6 +545,7 @@
     },
     "details": {
       "title": "تفاصيل التقرير",
+      "view_pdf": "عرض PDF",
       "generated_at": "تاريخ الإنشاء",
       "download_pdf": "تحميل PDF",
       "view_pdf": "عرض PDF",
@@ -648,6 +674,102 @@
       "submit": "تحديث كلمة المرور",
       "min_length": "يجب ألا تقل كلمة المرور عن 8 أحرف",
       "confirmation_mismatch": "تأكيد كلمة المرور غير متطابق"
+    }
+  },
+  "ads": {
+    "roles": {
+      "clinic": "عيادة",
+      "clinic_with_lab": "عيادة مع مختبر",
+      "lab": "مختبر"
+    },
+    "list": {
+      "title": "إعلاناتك",
+      "create": "إنشاء إعلان",
+      "create_short": "إنشاء",
+      "role_label": "الدور الحالي: {}",
+      "start": "تاريخ البداية",
+      "end": "تاريخ النهاية",
+      "remaining": "الوقت المتبقي"
+    },
+    "type": {
+      "title": "اختر نوع الإعلان",
+      "single": "إعلان لمرة واحدة",
+      "package": "الاشتراك في باقة"
+    },
+    "create": {
+      "title": "إنشاء إعلان",
+      "publish": "نشر الإعلان"
+    },
+    "form": {
+      "title_hint": "عنوان الإعلان",
+      "description_hint": "الوصف",
+      "upload_image": "رفع صورة الإعلان",
+      "title_required": "يرجى إدخال عنوان الإعلان",
+      "description_required": "يرجى إدخال وصف الإعلان",
+      "image_required": "يرجى رفع صورة للإعلان",
+      "package_required": "يرجى اختيار باقة"
+    },
+    "packages": {
+      "title": "الباقات",
+      "subscribe_now": "اشترك الآن",
+      "basic": {
+        "title": "الباقة الأساسية",
+        "features": {
+          "one": "إعلان واحد شهرياً",
+          "two": "ظهور عادي",
+          "three": "دعم فني"
+        }
+      },
+      "advanced": {
+        "title": "الباقة المتقدمة",
+        "features": {
+          "one": "3 إعلانات شهرياً",
+          "two": "ظهور متقدم",
+          "three": "دعم فني أولوية",
+          "four": "تحليلات"
+        }
+      },
+      "pro": {
+        "title": "الباقة الاحترافية",
+        "features": {
+          "one": "إعلانات غير محدودة",
+          "two": "ظهور مميز",
+          "three": "دعم فني VIP",
+          "four": "تحليلات متقدمة",
+          "five": "إعلانات مخصصة"
+        }
+      }
+    },
+    "payment": {
+      "title": "الدفع",
+      "price": "السعر",
+      "currency": "ريال",
+      "methods_title": "طرق الدفع",
+      "methods": {
+        "card": "بطاقة ائتمان",
+        "apple": "Apple Pay",
+        "mada": "مدى"
+      },
+      "pay_now": "الدفع الآن"
+    },
+    "status": {
+      "active": "نشط",
+      "finished": "منتهي",
+      "remaining_days_hours": "{} يوم {} ساعة متبقية",
+      "remaining_hours_minutes": "{} ساعة {} دقيقة متبقية"
+    },
+    "messages": {
+      "not_available": "الخيار غير متاح",
+      "not_available_for_role": "هذا الخيار غير متاح للدور الحالي",
+      "validation_title": "تحقق من البيانات",
+      "success_title": "تم إنشاء الإعلان",
+      "success_body": "تم إرسال إعلانك بنجاح وجاهز للعرض"
+    },
+    "mock": {
+      "first_title": "عرض تنظيف الأسنان",
+      "first_description": "خصم خاص لفترة محدودة",
+      "second_title": "خصم تبييض الأسنان",
+      "second_description": "انتهت مدة الإعلان"
     }
   },
   "services": {
