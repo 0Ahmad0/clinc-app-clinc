@@ -1,0 +1,108 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../config/theme/app_motion.dart';
+import '../../../../config/theme/app_shadows.dart';
+import '../../../../config/theme/app_spacing.dart';
+import '../../../../shared/extensions/context_extensions.dart';
+import '../cubit/doctors_cubit.dart';
+import '../cubit/doctors_state.dart';
+import '../doctor_specialty_l10n.dart';
+
+/// Horizontally scrolling specialty filter. The selected pill fills with the
+/// CTA gradient and glows; the rest are hairline-outlined.
+class DoctorsFilterChips extends StatelessWidget {
+  const DoctorsFilterChips({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    return BlocBuilder<DoctorsCubit, DoctorsState>(
+      buildWhen: (previous, current) => previous.specialty != current.specialty,
+      builder: (context, state) => SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          AppSpacing.screen,
+          AppSpacing.sm,
+          AppSpacing.screen,
+          AppSpacing.xxs,
+        ),
+        child: Row(
+          children: [
+            for (final specialty in kFilterSpecialties)
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
+                child: _FilterChip(
+                  label: specialty.label(l10n),
+                  icon: specialty.icon,
+                  selected: state.specialty == specialty,
+                  onTap: () =>
+                      context.read<DoctorsCubit>().selectSpecialty(specialty),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterChip extends StatelessWidget {
+  const _FilterChip({
+    required this.label,
+    required this.icon,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final foreground = selected ? colors.onBrand : colors.gray;
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: AppMotion.quick,
+        curve: AppMotion.emphasized,
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          AppSpacing.sm,
+          AppSpacing.xs + 1,
+          AppSpacing.md,
+          AppSpacing.xs + 1,
+        ),
+        decoration: BoxDecoration(
+          color: selected ? null : colors.surface,
+          gradient: selected ? colors.ctaGradient : null,
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+          border: Border.all(
+            color: selected
+                ? colors.onBrand.withValues(alpha: 0)
+                : colors.line,
+            width: 1.5,
+          ),
+          boxShadow: selected ? AppShadows.selectedChip : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: AppSizes.filterChipIcon, color: foreground),
+            AppGaps.w8,
+            Text(
+              label,
+              style: context.textTheme.bodySmall?.copyWith(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: foreground,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
