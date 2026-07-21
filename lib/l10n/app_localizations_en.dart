@@ -1275,4 +1275,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get report3Date => '04 Jul 2026 · 10:22 AM';
+
+  @override
+  String get toastOtpSentSuccess => 'OTP sent successfully';
+
+  @override
+  String get toastSuccess => 'Success';
+
+  @override
+  String get toastFailure => 'Error';
+
+  @override
+  String get toastWarning => 'Warning';
+
+  @override
+  String shareAppText(String appLink) {
+    return 'Download Eyadaty app: $appLink';
+  }
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
+  String get noDataYet => 'No data yet';
+
+  @override
+  String get coreUnsupportedType => 'Unsupported type';
+
+  @override
+  String get coreUnsupportedImageFormat => 'Unsupported image format';
+
+  @override
+  String get requestTimeout => 'Request timeout';
+
+  @override
+  String get noInternetConnection => 'No internet connection';
+
+  @override
+  String get sendTimeout => 'Send timeout';
+
+  @override
+  String get chatImageWithIcon => 'Image';
+
+  @override
+  String get chatVideoWithIcon => 'Video';
+
+  @override
+  String get chatVoiceWithIcon => 'Voice message';
+
+  @override
+  String get chatFileWithIcon => 'File';
 }

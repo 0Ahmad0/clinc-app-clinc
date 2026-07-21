@@ -429,5 +429,22 @@
   "@reportsTotalLabel": {"placeholders": {"total": {"type": "String"}}},
   "report1Date": "18 Jul 2026 · 10:22 AM",
   "report2Date": "11 Jul 2026 · 10:22 AM",
-  "report3Date": "04 Jul 2026 · 10:22 AM"
+  "report3Date": "04 Jul 2026 · 10:22 AM",
+  "toastOtpSentSuccess": "تم إرسال رمز التحقق بنجاح",
+  "toastSuccess": "تم بنجاح",
+  "toastFailure": "حدث خطأ",
+  "toastWarning": "تنبيه",
+  "shareAppText": "حمّل تطبيق عيادتي: {appLink}",
+  "@shareAppText": {"placeholders": {"appLink": {"type": "String"}}},
+  "noResultsFound": "لا توجد نتائج",
+  "noDataYet": "لا توجد بيانات بعد",
+  "coreUnsupportedType": "نوع غير مدعوم",
+  "coreUnsupportedImageFormat": "صيغة صورة غير مدعومة",
+  "requestTimeout": "انتهت مهلة الطلب",
+  "noInternetConnection": "لا يوجد اتصال بالإنترنت",
+  "sendTimeout": "انتهت مهلة الإرسال",
+  "chatImageWithIcon": "صورة",
+  "chatVideoWithIcon": "فيديو",
+  "chatVoiceWithIcon": "رسالة صوتية",
+  "chatFileWithIcon": "ملف"
 }

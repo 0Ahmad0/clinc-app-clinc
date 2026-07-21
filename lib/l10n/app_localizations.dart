@@ -2563,6 +2563,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'04 Jul 2026 · 10:22 AM'**
   String get report3Date;
+
+  /// No description provided for @toastOtpSentSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'OTP sent successfully'**
+  String get toastOtpSentSuccess;
+
+  /// No description provided for @toastSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Success'**
+  String get toastSuccess;
+
+  /// No description provided for @toastFailure.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get toastFailure;
+
+  /// No description provided for @toastWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get toastWarning;
+
+  /// No description provided for @shareAppText.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Eyadaty app: {appLink}'**
+  String shareAppText(String appLink);
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// No description provided for @noDataYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No data yet'**
+  String get noDataYet;
+
+  /// No description provided for @coreUnsupportedType.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported type'**
+  String get coreUnsupportedType;
+
+  /// No description provided for @coreUnsupportedImageFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported image format'**
+  String get coreUnsupportedImageFormat;
+
+  /// No description provided for @requestTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timeout'**
+  String get requestTimeout;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @sendTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Send timeout'**
+  String get sendTimeout;
+
+  /// No description provided for @chatImageWithIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Image'**
+  String get chatImageWithIcon;
+
+  /// No description provided for @chatVideoWithIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Video'**
+  String get chatVideoWithIcon;
+
+  /// No description provided for @chatVoiceWithIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice message'**
+  String get chatVoiceWithIcon;
+
+  /// No description provided for @chatFileWithIcon.
+  ///
+  /// In en, this message translates to:
+  /// **'File'**
+  String get chatFileWithIcon;
 }
 
 class _AppLocalizationsDelegate

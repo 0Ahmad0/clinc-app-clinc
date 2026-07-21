@@ -13,6 +13,7 @@ class App extends StatelessWidget {
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appBrand,
       debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: AppRouter.scaffoldMessengerKey,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,

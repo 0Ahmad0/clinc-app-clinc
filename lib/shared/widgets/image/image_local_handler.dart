@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:clinc_app_t1/generated/locale_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../extensions/context_extensions.dart';
 
 class ImageLocalHandler extends StatelessWidget {
   const ImageLocalHandler(
@@ -19,10 +19,10 @@ class ImageLocalHandler extends StatelessWidget {
   final Color? color;
   @override
   Widget build(BuildContext context) {
-    return getImageWidget();
+    return getImageWidget(context);
   }
 
-  Widget getImageWidget() {
+  Widget getImageWidget(BuildContext context) {
     String imagePath = url ?? '';
 
     switch (imagePath.split('.').last) {
@@ -90,7 +90,7 @@ class ImageLocalHandler extends StatelessWidget {
       case 'json':
         return Lottie.asset(imagePath, width: width, height: height, fit: fit);
     }
-    return Text(tr(LocaleKeys.core_unsupported_image_format));
+    return Text(context.l10n.coreUnsupportedImageFormat);
     // if (imagePath.endsWith('.svg')) {
     //   return SvgPicture.asset(imagePath,width: width,height: height,fit:fit??BoxFit.contain,
     //       colorFilter: color==null?null:ColorFilter.mode(color!, BlendMode.srcIn));

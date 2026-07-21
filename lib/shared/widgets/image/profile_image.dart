@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/app_assets.dart';
+import '../../../config/assets/app_assets.dart';
 import 'base_image.dart';
 
 // import 'base_image.dart';
@@ -23,7 +23,6 @@ import 'base_image.dart';
 //     );
 //   }
 // }
-
 
 class ProfileImage extends StatelessWidget {
   const ProfileImage({

@@ -1,18 +1,18 @@
-import 'package:clinc_app_t1/generated/locale_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
+// import 'package:get/get.dart';
 
-import '../../domain/error_handler/message.dart';
-import '../../domain/error_handler/network_exceptions.dart';
-import '../constants/app_assets.dart';
-import '../theme/app_colors.dart';
-import '../widgets/app_response_dialog.dart';
+import '../../config/assets/app_assets.dart';
+import '../../config/routes/app_router.dart';
+import '../../config/theme/app_colors.dart';
+import '../../l10n/app_localizations.dart';
+import '../../shared/widgets/app_response_dialog.dart';
+import '../domain/error_handler/message.dart';
+import '../domain/error_handler/network_exceptions.dart';
 
-export '../widgets/app_response_dialog.dart'
-    show ResponseDialogAction, ResponseDialogActions;
+// export '../widgets/app_response_dialog.dart'
+//     show ResponseDialogAction, ResponseDialogActions;
 
 class ResponseHelper {
   // static void onSuccess( {String? message, String? title}) {
@@ -182,7 +182,7 @@ class ResponseHelper {
     Color? titleColor,
     Color? messageColor,
   }) {
-    final currentContext = context ?? Get.context;
+    final currentContext = context;
 
     if (currentContext == null) {
       return Future<T?>.value();
@@ -212,12 +212,13 @@ class ResponseHelper {
   }
 
   static void onSuccess({String? message, String? title}) {
+    final l10n = _l10n;
     final displayMessage = _isOtpSuccessMessage(message)
-        ? tr(LocaleKeys.toast_otp_sent_success)
+        ? l10n?.toastOtpSentSuccess ?? 'OTP sent successfully'
         : message ?? '';
 
     _showCoolerSnackbar(
-      title: title ?? tr(LocaleKeys.toast_success),
+      title: title ?? l10n?.toastSuccess ?? 'Success',
       message: displayMessage,
       assetPath: AppAssets.snackbarSuccess,
       lineColor: const Color(0xFF4FA35A),
@@ -225,8 +226,9 @@ class ResponseHelper {
   }
 
   static void onFailure({String? message, String? title}) {
+    final l10n = _l10n;
     _showCoolerSnackbar(
-      title: title ?? tr(LocaleKeys.toast_failure),
+      title: title ?? l10n?.toastFailure ?? 'Error',
       message: MessageApi.findTextToast(message ?? ''),
       assetPath: AppAssets.snackbarFailure,
       lineColor: Colors.red,
@@ -234,8 +236,9 @@ class ResponseHelper {
   }
 
   static void onWarning({String? message, String? title}) {
+    final l10n = _l10n;
     _showCoolerSnackbar(
-      title: title ?? 'Warning',
+      title: title ?? l10n?.toastWarning ?? 'Warning',
       message: MessageApi.findTextToast(message ?? ''),
       assetPath: AppAssets.snackbarWarning,
       lineColor: const Color(0xFFF5BF24),
@@ -255,25 +258,27 @@ class ResponseHelper {
     required String assetPath,
     required Color lineColor,
   }) {
-    Get.rawSnackbar(
-      duration: const Duration(seconds: 3),
-      snackPosition: SnackPosition.TOP,
-      backgroundColor: Colors.transparent,
-      margin: EdgeInsets.only(top: 8.h, left: 18.w, right: 18.w),
-      padding: EdgeInsets.zero,
-      borderRadius: 16.r,
-      barBlur: 0,
-      overlayBlur: 0,
-      isDismissible: true,
-      forwardAnimationCurve: Curves.easeOutCubic,
-      reverseAnimationCurve: Curves.easeInCubic,
-      messageText: _CoolerSnackbarContent(
-        title: title,
-        message: message,
-        assetPath: assetPath,
-        lineColor: lineColor,
-      ),
-    );
+    final messenger = AppRouter.scaffoldMessengerKey.currentState;
+    if (messenger == null) return;
+
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(top: 8.h, left: 18.w, right: 18.w),
+          padding: EdgeInsets.zero,
+          content: _CoolerSnackbarContent(
+            title: title,
+            message: message,
+            assetPath: assetPath,
+            lineColor: lineColor,
+          ),
+        ),
+      );
   }
 
   static void onNetworkFailure({
@@ -297,10 +302,21 @@ class ResponseHelper {
   }
 
   static void showLoading() {
-    Get.dialog(
-      const Center(child: CircularProgressIndicator()),
+    final context = AppRouter.rootNavigatorKey.currentContext;
+    if (context == null) return;
+
+    showDialog<void>(
+      context: context,
       barrierDismissible: false,
+      useRootNavigator: true,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
     );
+  }
+
+  static AppLocalizations? get _l10n {
+    final context = AppRouter.rootNavigatorKey.currentContext;
+    if (context == null) return null;
+    return AppLocalizations.of(context);
   }
 }
 
@@ -327,7 +343,7 @@ class _CoolerSnackbarContent extends StatelessWidget {
           borderRadius: BorderRadius.circular(14.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.20),
+              color: Colors.black.withValues(alpha: .20),
               blurRadius: 22.r,
               offset: Offset(0, 10.h),
             ),

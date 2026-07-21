@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
-import '../../../domain/error_handler/network_exceptions.dart';
-import '../../constants/app_assets.dart';
-import '../../theme/app_colors.dart';
-
+import '../../../config/assets/app_assets.dart';
+import '../../../config/theme/app_colors.dart';
+import '../../../core/domain/error_handler/network_exceptions.dart';
+import '../../extensions/context_extensions.dart';
 
 class ErrorView extends StatelessWidget {
   const ErrorView({
@@ -14,22 +13,22 @@ class ErrorView extends StatelessWidget {
     this.networkExceptions,
     this.pathImage,
     this.height,
-     this.isEmptyState = false,
+    this.isEmptyState = false,
   });
 
   final NetworkExceptions? networkExceptions;
   final String? pathImage;
   final double? height;
-final bool isEmptyState;
+  final bool isEmptyState;
   @override
   Widget build(BuildContext context) {
-     if (isEmptyState) {
-    return ErrorViewBase(
-       value: 'no_results_found'.tr, // بدلاً من "لا توجد نتائج" الثابتة
-    assetPath: AppAssets.errorData,
-    height: height,
-    );
-  }
+    if (isEmptyState) {
+      return ErrorViewBase(
+        value: context.l10n.noResultsFound,
+        assetPath: AppAssets.errorData,
+        height: height,
+      );
+    }
     Widget errorView = ErrorViewBase(
       value: "Error!",
       assetPath: pathImage ?? AppAssets.errorData,
@@ -139,11 +138,7 @@ class ErrorViewBase extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (icon != null)
-            Icon(
-              icon,
-              size: 90.w,
-              color: AppColors.grey,
-            )
+            Icon(icon, size: 90.w, color: AppColors.grey)
           else
             _InformativeAssetView(
               assetPath: assetPath ?? AppAssets.errorData,

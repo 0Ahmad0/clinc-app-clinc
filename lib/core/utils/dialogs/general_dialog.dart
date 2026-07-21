@@ -1,13 +1,17 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:clinc_app_t1/app/core/constants/app_assets.dart';
-import 'package:clinc_app_t1/app/core/widgets/app_svg_widget.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
+import '../../../config/assets/app_assets.dart';
 import '../../../config/theme/app_colors.dart';
-import '../../constants/app_constants.dart';
-import '../../theme/app_colors.dart';
+import '../../../shared/widgets/app_svg_widget.dart';
+
+class AppConstants {
+  const AppConstants._();
+
+  static const defaultDuration = 300;
+}
 
 class GeneralAppDialog extends StatelessWidget {
   const GeneralAppDialog({
@@ -52,6 +56,8 @@ class GeneralAppDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void closeDialog() => Navigator.of(context, rootNavigator: true).pop();
+
     return Material(
       color: AppColors.transparent,
       child: Column(
@@ -69,9 +75,7 @@ class GeneralAppDialog extends StatelessWidget {
               children: [
                 10.verticalSpace,
                 Tada(
-                  delay: const Duration(
-                    milliseconds: AppConstants.defaultDuration,
-                  ),
+                  delay: Duration(milliseconds: AppConstants.defaultDuration),
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
@@ -97,15 +101,15 @@ class GeneralAppDialog extends StatelessWidget {
                 Text(
                   title,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 6.verticalSpace,
                 Row(
                   children: [
                     TextButton(
-                      onPressed: okOnTap ?? () => Get.back(),
+                      onPressed: okOnTap ?? closeDialog,
                       child: Text(
                         okText ?? '',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -115,7 +119,7 @@ class GeneralAppDialog extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: cancelOnTap ?? () => Get.back(),
+                      onPressed: cancelOnTap ?? closeDialog,
                       child: Text(
                         cancelText ?? '',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(

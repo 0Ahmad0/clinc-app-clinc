@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../theme/app_colors.dart';
+import '../../config/theme/app_colors.dart';
 
 class ResponseDialogAction {
   const ResponseDialogAction({
@@ -73,8 +73,9 @@ class AppResponseDialog extends StatelessWidget {
       elevation: 0,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final maxWidth =
-              constraints.maxWidth < 430 ? constraints.maxWidth : 430.0;
+          final maxWidth = constraints.maxWidth < 430
+              ? constraints.maxWidth
+              : 430.0;
 
           return Center(
             child: ConstrainedBox(
@@ -154,9 +155,7 @@ class AppResponseDialog extends StatelessWidget {
                       PositionedDirectional(
                         top: 12.h,
                         end: 12.w,
-                        child: _ResponseDialogCloseButton(
-                          isLoading: isLoading,
-                        ),
+                        child: _ResponseDialogCloseButton(isLoading: isLoading),
                       ),
                   ],
                 ),
@@ -212,7 +211,7 @@ class _ResponseDialogIcon extends StatelessWidget {
       width: 90.w,
       height: 90.w,
       decoration: BoxDecoration(
-        color: accentColor.withOpacity(.10),
+        color: accentColor.withValues(alpha: .10),
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,
@@ -317,9 +316,11 @@ class _ResponseDialogActionButtonState
     final isOutlined =
         widget.action.backgroundColor == null &&
         widget.action.borderColor != null;
-    final backgroundColor = widget.action.backgroundColor ??
+    final backgroundColor =
+        widget.action.backgroundColor ??
         (isOutlined ? Colors.transparent : widget.accentColor);
-    final foregroundColor = widget.action.foregroundColor ??
+    final foregroundColor =
+        widget.action.foregroundColor ??
         (isOutlined ? widget.accentColor : AppColors.white);
     final borderColor = widget.action.borderColor ?? Colors.transparent;
     final isLoading = widget.action.isLoading || _isRunning;
@@ -334,8 +335,8 @@ class _ResponseDialogActionButtonState
         style: TextButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
-          disabledBackgroundColor: backgroundColor.withOpacity(.70),
-          disabledForegroundColor: foregroundColor.withOpacity(.70),
+          disabledBackgroundColor: backgroundColor.withValues(alpha: .70),
+          disabledForegroundColor: foregroundColor.withValues(alpha: .70),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14.r),
             side: BorderSide(color: borderColor, width: 1.w),

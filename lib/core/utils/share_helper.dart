@@ -1,10 +1,13 @@
 import 'dart:io';
 
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../../config/assets/app_assets.dart';
+import '../../config/routes/app_router.dart';
+import '../../l10n/app_localizations.dart';
 
 class ShareHelper {
   static const String appLink = "https://appName.com";
@@ -18,17 +21,22 @@ class ShareHelper {
     String url = AppAssets.appLogoPNG,
   }) async {
     String appImage = url;
-    final shareText = tr(LocaleKeys.share_app_text, args: [appLink]);
+    final context = AppRouter.rootNavigatorKey.currentContext;
+    final shareText = context == null
+        ? 'Download Eyadaty app: $appLink'
+        : AppLocalizations.of(context).shareAppText(appLink);
 
     try {
       final byteData = await rootBundle.load(appImage);
 
       final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/share_image.png');
+      final pathParts = appImage.split('.');
+      final extension = pathParts.length > 1 ? pathParts.last : 'svg';
+      final file = File('${tempDir.path}/share_image.$extension');
       await file.writeAsBytes(byteData.buffer.asUint8List());
       final params = ShareParams(
         files: [XFile(file.path)],
-        fileNameOverrides: ['share.png'],
+        fileNameOverrides: ['share.$extension'],
         text: shareText,
         // title:shareText,
         // subject: shareText

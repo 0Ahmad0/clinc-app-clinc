@@ -8,6 +8,7 @@ class AppColors {
   const AppColors._();
 
   static const white = Color(0xFFFFFFFF);
+  static const transparent = Colors.transparent;
 
   // Primary blue ramp
   static const primary900 = Color(0xFF0C1424);
@@ -17,6 +18,7 @@ class AppColors {
   static const primary300 = Color(0xFF59C3FF);
   static const primary100 = Color(0xFFDCEBFF);
   static const primary50 = Color(0xFFEFF6FF);
+  static const primary = primary600;
 
   // Onboarding illustration gradient stops (between the ramp steps)
   static const illustrationA = Color(0xFF1B57C8);
@@ -28,10 +30,12 @@ class AppColors {
   static const slate = Color(0xFF3D5680);
   static const paragraph = Color(0xFF556685);
   static const gray = Color(0xFF64748B);
+  static const grey = gray;
   static const muted = Color(0xFF9AA8C0);
   static const line = Color(0xFFE3E9F4);
   static const fill = Color(0xFFEEF2F9);
   static const bg = Color(0xFFF5F7FB);
+  static const lightCard = white;
 
   // Semantic
   static const success = Color(0xFF22B573);
@@ -40,6 +44,7 @@ class AppColors {
   static const warning = Color(0xFFF0A92E);
   static const warningFg = Color(0xFFB07A15);
   static const danger = Color(0xFFE15050);
+  static const error = danger;
   static const dangerFg = Color(0xFFC93535);
   static const info = Color(0xFF0D84C0);
   static const purple = Color(0xFF7C4FD8);
@@ -49,6 +54,7 @@ class AppColors {
   // Dark surfaces (neutrals flip; brand + semantic stay constant)
   static const darkBg = primary900;
   static const darkSurface = Color(0xFF16213B);
+  static const darkCard = darkSurface;
   static const darkFill = Color(0xFF1B2740);
   static const darkLine = Color(0xFF24314F);
   static const darkInk = Color(0xFFF1F5FC);

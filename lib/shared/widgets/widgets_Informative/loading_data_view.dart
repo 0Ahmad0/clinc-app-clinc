@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../theme/app_colors.dart';
+import '../../../config/theme/app_colors.dart';
+
 
 class LoadingDataView extends StatelessWidget {
   final bool isShowContainer;
@@ -19,7 +20,7 @@ class LoadingDataView extends StatelessWidget {
             ///     )
         ),
         child:
-        const CircularProgressIndicator(
+        CircularProgressIndicator(
           color: AppColors.primary,
         )
         // LoadingAnimationWidget.discreteCircle(
@@ -47,7 +48,7 @@ class LoadingDataBaseView extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.sp //AppSize.s8
                   )),
           child:
-          const CircularProgressIndicator(
+          CircularProgressIndicator(
             color: AppColors.primary,
 
           )

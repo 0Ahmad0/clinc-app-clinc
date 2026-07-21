@@ -431,5 +431,22 @@
   "@reportsTotalLabel": {"placeholders": {"total": {"type": "String"}}},
   "report1Date": "18 Jul 2026 · 10:22 AM",
   "report2Date": "11 Jul 2026 · 10:22 AM",
-  "report3Date": "04 Jul 2026 · 10:22 AM"
+  "report3Date": "04 Jul 2026 · 10:22 AM",
+  "toastOtpSentSuccess": "OTP sent successfully",
+  "toastSuccess": "Success",
+  "toastFailure": "Error",
+  "toastWarning": "Warning",
+  "shareAppText": "Download Eyadaty app: {appLink}",
+  "@shareAppText": {"placeholders": {"appLink": {"type": "String"}}},
+  "noResultsFound": "No results found",
+  "noDataYet": "No data yet",
+  "coreUnsupportedType": "Unsupported type",
+  "coreUnsupportedImageFormat": "Unsupported image format",
+  "requestTimeout": "Request timeout",
+  "noInternetConnection": "No internet connection",
+  "sendTimeout": "Send timeout",
+  "chatImageWithIcon": "Image",
+  "chatVideoWithIcon": "Video",
+  "chatVoiceWithIcon": "Voice message",
+  "chatFileWithIcon": "File"
 }

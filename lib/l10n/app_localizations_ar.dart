@@ -1269,4 +1269,54 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get report3Date => '04 Jul 2026 · 10:22 AM';
+
+  @override
+  String get toastOtpSentSuccess => 'تم إرسال رمز التحقق بنجاح';
+
+  @override
+  String get toastSuccess => 'تم بنجاح';
+
+  @override
+  String get toastFailure => 'حدث خطأ';
+
+  @override
+  String get toastWarning => 'تنبيه';
+
+  @override
+  String shareAppText(String appLink) {
+    return 'حمّل تطبيق عيادتي: $appLink';
+  }
+
+  @override
+  String get noResultsFound => 'لا توجد نتائج';
+
+  @override
+  String get noDataYet => 'لا توجد بيانات بعد';
+
+  @override
+  String get coreUnsupportedType => 'نوع غير مدعوم';
+
+  @override
+  String get coreUnsupportedImageFormat => 'صيغة صورة غير مدعومة';
+
+  @override
+  String get requestTimeout => 'انتهت مهلة الطلب';
+
+  @override
+  String get noInternetConnection => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get sendTimeout => 'انتهت مهلة الإرسال';
+
+  @override
+  String get chatImageWithIcon => 'صورة';
+
+  @override
+  String get chatVideoWithIcon => 'فيديو';
+
+  @override
+  String get chatVoiceWithIcon => 'رسالة صوتية';
+
+  @override
+  String get chatFileWithIcon => 'ملف';
 }

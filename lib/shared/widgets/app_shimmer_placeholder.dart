@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:shimmer_animation/shimmer_animation.dart';
 
-import '../theme/app_colors.dart';
+import '../../config/theme/app_colors.dart';
+
 
 class AppShimmerPlaceholder extends StatelessWidget {
   const AppShimmerPlaceholder({

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:clinc_app_t1/generated/locale_keys.g.dart';
-import 'package:easy_localization/easy_localization.dart';
 
+import '../../../../shared/extensions/context_extensions.dart';
 import '../image_local_handler.dart';
 
 class IconHandler extends StatelessWidget {
@@ -21,10 +20,10 @@ class IconHandler extends StatelessWidget {
   final Color? color;
   @override
   Widget build(BuildContext context) {
-    return displayIconOrImage();
+    return displayIconOrImage(context);
   }
 
-  Widget displayIconOrImage() {
+  Widget displayIconOrImage(BuildContext context) {
     switch (icon.runtimeType) {
       case IconData:
         return Icon(icon, size: size ?? width, color: color);
@@ -37,7 +36,7 @@ class IconHandler extends StatelessWidget {
           color: color,
         );
       default:
-        return Text(tr(LocaleKeys.core_unsupported_type));
+        return Text(context.l10n.coreUnsupportedType);
     }
   }
 }
