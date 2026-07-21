@@ -27,3 +27,4 @@ class SettingsCubit extends Cubit<SettingsState> {
 
   void setAvatar(String path) => emit(state.copyWith(avatarPath: path));
 }
+
