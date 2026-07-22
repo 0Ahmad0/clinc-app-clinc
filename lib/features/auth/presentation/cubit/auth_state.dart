@@ -1,23 +1,41 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../core/domain/error_handler/network_exceptions.dart';
+import '../../data/models/clinic_login_model.dart';
+import '../../data/models/clinic_model.dart';
+import '../../data/models/clinic_otp_status_model.dart';
+import '../../data/models/clinic_otp_verification_model.dart';
+import '../../data/models/clinic_password_reset_model.dart';
 import '../../domain/account_type.dart';
 import '../../domain/auth_layer.dart';
 
-/// Which auth layer is showing and the currently chosen account type.
-class AuthState extends Equatable {
-  const AuthState({
-    this.layer = AuthLayer.login,
-    this.accountType = AccountType.clinic,
-  });
+part 'auth_state.freezed.dart';
 
-  final AuthLayer layer;
-  final AccountType accountType;
+enum AuthAction {
+  none,
+  login,
+  register,
+  me,
+  forgotPassword,
+  verifyOtp,
+  resendOtp,
+  resetPassword,
+  logout,
+}
 
-  AuthState copyWith({AuthLayer? layer, AccountType? accountType}) => AuthState(
-    layer: layer ?? this.layer,
-    accountType: accountType ?? this.accountType,
-  );
-
-  @override
-  List<Object> get props => [layer, accountType];
+@freezed
+abstract class AuthState with _$AuthState {
+  const factory AuthState({
+    @Default(AuthLayer.login) AuthLayer layer,
+    @Default(AccountType.clinic) AccountType accountType,
+    @Default(AuthAction.none) AuthAction action,
+    @Default(false) bool isLoading,
+    ClinicLoginModel? login,
+    ClinicModel? registeredClinic,
+    ClinicOtpStatusModel? otpStatus,
+    ClinicOtpVerificationModel? otpVerification,
+    ClinicPasswordResetModel? passwordReset,
+    String? message,
+    NetworkExceptions? failure,
+  }) = _AuthState;
 }

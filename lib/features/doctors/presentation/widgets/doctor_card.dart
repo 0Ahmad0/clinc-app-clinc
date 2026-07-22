@@ -5,22 +5,20 @@ import 'package:intl/intl.dart' show NumberFormat;
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
-import '../../domain/doctor_summary.dart';
 import '../../../../shared/widgets/app_avatar.dart';
 import '../../../../shared/widgets/app_switch.dart';
+import '../../data/models/clinic_doctor_model.dart';
 
 class DoctorCard extends StatelessWidget {
   const DoctorCard({
     super.key,
     required this.doctor,
-    required this.available,
     required this.accent,
     required this.onToggle,
     required this.onTap,
   });
 
-  final DoctorSummary doctor;
-  final bool available;
+  final ClinicDoctorModel doctor;
   final Color accent;
   final VoidCallback onToggle;
   final VoidCallback onTap;
@@ -30,6 +28,8 @@ class DoctorCard extends StatelessWidget {
     final colors = context.colors;
     final locale = Localizations.localeOf(context).toLanguageTag();
     final format = NumberFormat.decimalPattern(locale);
+    final available = doctor.isActive;
+    final name = doctor.name ?? doctor.nameAr ?? doctor.nameEn ?? '-';
     return Opacity(
       opacity: available ? 1 : 0.72,
       child: Material(
@@ -59,7 +59,7 @@ class DoctorCard extends StatelessWidget {
                     alignment: Alignment.center,
                     color: accent.withValues(alpha: 0.12),
                     child: Text(
-                      doctor.initials,
+                      name.characters.isEmpty ? '-' : name.characters.first,
                       style: context.textTheme.titleMedium?.copyWith(
                         color: accent,
                         fontWeight: FontWeight.w700,
@@ -76,7 +76,7 @@ class DoctorCard extends StatelessWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              doctor.name,
+                              name,
                               overflow: TextOverflow.ellipsis,
                               style: context.textTheme.titleSmall?.copyWith(
                                 color: colors.ink,
@@ -113,7 +113,7 @@ class DoctorCard extends StatelessWidget {
                       ),
                       AppGaps.h8,
                       Text(
-                        doctor.specialtyName,
+                        doctor.specializationName ?? '-',
                         style: context.textTheme.labelSmall?.copyWith(
                           color: accent,
                           fontWeight: FontWeight.w600,
@@ -144,7 +144,9 @@ class DoctorCard extends StatelessWidget {
                           ),
                           const SizedBox(width: AppSpacing.xxs),
                           Text(
-                            context.l10n.doctorFee(format.format(doctor.fee)),
+                            context.l10n.doctorFee(
+                              format.format(doctor.consultationFee),
+                            ),
                             style: context.textTheme.bodySmall?.copyWith(
                               color: colors.successFg,
                               fontWeight: FontWeight.w700,
@@ -157,10 +159,7 @@ class DoctorCard extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    AppSwitch(
-                      value: available,
-                      onChanged: onToggle,
-                    ),
+                    AppSwitch(value: available, onChanged: onToggle),
                     AppGaps.h12,
                     Icon(
                       Directionality.of(context) == TextDirection.rtl

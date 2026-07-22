@@ -1,36 +1,129 @@
+import 'dart:async';
+
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/doctor_specialty.dart';
-import '../../domain/doctor_summary.dart';
+import '../../../../core/data/pagination/pagination_state.dart';
+import '../../../../core/data/remote/api_response.dart';
+import '../../data/models/clinic_doctor_model.dart';
+import '../../domain/clinic_doctors_repository.dart';
 import 'doctors_state.dart';
 
 class DoctorsCubit extends Cubit<DoctorsState> {
-  DoctorsCubit() : super(const DoctorsState());
-
-  void search(String query) => emit(state.copyWith(query: query));
-
-  void selectSpecialty(DoctorSpecialty specialty) =>
-      emit(state.copyWith(specialty: specialty));
-
-  void toggleAvailability(int id) {
-    final availability = [...state.availability];
-    availability[id] = !availability[id];
-    emit(state.copyWith(availability: availability));
+  DoctorsCubit(this._repository)
+    : super(DoctorsState(pagination: PaginationState<ClinicDoctorModel>())) {
+    scrollController.addListener(_onScroll);
   }
 
-  List<DoctorSummary> visibleDoctors(List<DoctorSummary> doctors) {
-    final query = state.query.trim().toLowerCase();
-    return doctors
-        .where((doctor) {
-          final specialtyMatches =
-              state.specialty == DoctorSpecialty.all ||
-              doctor.specialty == state.specialty;
-          final queryMatches =
-              query.isEmpty ||
-              doctor.name.toLowerCase().contains(query) ||
-              doctor.specialtyName.toLowerCase().contains(query);
-          return specialtyMatches && queryMatches;
-        })
-        .toList(growable: false);
+  final ClinicDoctorsRepository _repository;
+  final ScrollController scrollController = ScrollController();
+  Timer? _debounce;
+
+  Future<void> loadInitial() async {
+    await Future.wait([loadSpecializations(), _loadPage(page: 1, reset: true)]);
+  }
+
+  Future<void> refresh() => _loadPage(page: 1, reset: true, refreshing: true);
+
+  Future<void> loadMore() async {
+    final pagination = state.pagination;
+    if (pagination.isBusy || !pagination.hasMore) return;
+    await _loadPage(page: pagination.currentPage + 1);
+  }
+
+  void search(String query) {
+    emit(state.copyWith(query: query));
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 450), () {
+      _loadPage(page: 1, reset: true);
+    });
+  }
+
+  void selectSpecialization(String? specializationId) {
+    emit(state.copyWith(selectedSpecializationId: specializationId));
+    _loadPage(page: 1, reset: true);
+  }
+
+  Future<void> toggleAvailability(ClinicDoctorModel doctor) async {
+    final id = doctor.doctorId;
+    if (id == null) return;
+    final result = await _repository.updateAvailability(
+      id: id,
+      isActive: !doctor.isActive,
+    );
+    result.when(
+      success: (_) => _loadPage(page: 1, reset: true),
+      failure: (exception) => emit(state.copyWith(failure: exception)),
+    );
+  }
+
+  Future<void> loadSpecializations() async {
+    final result = await _repository.getSpecializations();
+    result.when(
+      success: (response) {
+        emit(
+          state.copyWith(
+            specializations: response.result?.list ?? const [],
+            failure: null,
+          ),
+        );
+      },
+      failure: (exception) => emit(state.copyWith(failure: exception)),
+    );
+  }
+
+  Future<void> _loadPage({
+    required int page,
+    bool reset = false,
+    bool refreshing = false,
+  }) async {
+    final pagination = state.pagination;
+    if (pagination.isBusy && !reset) return;
+    if (reset) pagination.reset();
+    if (page == 1 && !refreshing) pagination.isInitialLoading.value = true;
+    if (refreshing) pagination.isRefreshing.value = true;
+    if (page > 1) pagination.isLoadingMore.value = true;
+    emit(state.copyWith(failure: null));
+
+    final result = await _repository.getDoctors(
+      page: page,
+      perPage: pagination.perPage,
+      search: state.query,
+      specializationId: state.selectedSpecializationId,
+    );
+
+    result.when(
+      success: (response) {
+        pagination.setPage(
+          data: response.result?.list ?? const [],
+          page: page,
+          meta: response.meta,
+        );
+        _clearLoading();
+        emit(state.copyWith(failure: null));
+      },
+      failure: (exception) {
+        _clearLoading();
+        emit(state.copyWith(failure: exception));
+      },
+    );
+  }
+
+  void _onScroll() {
+    final position = scrollController.position;
+    if (position.pixels >= position.maxScrollExtent - 240) loadMore();
+  }
+
+  void _clearLoading() {
+    state.pagination.isInitialLoading.value = false;
+    state.pagination.isLoadingMore.value = false;
+    state.pagination.isRefreshing.value = false;
+  }
+
+  @override
+  Future<void> close() {
+    _debounce?.cancel();
+    scrollController.dispose();
+    return super.close();
   }
 }

@@ -36,9 +36,7 @@ class AddDoctorScheduleRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsetsDirectional.all(AppSpacing.sm + 1),
       decoration: BoxDecoration(
-        color: active
-            ? colors.primary500.withValues(alpha: 0.05)
-            : colors.bg,
+        color: active ? colors.primary500.withValues(alpha: 0.05) : colors.bg,
         borderRadius: BorderRadius.circular(AppRadius.button),
         border: Border.all(
           color: active

@@ -1,9 +1,9 @@
 // const baseServ = "http://192.168.1.114/";
 
-const baseServ = "https://clinic.hivetech.space/";
-const baseServSlashLess = "https://clinic.hivetech.space/";
-// const baseServ = "http://192.168.1.101:8000/";
-// const baseServSlashLess = "http://192.168.1.101:8000/";
+// const baseServ = "https://clinic.hivetech.space/";
+// const baseServSlashLess = "https://clinic.hivetech.space/";
+const baseServ = "http://192.168.1.104:8000/";
+const baseServSlashLess = "http://192.168.1.104:8000/";
 
 const baseUrl = "${baseServSlashLess}api/";
 const storageUrl = "${baseServSlashLess}storage/";
@@ -20,6 +20,9 @@ class AppUrl {
   static const appSettings = "${baseUrl}app/settings";
 
   static const clinicRegister = "${baseUrl}clinic/register";
+  static const clinicLogin = "${baseUrl}clinic/login";
+  static const clinicMe = "${baseUrl}clinic/me";
+  static const clinicLogout = "${baseUrl}clinic/logout";
   static const clinicForgotPassword = "${baseUrl}clinic/forgot-password";
   static const clinicVerifyOtp = "${baseUrl}clinic/verify-otp";
   static const clinicResendOtp = "${baseUrl}clinic/resend-otp";
@@ -27,12 +30,18 @@ class AppUrl {
   static const insurances = "${baseUrl}insurances";
   static const clinicDashboard = "${baseUrl}clinic/dashboard";
   static const clinicDoctors = "${baseUrl}clinic/doctors";
+  static const clinicSpecializations = "${baseUrl}clinic/specializations";
   static const clinicAppointments = "${baseUrl}clinic/appointments";
   static const clinicNotifications = "${baseUrl}clinic/notifications";
   static const clinicRegistrationStatus =
       "${baseUrl}clinic/registration-status";
   static const clinicReports = "${baseUrl}clinic/reports";
   static const clinicServices = "${baseUrl}clinic/services";
+
+  static String clinicDoctor(String id) => '$clinicDoctors/$id';
+
+  static String clinicDoctorAvailability(String id) =>
+      '$clinicDoctors/$id/availability';
 
   /// User
   ///*******************************************************************************
@@ -182,5 +191,4 @@ class AppUrl {
   static const publicContactLinks = '$baseUrl${public}contact-links';
 
   ///------------------------------------------------------------------------------>
-
 }

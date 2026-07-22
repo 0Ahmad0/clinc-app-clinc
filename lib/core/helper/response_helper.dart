@@ -260,7 +260,6 @@ class ResponseHelper {
   }) {
     final messenger = AppRouter.scaffoldMessengerKey.currentState;
     if (messenger == null) return;
-
     messenger
       ..hideCurrentSnackBar()
       ..showSnackBar(
@@ -270,7 +269,8 @@ class ResponseHelper {
           elevation: 0,
           behavior: SnackBarBehavior.floating,
           margin: EdgeInsets.only(top: 8.h, left: 18.w, right: 18.w),
-          padding: EdgeInsets.zero,
+          padding: EdgeInsets.symmetric(vertical: 20.h),
+          // padding: EdgeInsets.zero,
           content: _CoolerSnackbarContent(
             title: title,
             message: message,

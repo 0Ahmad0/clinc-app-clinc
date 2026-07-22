@@ -10,7 +10,7 @@ class DoctorsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (_) => sl<DoctorsCubit>(),
+    create: (_) => sl<DoctorsCubit>()..loadInitial(),
     child: const DoctorsView(),
   );
 }

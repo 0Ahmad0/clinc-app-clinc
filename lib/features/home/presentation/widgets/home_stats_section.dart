@@ -4,10 +4,13 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../data/models/clinic_dashboard_model.dart';
 
 /// Clinic statistics block shown below the quick actions.
 class HomeStatsSection extends StatelessWidget {
-  const HomeStatsSection({super.key});
+  const HomeStatsSection({super.key, this.stats});
+
+  final ClinicDashboardStatsModel? stats;
 
   @override
   Widget build(BuildContext context) {
@@ -25,14 +28,17 @@ class HomeStatsSection extends StatelessWidget {
         children: [
           HomeSectionTitle(title: l10n.homeStatsTitle),
           const SizedBox(height: AppSpacing.sm),
-          const HomePatientCard(),
+          HomePatientCard(stats: stats),
           const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
               Expanded(
                 child: HomeMetricCard(
                   icon: Iconsax.profile_2user,
-                  count: l10n.homeDoctorsCount,
+                  count: _formatCount(
+                    stats?.doctorsCount,
+                    l10n.homeDoctorsCount,
+                  ),
                   label: l10n.homeDoctors,
                   detail: l10n.homeDoctorsGrowth,
                   accent: colors.primary500,
@@ -42,7 +48,7 @@ class HomeStatsSection extends StatelessWidget {
               Expanded(
                 child: HomeMetricCard(
                   icon: Iconsax.money,
-                  count: l10n.homeIncomeCount,
+                  count: _formatMoney(stats?.dailyIncome, l10n.homeIncomeCount),
                   suffix: l10n.homeCurrency,
                   label: l10n.homeDailyIncome,
                   accent: colors.warning,
@@ -51,10 +57,19 @@ class HomeStatsSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          const HomeTodaySummaryCard(),
+          HomeTodaySummaryCard(stats: stats),
         ],
       ),
     );
+  }
+
+  String _formatCount(int? value, String fallback) =>
+      value == null ? fallback : value.toString();
+
+  String _formatMoney(num? value, String fallback) {
+    if (value == null) return fallback;
+    if (value % 1 == 0) return value.toInt().toString();
+    return value.toStringAsFixed(2);
   }
 }
 
@@ -90,7 +105,9 @@ class HomeSectionTitle extends StatelessWidget {
 }
 
 class HomePatientCard extends StatelessWidget {
-  const HomePatientCard({super.key});
+  const HomePatientCard({super.key, this.stats});
+
+  final ClinicDashboardStatsModel? stats;
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +152,7 @@ class HomePatientCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      l10n.homePatientsCount,
+                      stats?.patientsCount.toString() ?? l10n.homePatientsCount,
                       style: context.textTheme.headlineMedium?.copyWith(
                         fontSize: AppSizes.homePatientCountText,
                         height: 1,
@@ -318,7 +335,9 @@ class HomeMetricCard extends StatelessWidget {
 }
 
 class HomeTodaySummaryCard extends StatelessWidget {
-  const HomeTodaySummaryCard({super.key});
+  const HomeTodaySummaryCard({super.key, this.stats});
+
+  final ClinicDashboardStatsModel? stats;
 
   @override
   Widget build(BuildContext context) {
@@ -360,7 +379,8 @@ class HomeTodaySummaryCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l10n.homeAppointmentsCount,
+                        stats?.todayAppointmentsCount.toString() ??
+                            l10n.homeAppointmentsCount,
                         style: context.textTheme.headlineMedium?.copyWith(
                           color: colors.onBrand,
                           height: 1,
@@ -392,7 +412,9 @@ class HomeTodaySummaryCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppRadius.pill),
               ),
               child: Text(
-                l10n.homeUpcomingCount,
+                stats == null
+                    ? l10n.homeUpcomingCount
+                    : '${stats!.pendingAppointmentsCount} ${l10n.homeAppointmentUpcoming}',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: context.textTheme.labelSmall?.copyWith(

@@ -7,18 +7,21 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../data/models/clinic_dashboard_model.dart';
 
 /// Gradient dashboard header with the overlapping four quick actions.
 class HomeTopSection extends StatelessWidget {
-  const HomeTopSection({super.key});
+  const HomeTopSection({super.key, this.dashboard});
+
+  final ClinicDashboardModel? dashboard;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: AppSizes.homeTopHeight,
       child: Stack(
-        children: const [
-          HomeHeader(),
+        children: [
+          HomeHeader(dashboard: dashboard),
           PositionedDirectional(
             start: AppSpacing.screen,
             end: AppSpacing.screen,
@@ -33,12 +36,22 @@ class HomeTopSection extends StatelessWidget {
 }
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  const HomeHeader({super.key, this.dashboard});
+
+  final ClinicDashboardModel? dashboard;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
+    final clinic = dashboard?.clinic;
+    final clinicName = clinic?.name?.trim().isNotEmpty == true
+        ? clinic!.name!
+        : l10n.homeClinicName;
+    final statusText = clinic?.workingHoursText?.trim().isNotEmpty == true
+        ? clinic!.workingHoursText!
+        : l10n.homeOpenStatus;
+    final isOpen = clinic?.isOpen ?? true;
     return Container(
       height: AppSizes.homeHeaderHeight,
       clipBehavior: Clip.antiAlias,
@@ -116,7 +129,9 @@ class HomeHeader extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l10n.homeClinicName,
+                            clinicName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: context.textTheme.headlineMedium?.copyWith(
                               color: colors.onBrand,
                             ),
@@ -151,11 +166,13 @@ class HomeHeader extends StatelessWidget {
                         width: AppSizes.homeStatusDot,
                         height: AppSizes.homeStatusDot,
                         decoration: BoxDecoration(
-                          color: colors.successBright,
+                          color: isOpen ? colors.successBright : colors.gray,
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: colors.successBright,
+                              color: isOpen
+                                  ? colors.successBright
+                                  : colors.gray,
                               blurRadius: AppSpacing.sm,
                             ),
                           ],
@@ -164,7 +181,7 @@ class HomeHeader extends StatelessWidget {
                       const SizedBox(width: AppSpacing.xs),
                       Expanded(
                         child: Text(
-                          l10n.homeOpenStatus,
+                          statusText,
                           style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: colors.onBrand,

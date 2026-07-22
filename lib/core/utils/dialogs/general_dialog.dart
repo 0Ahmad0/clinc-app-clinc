@@ -9,7 +9,8 @@ import '../../../shared/widgets/app_svg_widget.dart';
 
 class AppConstants {
   const AppConstants._();
-
+  static const double designWidth = 360.0;
+  static const double designHeight = 690.0;
   static const defaultDuration = 300;
 }
 

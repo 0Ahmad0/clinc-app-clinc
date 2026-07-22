@@ -16,8 +16,9 @@ class DoctorsHeader extends StatelessWidget {
     final colors = context.colors;
     return BlocBuilder<DoctorsCubit, DoctorsState>(
       builder: (context, state) {
-        final available = state.availability.where((value) => value).length;
-        final total = state.availability.length;
+        final items = state.pagination.items.value;
+        final available = items.where((value) => value.isActive).length;
+        final total = state.pagination.total ?? items.length;
         final format = NumberFormat.decimalPattern(
           Localizations.localeOf(context).toLanguageTag(),
         );

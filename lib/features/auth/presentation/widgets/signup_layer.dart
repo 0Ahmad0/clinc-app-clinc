@@ -28,10 +28,16 @@ class SignupLayer extends StatefulWidget {
 
 class SignupLayerState extends State<SignupLayer> {
   final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final licenseController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   @override
   void dispose() {
+    nameController.dispose();
+    licenseController.dispose();
+    emailController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -68,6 +74,7 @@ class SignupLayerState extends State<SignupLayer> {
                   _SectionLabel(_facilityLabel(l10n, state.accountType)),
                   const SizedBox(height: AppSpacing.sm),
                   AuthTextField(
+                    controller: nameController,
                     hint: _facilityHint(l10n, state.accountType),
                     icon: Iconsax.building,
                     validator: (value) =>
@@ -78,6 +85,7 @@ class SignupLayerState extends State<SignupLayer> {
             ),
             const SizedBox(height: AppSpacing.sm),
             AuthTextField(
+              controller: licenseController,
               hint: l10n.authLicenseHint,
               icon: Iconsax.personalcard,
               validator: (value) =>
@@ -85,6 +93,7 @@ class SignupLayerState extends State<SignupLayer> {
             ),
             const SizedBox(height: AppSpacing.sm),
             AuthTextField(
+              controller: emailController,
               hint: l10n.authEmailHint,
               icon: Iconsax.sms,
               keyboardType: TextInputType.emailAddress,
@@ -122,14 +131,27 @@ class SignupLayerState extends State<SignupLayer> {
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
-            AppButton(
-              label: l10n.authSignupCta,
-              onPressed: () {
-                FocusScope.of(context).unfocus();
-                if (formKey.currentState?.validate() ?? false) {
-                  cubit.submitSignup();
-                }
-              },
+            BlocBuilder<AuthCubit, AuthState>(
+              buildWhen: (previous, current) =>
+                  previous.isLoading != current.isLoading ||
+                  previous.action != current.action,
+              builder: (context, state) => AppButton(
+                label: l10n.authSignupCta,
+                onPressed:
+                    state.isLoading && state.action == AuthAction.register
+                    ? null
+                    : () {
+                        FocusScope.of(context).unfocus();
+                        if (formKey.currentState?.validate() ?? false) {
+                          cubit.register(
+                            name: nameController.text,
+                            licenseNumber: licenseController.text,
+                            email: emailController.text,
+                            password: passwordController.text,
+                          );
+                        }
+                      },
+              ),
             ),
             const SizedBox(height: AppSpacing.md),
             const _TermsText(),

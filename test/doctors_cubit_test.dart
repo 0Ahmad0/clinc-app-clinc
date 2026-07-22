@@ -1,41 +1,43 @@
-import 'package:clinic_app/features/doctors/domain/doctor_specialty.dart';
-import 'package:clinic_app/features/doctors/domain/doctor_summary.dart';
+import 'package:clinic_app/core/data/base_model.dart';
+import 'package:clinic_app/core/data/remote/api_response.dart';
+import 'package:clinic_app/features/doctors/data/models/clinic_doctor_model.dart';
+import 'package:clinic_app/features/doctors/data/models/clinic_specialization_model.dart';
+import 'package:clinic_app/features/doctors/domain/clinic_doctors_repository.dart';
 import 'package:clinic_app/features/doctors/presentation/cubit/doctors_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('doctors filter, search, and availability are functional', () {
-    final cubit = DoctorsCubit();
-    const doctors = [
-      DoctorSummary(
-        id: 0,
-        name: 'Doctor One',
-        initials: 'DO',
-        specialty: DoctorSpecialty.cardiology,
-        specialtyName: 'Cardiology',
-        experienceYears: 12,
-        fee: 150,
-      ),
-      DoctorSummary(
-        id: 1,
-        name: 'Doctor Two',
-        initials: 'DT',
-        specialty: DoctorSpecialty.dermatology,
-        specialtyName: 'Dermatology',
-        experienceYears: 7,
-        fee: 200,
-      ),
-    ];
+  test('doctors cubit updates search and specialization filters', () async {
+    final cubit = DoctorsCubit(_FakeClinicDoctorsRepository());
 
-    cubit.selectSpecialty(DoctorSpecialty.cardiology);
-    expect(cubit.visibleDoctors(doctors), [doctors.first]);
+    cubit.search('cardio');
+    cubit.selectSpecialization('1');
 
-    cubit.selectSpecialty(DoctorSpecialty.all);
-    cubit.search('derma');
-    expect(cubit.visibleDoctors(doctors), [doctors.last]);
-
-    cubit.toggleAvailability(0);
-    expect(cubit.state.availability.first, isFalse);
-    cubit.close();
+    expect(cubit.state.query, 'cardio');
+    expect(cubit.state.selectedSpecializationId, '1');
+    await Future<void>.delayed(Duration.zero);
+    await cubit.close();
   });
+}
+
+class _FakeClinicDoctorsRepository implements ClinicDoctorsRepository {
+  @override
+  Future<ApiResponse<BaseModel<BaseModels<ClinicDoctorModel>>>> getDoctors({
+    required int page,
+    required int perPage,
+    String? search,
+    String? specializationId,
+    bool? isActive,
+  }) async => ApiResponse.success(
+    BaseModel(result: BaseModels<ClinicDoctorModel>(list: [])),
+  );
+
+  @override
+  Future<ApiResponse<BaseModel<BaseModels<ClinicSpecializationModel>>>>
+  getSpecializations() async => ApiResponse.success(
+    BaseModel(result: BaseModels<ClinicSpecializationModel>(list: [])),
+  );
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

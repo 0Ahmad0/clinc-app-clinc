@@ -3,18 +3,21 @@ import 'package:flutter/material.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../data/models/clinic_dashboard_model.dart';
 import 'home_stats_section.dart';
 
 enum HomeAppointmentTone { upcoming, done, cancelled }
 
 /// Today's appointments list from the supplied dashboard design.
 class HomeAppointmentsSection extends StatelessWidget {
-  const HomeAppointmentsSection({super.key});
+  const HomeAppointmentsSection({super.key, this.appointments});
+
+  final List<ClinicDashboardAppointmentModel>? appointments;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final appointments = [
+    final fallbackAppointments = [
       (
         l10n.homeAppointment1Name,
         l10n.homeAppointment1Service,
@@ -72,19 +75,65 @@ class HomeAppointmentsSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
-          for (var index = 0; index < appointments.length; index++) ...[
-            if (index > 0) const SizedBox(height: AppSpacing.sm),
-            HomeAppointmentCard(
-              name: appointments[index].$1,
-              service: appointments[index].$2,
-              time: appointments[index].$3,
-              status: appointments[index].$4,
-              tone: appointments[index].$5,
-            ),
-          ],
+          if (appointments == null)
+            for (
+              var index = 0;
+              index < fallbackAppointments.length;
+              index++
+            ) ...[
+              if (index > 0) const SizedBox(height: AppSpacing.sm),
+              HomeAppointmentCard(
+                name: fallbackAppointments[index].$1,
+                service: fallbackAppointments[index].$2,
+                time: fallbackAppointments[index].$3,
+                status: fallbackAppointments[index].$4,
+                tone: fallbackAppointments[index].$5,
+              ),
+            ]
+          else if (appointments!.isEmpty)
+            Padding(
+              padding: const EdgeInsetsDirectional.symmetric(
+                vertical: AppSpacing.lg,
+              ),
+              child: Text(
+                l10n.homeTodayAppointments,
+                textAlign: TextAlign.center,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colors.gray,
+                ),
+              ),
+            )
+          else
+            for (var index = 0; index < appointments!.length; index++) ...[
+              if (index > 0) const SizedBox(height: AppSpacing.sm),
+              HomeAppointmentCard(
+                name: appointments![index].patientName ?? '-',
+                service: appointments![index].serviceName ?? '-',
+                time: appointments![index].time ?? '',
+                status: _statusLabel(context, appointments![index].status),
+                tone: _statusTone(appointments![index].status),
+              ),
+            ],
         ],
       ),
     );
+  }
+
+  String _statusLabel(BuildContext context, String? status) {
+    final l10n = context.l10n;
+    return switch (status) {
+      'completed' => l10n.homeAppointmentDone,
+      'rejected' => l10n.homeAppointmentCancelled,
+      'accepted' || 'pending' || _ => l10n.homeAppointmentUpcoming,
+    };
+  }
+
+  HomeAppointmentTone _statusTone(String? status) {
+    return switch (status) {
+      'completed' => HomeAppointmentTone.done,
+      'rejected' => HomeAppointmentTone.cancelled,
+      _ => HomeAppointmentTone.upcoming,
+    };
   }
 }
 

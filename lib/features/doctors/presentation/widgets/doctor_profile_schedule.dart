@@ -37,7 +37,10 @@ class DoctorProfileSchedule extends StatelessWidget {
             runSpacing: AppSpacing.xs - 1,
             children: [
               for (final day in Weekday.values)
-                _DayChip(label: day.label(l10n), active: _activeDays.contains(day)),
+                _DayChip(
+                  label: day.label(l10n),
+                  active: _activeDays.contains(day),
+                ),
             ],
           ),
         ),
@@ -52,7 +55,9 @@ class DoctorProfileSchedule extends StatelessWidget {
           decoration: BoxDecoration(
             color: colors.primary500.withValues(alpha: 0.07),
             borderRadius: BorderRadius.circular(AppRadius.field),
-            border: Border.all(color: colors.primary500.withValues(alpha: 0.16)),
+            border: Border.all(
+              color: colors.primary500.withValues(alpha: 0.16),
+            ),
           ),
           child: Row(
             children: [

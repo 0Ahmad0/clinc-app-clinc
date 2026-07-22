@@ -8,6 +8,7 @@ import '../../../../shared/widgets/app_button.dart';
 import '../../domain/auth_layer.dart';
 import '../../domain/auth_validators.dart';
 import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
 import 'auth_back_button.dart';
 import 'auth_pulse_badge.dart';
 import 'auth_text_field.dart';
@@ -23,6 +24,13 @@ class ForgotLayer extends StatefulWidget {
 
 class ForgotLayerState extends State<ForgotLayer> {
   final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +92,7 @@ class ForgotLayerState extends State<ForgotLayer> {
                   _InfoNote(text: l10n.authForgotInfo),
                   const SizedBox(height: AppSpacing.sm),
                   AuthTextField(
+                    controller: emailController,
                     hint: l10n.authForgotFieldHint,
                     icon: Iconsax.sms,
                     keyboardType: TextInputType.emailAddress,
@@ -92,13 +101,25 @@ class ForgotLayerState extends State<ForgotLayer> {
                         AuthValidators.required(value, l10n.validationRequired),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  // ponytail: OTP screen not built yet — wire the send action later.
-                  AppButton(
-                    label: l10n.authForgotCta,
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      formKey.currentState?.validate();
-                    },
+                  BlocBuilder<AuthCubit, AuthState>(
+                    buildWhen: (previous, current) =>
+                        previous.isLoading != current.isLoading ||
+                        previous.action != current.action,
+                    builder: (context, state) => AppButton(
+                      label: l10n.authForgotCta,
+                      onPressed:
+                          state.isLoading &&
+                              state.action == AuthAction.forgotPassword
+                          ? null
+                          : () {
+                              FocusScope.of(context).unfocus();
+                              if (formKey.currentState?.validate() ?? false) {
+                                cubit.forgotPassword(
+                                  email: emailController.text,
+                                );
+                              }
+                            },
+                    ),
                   ),
                   const Spacer(),
                   const SizedBox(height: AppSpacing.md),

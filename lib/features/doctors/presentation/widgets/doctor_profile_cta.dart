@@ -81,7 +81,11 @@ class DoctorProfileCta extends StatelessWidget {
                 width: 1.5,
               ),
             ),
-            child: Icon(Iconsax.call, color: colors.primary600, size: AppSizes.iconMd),
+            child: Icon(
+              Iconsax.call,
+              color: colors.primary600,
+              size: AppSizes.iconMd,
+            ),
           ),
         ],
       ),

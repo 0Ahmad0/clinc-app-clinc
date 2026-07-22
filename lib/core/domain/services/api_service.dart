@@ -19,7 +19,7 @@ abstract class ApiServices {
   });
 
   Future postFiles(
-     String path, {
+    String path, {
     Map<String, dynamic>? queryParams,
     Map<String, dynamic>? body,
     FormData? formData,
@@ -52,6 +52,14 @@ abstract class ApiServices {
     FormData? formData,
     bool? hasToken,
   });
+
+  Future patch(
+    String path, {
+    Map<String, dynamic>? queryParams,
+    Map<String, dynamic>? body,
+    FormData? formData,
+    bool? hasToken,
+  });
   Future<dynamic> delete(
     String path, {
     Map<String, dynamic>? queryParams,
@@ -59,5 +67,9 @@ abstract class ApiServices {
     bool? hasToken,
   });
 
-  Future<dynamic> downloadFile(String url,String filePath, void Function(int sent, int total)? onReceiveProgress,);
+  Future<dynamic> downloadFile(
+    String url,
+    String filePath,
+    void Function(int sent, int total)? onReceiveProgress,
+  );
 }

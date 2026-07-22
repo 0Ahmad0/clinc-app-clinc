@@ -45,7 +45,8 @@ class AddDoctorScheduleSection extends StatelessWidget {
                 active: state.isActive(day),
                 hours: state.hoursOf(day),
                 onToggle: () => cubit.toggleDay(day),
-                onPickStart: () => _pickTime(context, cubit, day, isStart: true),
+                onPickStart: () =>
+                    _pickTime(context, cubit, day, isStart: true),
                 onPickEnd: () => _pickTime(context, cubit, day, isStart: false),
               ),
               if (day != Weekday.values.last) AppGaps.h12,

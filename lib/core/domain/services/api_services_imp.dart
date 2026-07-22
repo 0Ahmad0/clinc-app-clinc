@@ -249,6 +249,28 @@ class ApiServicesImp implements ApiServices {
     }
   }
 
+  @override
+  Future patch(
+    String path, {
+    Map<String, dynamic>? queryParams,
+    Map<String, dynamic>? body,
+    FormData? formData,
+    bool? hasToken,
+  }) async {
+    try {
+      await setHeaders(hasToken ?? true);
+      final response = await _dio.patch(
+        path,
+        queryParameters: queryParams,
+        data: formData ?? body,
+        options: Options(headers: _headers),
+      );
+      return _handleResponseAsJson(response);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
   final dioLoggerInterceptor = InterceptorsWrapper(
     onRequest: (RequestOptions options, handler) {
       // String headers = "";

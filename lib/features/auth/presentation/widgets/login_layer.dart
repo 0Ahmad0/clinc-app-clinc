@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
-import '../../../../config/routes/app_routes.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../domain/auth_layer.dart';
 import '../../domain/auth_validators.dart';
 import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
 import 'auth_footer_link.dart';
 import 'auth_text_field.dart';
 
@@ -25,6 +24,15 @@ class LoginLayer extends StatefulWidget {
 
 class LoginLayerState extends State<LoginLayer> {
   final formKey = GlobalKey<FormState>();
+  final identifierController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    identifierController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +79,7 @@ class LoginLayerState extends State<LoginLayer> {
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   AuthTextField(
+                    controller: identifierController,
                     hint: l10n.authIdentifierHint,
                     icon: Iconsax.sms,
                     validator: (value) =>
@@ -78,6 +87,7 @@ class LoginLayerState extends State<LoginLayer> {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   AuthTextField(
+                    controller: passwordController,
                     hint: l10n.authPasswordHint,
                     icon: Iconsax.lock,
                     obscure: true,
@@ -105,17 +115,28 @@ class LoginLayerState extends State<LoginLayer> {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  AppButton(
-                    label: l10n.authLoginCta,
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      if (formKey.currentState?.validate() ?? false) {
-                        context.go(AppRoutes.home);
-                      }
-                    },
+                  BlocBuilder<AuthCubit, AuthState>(
+                    buildWhen: (previous, current) =>
+                        previous.isLoading != current.isLoading ||
+                        previous.action != current.action,
+                    builder: (context, state) => AppButton(
+                      label: l10n.authLoginCta,
+                      onPressed:
+                          state.isLoading && state.action == AuthAction.login
+                          ? null
+                          : () {
+                              FocusScope.of(context).unfocus();
+                              if (formKey.currentState?.validate() ?? false) {
+                                cubit.login(
+                                  identifier: identifierController.text,
+                                  password: passwordController.text,
+                                );
+                              }
+                            },
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  _GuestButton(onPressed: () => context.go(AppRoutes.home)),
+                  const _GuestButton(onPressed: null),
                   const Spacer(),
                   const SizedBox(height: AppSpacing.lg),
                   AuthFooterLink(
@@ -135,7 +156,7 @@ class LoginLayerState extends State<LoginLayer> {
 
 class _GuestButton extends StatelessWidget {
   const _GuestButton({required this.onPressed});
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {

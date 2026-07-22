@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_motion.dart';
 import '../../../../config/theme/app_shadows.dart';
@@ -7,7 +8,6 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../cubit/doctors_cubit.dart';
 import '../cubit/doctors_state.dart';
-import '../doctor_specialty_l10n.dart';
 
 /// Horizontally scrolling specialty filter. The selected pill fills with the
 /// CTA gradient and glows; the rest are hairline-outlined.
@@ -18,7 +18,10 @@ class DoctorsFilterChips extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return BlocBuilder<DoctorsCubit, DoctorsState>(
-      buildWhen: (previous, current) => previous.specialty != current.specialty,
+      buildWhen: (previous, current) =>
+          previous.selectedSpecializationId !=
+              current.selectedSpecializationId ||
+          previous.specializations != current.specializations,
       builder: (context, state) => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsetsDirectional.fromSTEB(
@@ -29,15 +32,28 @@ class DoctorsFilterChips extends StatelessWidget {
         ),
         child: Row(
           children: [
-            for (final specialty in kFilterSpecialties)
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
+              child: _FilterChip(
+                label: l10n.doctorsAll,
+                icon: Iconsax.category,
+                selected: state.selectedSpecializationId == null,
+                onTap: () =>
+                    context.read<DoctorsCubit>().selectSpecialization(null),
+              ),
+            ),
+            for (final specialty in state.specializations)
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
                 child: _FilterChip(
-                  label: specialty.label(l10n),
-                  icon: specialty.icon,
-                  selected: state.specialty == specialty,
-                  onTap: () =>
-                      context.read<DoctorsCubit>().selectSpecialty(specialty),
+                  label: specialty.name ?? '-',
+                  icon: Iconsax.health,
+                  selected:
+                      state.selectedSpecializationId ==
+                      specialty.specializationId,
+                  onTap: () => context
+                      .read<DoctorsCubit>()
+                      .selectSpecialization(specialty.specializationId),
                 ),
               ),
           ],
@@ -80,9 +96,7 @@ class _FilterChip extends StatelessWidget {
           gradient: selected ? colors.ctaGradient : null,
           borderRadius: BorderRadius.circular(AppRadius.pill),
           border: Border.all(
-            color: selected
-                ? colors.onBrand.withValues(alpha: 0)
-                : colors.line,
+            color: selected ? colors.onBrand.withValues(alpha: 0) : colors.line,
             width: 1.5,
           ),
           boxShadow: selected ? AppShadows.selectedChip : null,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_bottom_navigation.dart';
+import '../cubit/doctors_cubit.dart';
 import '../widgets/add_doctor_button.dart';
 import '../widgets/doctors_filter_chips.dart';
 import '../widgets/doctors_header.dart';
@@ -19,6 +21,7 @@ class DoctorsView extends StatelessWidget {
     body: Stack(
       children: [
         CustomScrollView(
+          controller: context.read<DoctorsCubit>().scrollController,
           slivers: [
             // Floating header: hides as you read down the list and snaps back
             // the moment you scroll up.
@@ -32,12 +35,13 @@ class DoctorsView extends StatelessWidget {
               elevation: 0,
               toolbarHeight:
                   MediaQuery.paddingOf(context).top +
+                  AppSizes.doctorsHeaderContent +
                   AppSizes.doctorsHeaderContent,
               flexibleSpace: const DoctorsHeader(),
             ),
             const SliverToBoxAdapter(child: DoctorsSearchField()),
             const SliverToBoxAdapter(child: DoctorsFilterChips()),
-            const SliverToBoxAdapter(child: DoctorsList()),
+            const DoctorsList(),
           ],
         ),
         const PositionedDirectional(

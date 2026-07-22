@@ -24,11 +24,19 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
 
   void setStart(Weekday day, TimeOfDay start) {
     final current = state.hoursOf(day);
-    emit(state.copyWith(hours: {...state.hours, day: (start: start, end: current.end)}));
+    emit(
+      state.copyWith(
+        hours: {...state.hours, day: (start: start, end: current.end)},
+      ),
+    );
   }
 
   void setEnd(Weekday day, TimeOfDay end) {
     final current = state.hoursOf(day);
-    emit(state.copyWith(hours: {...state.hours, day: (start: current.start, end: end)}));
+    emit(
+      state.copyWith(
+        hours: {...state.hours, day: (start: current.start, end: end)},
+      ),
+    );
   }
 }
