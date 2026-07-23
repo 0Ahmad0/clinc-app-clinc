@@ -58,6 +58,16 @@
   - `PUT /api/clinic/doctors/{doctor}`
   - `PATCH /api/clinic/doctors/{doctor}/availability`
   - `GET /api/clinic/specializations`
+  - `GET /api/clinic/appointments`
+  - `GET /api/clinic/appointments/{appointment}`
+  - `POST /api/clinic/appointments/{appointment}/accept`
+  - `POST /api/clinic/appointments/{appointment}/reject`
+  - `POST /api/clinic/appointments/{appointment}/finish`
+  - `POST /api/clinic/appointments/{appointment}/result`
+  - `GET /api/clinic/reports/summary`
+  - `POST /api/clinic/reports/export`
+  - `GET /api/clinic/reports/generated`
+  - `GET /api/clinic/reports/generated/{report}/download`
 - Clinic register request fields: `name`, `license_number`, `email`, `password`, `type`.
 - Clinic register `type` values: `clinic`, `lab`, `both`.
 - Clinic login request fields: `email`, `password`, optional `device_name`; the backend accepts email or license number through the `email` field.
@@ -68,7 +78,7 @@
 - Clinic dashboard request query fields: optional `date`.
 - Clinic protected endpoints use the `clinic.auth` middleware.
 - Clinic dashboard response returns clinic info, stats, nearest 5 appointments, and unread notifications count.
-- Missing operational APIs: appointments, notifications list/actions, services, reports, settings/profile update, password change, notification preferences, upload result, and generated reports.
+- Missing operational APIs: notifications list/actions, services, settings/profile update, password change, and notification preferences.
 
 ## Clean Architecture Rules
 - Required flow for all backend-integrated Clinic features:
@@ -270,6 +280,54 @@ locator.registerFactory<FeatureCubit>(
   - `lib/core/di/service_locator.dart`
   - `lib/core/domain/services/api_service.dart`
   - `lib/core/domain/services/api_services_imp.dart`
+  - `lib/core/utils/app_url.dart`
+  - `BACKEND_NOTES.md`
+  - `PROJECT_HANDOFF.md`
+
+## Completed: Clinic Appointments Integration
+- Date: 2026-07-23.
+- Integrated appointments list/detail/pagination/filter by status and actions.
+- Added appointments models, remote data source, repository, Cubit pagination, and Freezed state.
+- Registered Appointments dependencies in GetIt.
+- Files added/modified:
+  - `lib/features/appointments/data/clinic_appointments_remote_data_source.dart`
+  - `lib/features/appointments/data/models/clinic_appointment_model.dart`
+  - `lib/features/appointments/domain/clinic_appointments_repository.dart`
+  - `lib/features/appointments/presentation/cubit/appointments_cubit.dart`
+  - `lib/features/appointments/presentation/cubit/appointments_state.dart`
+  - `lib/features/appointments/presentation/pages/appointments_page.dart`
+  - `lib/features/appointments/presentation/pages/appointments_view.dart`
+  - `lib/features/appointments/presentation/pages/appointments_list_view.dart`
+  - `lib/features/appointments/presentation/pages/appointment_detail_view.dart`
+  - `lib/features/appointments/presentation/widgets/appointment_card.dart`
+  - `lib/features/appointments/presentation/widgets/appointment_actions.dart`
+  - `lib/features/appointments/presentation/widgets/appointment_detail_header.dart`
+  - `lib/features/appointments/presentation/widgets/appointments_header.dart`
+  - `lib/features/appointments/presentation/widgets/appointments_tabs.dart`
+  - `lib/core/di/service_locator.dart`
+  - `lib/core/utils/app_url.dart`
+  - `BACKEND_NOTES.md`
+  - `PROJECT_HANDOFF.md`
+
+## Completed: Clinic Reports Integration
+- Date: 2026-07-23.
+- Integrated reports summary, export, generated list, and pagination.
+- Added reports models, remote data source, repository, Cubit pagination, and Freezed state.
+- Registered Reports dependencies in GetIt.
+- Files added/modified:
+  - `lib/features/reports/data/clinic_reports_remote_data_source.dart`
+  - `lib/features/reports/data/models/clinic_report_model.dart`
+  - `lib/features/reports/domain/clinic_reports_repository.dart`
+  - `lib/features/reports/domain/report_period.dart`
+  - `lib/features/reports/domain/report_type.dart`
+  - `lib/features/reports/presentation/cubit/reports_cubit.dart`
+  - `lib/features/reports/presentation/cubit/reports_state.dart`
+  - `lib/features/reports/presentation/pages/reports_page.dart`
+  - `lib/features/reports/presentation/pages/reports_view.dart`
+  - `lib/features/reports/presentation/widgets/reports_export_buttons.dart`
+  - `lib/features/reports/presentation/widgets/reports_list.dart`
+  - `lib/features/reports/presentation/widgets/report_entry_card.dart`
+  - `lib/core/di/service_locator.dart`
   - `lib/core/utils/app_url.dart`
   - `BACKEND_NOTES.md`
   - `PROJECT_HANDOFF.md`

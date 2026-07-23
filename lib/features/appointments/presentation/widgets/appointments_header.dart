@@ -5,17 +5,11 @@ import 'package:intl/intl.dart' show NumberFormat;
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
-import '../../domain/appointment.dart';
-import '../../domain/appointment_status.dart';
 import '../cubit/appointments_cubit.dart';
 import '../cubit/appointments_state.dart';
 
-/// Blue gradient header for the list view: calendar icon, title, a summary line
-/// and confirmed / done stat pills.
 class AppointmentsHeader extends StatelessWidget {
-  const AppointmentsHeader({super.key, required this.appointments});
-
-  final List<Appointment> appointments;
+  const AppointmentsHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +20,10 @@ class AppointmentsHeader extends StatelessWidget {
     );
     return BlocBuilder<AppointmentsCubit, AppointmentsState>(
       builder: (context, state) {
-        final cubit = context.read<AppointmentsCubit>();
-        final pending = cubit.countOf(appointments, AppointmentStatus.pending);
-        final confirmed = cubit.countOf(
-          appointments,
-          AppointmentStatus.confirmed,
-        );
-        final done = cubit.countOf(appointments, AppointmentStatus.done);
+        final items = state.pagination.items.value;
+        final pending = items.where((e) => e.status == 'pending').length;
+        final confirmed = items.where((e) => e.status == 'accepted').length;
+        final done = items.where((e) => e.status == 'completed').length;
         return Container(
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
@@ -95,7 +86,9 @@ class AppointmentsHeader extends StatelessWidget {
                           ),
                           Text(
                             l10n.apptHeaderLine(
-                              format.format(appointments.length),
+                              format.format(
+                                state.pagination.total ?? items.length,
+                              ),
                               format.format(pending),
                             ),
                             style: context.textTheme.bodySmall?.copyWith(

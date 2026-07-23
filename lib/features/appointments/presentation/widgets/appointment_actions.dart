@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 import '../../../../core/enums/app_feedback_type.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_toast.dart';
-import '../../domain/appointment.dart';
+import '../../data/models/clinic_appointment_model.dart';
 import '../appointment_kind_style.dart';
 import '../cubit/appointments_cubit.dart';
 import 'appointment_finish_sheet.dart';
 import 'appointment_reject_sheet.dart';
 
-/// Opens the reject sheet; on confirmation rejects the appointment and notifies.
 Future<void> openRejectSheet(
   BuildContext context,
   AppointmentsCubit cubit,
-  int id,
+  String id,
 ) async {
   final l10n = context.l10n;
   final reason = await showModalBottomSheet<String>(
@@ -23,8 +22,6 @@ Future<void> openRejectSheet(
     builder: (_) => const AppointmentRejectSheet(),
   );
   if (reason == null || !context.mounted) return;
-  // Toast before the mutation: rejecting can drop the card from the current
-  // filter and unmount this context.
   AppToast.show(
     context,
     title: l10n.apptStatusRejected,
@@ -34,28 +31,32 @@ Future<void> openRejectSheet(
   cubit.reject(id, reason);
 }
 
-/// Opens the finish sheet; on confirmation marks the appointment done.
 Future<void> openFinishSheet(
   BuildContext context,
   AppointmentsCubit cubit,
-  Appointment appointment,
+  ClinicAppointmentModel appointment,
 ) async {
   final l10n = context.l10n;
-  final requiresResult = appointment.kind.requiresResult;
-  final done = await showModalBottomSheet<bool>(
+  final requiresResult = appointment.kindValue.requiresResult;
+  final result = await showModalBottomSheet<AppointmentFinishResult>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
     builder: (_) => AppointmentFinishSheet(requiresResult: requiresResult),
   );
-  if (done != true || !context.mounted) return;
-  // Toast before the mutation: finishing can drop the card from the current
-  // filter and unmount this context.
+  if (result == null || !context.mounted) return;
   AppToast.show(
     context,
     title: l10n.apptStatusDone,
     message: requiresResult ? l10n.apptFinishToastLab : l10n.apptFinishToast,
     type: AppFeedbackType.success,
   );
-  cubit.finish(appointment.id);
+  final id = appointment.appointmentId;
+  if (id == null) return;
+  if (requiresResult) {
+    final filePath = result.filePath;
+    if (filePath != null) cubit.uploadResult(id, filePath);
+    return;
+  }
+  cubit.finish(id, notes: result.notes);
 }

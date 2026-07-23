@@ -13,10 +13,14 @@ import '../../features/home/data/clinic_dashboard_remote_data_source.dart';
 import '../../features/home/domain/clinic_dashboard_repository.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
 import '../../features/onboarding/presentation/cubit/onboarding_cubit.dart';
+import '../../features/reports/data/clinic_reports_remote_data_source.dart';
+import '../../features/reports/domain/clinic_reports_repository.dart';
 import '../../features/reports/presentation/cubit/reports_cubit.dart';
 import '../../features/services/presentation/cubit/services_cubit.dart';
 import '../../features/settings/presentation/cubit/settings_cubit.dart';
 import '../../features/doctors/presentation/cubit/add_doctor_cubit.dart';
+import '../../features/appointments/data/clinic_appointments_remote_data_source.dart';
+import '../../features/appointments/domain/clinic_appointments_repository.dart';
 import '../../features/doctors/data/clinic_doctors_remote_data_source.dart';
 import '../../features/doctors/domain/clinic_doctors_repository.dart';
 import '../../features/appointments/presentation/cubit/appointments_cubit.dart';
@@ -50,6 +54,18 @@ void configureDependencies() {
   sl.registerLazySingleton<ClinicDoctorsRepository>(
     () => ClinicDoctorsRepository(sl()),
   );
+  sl.registerLazySingleton<ClinicAppointmentsRemoteDataSource>(
+    () => ClinicAppointmentsRemoteDataSource(sl()),
+  );
+  sl.registerLazySingleton<ClinicAppointmentsRepository>(
+    () => ClinicAppointmentsRepository(sl()),
+  );
+  sl.registerLazySingleton<ClinicReportsRemoteDataSource>(
+    () => ClinicReportsRemoteDataSource(sl()),
+  );
+  sl.registerLazySingleton<ClinicReportsRepository>(
+    () => ClinicReportsRepository(sl()),
+  );
 
   sl.registerFactory<OnboardingCubit>(OnboardingCubit.new);
   sl.registerFactory<AuthCubit>(() => AuthCubit(sl()));
@@ -57,12 +73,12 @@ void configureDependencies() {
   sl.registerFactory<DoctorsCubit>(() => DoctorsCubit(sl()));
   sl.registerFactory<AddDoctorCubit>(AddDoctorCubit.new);
   sl.registerFactory<NotificationsCubit>(NotificationsCubit.new);
-  sl.registerFactory<AppointmentsCubit>(AppointmentsCubit.new);
+  sl.registerFactory<AppointmentsCubit>(() => AppointmentsCubit(sl()));
   sl.registerFactoryParam<ServicesCubit, AccountType, void>(
     (accountType, _) => ServicesCubit(accountType),
   );
   sl.registerFactoryParam<ReportsCubit, AccountType, void>(
-    (accountType, _) => ReportsCubit(accountType),
+    (accountType, _) => ReportsCubit(accountType, sl()),
   );
   sl.registerFactory<SettingsCubit>(SettingsCubit.new);
 }

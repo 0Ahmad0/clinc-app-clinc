@@ -7,35 +7,27 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../core/enums/app_button_variant.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
-import '../../domain/appointment.dart';
-import '../../domain/appointment_status.dart';
+import '../../data/models/clinic_appointment_model.dart';
 import '../appointment_kind_style.dart';
 import '../appointment_status_style.dart';
 import '../cubit/appointments_cubit.dart';
 import 'appointment_actions.dart';
 
-/// A single appointment in the list: patient summary plus the status-specific
-/// action row (accept/reject while pending, finish while confirmed) and the
-/// rejection reason when rejected.
 class AppointmentCard extends StatelessWidget {
-  const AppointmentCard({
-    super.key,
-    required this.appointment,
-    required this.status,
-    required this.reason,
-  });
+  const AppointmentCard({super.key, required this.appointment});
 
-  final Appointment appointment;
-  final AppointmentStatus status;
-  final String? reason;
+  final ClinicAppointmentModel appointment;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
     final cubit = context.read<AppointmentsCubit>();
+    final status = appointment.statusValue;
+    final kind = appointment.kindValue;
     final accent = status.accent(colors);
-    final kindAccent = appointment.kind.accent(colors);
+    final kindAccent = kind.accent(colors);
+    final name = appointment.patientName ?? '-';
     return Material(
       color: colors.surface,
       shape: RoundedRectangleBorder(
@@ -47,15 +39,16 @@ class AppointmentCard extends StatelessWidget {
       elevation: 2,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          border: BorderDirectional(
-            start: BorderSide(color: accent, width: 4),
-          ),
+          border: BorderDirectional(start: BorderSide(color: accent, width: 4)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             InkWell(
-              onTap: () => cubit.open(appointment.id),
+              onTap: () {
+                final id = appointment.appointmentId;
+                if (id != null) cubit.open(id);
+              },
               child: Padding(
                 padding: const EdgeInsetsDirectional.all(AppSpacing.md),
                 child: Row(
@@ -69,7 +62,7 @@ class AppointmentCard extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: Text(
-                        appointment.initial,
+                        name.characters.isEmpty ? '-' : name.characters.first,
                         style: context.textTheme.titleMedium?.copyWith(
                           color: accent,
                           fontWeight: FontWeight.w700,
@@ -85,7 +78,7 @@ class AppointmentCard extends StatelessWidget {
                             children: [
                               Flexible(
                                 child: Text(
-                                  appointment.name,
+                                  name,
                                   overflow: TextOverflow.ellipsis,
                                   style: context.textTheme.bodyMedium?.copyWith(
                                     color: colors.ink,
@@ -128,7 +121,7 @@ class AppointmentCard extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              appointment.service,
+                              appointment.serviceName ?? '-',
                               style: context.textTheme.labelSmall?.copyWith(
                                 color: kindAccent,
                                 fontWeight: FontWeight.w600,
@@ -145,7 +138,7 @@ class AppointmentCard extends StatelessWidget {
                               ),
                               const SizedBox(width: AppSpacing.xxs + 1),
                               Text(
-                                appointment.time,
+                                appointment.time ?? '',
                                 textDirection: TextDirection.ltr,
                                 style: context.textTheme.bodySmall?.copyWith(
                                   color: colors.gray,
@@ -160,7 +153,7 @@ class AppointmentCard extends StatelessWidget {
                               const SizedBox(width: AppSpacing.xxs + 1),
                               Flexible(
                                 child: Text(
-                                  appointment.phone,
+                                  appointment.patientPhone ?? '',
                                   textDirection: TextDirection.ltr,
                                   overflow: TextOverflow.ellipsis,
                                   style: context.textTheme.bodySmall?.copyWith(
@@ -185,7 +178,7 @@ class AppointmentCard extends StatelessWidget {
                 ),
               ),
             ),
-            if (status == AppointmentStatus.pending)
+            if (appointment.status == 'pending')
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(
                   AppSpacing.md,
@@ -200,7 +193,10 @@ class AppointmentCard extends StatelessWidget {
                         label: l10n.apptAccept,
                         icon: Iconsax.tick_circle,
                         variant: AppButtonVariant.success,
-                        onPressed: () => cubit.accept(appointment.id),
+                        onPressed: () {
+                          final id = appointment.appointmentId;
+                          if (id != null) cubit.accept(id);
+                        },
                       ),
                     ),
                     AppGaps.w12,
@@ -209,14 +205,16 @@ class AppointmentCard extends StatelessWidget {
                         label: l10n.apptReject,
                         icon: Iconsax.close_circle,
                         variant: AppButtonVariant.danger,
-                        onPressed: () =>
-                            openRejectSheet(context, cubit, appointment.id),
+                        onPressed: () {
+                          final id = appointment.appointmentId;
+                          if (id != null) openRejectSheet(context, cubit, id);
+                        },
                       ),
                     ),
                   ],
                 ),
               ),
-            if (status == AppointmentStatus.confirmed)
+            if (appointment.status == 'accepted')
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(
                   AppSpacing.md,
@@ -225,13 +223,13 @@ class AppointmentCard extends StatelessWidget {
                   AppSpacing.md,
                 ),
                 child: AppButton(
-                  label: appointment.kind.finishLabel(l10n),
+                  label: kind.finishLabel(l10n),
                   icon: Iconsax.tick_square,
-                  onPressed: () =>
-                      openFinishSheet(context, cubit, appointment),
+                  onPressed: () => openFinishSheet(context, cubit, appointment),
                 ),
               ),
-            if (status == AppointmentStatus.rejected && reason != null)
+            if (appointment.status == 'rejected' &&
+                appointment.rejectionReason != null)
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(
                   AppSpacing.md,
@@ -239,43 +237,10 @@ class AppointmentCard extends StatelessWidget {
                   AppSpacing.md,
                   AppSpacing.md,
                 ),
-                child: Container(
-                  padding: const EdgeInsetsDirectional.all(AppSpacing.sm),
-                  decoration: BoxDecoration(
-                    color: colors.danger.withValues(alpha: 0.06),
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                    border: Border.all(
-                      color: colors.danger.withValues(alpha: 0.15),
-                    ),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Iconsax.info_circle,
-                        size: AppSizes.iconXs,
-                        color: colors.dangerFg,
-                      ),
-                      AppGaps.w8,
-                      Expanded(
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: '${l10n.apptRejectReasonPrefix}: ',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              TextSpan(text: reason),
-                            ],
-                          ),
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: colors.dangerFg,
-                          ),
-                        ),
-                      ),
-                    ],
+                child: Text(
+                  appointment.rejectionReason!,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: colors.dangerFg,
                   ),
                 ),
               ),

@@ -33,9 +33,9 @@ class _AppointmentRejectSheetState extends State<AppointmentRejectSheet> {
 
   void _confirm(List<String> reasons) {
     if (!_canConfirm) return;
-    Navigator.of(context).pop(
-      _otherPicked ? _note.text.trim() : reasons[_selected!],
-    );
+    Navigator.of(
+      context,
+    ).pop(_otherPicked ? _note.text.trim() : reasons[_selected!]);
   }
 
   @override

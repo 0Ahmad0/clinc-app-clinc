@@ -237,17 +237,82 @@
 - Authorization: `clinic.auth`.
 - Response: list of `ClinicSpecializationResource`.
 
+### Clinic Appointments List
+- Endpoint: `GET /api/clinic/appointments`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Query fields: `page`, `per_page`, `status`, `type`, `date`, `search`.
+- Response: `ClinicAppointmentCollectionResource` with `data.data` and `data.meta`.
+
+### Clinic Appointment Details
+- Endpoint: `GET /api/clinic/appointments/{appointment}`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Response: `ClinicAppointmentResource`.
+
+### Clinic Appointment Accept
+- Endpoint: `POST /api/clinic/appointments/{appointment}/accept`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Request fields: none.
+- Response: `ClinicAppointmentResource`.
+
+### Clinic Appointment Reject
+- Endpoint: `POST /api/clinic/appointments/{appointment}/reject`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Request fields: `reason_id`, `reason`, `notes`.
+- Response: `ClinicAppointmentResource`.
+
+### Clinic Appointment Finish
+- Endpoint: `POST /api/clinic/appointments/{appointment}/finish`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Request fields: `notes`.
+- Response: `ClinicAppointmentResource`.
+
+### Clinic Appointment Result Upload
+- Endpoint: `POST /api/clinic/appointments/{appointment}/result`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Request fields: `result_file` PDF.
+- Response: `ClinicAppointmentResource`.
+
+### Clinic Reports Summary
+- Endpoint: `GET /api/clinic/reports/summary`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Query fields: `period`, `type`, `date`.
+- `period` values: `week`, `month`, `year`.
+- `type` values: `appointments`, `clinic`, `revenue`, `doctors`.
+- Response: `ClinicReportSummaryResource`.
+
+### Clinic Reports Export
+- Endpoint: `POST /api/clinic/reports/export`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Request fields: `period`, `type`, `format`, `date`.
+- `format` values: `pdf`, `xlsx`.
+- Response: `ClinicGeneratedReportResource`.
+
+### Clinic Generated Reports List
+- Endpoint: `GET /api/clinic/reports/generated`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Query fields: `page`, `per_page`, `period`, `type`.
+- Response: `ClinicGeneratedReportCollectionResource` with `data.data` and `data.meta`.
+
+### Clinic Generated Report Download
+- Endpoint: `GET /api/clinic/reports/generated/{report}/download`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Response: binary file download.
+
 ## Missing Clinic APIs
 - Clinic profile/details endpoint: MISSING BACKEND ENDPOINT.
 - Clinic profile update endpoint: MISSING BACKEND ENDPOINT.
 - Clinic password change endpoint: MISSING BACKEND ENDPOINT.
 - Clinic notification preferences endpoint: MISSING BACKEND ENDPOINT.
-- Clinic appointments list endpoint: MISSING BACKEND ENDPOINT.
-- Clinic appointment details endpoint: MISSING BACKEND ENDPOINT.
-- Clinic appointment accept endpoint: MISSING BACKEND ENDPOINT.
-- Clinic appointment reject endpoint: MISSING BACKEND ENDPOINT.
-- Clinic appointment finish endpoint: MISSING BACKEND ENDPOINT.
-- Clinic upload lab result endpoint: MISSING BACKEND ENDPOINT.
 - Clinic notifications list endpoint: MISSING BACKEND ENDPOINT.
 - Clinic notification read endpoint: MISSING BACKEND ENDPOINT.
 - Clinic notifications mark all read endpoint: MISSING BACKEND ENDPOINT.
@@ -257,9 +322,6 @@
 - Clinic lab tests endpoint: MISSING BACKEND ENDPOINT.
 - Clinic service enable/disable endpoint: MISSING BACKEND ENDPOINT.
 - Clinic service price update endpoint: MISSING BACKEND ENDPOINT.
-- Clinic reports summary endpoint: MISSING BACKEND ENDPOINT.
-- Clinic reports export endpoint: MISSING BACKEND ENDPOINT.
-- Clinic generated reports list endpoint: MISSING BACKEND ENDPOINT.
 
 ## Pagination Contract
 - Do not assume pagination metadata for missing Clinic endpoints.

@@ -36,12 +36,32 @@ class AppUrl {
   static const clinicRegistrationStatus =
       "${baseUrl}clinic/registration-status";
   static const clinicReports = "${baseUrl}clinic/reports";
+  static const clinicReportsSummary = "$clinicReports/summary";
+  static const clinicReportsExport = "$clinicReports/export";
+  static const clinicReportsGenerated = "$clinicReports/generated";
   static const clinicServices = "${baseUrl}clinic/services";
 
   static String clinicDoctor(String id) => '$clinicDoctors/$id';
 
   static String clinicDoctorAvailability(String id) =>
       '$clinicDoctors/$id/availability';
+
+  static String clinicAppointment(String id) => '$clinicAppointments/$id';
+
+  static String clinicAppointmentAccept(String id) =>
+      '$clinicAppointments/$id/accept';
+
+  static String clinicAppointmentReject(String id) =>
+      '$clinicAppointments/$id/reject';
+
+  static String clinicAppointmentFinish(String id) =>
+      '$clinicAppointments/$id/finish';
+
+  static String clinicAppointmentResult(String id) =>
+      '$clinicAppointments/$id/result';
+
+  static String clinicGeneratedReportDownload(String id) =>
+      '$clinicReportsGenerated/$id/download';
 
   /// User
   ///*******************************************************************************

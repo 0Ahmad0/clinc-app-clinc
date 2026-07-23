@@ -10,7 +10,7 @@ class AppointmentsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (_) => sl<AppointmentsCubit>(),
+    create: (_) => sl<AppointmentsCubit>()..loadInitial(),
     child: const AppointmentsView(),
   );
 }

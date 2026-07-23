@@ -4,27 +4,21 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
-import '../../domain/appointment.dart';
-import '../../domain/appointment_status.dart';
+import '../../data/models/clinic_appointment_model.dart';
 import '../appointment_status_style.dart';
 import '../cubit/appointments_cubit.dart';
 
-/// Gradient hero for the appointment detail: back button, avatar, name, service
-/// and status chips.
 class AppointmentDetailHeader extends StatelessWidget {
-  const AppointmentDetailHeader({
-    super.key,
-    required this.appointment,
-    required this.status,
-  });
+  const AppointmentDetailHeader({super.key, required this.appointment});
 
-  final Appointment appointment;
-  final AppointmentStatus status;
+  final ClinicAppointmentModel appointment;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final rtl = Directionality.of(context) == TextDirection.rtl;
+    final status = appointment.statusValue;
+    final name = appointment.patientName ?? '-';
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -33,126 +27,107 @@ class AppointmentDetailHeader extends StatelessWidget {
           bottom: Radius.circular(AppRadius.homeHeader),
         ),
       ),
-      child: Stack(
-        children: [
-          PositionedDirectional(
-            top: -AppSizes.homeHeaderCircleTop,
-            start: -AppSizes.homeHeaderCircleStart,
-            child: Container(
-              width: AppSizes.homeHeaderCircleSmall,
-              height: AppSizes.homeHeaderCircleSmall,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: colors.onBrand.withValues(alpha: 0.12),
-                  width: 1.5,
+      child: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(
+          AppSpacing.screen,
+          MediaQuery.paddingOf(context).top + AppSpacing.xs,
+          AppSpacing.screen,
+          AppSpacing.lg,
+        ),
+        child: Column(
+          children: [
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: SizedBox.square(
+                dimension: AppSizes.hitTarget,
+                child: Material(
+                  color: colors.onBrand.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(AppRadius.field),
+                  child: InkWell(
+                    onTap: () =>
+                        context.read<AppointmentsCubit>().closeDetail(),
+                    borderRadius: BorderRadius.circular(AppRadius.field),
+                    child: Icon(
+                      rtl ? Iconsax.arrow_right_3 : Iconsax.arrow_left_2,
+                      color: colors.onBrand,
+                      size: AppSizes.iconMd,
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(
-              AppSpacing.screen,
-              MediaQuery.paddingOf(context).top + AppSpacing.xs,
-              AppSpacing.screen,
-              AppSpacing.lg,
+            Container(
+              width: AppSizes.appointmentDetailAvatar,
+              height: AppSizes.appointmentDetailAvatar,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colors.onBrand.withValues(alpha: 0.16),
+                border: Border.all(
+                  color: colors.onBrand.withValues(alpha: 0.35),
+                  width: 2,
+                ),
+              ),
+              child: Text(
+                name.characters.isEmpty ? '-' : name.characters.first,
+                style: context.textTheme.headlineMedium?.copyWith(
+                  color: colors.onBrand,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
-            child: Column(
+            AppGaps.h12,
+            Text(
+              name,
+              textAlign: TextAlign.center,
+              style: context.textTheme.titleLarge?.copyWith(
+                color: colors.onBrand,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            AppGaps.h12,
+            Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: SizedBox.square(
-                    dimension: AppSizes.hitTarget,
-                    child: Material(
-                      color: colors.onBrand.withValues(alpha: 0.14),
-                      borderRadius: BorderRadius.circular(AppRadius.field),
-                      child: InkWell(
-                        onTap: () =>
-                            context.read<AppointmentsCubit>().closeDetail(),
-                        borderRadius: BorderRadius.circular(AppRadius.field),
-                        child: Icon(
-                          rtl ? Iconsax.arrow_right_3 : Iconsax.arrow_left_2,
-                          color: colors.onBrand,
-                          size: AppSizes.iconMd,
-                        ),
-                      ),
+                Container(
+                  padding: const EdgeInsetsDirectional.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.xs,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colors.onBrand.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(AppRadius.pill),
+                  ),
+                  child: Text(
+                    appointment.serviceName ?? '-',
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: colors.onBrand,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
+                AppGaps.w8,
                 Container(
-                  width: AppSizes.appointmentDetailAvatar,
-                  height: AppSizes.appointmentDetailAvatar,
-                  alignment: Alignment.center,
+                  padding: const EdgeInsetsDirectional.symmetric(
+                    horizontal: AppSpacing.md,
+                    vertical: AppSpacing.xs,
+                  ),
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: colors.onBrand.withValues(alpha: 0.16),
-                    border: Border.all(
-                      color: colors.onBrand.withValues(alpha: 0.35),
-                      width: 2,
-                    ),
+                    color: colors.onBrand.withValues(alpha: 0.92),
+                    borderRadius: BorderRadius.circular(AppRadius.pill),
                   ),
                   child: Text(
-                    appointment.initial,
-                    style: context.textTheme.headlineMedium?.copyWith(
-                      color: colors.onBrand,
+                    status.label(context.l10n),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: status.accent(colors),
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
-                AppGaps.h12,
-                Text(
-                  appointment.name,
-                  textAlign: TextAlign.center,
-                  style: context.textTheme.titleLarge?.copyWith(
-                    color: colors.onBrand,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                AppGaps.h12,
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: AppSpacing.md,
-                        vertical: AppSpacing.xs,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colors.onBrand.withValues(alpha: 0.14),
-                        borderRadius: BorderRadius.circular(AppRadius.pill),
-                      ),
-                      child: Text(
-                        appointment.service,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: colors.onBrand,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    AppGaps.w8,
-                    Container(
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: AppSpacing.md,
-                        vertical: AppSpacing.xs,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colors.onBrand.withValues(alpha: 0.92),
-                        borderRadius: BorderRadius.circular(AppRadius.pill),
-                      ),
-                      child: Text(
-                        status.label(context.l10n),
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: status.accent(colors),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -3,31 +3,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
+import '../../../../core/enums/app_button_variant.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_section_card.dart';
-import '../../../../core/enums/app_button_variant.dart';
-import '../../domain/appointment.dart';
-import '../../domain/appointment_status.dart';
+import '../../data/models/clinic_appointment_model.dart';
 import '../appointment_kind_style.dart';
 import '../cubit/appointments_cubit.dart';
 import '../widgets/appointment_actions.dart';
 import '../widgets/appointment_detail_header.dart';
 import '../widgets/appointment_info_row.dart';
 
-/// Full-screen appointment detail: patient info, appointment details and the
-/// status-specific action card.
 class AppointmentDetailView extends StatelessWidget {
-  const AppointmentDetailView({
-    super.key,
-    required this.appointment,
-    required this.status,
-    required this.reason,
-  });
+  const AppointmentDetailView({super.key, required this.appointment});
 
-  final Appointment appointment;
-  final AppointmentStatus status;
-  final String? reason;
+  final ClinicAppointmentModel appointment;
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +25,11 @@ class AppointmentDetailView extends StatelessWidget {
     final l10n = context.l10n;
     final cubit = context.read<AppointmentsCubit>();
     final hasActions =
-        status == AppointmentStatus.pending ||
-        status == AppointmentStatus.confirmed;
+        appointment.status == 'pending' || appointment.status == 'accepted';
     return ListView(
       padding: EdgeInsets.zero,
       children: [
-        AppointmentDetailHeader(appointment: appointment, status: status),
+        AppointmentDetailHeader(appointment: appointment),
         Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(
             AppSpacing.screen,
@@ -59,13 +48,13 @@ class AppointmentDetailView extends StatelessWidget {
                     AppointmentInfoRow(
                       icon: Iconsax.user,
                       label: l10n.apptRowName,
-                      value: appointment.name,
+                      value: appointment.patientName ?? '-',
                     ),
                     AppGaps.h12,
                     AppointmentInfoRow(
                       icon: Iconsax.call,
                       label: l10n.apptRowPhone,
-                      value: appointment.phone,
+                      value: appointment.patientPhone ?? '-',
                     ),
                   ],
                 ),
@@ -80,26 +69,26 @@ class AppointmentDetailView extends StatelessWidget {
                     AppointmentInfoRow(
                       icon: Iconsax.briefcase,
                       label: l10n.apptRowService,
-                      value: appointment.service,
+                      value: appointment.serviceName ?? '-',
                     ),
                     AppGaps.h12,
                     AppointmentInfoRow(
                       icon: Iconsax.calendar,
                       label: l10n.apptRowDate,
-                      value: l10n.apptSampleDate,
+                      value: appointment.date ?? '-',
                     ),
                     AppGaps.h12,
                     AppointmentInfoRow(
                       icon: Iconsax.clock,
                       label: l10n.apptRowTime,
-                      value: appointment.time,
+                      value: appointment.time ?? '-',
                     ),
-                    if (reason != null) ...[
+                    if (appointment.rejectionReason != null) ...[
                       AppGaps.h12,
                       AppointmentInfoRow(
                         icon: Iconsax.info_circle,
                         label: l10n.apptRejectReasonPrefix,
-                        value: reason!,
+                        value: appointment.rejectionReason!,
                       ),
                     ],
                   ],
@@ -111,7 +100,7 @@ class AppointmentDetailView extends StatelessWidget {
                   icon: Iconsax.flash_1,
                   tint: colors.successFg,
                   title: l10n.apptActionsSection,
-                  child: status == AppointmentStatus.pending
+                  child: appointment.status == 'pending'
                       ? Row(
                           children: [
                             Expanded(
@@ -119,7 +108,10 @@ class AppointmentDetailView extends StatelessWidget {
                                 label: l10n.apptAccept,
                                 icon: Iconsax.tick_circle,
                                 variant: AppButtonVariant.success,
-                                onPressed: () => cubit.accept(appointment.id),
+                                onPressed: () {
+                                  final id = appointment.appointmentId;
+                                  if (id != null) cubit.accept(id);
+                                },
                               ),
                             ),
                             AppGaps.w12,
@@ -128,17 +120,18 @@ class AppointmentDetailView extends StatelessWidget {
                                 label: l10n.apptReject,
                                 icon: Iconsax.close_circle,
                                 variant: AppButtonVariant.danger,
-                                onPressed: () => openRejectSheet(
-                                  context,
-                                  cubit,
-                                  appointment.id,
-                                ),
+                                onPressed: () {
+                                  final id = appointment.appointmentId;
+                                  if (id != null) {
+                                    openRejectSheet(context, cubit, id);
+                                  }
+                                },
                               ),
                             ),
                           ],
                         )
                       : AppButton(
-                          label: appointment.kind.finishLabel(l10n),
+                          label: appointment.kindValue.finishLabel(l10n),
                           icon: Iconsax.tick_square,
                           onPressed: () =>
                               openFinishSheet(context, cubit, appointment),

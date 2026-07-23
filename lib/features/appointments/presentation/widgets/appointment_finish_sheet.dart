@@ -9,9 +9,15 @@ import '../../../../shared/widgets/app_bottom_sheet.dart';
 import 'appointment_confirm_button.dart';
 import 'appointment_upload_box.dart';
 
+class AppointmentFinishResult {
+  const AppointmentFinishResult({this.filePath, this.notes});
+
+  final String? filePath;
+  final String? notes;
+}
+
 /// Bottom sheet for finishing an appointment. Lab appointments must attach a
-/// result PDF first (picked via `file_picker`). Pops `true` on confirm, nothing
-/// when dismissed.
+/// result PDF first (picked via `file_picker`).
 class AppointmentFinishSheet extends StatefulWidget {
   const AppointmentFinishSheet({super.key, required this.requiresResult});
 
@@ -23,6 +29,7 @@ class AppointmentFinishSheet extends StatefulWidget {
 
 class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
   String? _fileName;
+  String? _filePath;
   final TextEditingController _note = TextEditingController();
 
   bool get _canConfirm => !widget.requiresResult || _fileName != null;
@@ -36,7 +43,10 @@ class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
   Future<void> _pickFile() async {
     final picked = await sl<MediaService>().pickPdf();
     if (picked == null) return;
-    setState(() => _fileName = picked.name);
+    setState(() {
+      _fileName = picked.name;
+      _filePath = picked.path;
+    });
   }
 
   @override
@@ -92,10 +102,7 @@ class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
           ),
           AppGaps.h16,
           if (widget.requiresResult) ...[
-            AppointmentUploadBox(
-              fileName: _fileName,
-              onTap: _pickFile,
-            ),
+            AppointmentUploadBox(fileName: _fileName, onTap: _pickFile),
             AppGaps.h12,
           ],
           TextField(
@@ -127,7 +134,12 @@ class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
                 : l10n.apptFinishConfirm,
             enabled: _canConfirm,
             background: colors.success,
-            onTap: () => Navigator.of(context).pop(true),
+            onTap: () => Navigator.of(context).pop(
+              AppointmentFinishResult(
+                filePath: _filePath,
+                notes: _note.text.trim().isEmpty ? null : _note.text.trim(),
+              ),
+            ),
           ),
         ],
       ),

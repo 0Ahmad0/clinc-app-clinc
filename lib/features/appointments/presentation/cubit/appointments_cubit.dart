@@ -1,58 +1,133 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/appointment.dart';
-import '../../domain/appointment_status.dart';
+import '../../../../core/data/pagination/pagination_state.dart';
+import '../../../../core/data/remote/api_response.dart';
+import '../../data/models/clinic_appointment_model.dart';
 import '../../domain/appointment_tab.dart';
+import '../../domain/clinic_appointments_repository.dart';
 import 'appointments_state.dart';
 
 class AppointmentsCubit extends Cubit<AppointmentsState> {
-  AppointmentsCubit() : super(const AppointmentsState());
+  AppointmentsCubit(this._repository)
+    : super(
+        AppointmentsState(
+          pagination: PaginationState<ClinicAppointmentModel>(),
+        ),
+      ) {
+    scrollController.addListener(_onScroll);
+  }
 
-  void selectTab(AppointmentTab tab) => emit(state.copyWith(tab: tab));
+  final ClinicAppointmentsRepository _repository;
+  final ScrollController scrollController = ScrollController();
 
-  void open(int id) => emit(state.copyWith(selectedId: id));
+  Future<void> loadInitial() => _loadPage(page: 1, reset: true);
 
-  void closeDetail() => emit(state.copyWith(selectedId: null));
+  Future<void> refresh() => _loadPage(page: 1, reset: true, refreshing: true);
 
-  void accept(int id) => _setStatus(id, AppointmentStatus.confirmed);
+  Future<void> loadMore() async {
+    final pagination = state.pagination;
+    if (pagination.isBusy || !pagination.hasMore) return;
+    await _loadPage(page: pagination.currentPage + 1);
+  }
 
-  void finish(int id) => _setStatus(id, AppointmentStatus.done);
+  void selectTab(AppointmentTab tab) {
+    emit(state.copyWith(tab: tab));
+    _loadPage(page: 1, reset: true);
+  }
 
-  void reject(int id, String reason) {
-    emit(
-      state.copyWith(
-        statusOverrides: {...state.statusOverrides, id: AppointmentStatus.rejected},
-        reasons: {...state.reasons, id: reason},
-      ),
+  Future<void> open(String id) async {
+    emit(state.copyWith(selectedId: id));
+    final result = await _repository.getAppointment(id);
+    result.when(
+      success: (response) =>
+          emit(state.copyWith(selected: response.result, failure: null)),
+      failure: (exception) => emit(state.copyWith(failure: exception)),
     );
   }
 
-  void _setStatus(int id, AppointmentStatus status) => emit(
-    state.copyWith(statusOverrides: {...state.statusOverrides, id: status}),
-  );
+  void closeDetail() => emit(state.copyWith(selectedId: null, selected: null));
 
-  /// Live status: an override wins over the seeded one.
-  AppointmentStatus statusOf(Appointment appointment) =>
-      state.statusOverrides[appointment.id] ?? appointment.status;
+  Future<void> accept(String id) => _action(() => _repository.accept(id));
 
-  String? reasonOf(Appointment appointment) => state.reasons[appointment.id];
+  Future<void> reject(String id, String reason) =>
+      _action(() => _repository.reject(id: id, reason: reason));
 
-  int countOf(List<Appointment> all, AppointmentStatus status) =>
-      all.where((a) => statusOf(a) == status).length;
+  Future<void> finish(String id, {String? notes}) =>
+      _action(() => _repository.finish(id: id, notes: notes));
 
-  /// Appointments matching the selected tab, using live status.
-  List<Appointment> visible(List<Appointment> all) => all
-      .where(
-        (a) =>
-            state.tab == AppointmentTab.all ||
-            statusOf(a).name == state.tab.name,
-      )
-      .toList(growable: false);
+  Future<void> uploadResult(String id, String filePath) =>
+      _action(() => _repository.uploadResult(id: id, filePath: filePath));
 
-  Appointment? selected(List<Appointment> all) {
-    for (final a in all) {
-      if (a.id == state.selectedId) return a;
+  Future<void> _action(Future<ApiResponse<dynamic>> Function() action) async {
+    final result = await action();
+    result.when(
+      success: (_) => _loadPage(page: 1, reset: true),
+      failure: (exception) => emit(state.copyWith(failure: exception)),
+    );
+  }
+
+  Future<void> _loadPage({
+    required int page,
+    bool reset = false,
+    bool refreshing = false,
+  }) async {
+    final pagination = state.pagination;
+    if (pagination.isBusy && !reset) return;
+    if (reset) pagination.reset();
+    if (page == 1 && !refreshing) pagination.isInitialLoading.value = true;
+    if (refreshing) pagination.isRefreshing.value = true;
+    if (page > 1) pagination.isLoadingMore.value = true;
+    emit(state.copyWith(failure: null));
+
+    final result = await _repository.getAppointments(
+      page: page,
+      perPage: pagination.perPage,
+      status: _statusFilter(state.tab),
+    );
+
+    result.when(
+      success: (response) {
+        pagination.setPage(
+          data: response.result?.list ?? const [],
+          page: page,
+          meta: response.meta,
+        );
+        _clearLoading();
+        emit(state.copyWith(failure: null));
+      },
+      failure: (exception) {
+        _clearLoading();
+        emit(state.copyWith(failure: exception));
+      },
+    );
+  }
+
+  String? _statusFilter(AppointmentTab tab) => switch (tab) {
+    AppointmentTab.all => null,
+    AppointmentTab.pending => 'pending',
+    AppointmentTab.confirmed => 'accepted',
+    AppointmentTab.done => 'completed',
+    AppointmentTab.rejected => 'rejected',
+  };
+
+  void _clearLoading() {
+    state.pagination.isInitialLoading.value = false;
+    state.pagination.isLoadingMore.value = false;
+    state.pagination.isRefreshing.value = false;
+  }
+
+  void _onScroll() {
+    if (!scrollController.hasClients) return;
+    final position = scrollController.position;
+    if (position.pixels >= position.maxScrollExtent - 240) {
+      loadMore();
     }
-    return null;
+  }
+
+  @override
+  Future<void> close() {
+    scrollController.dispose();
+    return super.close();
   }
 }
