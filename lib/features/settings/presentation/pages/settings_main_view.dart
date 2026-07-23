@@ -13,7 +13,6 @@ import '../../domain/app_theme_choice.dart';
 import '../../domain/notification_channel.dart';
 import '../../domain/settings_section.dart';
 import '../cubit/settings_cubit.dart';
-import '../cubit/settings_state.dart';
 import '../settings_choice_labels.dart';
 import '../widgets/settings_group.dart';
 import '../widgets/settings_language_sheet.dart';

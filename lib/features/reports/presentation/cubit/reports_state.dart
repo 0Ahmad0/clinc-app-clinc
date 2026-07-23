@@ -1,17 +1,16 @@
-import 'package:equatable/equatable.dart';
+part of 'reports_cubit.dart';
 
-import '../../domain/report_period.dart';
-import '../../domain/report_type.dart';
-
-class ReportsState extends Equatable {
-  const ReportsState({this.period = ReportPeriod.week, required this.type});
-
-  final ReportPeriod period;
-  final ReportType type;
-
-  ReportsState copyWith({ReportPeriod? period, ReportType? type}) =>
-      ReportsState(period: period ?? this.period, type: type ?? this.type);
-
-  @override
-  List<Object> get props => [period, type];
+@freezed
+abstract class ReportsState with _$ReportsState {
+  const factory ReportsState({
+    @Default(ReportPeriod.week) ReportPeriod period,
+    required ReportType type,
+    ClinicReportSummaryModel? summary,
+    ClinicGeneratedReportModel? exportedReport,
+    NetworkExceptions? failure,
+    @Default(false) bool isSummaryLoading,
+    @Default(false) bool isExportingPdf,
+    @Default(false) bool isExportingXlsx,
+    required PaginationState<ClinicGeneratedReportModel> pagination,
+  }) = _ReportsState;
 }

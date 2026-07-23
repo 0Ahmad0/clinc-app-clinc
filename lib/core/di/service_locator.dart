@@ -16,6 +16,8 @@ import '../../features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import '../../features/reports/data/clinic_reports_remote_data_source.dart';
 import '../../features/reports/domain/clinic_reports_repository.dart';
 import '../../features/reports/presentation/cubit/reports_cubit.dart';
+import '../../features/settings/data/clinic_settings_remote_data_source.dart';
+import '../../features/settings/domain/clinic_settings_repository.dart';
 import '../../features/services/presentation/cubit/services_cubit.dart';
 import '../../features/settings/presentation/cubit/settings_cubit.dart';
 import '../../features/doctors/presentation/cubit/add_doctor_cubit.dart';
@@ -66,6 +68,12 @@ void configureDependencies() {
   sl.registerLazySingleton<ClinicReportsRepository>(
     () => ClinicReportsRepository(sl()),
   );
+  sl.registerLazySingleton<ClinicSettingsRemoteDataSource>(
+    () => ClinicSettingsRemoteDataSource(sl()),
+  );
+  sl.registerLazySingleton<ClinicSettingsRepository>(
+    () => ClinicSettingsRepository(sl()),
+  );
 
   sl.registerFactory<OnboardingCubit>(OnboardingCubit.new);
   sl.registerFactory<AuthCubit>(() => AuthCubit(sl()));
@@ -80,5 +88,5 @@ void configureDependencies() {
   sl.registerFactoryParam<ReportsCubit, AccountType, void>(
     (accountType, _) => ReportsCubit(accountType, sl()),
   );
-  sl.registerFactory<SettingsCubit>(SettingsCubit.new);
+  sl.registerFactory<SettingsCubit>(() => SettingsCubit(sl()));
 }

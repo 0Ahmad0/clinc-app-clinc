@@ -7,7 +7,6 @@ import '../../../../core/enums/app_feedback_type.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_toast.dart';
-import '../../domain/settings_section.dart';
 import '../cubit/settings_cubit.dart';
 import '../widgets/settings_password_field.dart';
 import '../widgets/settings_password_header.dart';
@@ -67,13 +66,11 @@ class _SettingsPasswordViewState extends State<SettingsPasswordView> {
       );
       return;
     }
-    AppToast.show(
-      context,
-      title: l10n.settingsPasswordTitle,
-      message: l10n.settingsPasswordChanged,
-      type: AppFeedbackType.success,
+    context.read<SettingsCubit>().changePassword(
+      currentPassword: _current.text,
+      password: _next.text,
+      passwordConfirmation: _confirm.text,
     );
-    context.read<SettingsCubit>().show(SettingsSection.main);
   }
 
   @override
@@ -149,10 +146,16 @@ class _SettingsPasswordViewState extends State<SettingsPasswordView> {
                 AppGaps.h8,
                 SettingsPasswordStrength(level: _strength),
                 AppGaps.h24,
-                AppButton(
-                  label: l10n.settingsPasswordTitle,
-                  icon: Iconsax.refresh,
-                  onPressed: _submit,
+                BlocBuilder<SettingsCubit, SettingsState>(
+                  buildWhen: (previous, current) =>
+                      previous.isChangingPassword != current.isChangingPassword,
+                  builder: (context, state) => AppButton(
+                    label: state.isChangingPassword
+                        ? '...'
+                        : l10n.settingsPasswordTitle,
+                    icon: Iconsax.refresh,
+                    onPressed: state.isChangingPassword ? null : _submit,
+                  ),
                 ),
               ],
             ),

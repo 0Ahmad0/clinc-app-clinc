@@ -10,12 +10,16 @@ class SettingsProfileField extends StatelessWidget {
     super.key,
     required this.label,
     required this.icon,
-    required this.value,
+    this.value,
+    this.controller,
+    this.readOnly = false,
   });
 
   final String label;
   final IconData icon;
-  final String value;
+  final String? value;
+  final TextEditingController? controller;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,9 @@ class SettingsProfileField extends StatelessWidget {
               AppGaps.w8,
               Expanded(
                 child: TextFormField(
-                  initialValue: value,
+                  controller: controller,
+                  initialValue: controller == null ? value : null,
+                  readOnly: readOnly,
                   textDirection: TextDirection.ltr,
                   style: context.textTheme.bodyMedium?.copyWith(
                     color: colors.ink,

@@ -308,11 +308,41 @@
 - Authorization: `clinic.auth`.
 - Response: binary file download.
 
+### Clinic Settings Profile
+- Endpoint: `GET /api/clinic/profile`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Response: `ClinicSettingsProfileResource`.
+
+### Clinic Settings Update Profile
+- Endpoint: `PUT /api/clinic/profile`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Request fields: `name`, `email`, `phone`, `location`, `description`, `website`, `lat`, `lng`, `logo`, `cover`, `working_hours`.
+- `license_number` is not editable.
+- Response: `ClinicSettingsProfileUpdateResource`.
+
+### Clinic Change Password
+- Endpoint: `POST /api/clinic/change-password`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Request fields: `current_password`, `password`, `password_confirmation`.
+- Response: `ClinicPasswordChangeResource`.
+
+### Clinic Notification Settings
+- Endpoint: `GET /api/clinic/notification-settings`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Response: `ClinicNotificationSettingsResource`.
+
+### Clinic Update Notification Settings
+- Endpoint: `PUT /api/clinic/notification-settings`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Request fields: `app_notifications`, `email_notifications`, `sms_notifications`.
+- Response: `ClinicNotificationSettingsResource`.
+
 ## Missing Clinic APIs
-- Clinic profile/details endpoint: MISSING BACKEND ENDPOINT.
-- Clinic profile update endpoint: MISSING BACKEND ENDPOINT.
-- Clinic password change endpoint: MISSING BACKEND ENDPOINT.
-- Clinic notification preferences endpoint: MISSING BACKEND ENDPOINT.
 - Clinic notifications list endpoint: MISSING BACKEND ENDPOINT.
 - Clinic notification read endpoint: MISSING BACKEND ENDPOINT.
 - Clinic notifications mark all read endpoint: MISSING BACKEND ENDPOINT.

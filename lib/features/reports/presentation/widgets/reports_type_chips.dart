@@ -7,7 +7,6 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../domain/report_type.dart';
 import '../cubit/reports_cubit.dart';
-import '../cubit/reports_state.dart';
 import '../reports_l10n.dart';
 
 /// "Report type" label plus a horizontally scrolling row of type chips. The

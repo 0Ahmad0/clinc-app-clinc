@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/enums/app_feedback_type.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_toast.dart';
 import '../../domain/settings_section.dart';
 import '../cubit/settings_cubit.dart';
-import '../cubit/settings_state.dart';
 import 'settings_main_view.dart';
 import 'settings_password_view.dart';
 import 'settings_profile_view.dart';
@@ -15,7 +16,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (_) => sl<SettingsCubit>(),
+    create: (_) => sl<SettingsCubit>()..loadInitial(),
     child: const _SettingsScaffold(),
   );
 }
@@ -25,8 +26,29 @@ class _SettingsScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SettingsCubit, SettingsState>(
+    return BlocConsumer<SettingsCubit, SettingsState>(
       buildWhen: (previous, current) => previous.section != current.section,
+      listenWhen: (previous, current) =>
+          previous.failure != current.failure ||
+          previous.passwordChanged != current.passwordChanged,
+      listener: (context, state) {
+        if (state.failure != null) {
+          AppToast.show(
+            context,
+            title: context.l10n.settingsProfileSave,
+            message: state.failure.toString(),
+            type: AppFeedbackType.danger,
+          );
+        }
+        if (state.passwordChanged) {
+          AppToast.show(
+            context,
+            title: context.l10n.settingsPasswordTitle,
+            message: context.l10n.settingsPasswordChanged,
+            type: AppFeedbackType.success,
+          );
+        }
+      },
       builder: (context, state) {
         final onMain = state.section == SettingsSection.main;
         // Sub-views back out to the main list first; only the main list pops

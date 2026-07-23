@@ -45,9 +45,7 @@ class SettingsProfileCover extends StatelessWidget {
                 alignment: Alignment.center,
                 padding: const EdgeInsetsDirectional.all(AppSpacing.lg),
                 child: coverPath != null
-                    ? SizedBox.expand(
-                        child: Image.file(File(coverPath!), fit: BoxFit.cover),
-                      )
+                    ? SizedBox.expand(child: _ProfileImage(path: coverPath!))
                     : Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -78,14 +76,14 @@ class SettingsProfileCover extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: avatarPath == null ? colors.heroBadgeGradient : null,
+                    gradient: avatarPath == null
+                        ? colors.heroBadgeGradient
+                        : null,
                     border: Border.all(color: colors.bg, width: 4),
                   ),
                   alignment: Alignment.center,
                   child: avatarPath != null
-                      ? SizedBox.expand(
-                          child: Image.file(File(avatarPath!), fit: BoxFit.cover),
-                        )
+                      ? SizedBox.expand(child: _ProfileImage(path: avatarPath!))
                       : Icon(
                           Iconsax.hospital,
                           color: colors.onBrand,
@@ -119,5 +117,19 @@ class SettingsProfileCover extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _ProfileImage extends StatelessWidget {
+  const _ProfileImage({required this.path});
+
+  final String path;
+
+  @override
+  Widget build(BuildContext context) {
+    if (path.startsWith('http')) {
+      return Image.network(path, fit: BoxFit.cover);
+    }
+    return Image.file(File(path), fit: BoxFit.cover);
   }
 }

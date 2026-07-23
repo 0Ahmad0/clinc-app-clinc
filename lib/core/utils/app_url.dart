@@ -40,6 +40,10 @@ class AppUrl {
   static const clinicReportsExport = "$clinicReports/export";
   static const clinicReportsGenerated = "$clinicReports/generated";
   static const clinicServices = "${baseUrl}clinic/services";
+  static const clinicProfile = "${baseUrl}clinic/profile";
+  static const clinicChangePassword = "${baseUrl}clinic/change-password";
+  static const clinicNotificationSettings =
+      "${baseUrl}clinic/notification-settings";
 
   static String clinicDoctor(String id) => '$clinicDoctors/$id';
 

@@ -68,6 +68,11 @@
   - `POST /api/clinic/reports/export`
   - `GET /api/clinic/reports/generated`
   - `GET /api/clinic/reports/generated/{report}/download`
+  - `GET /api/clinic/profile`
+  - `PUT /api/clinic/profile`
+  - `POST /api/clinic/change-password`
+  - `GET /api/clinic/notification-settings`
+  - `PUT /api/clinic/notification-settings`
 - Clinic register request fields: `name`, `license_number`, `email`, `password`, `type`.
 - Clinic register `type` values: `clinic`, `lab`, `both`.
 - Clinic login request fields: `email`, `password`, optional `device_name`; the backend accepts email or license number through the `email` field.
@@ -78,7 +83,7 @@
 - Clinic dashboard request query fields: optional `date`.
 - Clinic protected endpoints use the `clinic.auth` middleware.
 - Clinic dashboard response returns clinic info, stats, nearest 5 appointments, and unread notifications count.
-- Missing operational APIs: notifications list/actions, services, settings/profile update, password change, and notification preferences.
+- Missing operational APIs: notifications list/actions and services.
 
 ## Clean Architecture Rules
 - Required flow for all backend-integrated Clinic features:
@@ -328,6 +333,29 @@ locator.registerFactory<FeatureCubit>(
   - `lib/features/reports/presentation/widgets/reports_list.dart`
   - `lib/features/reports/presentation/widgets/report_entry_card.dart`
   - `lib/core/di/service_locator.dart`
+  - `lib/core/utils/app_url.dart`
+  - `BACKEND_NOTES.md`
+  - `PROJECT_HANDOFF.md`
+
+## Completed: Clinic Settings Integration
+- Date: 2026-07-23.
+- Integrated profile, profile update with optional logo/cover upload, change password, and notification settings.
+- Added settings models, remote data source, repository, Cubit integration, and Freezed state.
+- Registered Settings dependencies in GetIt.
+- Files added/modified:
+  - `lib/features/settings/data/clinic_settings_remote_data_source.dart`
+  - `lib/features/settings/data/models/clinic_settings_model.dart`
+  - `lib/features/settings/domain/clinic_settings_repository.dart`
+  - `lib/features/settings/presentation/cubit/settings_cubit.dart`
+  - `lib/features/settings/presentation/cubit/settings_state.dart`
+  - `lib/features/settings/presentation/pages/settings_page.dart`
+  - `lib/features/settings/presentation/pages/settings_main_view.dart`
+  - `lib/features/settings/presentation/pages/settings_profile_view.dart`
+  - `lib/features/settings/presentation/pages/settings_password_view.dart`
+  - `lib/features/settings/presentation/widgets/settings_profile_cover.dart`
+  - `lib/features/settings/presentation/widgets/settings_profile_field.dart`
+  - `lib/core/di/service_locator.dart`
+  - `lib/core/domain/services/api_services_imp.dart`
   - `lib/core/utils/app_url.dart`
   - `BACKEND_NOTES.md`
   - `PROJECT_HANDOFF.md`

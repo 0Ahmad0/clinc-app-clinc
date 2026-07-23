@@ -32,16 +32,24 @@ extension ReportPeriodL10n on ReportPeriod {
 extension ReportTypeL10n on ReportType {
   String label(AppLocalizations l10n) => switch (this) {
     ReportType.appointments => l10n.reportsTypeAppointments,
+    ReportType.clinic => _localized(l10n, ar: 'العيادة', en: 'Clinic'),
     ReportType.revenue => l10n.reportsTypeRevenue,
-    ReportType.labs => l10n.reportsTypeLabs,
+    ReportType.doctors => _localized(l10n, ar: 'الأطباء', en: 'Doctors'),
   };
 
   IconData get icon => switch (this) {
     ReportType.appointments => Iconsax.calendar,
+    ReportType.clinic => Iconsax.hospital,
     ReportType.revenue => Iconsax.trend_up,
-    ReportType.labs => Iconsax.health,
+    ReportType.doctors => Iconsax.profile_2user,
   };
 }
+
+String _localized(
+  AppLocalizations l10n, {
+  required String ar,
+  required String en,
+}) => l10n.localeName.startsWith('ar') ? ar : en;
 
 /// Label, glyph and colors for each outcome. `barColor` tints bars/dots/tints;
 /// `textColor` is the readable foreground for numbers and icons.

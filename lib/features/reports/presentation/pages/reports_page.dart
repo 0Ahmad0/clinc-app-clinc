@@ -15,7 +15,7 @@ class ReportsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlocProvider(
-    create: (_) => sl<ReportsCubit>(param1: accountType),
+    create: (_) => sl<ReportsCubit>(param1: accountType)..loadInitial(),
     child: const ReportsView(),
   );
 }

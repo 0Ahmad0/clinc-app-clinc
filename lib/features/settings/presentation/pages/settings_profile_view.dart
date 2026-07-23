@@ -9,142 +9,191 @@ import '../../../../core/media/media_service.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/media_source_sheet.dart';
-import '../../domain/settings_section.dart';
 import '../cubit/settings_cubit.dart';
-import '../cubit/settings_state.dart';
 import '../widgets/settings_group_title.dart';
 import '../widgets/settings_profile_cover.dart';
 import '../widgets/settings_profile_field.dart';
 import '../widgets/settings_profile_header.dart';
 
-/// The clinic profile editor: flat header, cover + avatar, editable info
-/// sections and a floating save bar.
-class SettingsProfileView extends StatelessWidget {
+class SettingsProfileView extends StatefulWidget {
   const SettingsProfileView({super.key});
+
+  @override
+  State<SettingsProfileView> createState() => _SettingsProfileViewState();
+}
+
+class _SettingsProfileViewState extends State<SettingsProfileView> {
+  final _name = TextEditingController();
+  final _location = TextEditingController();
+  final _license = TextEditingController();
+  final _email = TextEditingController();
+  final _phone = TextEditingController();
+  final _website = TextEditingController();
+  final _description = TextEditingController();
+  int? _clinicId;
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _location.dispose();
+    _license.dispose();
+    _email.dispose();
+    _phone.dispose();
+    _website.dispose();
+    _description.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final sections = <(String, List<Widget>)>[
-      (l10n.settingsClinicInfo, [
-        SettingsProfileField(
-          label: l10n.settingsFieldClinicName,
-          icon: Iconsax.hospital,
-          value: l10n.settingsClinicName,
-        ),
-        SettingsProfileField(
-          label: l10n.settingsFieldAddress,
-          icon: Iconsax.location,
-          value: l10n.settingsValueAddress,
-        ),
-        SettingsProfileField(
-          label: l10n.settingsFieldLicense,
-          icon: Iconsax.medal_star,
-          value: l10n.settingsValueLicense,
-        ),
-      ]),
-      (l10n.settingsContactInfo, [
-        SettingsProfileField(
-          label: l10n.settingsFieldEmail,
-          icon: Iconsax.sms,
-          value: l10n.settingsClinicEmail,
-        ),
-        SettingsProfileField(
-          label: l10n.settingsFieldPhone,
-          icon: Iconsax.call,
-          value: l10n.settingsValuePhone,
-        ),
-        SettingsProfileField(
-          label: l10n.settingsFieldWebsite,
-          icon: Iconsax.global,
-          value: l10n.settingsValueWebsite,
-        ),
-      ]),
-    ];
-
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          padding: const EdgeInsetsDirectional.only(
-            bottom: AppSizes.homeBottomClearance,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SettingsProfileHeader(),
-              BlocBuilder<SettingsCubit, SettingsState>(
-                buildWhen: (previous, current) =>
-                    previous.coverPath != current.coverPath ||
-                    previous.avatarPath != current.avatarPath,
-                builder: (context, state) => SettingsProfileCover(
-                  coverPath: state.coverPath,
-                  avatarPath: state.avatarPath,
-                  onPickCover: () => _pickImage(context, cover: true),
-                  onPickAvatar: () => _pickImage(context, cover: false),
-                ),
+    return BlocBuilder<SettingsCubit, SettingsState>(
+      builder: (context, state) {
+        final clinic = state.clinic;
+        if (clinic?.clinicId != null && clinic?.clinicId != _clinicId) {
+          _clinicId = clinic!.clinicId;
+          _name.text = clinic.name ?? '';
+          _location.text = clinic.location ?? '';
+          _license.text = clinic.licenseNumber ?? '';
+          _email.text = clinic.email ?? '';
+          _phone.text = clinic.phone ?? '';
+          _website.text = clinic.website ?? '';
+          _description.text = clinic.description ?? '';
+        }
+        final sections = <(String, List<Widget>)>[
+          (
+            l10n.settingsClinicInfo,
+            [
+              SettingsProfileField(
+                label: l10n.settingsFieldClinicName,
+                icon: Iconsax.hospital,
+                controller: _name,
               ),
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(
-                  AppSpacing.screen,
-                  AppSpacing.md + 2,
-                  AppSpacing.screen,
-                  0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    for (final section in sections) ...[
-                      SettingsGroupTitle(title: section.$1),
-                      AppGaps.h12,
-                      for (final field in section.$2)
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(
-                            bottom: AppSpacing.sm,
-                          ),
-                          child: field,
-                        ),
-                      AppGaps.h8,
-                    ],
-                  ],
-                ),
+              SettingsProfileField(
+                label: l10n.settingsFieldAddress,
+                icon: Iconsax.location,
+                controller: _location,
+              ),
+              SettingsProfileField(
+                label: l10n.settingsFieldLicense,
+                icon: Iconsax.medal_star,
+                controller: _license,
+                readOnly: true,
               ),
             ],
           ),
-        ),
-        PositionedDirectional(
-          bottom: 0,
-          start: 0,
-          end: 0,
-          child: Container(
-            padding: EdgeInsetsDirectional.fromSTEB(
-              AppSpacing.screen,
-              AppSpacing.sm,
-              AppSpacing.screen,
-              MediaQuery.paddingOf(context).bottom + AppSpacing.lg,
-            ),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [context.colors.bg, context.colors.bg.withValues(alpha: 0)],
+          (
+            l10n.settingsContactInfo,
+            [
+              SettingsProfileField(
+                label: l10n.settingsFieldEmail,
+                icon: Iconsax.sms,
+                controller: _email,
+              ),
+              SettingsProfileField(
+                label: l10n.settingsFieldPhone,
+                icon: Iconsax.call,
+                controller: _phone,
+              ),
+              SettingsProfileField(
+                label: l10n.settingsFieldWebsite,
+                icon: Iconsax.global,
+                controller: _website,
+              ),
+            ],
+          ),
+        ];
+
+        return Stack(
+          children: [
+            SingleChildScrollView(
+              padding: const EdgeInsetsDirectional.only(
+                bottom: AppSizes.homeBottomClearance,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SettingsProfileHeader(),
+                  SettingsProfileCover(
+                    coverPath: state.coverPath ?? clinic?.cover,
+                    avatarPath: state.avatarPath ?? clinic?.logo,
+                    onPickCover: () => _pickImage(context, cover: true),
+                    onPickAvatar: () => _pickImage(context, cover: false),
+                  ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                      AppSpacing.screen,
+                      AppSpacing.md + 2,
+                      AppSpacing.screen,
+                      0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (final section in sections) ...[
+                          SettingsGroupTitle(title: section.$1),
+                          AppGaps.h12,
+                          for (final field in section.$2)
+                            Padding(
+                              padding: const EdgeInsetsDirectional.only(
+                                bottom: AppSpacing.sm,
+                              ),
+                              child: field,
+                            ),
+                          AppGaps.h8,
+                        ],
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-            child: AppButton(
-              label: l10n.settingsProfileSave,
-              icon: Iconsax.document_download,
-              onPressed: () =>
-                  context.read<SettingsCubit>().show(SettingsSection.main),
+            PositionedDirectional(
+              bottom: 0,
+              start: 0,
+              end: 0,
+              child: Container(
+                padding: EdgeInsetsDirectional.fromSTEB(
+                  AppSpacing.screen,
+                  AppSpacing.sm,
+                  AppSpacing.screen,
+                  MediaQuery.paddingOf(context).bottom + AppSpacing.lg,
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      context.colors.bg,
+                      context.colors.bg.withValues(alpha: 0),
+                    ],
+                  ),
+                ),
+                child: AppButton(
+                  label: state.isSavingProfile
+                      ? '...'
+                      : l10n.settingsProfileSave,
+                  icon: Iconsax.document_download,
+                  onPressed: state.isSavingProfile
+                      ? null
+                      : () => context.read<SettingsCubit>().updateProfile(
+                          name: _name.text.trim(),
+                          email: _email.text.trim(),
+                          phone: _phone.text.trim(),
+                          location: _location.text.trim(),
+                          description: _description.text.trim(),
+                          website: _website.text.trim(),
+                        ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 
-  Future<void> _pickImage(
-    BuildContext context, {
-    required bool cover,
-  }) async {
+  Future<void> _pickImage(BuildContext context, {required bool cover}) async {
     final cubit = context.read<SettingsCubit>();
     final source = await showModalBottomSheet<ImageSource>(
       context: context,
