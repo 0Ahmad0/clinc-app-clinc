@@ -34,8 +34,8 @@ class DoctorsView extends StatelessWidget {
               surfaceTintColor: Colors.transparent,
               elevation: 0,
               toolbarHeight:
-                  MediaQuery.paddingOf(context).top +
-                  AppSizes.doctorsHeaderContent +
+                  // MediaQuery.paddingOf(context).top
+                      // +
                   AppSizes.doctorsHeaderContent,
               flexibleSpace: const DoctorsHeader(),
             ),
@@ -44,6 +44,7 @@ class DoctorsView extends StatelessWidget {
             const DoctorsList(),
           ],
         ),
+
         const PositionedDirectional(
           start: AppSpacing.screen,
           bottom: AppSizes.doctorsFabBottom,

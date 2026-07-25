@@ -138,7 +138,7 @@ class AppointmentCard extends StatelessWidget {
                               ),
                               const SizedBox(width: AppSpacing.xxs + 1),
                               Text(
-                                appointment.time ?? '',
+                                appointment.formattedDateTime,
                                 textDirection: TextDirection.ltr,
                                 style: context.textTheme.bodySmall?.copyWith(
                                   color: colors.gray,
@@ -222,11 +222,35 @@ class AppointmentCard extends StatelessWidget {
                   AppSpacing.md,
                   AppSpacing.md,
                 ),
-                child: AppButton(
-                  label: kind.finishLabel(l10n),
-                  icon: Iconsax.tick_square,
-                  onPressed: () => openFinishSheet(context, cubit, appointment),
-                ),
+                child: kind.requiresResult
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: AppButton(
+                              label: l10n.apptFinish,
+                              icon: Iconsax.tick_square,
+                              onPressed: () =>
+                                  openFinishSheet(context, cubit, appointment),
+                            ),
+                          ),
+                          AppGaps.w12,
+                          Expanded(
+                            child: AppButton(
+                              label: _uploadResultLabel(context),
+                              icon: Iconsax.document_upload,
+                              variant: AppButtonVariant.secondary,
+                              onPressed: () =>
+                                  openResultSheet(context, cubit, appointment),
+                            ),
+                          ),
+                        ],
+                      )
+                    : AppButton(
+                        label: l10n.apptFinish,
+                        icon: Iconsax.tick_square,
+                        onPressed: () =>
+                            openFinishSheet(context, cubit, appointment),
+                      ),
               ),
             if (appointment.status == 'rejected' &&
                 appointment.rejectionReason != null)
@@ -249,4 +273,9 @@ class AppointmentCard extends StatelessWidget {
       ),
     );
   }
+
+  String _uploadResultLabel(BuildContext context) =>
+      Localizations.localeOf(context).languageCode == 'ar'
+      ? 'رفع النتيجة'
+      : 'Upload result';
 }

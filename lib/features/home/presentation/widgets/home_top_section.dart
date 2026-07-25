@@ -6,6 +6,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
+import '../../../../core/services/storage_service.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../data/models/clinic_dashboard_model.dart';
 
@@ -45,9 +46,13 @@ class HomeHeader extends StatelessWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final clinic = dashboard?.clinic;
-    final clinicName = clinic?.name?.trim().isNotEmpty == true
-        ? clinic!.name!
-        : l10n.homeClinicName;
+    final cachedClinic = StorageService.instance.getCachedClinic();
+    final cachedClinicName = cachedClinic?['name']?.toString().trim();
+    final clinicName = (cachedClinicName != null && cachedClinicName.isNotEmpty)
+        ? cachedClinicName
+        : (clinic?.name?.trim().isNotEmpty == true
+              ? clinic!.name!
+              : l10n.homeClinicName);
     final statusText = clinic?.workingHoursText?.trim().isNotEmpty == true
         ? clinic!.workingHoursText!
         : l10n.homeOpenStatus;
@@ -299,8 +304,12 @@ class HomeQuickActions extends StatelessWidget {
         l10n.homeDoctors,
         () => context.go(AppRoutes.doctors),
       ),
-      (Iconsax.briefcase, l10n.homeServices, () {}),
-      (Iconsax.chart_2, l10n.homeReports, () {}),
+      (
+        Iconsax.briefcase,
+        l10n.homeServices,
+        () => context.go(AppRoutes.services),
+      ),
+      (Iconsax.chart_2, l10n.homeReports, () => context.go(AppRoutes.reports)),
     ];
     return Row(
       children: [

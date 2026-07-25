@@ -342,16 +342,245 @@
 - Request fields: `app_notifications`, `email_notifications`, `sms_notifications`.
 - Response: `ClinicNotificationSettingsResource`.
 
+### Clinic Device Token
+- Endpoint: `POST /api/clinic/device-token`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Request fields: `token`, `platform`, `device_id`, `app_version`, `locale`.
+- Response: `UserDeviceResource`.
+
+### Clinic Notifications List
+- Endpoint: `GET /api/clinic/notifications`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Query fields: `page`, `per_page`, `is_read`.
+- Response: `NotificationCollection` with `data.items` and top-level `meta`.
+
+### Clinic Notification Read
+- Endpoint: `POST /api/clinic/notifications/{notification}/read`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Response: `NotificationResource`.
+
+### Clinic Notifications Mark All Read
+- Endpoint: `POST /api/clinic/notifications/mark-all-read`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Response: `MarkAllNotificationsReadResource`.
+
+### Clinic Notifications Unread Count
+- Endpoint: `GET /api/clinic/notifications/unread-count`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Response: `UnreadCountResource`.
+
+### Clinic Notification Delete
+- Endpoint: `DELETE /api/clinic/notifications/{notification}`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Response: `ClinicNotificationDeletionResource`.
+
+### Clinic Notifications Clear
+- Endpoint: `DELETE /api/clinic/notifications`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Response: `ClinicNotificationsClearResource`.
+
 ## Missing Clinic APIs
-- Clinic notifications list endpoint: MISSING BACKEND ENDPOINT.
-- Clinic notification read endpoint: MISSING BACKEND ENDPOINT.
-- Clinic notifications mark all read endpoint: MISSING BACKEND ENDPOINT.
-- Clinic notifications delete endpoint: MISSING BACKEND ENDPOINT.
-- Clinic device token registration endpoint: MISSING BACKEND ENDPOINT.
-- Clinic lab sections endpoint: MISSING BACKEND ENDPOINT.
-- Clinic lab tests endpoint: MISSING BACKEND ENDPOINT.
-- Clinic service enable/disable endpoint: MISSING BACKEND ENDPOINT.
-- Clinic service price update endpoint: MISSING BACKEND ENDPOINT.
+- None for the documented Clinic Services contract below.
+
+## Required Clinic Services API Contract
+
+### Clinic Lab Sections
+- Endpoint: `GET /api/clinic/services/lab-sections`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `lab`, `both`.
+- Query fields: none.
+- Response resource: `ClinicLabSectionResource`.
+- Response data shape:
+  - `section_id`
+  - `slug`
+  - `name`
+  - `name_ar`
+  - `name_en`
+  - `description`
+  - `icon`
+  - `is_active`
+
+### Clinic Available Lab Tests
+- Endpoint: `GET /api/clinic/services/lab-tests`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `lab`, `both`.
+- Query fields:
+  - `page`: nullable integer min 1.
+  - `per_page`: nullable integer min 1 max 100.
+  - `search`: nullable string max 255.
+  - `section_id`: nullable exists lab section/category id.
+  - `section_slug`: nullable string.
+- Response resource: `ClinicAvailableLabTestCollectionResource`.
+- Response data shape:
+  - `data`: list of `ClinicAvailableLabTestResource`.
+  - `meta.currentPage`
+  - `meta.perPage`
+  - `meta.total`
+  - `meta.hasMore`
+- `ClinicAvailableLabTestResource` fields:
+  - `lab_test_id`
+  - `code`
+  - `name`
+  - `name_ar`
+  - `name_en`
+  - `description`
+  - `section_id`
+  - `section_slug`
+  - `section_name`
+  - `default_price`
+  - `is_active`
+
+### Clinic Enabled Lab Tests
+- Endpoint: `GET /api/clinic/services/enabled-lab-tests`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `lab`, `both`.
+- Query fields:
+  - `page`: nullable integer min 1.
+  - `per_page`: nullable integer min 1 max 100.
+  - `search`: nullable string max 255.
+  - `section_id`: nullable exists lab section/category id.
+  - `is_active`: nullable boolean.
+- Response resource: `ClinicEnabledLabTestCollectionResource`.
+- Response data shape:
+  - `data`: list of `ClinicEnabledLabTestResource`.
+  - `meta.currentPage`
+  - `meta.perPage`
+  - `meta.total`
+  - `meta.hasMore`
+- `ClinicEnabledLabTestResource` fields:
+  - `clinic_lab_test_id`
+  - `lab_test_id`
+  - `code`
+  - `name`
+  - `name_ar`
+  - `name_en`
+  - `section_id`
+  - `section_slug`
+  - `section_name`
+  - `price`
+  - `default_price`
+  - `is_active`
+
+### Clinic Enable/Update Lab Test
+- Endpoint: `POST /api/clinic/services/lab-tests/{labTest}`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `lab`, `both`.
+- Request fields:
+  - `price`: required numeric min 0.
+  - `is_active`: required boolean.
+- Response resource: `ClinicEnabledLabTestResource`.
+
+### Clinic Update Enabled Lab Test
+- Endpoint: `PUT /api/clinic/services/lab-tests/{labTest}`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `lab`, `both`.
+- Request fields:
+  - `price`: required numeric min 0.
+  - `is_active`: required boolean.
+- Response resource: `ClinicEnabledLabTestResource`.
+
+### Clinic Remove Lab Test
+- Endpoint: `DELETE /api/clinic/services/lab-tests/{labTest}`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `lab`, `both`.
+- Request fields: none.
+- Response resource: `ClinicServiceRemovalResource`.
+- Response data fields:
+  - `removed`
+
+### Clinic Available Service Specializations
+- Endpoint: `GET /api/clinic/services/specializations`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `clinic`, `both`.
+- Query fields:
+  - `page`: nullable integer min 1.
+  - `per_page`: nullable integer min 1 max 100.
+  - `search`: nullable string max 255.
+- Response resource: `ClinicAvailableServiceSpecializationCollectionResource`.
+- Response data shape:
+  - `data`: list of `ClinicAvailableServiceSpecializationResource`.
+  - `meta.currentPage`
+  - `meta.perPage`
+  - `meta.total`
+  - `meta.hasMore`
+- `ClinicAvailableServiceSpecializationResource` fields:
+  - `specialization_id`
+  - `slug`
+  - `name`
+  - `name_ar`
+  - `name_en`
+  - `description`
+  - `icon`
+  - `is_active`
+
+### Clinic Enabled Service Specializations
+- Endpoint: `GET /api/clinic/services/enabled-specializations`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `clinic`, `both`.
+- Query fields:
+  - `page`: nullable integer min 1.
+  - `per_page`: nullable integer min 1 max 100.
+  - `search`: nullable string max 255.
+  - `is_active`: nullable boolean.
+- Response resource: `ClinicEnabledServiceSpecializationCollectionResource`.
+- Response data shape:
+  - `data`: list of `ClinicEnabledServiceSpecializationResource`.
+  - `meta.currentPage`
+  - `meta.perPage`
+  - `meta.total`
+  - `meta.hasMore`
+- `ClinicEnabledServiceSpecializationResource` fields:
+  - `clinic_specialization_id`
+  - `specialization_id`
+  - `slug`
+  - `name`
+  - `name_ar`
+  - `name_en`
+  - `icon`
+  - `is_active`
+
+### Clinic Enable/Update Service Specialization
+- Endpoint: `POST /api/clinic/services/specializations/{specialization}`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `clinic`, `both`.
+- Request fields:
+  - `is_active`: required boolean.
+- Response resource: `ClinicEnabledServiceSpecializationResource`.
+
+### Clinic Update Enabled Service Specialization
+- Endpoint: `PUT /api/clinic/services/specializations/{specialization}`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `clinic`, `both`.
+- Request fields:
+  - `is_active`: required boolean.
+- Response resource: `ClinicEnabledServiceSpecializationResource`.
+
+### Clinic Remove Service Specialization
+- Endpoint: `DELETE /api/clinic/services/specializations/{specialization}`
+- Status: available.
+- Authorization: `clinic.auth`.
+- Clinic types allowed: `clinic`, `both`.
+- Request fields: none.
+- Response resource: `ClinicServiceRemovalResource`.
+- Response data fields:
+  - `removed`
 
 ## Pagination Contract
 - Do not assume pagination metadata for missing Clinic endpoints.
@@ -369,3 +598,33 @@
 - Do not reuse User APIs for Clinic APIs unless explicitly documented here as Clinic-compatible.
 - If a Clinic endpoint is missing, produce a `BACKEND API PROMPT` for the backend developer/Codex instead of wiring Flutter to a fake or guessed endpoint.
 - The backend prompt must define routes, methods, controllers, validation requests, resources, models/relations, authorization, response JSON, pagination metadata, filters/search, and migrations if needed.
+
+## Flutter Consumption Notes
+- No new backend endpoints were required for the notifications counters fix.
+- For notifications counters in Flutter:
+  - unread count source: `GET /api/clinic/notifications/unread-count`.
+  - tab totals source: paginated list meta from `GET /api/clinic/notifications` with current `is_read` filter.
+- No new backend endpoints were required for home clinic-name live refresh; Flutter now reacts to local clinic cache updates after profile save.
+- No new backend endpoints were required for profile-save success toast; this is Flutter presentation feedback only.
+- No new backend endpoints were required to remove notifications full reload on open; Flutter now performs local list/counter updates after `mark-read`.
+- No new backend endpoints were required for services account-type routing fix; Flutter now maps cached clinic `type` to allowed services kind before loading services APIs.
+- No new backend endpoints were required for custom Dio API logging; this enhancement is Flutter-side diagnostics/log formatting only.
+- No new backend endpoints were required for raw body log display; this is logger presentation behavior only.
+- No new backend endpoints were required for services-tab visibility update; this is Flutter UI behavior only.
+- No new backend endpoints were required for services tab click/data visibility behavior; Flutter now surfaces backend permission errors and shows available specialties when no enabled specialties exist.
+
+- No new backend endpoints were required for restoring services-tab hide behavior by account type; this is Flutter UI visibility logic only.
+- No new backend endpoints were required for reports entry-card border crash fix; this is Flutter rendering/decorations logic only.
+- No new backend endpoints were required for services numeric/string parsing compatibility fix; this is Flutter model decoding resilience for existing payload shapes.
+- No new backend endpoints were required for restoring lab sections add/remove UX; Flutter now manages selected lab sections locally and syncs initial selection from enabled lab tests data.
+- No new backend endpoints were required for reports date format and report file open behavior; this is Flutter presentation/link-opening logic over existing `file_url` and `generated_at` fields.
+- No new backend endpoints were required for Clinic doctor add/edit/details; Flutter now consumes existing `GET /api/clinic/doctors/{doctor}`, `POST /api/clinic/doctors`, `PUT /api/clinic/doctors/{doctor}`, and `GET /api/clinic/specializations`.
+- Flutter doctor add/edit sends documented scalar fields, `schedules.*.day/from/to/is_active`, optional multipart `image`, and optional multipart `qualification_files[]` when selected.
+- Backend should verify create/update still accept multipart `PUT` and `POST` payloads, keep `image` and `qualification_files` optional, validate `image` as image, and validate `qualification_files.*` as PDF/file.
+- Removing newly selected local image/files before save is Flutter-only. Removing already-uploaded server assets needs an explicit backend request contract if required later.
+- No new backend endpoints were required for appointments counters fix; Flutter reads pagination `meta.total` from existing `GET /api/clinic/appointments` calls and calculates visible filter-chip counts from loaded list items.
+- No new backend endpoints were required for accepted appointment action split; Flutter now keeps `finish` and `result` as separate actions for lab/result-required appointments.
+- No new backend endpoints were required for appointment detail result/notes display; Flutter reads existing `notes` and `result_file` fields from `ClinicAppointmentResource`.
+- No new backend endpoints were required for home quick actions navigation; this is Flutter routing only.
+- No new backend endpoints were required for appointment card date-time display; Flutter formats existing `date` and `time` fields.
+- No new backend endpoints were required for notifications counters pagination pattern; Flutter reads full totals from existing paginated notifications meta and calculates tab counters from loaded items.

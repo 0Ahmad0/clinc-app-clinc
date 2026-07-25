@@ -4,7 +4,6 @@ import '../../../../core/enums/app_feedback_type.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_toast.dart';
 import '../../data/models/clinic_appointment_model.dart';
-import '../appointment_kind_style.dart';
 import '../cubit/appointments_cubit.dart';
 import 'appointment_finish_sheet.dart';
 import 'appointment_reject_sheet.dart';
@@ -37,26 +36,51 @@ Future<void> openFinishSheet(
   ClinicAppointmentModel appointment,
 ) async {
   final l10n = context.l10n;
-  final requiresResult = appointment.kindValue.requiresResult;
   final result = await showModalBottomSheet<AppointmentFinishResult>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => AppointmentFinishSheet(requiresResult: requiresResult),
+    builder: (_) => const AppointmentFinishSheet(requiresResult: false),
   );
   if (result == null || !context.mounted) return;
   AppToast.show(
     context,
     title: l10n.apptStatusDone,
-    message: requiresResult ? l10n.apptFinishToastLab : l10n.apptFinishToast,
+    message: l10n.apptFinishToast,
     type: AppFeedbackType.success,
   );
   final id = appointment.appointmentId;
   if (id == null) return;
-  if (requiresResult) {
-    final filePath = result.filePath;
-    if (filePath != null) cubit.uploadResult(id, filePath);
-    return;
-  }
   cubit.finish(id, notes: result.notes);
 }
+
+Future<void> openResultSheet(
+  BuildContext context,
+  AppointmentsCubit cubit,
+  ClinicAppointmentModel appointment,
+) async {
+  final l10n = context.l10n;
+  final result = await showModalBottomSheet<AppointmentFinishResult>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (_) =>
+        const AppointmentFinishSheet(requiresResult: true, resultOnly: true),
+  );
+  if (result == null || !context.mounted) return;
+  final id = appointment.appointmentId;
+  final filePath = result.filePath;
+  if (id == null || filePath == null) return;
+  AppToast.show(
+    context,
+    title: _uploadResultTitle(context),
+    message: l10n.apptFinishToastLab,
+    type: AppFeedbackType.success,
+  );
+  cubit.uploadResult(id, filePath);
+}
+
+String _uploadResultTitle(BuildContext context) =>
+    Localizations.localeOf(context).languageCode == 'ar'
+    ? 'رفع النتيجة'
+    : 'Upload result';

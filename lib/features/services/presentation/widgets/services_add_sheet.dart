@@ -4,10 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_bottom_sheet.dart';
-import '../../domain/lab_section.dart';
 import '../../domain/service_kind.dart';
 import '../cubit/services_cubit.dart';
-import '../services_catalog.dart';
 import '../services_l10n.dart';
 
 /// Bottom sheet that lists the addable sections or specialties for the active
@@ -41,33 +39,39 @@ class ServicesAddSheet extends StatelessWidget {
           ),
           AppGaps.h16,
           if (isLab)
-            for (final section in LabSection.values)
+            for (final section in state.labSections)
               Padding(
                 padding: const EdgeInsetsDirectional.only(
                   bottom: AppSpacing.xs,
                 ),
                 child: _AddTile(
-                  icon: section.icon,
+                  icon: section.iconData,
                   accent: section.accent(colors),
-                  name: section.label(l10n),
-                  added: state.sections.contains(section),
+                  name: section.label(context),
+                  added: state.isLabSectionAdded(section.sectionId),
                   onTap: () {
-                    cubit.addSection(section);
+                    if (state.isLabSectionAdded(section.sectionId)) {
+                      cubit.removeSection(section);
+                    } else {
+                      cubit.addSection(section);
+                    }
                     Navigator.of(context).pop();
                   },
                 ),
               )
           else
-            for (final specialty in kClinicSpecialties)
+            for (final specialty in state.availableSpecializations.items.value)
               Padding(
                 padding: const EdgeInsetsDirectional.only(
                   bottom: AppSpacing.xs,
                 ),
                 child: _AddTile(
-                  icon: specialty.icon,
+                  icon: specialty.iconData,
                   accent: specialty.accent(colors),
-                  name: specialty.label(l10n),
-                  added: state.specialties.contains(specialty),
+                  name: specialty.label(context),
+                  added: state.isSpecializationEnabled(
+                    specialty.specializationId,
+                  ),
                   onTap: () {
                     cubit.addSpecialty(specialty);
                     Navigator.of(context).pop();

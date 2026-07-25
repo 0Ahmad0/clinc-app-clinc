@@ -1,64 +1,64 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart' show TimeOfDay;
+part of 'add_doctor_cubit.dart';
 
-import '../../domain/doctor_specialty.dart';
-import '../../domain/weekday.dart';
-
-/// A working day's start and end times.
 typedef WorkingHours = ({TimeOfDay start, TimeOfDay end});
+typedef DoctorPickedQualification = ({String path, String name});
 
-/// Form state for the add-doctor screen: the chosen specialty (and whether its
-/// picker is open), which days the doctor works, and each day's hours.
-class AddDoctorState extends Equatable {
-  const AddDoctorState({
-    this.specialty,
-    this.specialtyOpen = false,
-    this.activeDays = _defaultDays,
-    this.hours = _defaultHours,
-  });
+@freezed
+abstract class AddDoctorState with _$AddDoctorState {
+  const factory AddDoctorState({
+    ClinicDoctorModel? initialDoctor,
+    ClinicDoctorModel? savedDoctor,
+    @Default(<ClinicSpecializationModel>[])
+    List<ClinicSpecializationModel> specializations,
+    String? selectedSpecializationId,
+    @Default('male') String gender,
+    String? imagePath,
+    @Default(<DoctorPickedQualification>[])
+    List<DoctorPickedQualification> qualificationFiles,
+    @Default(false) bool specialtyOpen,
+    @Default(_defaultDays) Set<Weekday> activeDays,
+    @Default(_defaultHours) Map<Weekday, WorkingHours> hours,
+    @Default(false) bool isLoadingSpecializations,
+    @Default(false) bool isSaving,
+    @Default(false) bool saved,
+    NetworkExceptions? failure,
+  }) = _AddDoctorState;
+}
 
-  static const Set<Weekday> _defaultDays = {
-    Weekday.saturday,
-    Weekday.sunday,
-    Weekday.monday,
-  };
+const Set<Weekday> _defaultDays = {
+  Weekday.saturday,
+  Weekday.sunday,
+  Weekday.monday,
+};
 
-  static const WorkingHours _defaultDay = (
-    start: TimeOfDay(hour: 9, minute: 0),
-    end: TimeOfDay(hour: 17, minute: 0),
-  );
+const WorkingHours _defaultDay = (
+  start: TimeOfDay(hour: 9, minute: 0),
+  end: TimeOfDay(hour: 17, minute: 0),
+);
 
-  static const Map<Weekday, WorkingHours> _defaultHours = {
-    Weekday.saturday: _defaultDay,
-    Weekday.sunday: _defaultDay,
-    Weekday.monday: _defaultDay,
-    Weekday.tuesday: _defaultDay,
-    Weekday.wednesday: _defaultDay,
-    Weekday.thursday: _defaultDay,
-    Weekday.friday: _defaultDay,
-  };
+const Map<Weekday, WorkingHours> _defaultHours = {
+  Weekday.saturday: _defaultDay,
+  Weekday.sunday: _defaultDay,
+  Weekday.monday: _defaultDay,
+  Weekday.tuesday: _defaultDay,
+  Weekday.wednesday: _defaultDay,
+  Weekday.thursday: _defaultDay,
+  Weekday.friday: _defaultDay,
+};
 
-  final DoctorSpecialty? specialty;
-  final bool specialtyOpen;
-  final Set<Weekday> activeDays;
-  final Map<Weekday, WorkingHours> hours;
+extension AddDoctorStateX on AddDoctorState {
+  bool get isEdit => initialDoctor?.doctorId != null;
 
   bool isActive(Weekday day) => activeDays.contains(day);
 
   WorkingHours hoursOf(Weekday day) => hours[day] ?? _defaultDay;
 
-  AddDoctorState copyWith({
-    DoctorSpecialty? specialty,
-    bool? specialtyOpen,
-    Set<Weekday>? activeDays,
-    Map<Weekday, WorkingHours>? hours,
-  }) => AddDoctorState(
-    specialty: specialty ?? this.specialty,
-    specialtyOpen: specialtyOpen ?? this.specialtyOpen,
-    activeDays: activeDays ?? this.activeDays,
-    hours: hours ?? this.hours,
-  );
-
-  @override
-  List<Object?> get props => [specialty, specialtyOpen, activeDays, hours];
+  ClinicSpecializationModel? get selectedSpecialization {
+    for (final specialization in specializations) {
+      if (specialization.specializationId == selectedSpecializationId) {
+        return specialization;
+      }
+    }
+    return null;
+  }
 }

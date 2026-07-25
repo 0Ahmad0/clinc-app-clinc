@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SettingsState {
 
- SettingsSection get section; Set<NotificationChannel> get channels; AppThemeChoice get theme; AppLanguage get language; String? get coverPath; String? get avatarPath; ClinicSettingsClinicModel? get clinic; bool get pendingUpdate; bool get isLoading; bool get isSavingProfile; bool get isChangingPassword; bool get passwordChanged; NetworkExceptions? get failure;
+ SettingsSection get section; Set<NotificationChannel> get channels; AppThemeChoice get theme; AppLanguage get language; String? get coverPath; String? get avatarPath; ClinicSettingsClinicModel? get clinic; bool get pendingUpdate; bool get isLoading; bool get isSavingProfile; bool get profileSaved; bool get isChangingPassword; bool get passwordChanged; NetworkExceptions? get failure;
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $SettingsStateCopyWith<SettingsState> get copyWith => _$SettingsStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.section, section) || other.section == section)&&const DeepCollectionEquality().equals(other.channels, channels)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.language, language) || other.language == language)&&(identical(other.coverPath, coverPath) || other.coverPath == coverPath)&&(identical(other.avatarPath, avatarPath) || other.avatarPath == avatarPath)&&(identical(other.clinic, clinic) || other.clinic == clinic)&&(identical(other.pendingUpdate, pendingUpdate) || other.pendingUpdate == pendingUpdate)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isSavingProfile, isSavingProfile) || other.isSavingProfile == isSavingProfile)&&(identical(other.isChangingPassword, isChangingPassword) || other.isChangingPassword == isChangingPassword)&&(identical(other.passwordChanged, passwordChanged) || other.passwordChanged == passwordChanged)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.section, section) || other.section == section)&&const DeepCollectionEquality().equals(other.channels, channels)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.language, language) || other.language == language)&&(identical(other.coverPath, coverPath) || other.coverPath == coverPath)&&(identical(other.avatarPath, avatarPath) || other.avatarPath == avatarPath)&&(identical(other.clinic, clinic) || other.clinic == clinic)&&(identical(other.pendingUpdate, pendingUpdate) || other.pendingUpdate == pendingUpdate)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isSavingProfile, isSavingProfile) || other.isSavingProfile == isSavingProfile)&&(identical(other.profileSaved, profileSaved) || other.profileSaved == profileSaved)&&(identical(other.isChangingPassword, isChangingPassword) || other.isChangingPassword == isChangingPassword)&&(identical(other.passwordChanged, passwordChanged) || other.passwordChanged == passwordChanged)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,section,const DeepCollectionEquality().hash(channels),theme,language,coverPath,avatarPath,clinic,pendingUpdate,isLoading,isSavingProfile,isChangingPassword,passwordChanged,failure);
+int get hashCode => Object.hash(runtimeType,section,const DeepCollectionEquality().hash(channels),theme,language,coverPath,avatarPath,clinic,pendingUpdate,isLoading,isSavingProfile,profileSaved,isChangingPassword,passwordChanged,failure);
 
 @override
 String toString() {
-  return 'SettingsState(section: $section, channels: $channels, theme: $theme, language: $language, coverPath: $coverPath, avatarPath: $avatarPath, clinic: $clinic, pendingUpdate: $pendingUpdate, isLoading: $isLoading, isSavingProfile: $isSavingProfile, isChangingPassword: $isChangingPassword, passwordChanged: $passwordChanged, failure: $failure)';
+  return 'SettingsState(section: $section, channels: $channels, theme: $theme, language: $language, coverPath: $coverPath, avatarPath: $avatarPath, clinic: $clinic, pendingUpdate: $pendingUpdate, isLoading: $isLoading, isSavingProfile: $isSavingProfile, profileSaved: $profileSaved, isChangingPassword: $isChangingPassword, passwordChanged: $passwordChanged, failure: $failure)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $SettingsStateCopyWith<$Res>  {
   factory $SettingsStateCopyWith(SettingsState value, $Res Function(SettingsState) _then) = _$SettingsStateCopyWithImpl;
 @useResult
 $Res call({
- SettingsSection section, Set<NotificationChannel> channels, AppThemeChoice theme, AppLanguage language, String? coverPath, String? avatarPath, ClinicSettingsClinicModel? clinic, bool pendingUpdate, bool isLoading, bool isSavingProfile, bool isChangingPassword, bool passwordChanged, NetworkExceptions? failure
+ SettingsSection section, Set<NotificationChannel> channels, AppThemeChoice theme, AppLanguage language, String? coverPath, String? avatarPath, ClinicSettingsClinicModel? clinic, bool pendingUpdate, bool isLoading, bool isSavingProfile, bool profileSaved, bool isChangingPassword, bool passwordChanged, NetworkExceptions? failure
 });
 
 
@@ -62,7 +62,7 @@ class _$SettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? section = null,Object? channels = null,Object? theme = null,Object? language = null,Object? coverPath = freezed,Object? avatarPath = freezed,Object? clinic = freezed,Object? pendingUpdate = null,Object? isLoading = null,Object? isSavingProfile = null,Object? isChangingPassword = null,Object? passwordChanged = null,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? section = null,Object? channels = null,Object? theme = null,Object? language = null,Object? coverPath = freezed,Object? avatarPath = freezed,Object? clinic = freezed,Object? pendingUpdate = null,Object? isLoading = null,Object? isSavingProfile = null,Object? profileSaved = null,Object? isChangingPassword = null,Object? passwordChanged = null,Object? failure = freezed,}) {
   return _then(_self.copyWith(
 section: null == section ? _self.section : section // ignore: cast_nullable_to_non_nullable
 as SettingsSection,channels: null == channels ? _self.channels : channels // ignore: cast_nullable_to_non_nullable
@@ -74,6 +74,7 @@ as String?,clinic: freezed == clinic ? _self.clinic : clinic // ignore: cast_nul
 as ClinicSettingsClinicModel?,pendingUpdate: null == pendingUpdate ? _self.pendingUpdate : pendingUpdate // ignore: cast_nullable_to_non_nullable
 as bool,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,isSavingProfile: null == isSavingProfile ? _self.isSavingProfile : isSavingProfile // ignore: cast_nullable_to_non_nullable
+as bool,profileSaved: null == profileSaved ? _self.profileSaved : profileSaved // ignore: cast_nullable_to_non_nullable
 as bool,isChangingPassword: null == isChangingPassword ? _self.isChangingPassword : isChangingPassword // ignore: cast_nullable_to_non_nullable
 as bool,passwordChanged: null == passwordChanged ? _self.passwordChanged : passwordChanged // ignore: cast_nullable_to_non_nullable
 as bool,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
@@ -186,10 +187,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SettingsSection section,  Set<NotificationChannel> channels,  AppThemeChoice theme,  AppLanguage language,  String? coverPath,  String? avatarPath,  ClinicSettingsClinicModel? clinic,  bool pendingUpdate,  bool isLoading,  bool isSavingProfile,  bool isChangingPassword,  bool passwordChanged,  NetworkExceptions? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( SettingsSection section,  Set<NotificationChannel> channels,  AppThemeChoice theme,  AppLanguage language,  String? coverPath,  String? avatarPath,  ClinicSettingsClinicModel? clinic,  bool pendingUpdate,  bool isLoading,  bool isSavingProfile,  bool profileSaved,  bool isChangingPassword,  bool passwordChanged,  NetworkExceptions? failure)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SettingsState() when $default != null:
-return $default(_that.section,_that.channels,_that.theme,_that.language,_that.coverPath,_that.avatarPath,_that.clinic,_that.pendingUpdate,_that.isLoading,_that.isSavingProfile,_that.isChangingPassword,_that.passwordChanged,_that.failure);case _:
+return $default(_that.section,_that.channels,_that.theme,_that.language,_that.coverPath,_that.avatarPath,_that.clinic,_that.pendingUpdate,_that.isLoading,_that.isSavingProfile,_that.profileSaved,_that.isChangingPassword,_that.passwordChanged,_that.failure);case _:
   return orElse();
 
 }
@@ -207,10 +208,10 @@ return $default(_that.section,_that.channels,_that.theme,_that.language,_that.co
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SettingsSection section,  Set<NotificationChannel> channels,  AppThemeChoice theme,  AppLanguage language,  String? coverPath,  String? avatarPath,  ClinicSettingsClinicModel? clinic,  bool pendingUpdate,  bool isLoading,  bool isSavingProfile,  bool isChangingPassword,  bool passwordChanged,  NetworkExceptions? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( SettingsSection section,  Set<NotificationChannel> channels,  AppThemeChoice theme,  AppLanguage language,  String? coverPath,  String? avatarPath,  ClinicSettingsClinicModel? clinic,  bool pendingUpdate,  bool isLoading,  bool isSavingProfile,  bool profileSaved,  bool isChangingPassword,  bool passwordChanged,  NetworkExceptions? failure)  $default,) {final _that = this;
 switch (_that) {
 case _SettingsState():
-return $default(_that.section,_that.channels,_that.theme,_that.language,_that.coverPath,_that.avatarPath,_that.clinic,_that.pendingUpdate,_that.isLoading,_that.isSavingProfile,_that.isChangingPassword,_that.passwordChanged,_that.failure);case _:
+return $default(_that.section,_that.channels,_that.theme,_that.language,_that.coverPath,_that.avatarPath,_that.clinic,_that.pendingUpdate,_that.isLoading,_that.isSavingProfile,_that.profileSaved,_that.isChangingPassword,_that.passwordChanged,_that.failure);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -227,10 +228,10 @@ return $default(_that.section,_that.channels,_that.theme,_that.language,_that.co
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SettingsSection section,  Set<NotificationChannel> channels,  AppThemeChoice theme,  AppLanguage language,  String? coverPath,  String? avatarPath,  ClinicSettingsClinicModel? clinic,  bool pendingUpdate,  bool isLoading,  bool isSavingProfile,  bool isChangingPassword,  bool passwordChanged,  NetworkExceptions? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( SettingsSection section,  Set<NotificationChannel> channels,  AppThemeChoice theme,  AppLanguage language,  String? coverPath,  String? avatarPath,  ClinicSettingsClinicModel? clinic,  bool pendingUpdate,  bool isLoading,  bool isSavingProfile,  bool profileSaved,  bool isChangingPassword,  bool passwordChanged,  NetworkExceptions? failure)?  $default,) {final _that = this;
 switch (_that) {
 case _SettingsState() when $default != null:
-return $default(_that.section,_that.channels,_that.theme,_that.language,_that.coverPath,_that.avatarPath,_that.clinic,_that.pendingUpdate,_that.isLoading,_that.isSavingProfile,_that.isChangingPassword,_that.passwordChanged,_that.failure);case _:
+return $default(_that.section,_that.channels,_that.theme,_that.language,_that.coverPath,_that.avatarPath,_that.clinic,_that.pendingUpdate,_that.isLoading,_that.isSavingProfile,_that.profileSaved,_that.isChangingPassword,_that.passwordChanged,_that.failure);case _:
   return null;
 
 }
@@ -242,7 +243,7 @@ return $default(_that.section,_that.channels,_that.theme,_that.language,_that.co
 
 
 class _SettingsState implements SettingsState {
-  const _SettingsState({this.section = SettingsSection.main, final  Set<NotificationChannel> channels = const {NotificationChannel.app, NotificationChannel.sms}, this.theme = AppThemeChoice.system, this.language = AppLanguage.ar, this.coverPath, this.avatarPath, this.clinic, this.pendingUpdate = false, this.isLoading = false, this.isSavingProfile = false, this.isChangingPassword = false, this.passwordChanged = false, this.failure}): _channels = channels;
+  const _SettingsState({this.section = SettingsSection.main, final  Set<NotificationChannel> channels = const {NotificationChannel.app, NotificationChannel.sms}, this.theme = AppThemeChoice.system, this.language = AppLanguage.ar, this.coverPath, this.avatarPath, this.clinic, this.pendingUpdate = false, this.isLoading = false, this.isSavingProfile = false, this.profileSaved = false, this.isChangingPassword = false, this.passwordChanged = false, this.failure}): _channels = channels;
   
 
 @override@JsonKey() final  SettingsSection section;
@@ -261,6 +262,7 @@ class _SettingsState implements SettingsState {
 @override@JsonKey() final  bool pendingUpdate;
 @override@JsonKey() final  bool isLoading;
 @override@JsonKey() final  bool isSavingProfile;
+@override@JsonKey() final  bool profileSaved;
 @override@JsonKey() final  bool isChangingPassword;
 @override@JsonKey() final  bool passwordChanged;
 @override final  NetworkExceptions? failure;
@@ -275,16 +277,16 @@ _$SettingsStateCopyWith<_SettingsState> get copyWith => __$SettingsStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.section, section) || other.section == section)&&const DeepCollectionEquality().equals(other._channels, _channels)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.language, language) || other.language == language)&&(identical(other.coverPath, coverPath) || other.coverPath == coverPath)&&(identical(other.avatarPath, avatarPath) || other.avatarPath == avatarPath)&&(identical(other.clinic, clinic) || other.clinic == clinic)&&(identical(other.pendingUpdate, pendingUpdate) || other.pendingUpdate == pendingUpdate)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isSavingProfile, isSavingProfile) || other.isSavingProfile == isSavingProfile)&&(identical(other.isChangingPassword, isChangingPassword) || other.isChangingPassword == isChangingPassword)&&(identical(other.passwordChanged, passwordChanged) || other.passwordChanged == passwordChanged)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.section, section) || other.section == section)&&const DeepCollectionEquality().equals(other._channels, _channels)&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.language, language) || other.language == language)&&(identical(other.coverPath, coverPath) || other.coverPath == coverPath)&&(identical(other.avatarPath, avatarPath) || other.avatarPath == avatarPath)&&(identical(other.clinic, clinic) || other.clinic == clinic)&&(identical(other.pendingUpdate, pendingUpdate) || other.pendingUpdate == pendingUpdate)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isSavingProfile, isSavingProfile) || other.isSavingProfile == isSavingProfile)&&(identical(other.profileSaved, profileSaved) || other.profileSaved == profileSaved)&&(identical(other.isChangingPassword, isChangingPassword) || other.isChangingPassword == isChangingPassword)&&(identical(other.passwordChanged, passwordChanged) || other.passwordChanged == passwordChanged)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,section,const DeepCollectionEquality().hash(_channels),theme,language,coverPath,avatarPath,clinic,pendingUpdate,isLoading,isSavingProfile,isChangingPassword,passwordChanged,failure);
+int get hashCode => Object.hash(runtimeType,section,const DeepCollectionEquality().hash(_channels),theme,language,coverPath,avatarPath,clinic,pendingUpdate,isLoading,isSavingProfile,profileSaved,isChangingPassword,passwordChanged,failure);
 
 @override
 String toString() {
-  return 'SettingsState(section: $section, channels: $channels, theme: $theme, language: $language, coverPath: $coverPath, avatarPath: $avatarPath, clinic: $clinic, pendingUpdate: $pendingUpdate, isLoading: $isLoading, isSavingProfile: $isSavingProfile, isChangingPassword: $isChangingPassword, passwordChanged: $passwordChanged, failure: $failure)';
+  return 'SettingsState(section: $section, channels: $channels, theme: $theme, language: $language, coverPath: $coverPath, avatarPath: $avatarPath, clinic: $clinic, pendingUpdate: $pendingUpdate, isLoading: $isLoading, isSavingProfile: $isSavingProfile, profileSaved: $profileSaved, isChangingPassword: $isChangingPassword, passwordChanged: $passwordChanged, failure: $failure)';
 }
 
 
@@ -295,7 +297,7 @@ abstract mixin class _$SettingsStateCopyWith<$Res> implements $SettingsStateCopy
   factory _$SettingsStateCopyWith(_SettingsState value, $Res Function(_SettingsState) _then) = __$SettingsStateCopyWithImpl;
 @override @useResult
 $Res call({
- SettingsSection section, Set<NotificationChannel> channels, AppThemeChoice theme, AppLanguage language, String? coverPath, String? avatarPath, ClinicSettingsClinicModel? clinic, bool pendingUpdate, bool isLoading, bool isSavingProfile, bool isChangingPassword, bool passwordChanged, NetworkExceptions? failure
+ SettingsSection section, Set<NotificationChannel> channels, AppThemeChoice theme, AppLanguage language, String? coverPath, String? avatarPath, ClinicSettingsClinicModel? clinic, bool pendingUpdate, bool isLoading, bool isSavingProfile, bool profileSaved, bool isChangingPassword, bool passwordChanged, NetworkExceptions? failure
 });
 
 
@@ -312,7 +314,7 @@ class __$SettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? section = null,Object? channels = null,Object? theme = null,Object? language = null,Object? coverPath = freezed,Object? avatarPath = freezed,Object? clinic = freezed,Object? pendingUpdate = null,Object? isLoading = null,Object? isSavingProfile = null,Object? isChangingPassword = null,Object? passwordChanged = null,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? section = null,Object? channels = null,Object? theme = null,Object? language = null,Object? coverPath = freezed,Object? avatarPath = freezed,Object? clinic = freezed,Object? pendingUpdate = null,Object? isLoading = null,Object? isSavingProfile = null,Object? profileSaved = null,Object? isChangingPassword = null,Object? passwordChanged = null,Object? failure = freezed,}) {
   return _then(_SettingsState(
 section: null == section ? _self.section : section // ignore: cast_nullable_to_non_nullable
 as SettingsSection,channels: null == channels ? _self._channels : channels // ignore: cast_nullable_to_non_nullable
@@ -324,6 +326,7 @@ as String?,clinic: freezed == clinic ? _self.clinic : clinic // ignore: cast_nul
 as ClinicSettingsClinicModel?,pendingUpdate: null == pendingUpdate ? _self.pendingUpdate : pendingUpdate // ignore: cast_nullable_to_non_nullable
 as bool,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,isSavingProfile: null == isSavingProfile ? _self.isSavingProfile : isSavingProfile // ignore: cast_nullable_to_non_nullable
+as bool,profileSaved: null == profileSaved ? _self.profileSaved : profileSaved // ignore: cast_nullable_to_non_nullable
 as bool,isChangingPassword: null == isChangingPassword ? _self.isChangingPassword : isChangingPassword // ignore: cast_nullable_to_non_nullable
 as bool,passwordChanged: null == passwordChanged ? _self.passwordChanged : passwordChanged // ignore: cast_nullable_to_non_nullable
 as bool,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
@@ -13,11 +14,13 @@ class StorageService {
   StorageService._();
 
   final GetStorage _box = GetStorage();
+  final ValueNotifier<int> appPreferencesVersion = ValueNotifier<int>(0);
   String? _sessionAccessToken;
 
   // مفاتيح التخزين
 
   static const String _themeKey = 'isDarkMode';
+  static const String _themeModeKey = 'theme_mode';
 
   ///Keys
   static const String IS_FIRST_TIME = 'is_first_time';
@@ -48,8 +51,7 @@ class StorageService {
 
   // --- دوال اللغة ---
   String get languageCode {
-    // اقرأ اللغة، وإذا لم تكن موجودة، استخدم 'en' كافتراضي
-    return _box.read(LANG_CODE) ?? 'en';
+    return _box.read(LANG_CODE) ?? _deviceLanguageCode;
   }
 
   bool isLanguageCode() => _box.read(LANG_CODE) != null;
@@ -81,8 +83,14 @@ class StorageService {
 
   Locale get locale => Locale(languageCode);
 
+  String get _deviceLanguageCode {
+    final code = ui.PlatformDispatcher.instance.locale.languageCode;
+    return code == 'en' ? 'en' : 'ar';
+  }
+
   void saveLanguage(String languageCode) {
     _box.write(LANG_CODE, languageCode);
+    appPreferencesVersion.value++;
   }
 
   void skipFirstTime({bool skip = false}) {
@@ -99,8 +107,27 @@ class StorageService {
 
   ThemeMode get themeMode => isDarkMode ? ThemeMode.dark : ThemeMode.light;
 
+  ThemeMode get appThemeMode {
+    final stored = _box.read<String>(_themeModeKey);
+    return switch (stored) {
+      'light' => ThemeMode.light,
+      'dark' => ThemeMode.dark,
+      _ => ThemeMode.system,
+    };
+  }
+
   void saveTheme(bool isDarkMode) {
     _box.write(_themeKey, isDarkMode);
+    _box.write(_themeModeKey, isDarkMode ? 'dark' : 'light');
+    appPreferencesVersion.value++;
+  }
+
+  void saveThemeMode(ThemeMode themeMode) {
+    _box.write(_themeModeKey, themeMode.name);
+    if (themeMode != ThemeMode.system) {
+      _box.write(_themeKey, themeMode == ThemeMode.dark);
+    }
+    appPreferencesVersion.value++;
   }
 
   Future setAccessToken(String? token, {bool persist = true}) async {
@@ -128,6 +155,7 @@ class StorageService {
 
   Future cacheClinic(Map<String, dynamic> clinic) async {
     await writeData(CLINIC, jsonEncode(clinic));
+    appPreferencesVersion.value++;
   }
 
   Map<String, dynamic>? getCachedClinic() {

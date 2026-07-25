@@ -5,7 +5,8 @@ import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_switch.dart';
-import '../../domain/lab_test.dart';
+import '../../data/models/clinic_service_model.dart';
+import '../services_l10n.dart';
 
 /// One lab test row: code chip, name/sub, an enable switch, a price field and a
 /// state chip. Stateful only to own the price field's controller so typing
@@ -21,7 +22,7 @@ class ServiceTestCard extends StatefulWidget {
     required this.onPriceChanged,
   });
 
-  final LabTest test;
+  final ClinicAvailableLabTestModel test;
   final Color accent;
   final bool enabled;
   final String price;
@@ -33,8 +34,9 @@ class ServiceTestCard extends StatefulWidget {
 }
 
 class _ServiceTestCardState extends State<ServiceTestCard> {
-  late final TextEditingController _controller =
-      TextEditingController(text: widget.price);
+  late final TextEditingController _controller = TextEditingController(
+    text: widget.price,
+  );
 
   @override
   void dispose() {
@@ -80,7 +82,7 @@ class _ServiceTestCardState extends State<ServiceTestCard> {
                   borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
                 child: Text(
-                  widget.test.code,
+                  widget.test.code ?? '-',
                   textDirection: TextDirection.ltr,
                   style: context.textTheme.labelSmall?.copyWith(
                     color: accent,
@@ -94,7 +96,7 @@ class _ServiceTestCardState extends State<ServiceTestCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.test.name,
+                      widget.test.label(context),
                       style: context.textTheme.titleSmall?.copyWith(
                         color: colors.ink,
                         fontWeight: FontWeight.w700,
@@ -102,7 +104,7 @@ class _ServiceTestCardState extends State<ServiceTestCard> {
                     ),
                     const SizedBox(height: AppSpacing.xxs),
                     Text(
-                      widget.test.sub,
+                      widget.test.subtitle(context),
                       style: context.textTheme.bodySmall?.copyWith(
                         color: colors.gray,
                       ),
@@ -178,9 +180,7 @@ class _ServiceTestCardState extends State<ServiceTestCard> {
                   borderRadius: BorderRadius.circular(AppRadius.pill),
                 ),
                 child: Text(
-                  widget.enabled
-                      ? l10n.servicesEnabled
-                      : l10n.servicesDisabled,
+                  widget.enabled ? l10n.servicesEnabled : l10n.servicesDisabled,
                   style: context.textTheme.labelSmall?.copyWith(
                     color: widget.enabled ? colors.successFg : colors.muted,
                     fontWeight: FontWeight.w700,

@@ -7,7 +7,6 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../domain/service_kind.dart';
 import '../cubit/services_cubit.dart';
-import '../cubit/services_state.dart';
 import '../services_l10n.dart';
 
 /// Lab/specialty tab switcher. Hidden entirely for single-role facilities —

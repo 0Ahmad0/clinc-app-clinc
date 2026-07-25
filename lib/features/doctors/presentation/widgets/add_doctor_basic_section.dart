@@ -9,7 +9,20 @@ import 'add_doctor_text_field.dart';
 
 /// Basic-info card: names, specialty, fee and contact details.
 class AddDoctorBasicSection extends StatelessWidget {
-  const AddDoctorBasicSection({super.key});
+  const AddDoctorBasicSection({
+    super.key,
+    required this.nameArController,
+    required this.nameEnController,
+    required this.feeController,
+    required this.phoneController,
+    required this.emailController,
+  });
+
+  final TextEditingController nameArController;
+  final TextEditingController nameEnController;
+  final TextEditingController feeController;
+  final TextEditingController phoneController;
+  final TextEditingController emailController;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +39,7 @@ class AddDoctorBasicSection extends StatelessWidget {
                 child: AddDoctorTextField(
                   icon: Iconsax.user,
                   hint: l10n.addDoctorNameAr,
+                  controller: nameArController,
                 ),
               ),
               AppGaps.w12,
@@ -33,6 +47,7 @@ class AddDoctorBasicSection extends StatelessWidget {
                 child: AddDoctorTextField(
                   icon: Iconsax.user,
                   hint: l10n.addDoctorNameEn,
+                  controller: nameEnController,
                 ),
               ),
             ],
@@ -44,6 +59,7 @@ class AddDoctorBasicSection extends StatelessWidget {
             icon: Iconsax.money_2,
             hint: l10n.addDoctorFee,
             keyboardType: TextInputType.number,
+            controller: feeController,
           ),
           AppGaps.h12,
           Row(
@@ -53,6 +69,7 @@ class AddDoctorBasicSection extends StatelessWidget {
                   icon: Iconsax.call,
                   hint: l10n.addDoctorPhone,
                   keyboardType: TextInputType.phone,
+                  controller: phoneController,
                 ),
               ),
               AppGaps.w12,
@@ -61,6 +78,7 @@ class AddDoctorBasicSection extends StatelessWidget {
                   icon: Iconsax.sms,
                   hint: l10n.addDoctorEmail,
                   keyboardType: TextInputType.emailAddress,
+                  controller: emailController,
                 ),
               ),
             ],

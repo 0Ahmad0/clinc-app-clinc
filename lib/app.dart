@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'config/routes/app_router.dart';
 import 'config/theme/app_theme.dart';
+import 'core/services/storage_service.dart';
 import 'core/utils/dialogs/general_dialog.dart';
 import 'l10n/app_localizations.dart';
 
@@ -12,27 +13,34 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final storage = StorageService.instance;
     return ScreenUtilInit(
-        designSize: const Size(
+      designSize: const Size(
         AppConstants.designWidth,
         AppConstants.designHeight,
-    ),
-    minTextAdapt: true,
-    splitScreenMode: true,
-    builder: (context, child) {
-        return MaterialApp.router(
-          onGenerateTitle: (context) => AppLocalizations.of(context).appBrand,
-          debugShowCheckedModeBanner: false,
-          scaffoldMessengerKey: AppRouter.scaffoldMessengerKey,
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          themeMode: ThemeMode.system,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: const Locale('ar'),
-          routerConfig: AppRouter.router,
+      ),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        return ValueListenableBuilder<int>(
+          valueListenable: storage.appPreferencesVersion,
+          builder: (context, _, _) {
+            return MaterialApp.router(
+              onGenerateTitle: (context) =>
+                  AppLocalizations.of(context).appBrand,
+              debugShowCheckedModeBanner: false,
+              scaffoldMessengerKey: AppRouter.scaffoldMessengerKey,
+              theme: AppTheme.light,
+              darkTheme: AppTheme.dark,
+              themeMode: storage.appThemeMode,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              locale: storage.locale,
+              routerConfig: AppRouter.router,
+            );
+          },
         );
-      }
+      },
     );
   }
 }

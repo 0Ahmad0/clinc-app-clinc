@@ -6,9 +6,8 @@ import '../../../../config/theme/app_motion.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../data/models/clinic_specialization_model.dart';
 import '../cubit/add_doctor_cubit.dart';
-import '../cubit/add_doctor_state.dart';
-import '../doctor_specialty_l10n.dart';
 
 /// Specialty field that expands into an inline option list.
 class AddDoctorSpecialtyPicker extends StatelessWidget {
@@ -21,7 +20,8 @@ class AddDoctorSpecialtyPicker extends StatelessWidget {
     final cubit = context.read<AddDoctorCubit>();
     return BlocBuilder<AddDoctorCubit, AddDoctorState>(
       builder: (context, state) {
-        final selected = state.specialty;
+        final selected = state.selectedSpecialization;
+        final specializations = state.specializations;
         return Column(
           children: [
             GestureDetector(
@@ -51,8 +51,9 @@ class AddDoctorSpecialtyPicker extends StatelessWidget {
                     AppGaps.w8,
                     Expanded(
                       child: Text(
-                        selected?.label(l10n) ??
-                            l10n.addDoctorSpecialtyPlaceholder,
+                        selected == null
+                            ? l10n.addDoctorSpecialtyPlaceholder
+                            : _label(context, selected),
                         style: context.textTheme.bodyMedium?.copyWith(
                           color: selected == null ? colors.muted : colors.ink,
                           fontWeight: selected == null
@@ -89,11 +90,15 @@ class AddDoctorSpecialtyPicker extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    for (final specialty in kPickableSpecialties)
+                    for (final specialty in specializations)
                       Material(
                         color: colors.surface.withValues(alpha: 0),
                         child: InkWell(
-                          onTap: () => cubit.selectSpecialty(specialty),
+                          onTap: specialty.specializationId == null
+                              ? null
+                              : () => cubit.selectSpecialization(
+                                  specialty.specializationId!,
+                                ),
                           borderRadius: BorderRadius.circular(AppRadius.sm),
                           child: Container(
                             width: double.infinity,
@@ -102,15 +107,19 @@ class AddDoctorSpecialtyPicker extends StatelessWidget {
                               vertical: AppSpacing.sm,
                             ),
                             decoration: BoxDecoration(
-                              color: specialty == selected
+                              color:
+                                  specialty.specializationId ==
+                                      state.selectedSpecializationId
                                   ? colors.primary500.withValues(alpha: 0.1)
                                   : null,
                               borderRadius: BorderRadius.circular(AppRadius.sm),
                             ),
                             child: Text(
-                              specialty.label(l10n),
+                              _label(context, specialty),
                               style: context.textTheme.bodyMedium?.copyWith(
-                                color: specialty == selected
+                                color:
+                                    specialty.specializationId ==
+                                        state.selectedSpecializationId
                                     ? colors.primary600
                                     : colors.ink,
                                 fontWeight: FontWeight.w600,
@@ -127,5 +136,13 @@ class AddDoctorSpecialtyPicker extends StatelessWidget {
         );
       },
     );
+  }
+
+  String _label(BuildContext context, ClinicSpecializationModel specialty) {
+    final locale = Localizations.localeOf(context).languageCode;
+    if (locale == 'ar') {
+      return specialty.nameAr ?? specialty.name ?? specialty.nameEn ?? '-';
+    }
+    return specialty.nameEn ?? specialty.name ?? specialty.nameAr ?? '-';
   }
 }

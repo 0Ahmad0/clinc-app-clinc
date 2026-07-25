@@ -44,6 +44,7 @@ class AuthView extends StatelessWidget {
               return;
             }
 
+
             final message = state.message;
             if (!state.isLoading && message != null && message.isNotEmpty) {
               ResponseHelper.onSuccess(message: message);

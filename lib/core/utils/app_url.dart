@@ -2,8 +2,8 @@
 
 // const baseServ = "https://clinic.hivetech.space/";
 // const baseServSlashLess = "https://clinic.hivetech.space/";
-const baseServ = "http://192.168.1.104:8000/";
-const baseServSlashLess = "http://192.168.1.104:8000/";
+const baseServ = "http://10.173.67.203:8000/";
+const baseServSlashLess = "http://10.173.67.203:8000/";
 
 const baseUrl = "${baseServSlashLess}api/";
 const storageUrl = "${baseServSlashLess}storage/";
@@ -15,6 +15,7 @@ const guardian = "guardian/";
 const sheikh = "sheikh/";
 const psychologist = "psychologist/";
 const app = "app/";
+
 
 class AppUrl {
   static const appSettings = "${baseUrl}app/settings";
@@ -33,6 +34,11 @@ class AppUrl {
   static const clinicSpecializations = "${baseUrl}clinic/specializations";
   static const clinicAppointments = "${baseUrl}clinic/appointments";
   static const clinicNotifications = "${baseUrl}clinic/notifications";
+  static const clinicNotificationsMarkAllRead =
+      "$clinicNotifications/mark-all-read";
+  static const clinicNotificationsUnreadCount =
+      "$clinicNotifications/unread-count";
+  static const clinicDeviceToken = "${baseUrl}clinic/device-token";
   static const clinicRegistrationStatus =
       "${baseUrl}clinic/registration-status";
   static const clinicReports = "${baseUrl}clinic/reports";
@@ -40,6 +46,14 @@ class AppUrl {
   static const clinicReportsExport = "$clinicReports/export";
   static const clinicReportsGenerated = "$clinicReports/generated";
   static const clinicServices = "${baseUrl}clinic/services";
+  static const clinicServicesLabSections = "$clinicServices/lab-sections";
+  static const clinicServicesLabTests = "$clinicServices/lab-tests";
+  static const clinicServicesEnabledLabTests =
+      "$clinicServices/enabled-lab-tests";
+  static const clinicServicesSpecializations =
+      "$clinicServices/specializations";
+  static const clinicServicesEnabledSpecializations =
+      "$clinicServices/enabled-specializations";
   static const clinicProfile = "${baseUrl}clinic/profile";
   static const clinicChangePassword = "${baseUrl}clinic/change-password";
   static const clinicNotificationSettings =
@@ -66,6 +80,17 @@ class AppUrl {
 
   static String clinicGeneratedReportDownload(String id) =>
       '$clinicReportsGenerated/$id/download';
+
+  static String clinicNotification(int id) => '$clinicNotifications/$id';
+
+  static String clinicNotificationRead(int id) =>
+      '$clinicNotifications/$id/read';
+
+  static String clinicServicesLabTest(int id) =>
+      '$clinicServices/lab-tests/$id';
+
+  static String clinicServicesSpecialization(int id) =>
+      '$clinicServices/specializations/$id';
 
   /// User
   ///*******************************************************************************

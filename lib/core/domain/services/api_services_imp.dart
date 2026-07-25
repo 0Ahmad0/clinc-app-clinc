@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
+import '../../network/interceptors/api_logger_interceptor.dart';
 import '../../services/storage_service.dart';
 import '../../utils/app_url.dart';
 import 'api_service.dart';
@@ -21,7 +21,11 @@ class ApiServicesImp implements ApiServices {
       ..receiveTimeout = const Duration(minutes: 1)
       ..connectTimeout = const Duration(seconds: 30)
       ..followRedirects = true;
-    _dio.interceptors.add(dioLoggerInterceptor);
+    _dio.interceptors.removeWhere(
+      (interceptor) =>
+          interceptor is LogInterceptor || interceptor is ApiLoggerInterceptor,
+    );
+    _dio.interceptors.add(ApiLoggerInterceptor());
   }
 
   Future<void> setHeaders(bool hasToken) async {
@@ -272,57 +276,6 @@ class ApiServicesImp implements ApiServices {
       rethrow;
     }
   }
-
-  final dioLoggerInterceptor = InterceptorsWrapper(
-    onRequest: (RequestOptions options, handler) {
-      // String headers = "";
-      // options.headers.forEach((key, value) {
-      //   headers += "| $key: $value";
-      // });
-
-      var data;
-
-      if (options.data.runtimeType.toString() == 'FormData') {
-        data = {'fields': options.data?.fields, 'files': options.data?.files};
-      } else {
-        data = options.data;
-      }
-      String headers = "";
-      options.headers.forEach((key, value) {
-        headers += "| $key: $value";
-      });
-      //     log("┌------------------------------------------------------------------------------");
-      //     log('''| [DIO] Request: ${options.method} ${options.uri}
-      // | ${data}
-      // | Headers:\n$headers''');
-      log(
-        "┌------------------------------------------------------------------------------",
-      );
-      log('''| [DIO] Request: ${options.method} ${options.uri}
-| $data
-| Headers:\n$headers''');
-      log(
-        "├------------------------------------------------------------------------------",
-      );
-      handler.next(options); //continue
-    },
-    onResponse: (Response response, handler) async {
-      // print(response.data);
-      log(response.data.toString());
-      log(
-        "└------------------------------------------------------------------------------",
-      );
-      handler.next(response);
-      // return response; // continue
-    },
-    onError: (DioException error, handler) async {
-      log("| [DIO] Error: ${error.error}: ${error.response.toString()}");
-      log(
-        "└------------------------------------------------------------------------------",
-      );
-      handler.next(error); //continue
-    },
-  );
 
   @override
   Future<String> downloadFile(

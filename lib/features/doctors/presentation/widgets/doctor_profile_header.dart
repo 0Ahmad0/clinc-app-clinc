@@ -15,11 +15,13 @@ class DoctorProfileHeader extends StatelessWidget {
     required this.doctor,
     required this.available,
     required this.onBack,
+    required this.onEdit,
   });
 
   final DoctorSummary doctor;
   final bool available;
   final VoidCallback onBack;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +70,7 @@ class DoctorProfileHeader extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const _CircleButton(icon: Iconsax.edit_2),
+                    _CircleButton(icon: Iconsax.edit_2, onTap: onEdit),
                   ],
                 ),
                 AppGaps.h16,

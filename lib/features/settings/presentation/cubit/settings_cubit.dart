@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../core/data/remote/api_response.dart';
 import '../../../../core/domain/error_handler/network_exceptions.dart';
+import '../../../../core/services/storage_service.dart';
 import '../../data/models/clinic_settings_model.dart';
 import '../../domain/app_language.dart';
 import '../../domain/app_theme_choice.dart';
@@ -14,7 +16,8 @@ part 'settings_cubit.freezed.dart';
 part 'settings_state.dart';
 
 class SettingsCubit extends Cubit<SettingsState> {
-  SettingsCubit(this._repository) : super(const SettingsState());
+  SettingsCubit(this._repository)
+    : super(SettingsState(theme: _storedTheme(), language: _storedLanguage()));
 
   final ClinicSettingsRepository _repository;
 
@@ -22,14 +25,20 @@ class SettingsCubit extends Cubit<SettingsState> {
     emit(state.copyWith(isLoading: true, failure: null));
     final profileResult = await _repository.profile();
     profileResult.when(
-      success: (response) => emit(
-        state.copyWith(
-          clinic: response.result?.clinic,
-          pendingUpdate: response.result?.pendingUpdate ?? false,
-          isLoading: false,
-          failure: null,
-        ),
-      ),
+      success: (response) {
+        final clinic = response.result?.clinic;
+        if (clinic != null) {
+          StorageService.instance.cacheClinic(clinic.toJson());
+        }
+        emit(
+          state.copyWith(
+            clinic: clinic,
+            pendingUpdate: response.result?.pendingUpdate ?? false,
+            isLoading: false,
+            failure: null,
+          ),
+        );
+      },
       failure: (exception) =>
           emit(state.copyWith(isLoading: false, failure: exception)),
     );
@@ -64,10 +73,19 @@ class SettingsCubit extends Cubit<SettingsState> {
     );
   }
 
-  void setTheme(AppThemeChoice theme) => emit(state.copyWith(theme: theme));
+  void setTheme(AppThemeChoice theme) {
+    StorageService.instance.saveThemeMode(switch (theme) {
+      AppThemeChoice.system => ThemeMode.system,
+      AppThemeChoice.light => ThemeMode.light,
+      AppThemeChoice.dark => ThemeMode.dark,
+    });
+    emit(state.copyWith(theme: theme));
+  }
 
-  void setLanguage(AppLanguage language) =>
-      emit(state.copyWith(language: language));
+  void setLanguage(AppLanguage language) {
+    StorageService.instance.saveLanguage(language.name);
+    emit(state.copyWith(language: language));
+  }
 
   void setCover(String path) => emit(state.copyWith(coverPath: path));
 
@@ -81,7 +99,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     required String description,
     required String website,
   }) async {
-    emit(state.copyWith(isSavingProfile: true, failure: null));
+    emit(state.copyWith(isSavingProfile: true, profileSaved: false, failure: null));
     final result = await _repository.updateProfile(
       fields: {
         'name': name,
@@ -95,19 +113,40 @@ class SettingsCubit extends Cubit<SettingsState> {
       coverPath: state.coverPath,
     );
     result.when(
-      success: (response) => emit(
-        state.copyWith(
-          clinic: response.result?.clinic ?? state.clinic,
-          pendingUpdate: response.result?.submittedForReview ?? false,
-          coverPath: null,
-          avatarPath: null,
-          isSavingProfile: false,
-          section: SettingsSection.main,
-          failure: null,
-        ),
-      ),
+      success: (response) {
+        final updatedClinic =
+            response.result?.clinic ??
+            _mergeClinicAfterProfileUpdate(
+              name: name,
+              email: email,
+              phone: phone,
+              location: location,
+              description: description,
+              website: website,
+            );
+        if (updatedClinic != null) {
+          StorageService.instance.cacheClinic(updatedClinic.toJson());
+        }
+        emit(
+          state.copyWith(
+            clinic: updatedClinic,
+            pendingUpdate: response.result?.submittedForReview ?? false,
+            coverPath: null,
+            avatarPath: null,
+            isSavingProfile: false,
+            profileSaved: true,
+            failure: null,
+          ),
+        );
+      },
       failure: (exception) =>
-          emit(state.copyWith(isSavingProfile: false, failure: exception)),
+          emit(
+            state.copyWith(
+              isSavingProfile: false,
+              profileSaved: false,
+              failure: exception,
+            ),
+          ),
     );
   }
 
@@ -154,5 +193,40 @@ class SettingsCubit extends Cubit<SettingsState> {
       if (model.emailNotifications) NotificationChannel.email,
       if (model.smsNotifications) NotificationChannel.sms,
     };
+  }
+
+  static AppThemeChoice _storedTheme() {
+    return switch (StorageService.instance.appThemeMode) {
+      ThemeMode.light => AppThemeChoice.light,
+      ThemeMode.dark => AppThemeChoice.dark,
+      ThemeMode.system => AppThemeChoice.system,
+    };
+  }
+
+  static AppLanguage _storedLanguage() {
+    return switch (StorageService.instance.languageCode) {
+      'en' => AppLanguage.en,
+      _ => AppLanguage.ar,
+    };
+  }
+
+  ClinicSettingsClinicModel? _mergeClinicAfterProfileUpdate({
+    required String name,
+    required String email,
+    required String phone,
+    required String location,
+    required String description,
+    required String website,
+  }) {
+    final current = state.clinic;
+    if (current == null) return null;
+    return current.copyWith(
+      name: name,
+      email: email,
+      phone: phone,
+      location: location,
+      description: description,
+      website: website,
+    );
   }
 }

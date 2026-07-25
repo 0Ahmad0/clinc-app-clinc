@@ -1,46 +1,470 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../../core/data/pagination/pagination_state.dart';
+import '../../../../core/data/remote/api_response.dart';
+import '../../../../core/domain/error_handler/network_exceptions.dart';
 import '../../../auth/domain/account_type.dart';
-import '../../domain/clinic_specialty.dart';
-import '../../domain/lab_section.dart';
+import '../../data/models/clinic_service_model.dart';
+import '../../domain/clinic_services_repository.dart';
 import '../../domain/service_kind.dart';
-import 'services_state.dart';
+
+part 'services_cubit.freezed.dart';
+part 'services_state.dart';
 
 class ServicesCubit extends Cubit<ServicesState> {
-  ServicesCubit(this.accountType)
+  ServicesCubit(this.accountType, this._repository)
     : availableKinds = serviceKindsFor(accountType),
-      super(ServicesState(kind: serviceKindsFor(accountType).first));
+      super(
+        ServicesState(
+          kind: serviceKindsFor(accountType).first,
+          availableLabTests: PaginationState<ClinicAvailableLabTestModel>(
+            perPage: 50,
+          ),
+          enabledLabTests: PaginationState<ClinicEnabledLabTestModel>(
+            perPage: 50,
+          ),
+          availableSpecializations:
+              PaginationState<ClinicAvailableSpecializationModel>(perPage: 50),
+          enabledSpecializations:
+              PaginationState<ClinicEnabledSpecializationModel>(perPage: 50),
+        ),
+      );
 
   final AccountType accountType;
-
-  /// Tabs this facility may see — role-scoped, computed once.
+  final ClinicServicesRepository _repository;
   final List<ServiceKind> availableKinds;
+  final Map<int, Timer> _priceDebounceTimers = {};
+  Timer? _searchDebounceTimer;
 
-  void selectKind(ServiceKind kind) => emit(state.copyWith(kind: kind));
+  bool get _canUseLab =>
+      accountType == AccountType.lab || accountType == AccountType.both;
 
-  void openDetail(LabSection section) =>
-      emit(state.copyWith(detail: section));
+  bool get _canUseSpecialty =>
+      accountType == AccountType.clinic || accountType == AccountType.both;
 
-  void closeDetail() => emit(state.copyWith(clearDetail: true));
-
-  void addSection(LabSection section) {
-    if (state.sections.contains(section)) return;
-    emit(state.copyWith(sections: [...state.sections, section]));
+  Future<void> loadInitial() async {
+    emit(state.copyWith(isLoading: true, failure: null));
+    final tasks = <Future<void>>[];
+    if (_canUseLab) {
+      tasks.addAll([_loadLabSections(), _loadEnabledLabTests(page: 1)]);
+    }
+    if (_canUseSpecialty) {
+      tasks.addAll([
+        _loadAvailableSpecializations(page: 1),
+        _loadEnabledSpecializations(page: 1),
+      ]);
+    }
+    await Future.wait(tasks);
+    emit(state.copyWith(isLoading: false));
   }
 
-  void addSpecialty(ClinicSpecialty specialty) {
-    if (state.specialties.contains(specialty)) return;
-    emit(state.copyWith(specialties: [...state.specialties, specialty]));
+  Future<void> refresh() => loadInitial();
+
+  Future<void> selectKind(ServiceKind kind) async {
+    emit(state.copyWith(kind: kind, detail: null, failure: null));
+    if (kind == ServiceKind.specialty) {
+      if (state.availableSpecializations.items.isEmpty) {
+        await _loadAvailableSpecializations(page: 1);
+      }
+      if (state.enabledSpecializations.items.isEmpty) {
+        await _loadEnabledSpecializations(page: 1);
+      }
+      return;
+    }
+
+    if (kind == ServiceKind.lab) {
+      if (state.labSections.isEmpty) {
+        await _loadLabSections();
+      }
+      if (state.enabledLabTests.items.isEmpty) {
+        await _loadEnabledLabTests(page: 1);
+      }
+    }
   }
 
-  void toggleTest(String code) {
-    final current = state.testState(code);
-    emit(_withTest(code, current.copyWith(enabled: !current.enabled)));
+  Future<void> openDetail(ClinicLabSectionModel section) async {
+    emit(state.copyWith(detail: section, failure: null));
+    await Future.wait([
+      _loadAvailableLabTests(page: 1, section: section, reset: true),
+      _loadEnabledLabTests(page: 1, section: section, reset: true),
+    ]);
   }
 
-  void setTestPrice(String code, String price) =>
-      emit(_withTest(code, state.testState(code).copyWith(price: price)));
+  void closeDetail() => emit(state.copyWith(detail: null));
 
-  ServicesState _withTest(String code, LabTestState value) =>
-      state.copyWith(tests: {...state.tests, code: value});
+  Future<void> addSection(ClinicLabSectionModel section) async {
+    final sectionId = section.sectionId;
+    if (sectionId != null && !state.selectedLabSectionIds.contains(sectionId)) {
+      emit(
+        state.copyWith(
+          selectedLabSectionIds: {...state.selectedLabSectionIds, sectionId},
+        ),
+      );
+    }
+    await openDetail(section);
+  }
+
+  void removeSection(ClinicLabSectionModel section) {
+    final sectionId = section.sectionId;
+    if (sectionId == null) return;
+    if (!state.selectedLabSectionIds.contains(sectionId)) return;
+    final updated = {...state.selectedLabSectionIds}..remove(sectionId);
+    final shouldCloseDetail = state.detail?.sectionId == sectionId;
+    emit(
+      state.copyWith(
+        selectedLabSectionIds: updated,
+        detail: shouldCloseDetail ? null : state.detail,
+      ),
+    );
+  }
+
+  void searchLabTests(String value) {
+    emit(state.copyWith(labSearch: value));
+    _searchDebounceTimer?.cancel();
+    _searchDebounceTimer = Timer(const Duration(milliseconds: 450), () {
+      final detail = state.detail;
+      if (detail != null) {
+        _loadAvailableLabTests(page: 1, section: detail, reset: true);
+      }
+    });
+  }
+
+  void searchSpecializations(String value) {
+    emit(state.copyWith(specializationSearch: value));
+    _searchDebounceTimer?.cancel();
+    _searchDebounceTimer = Timer(
+      const Duration(milliseconds: 450),
+      () => _loadAvailableSpecializations(page: 1, reset: true),
+    );
+  }
+
+  Future<void> loadMoreLabTests() async {
+    final pagination = state.availableLabTests;
+    if (pagination.isBusy || !pagination.hasMore || state.detail == null) {
+      return;
+    }
+    await _loadAvailableLabTests(
+      page: pagination.currentPage + 1,
+      section: state.detail,
+    );
+  }
+
+  Future<void> loadMoreSpecializations() async {
+    final pagination = state.availableSpecializations;
+    if (pagination.isBusy || !pagination.hasMore) return;
+    await _loadAvailableSpecializations(page: pagination.currentPage + 1);
+  }
+
+  Future<void> addSpecialty(
+    ClinicAvailableSpecializationModel specialty,
+  ) async {
+    final id = specialty.specializationId;
+    if (id == null || state.isSpecializationEnabled(id)) return;
+    _setBusySpecialization(id, true);
+    final result = await _repository.enableSpecialization(
+      specializationId: id,
+      isActive: true,
+    );
+    result.when(
+      success: (response) {
+        final item = response.result;
+        if (item != null) _upsertSpecialization(item);
+        emit(state.copyWith(failure: null));
+      },
+      failure: (exception) => emit(state.copyWith(failure: exception)),
+    );
+    _setBusySpecialization(id, false);
+  }
+
+  Future<void> toggleTest(int? labTestId) async {
+    if (labTestId == null || state.busyLabTestIds.contains(labTestId)) return;
+    final current = state.testState(labTestId);
+    _setBusyLabTest(labTestId, true);
+
+    if (current.enabled) {
+      final result = await _repository.removeLabTest(labTestId: labTestId);
+      result.when(
+        success: (_) {
+          state.enabledLabTests.items.assignAll(
+            state.enabledLabTests.items.value.where(
+              (item) => item.labTestId != labTestId,
+            ),
+          );
+          emit(state.copyWith(failure: null));
+        },
+        failure: (exception) => emit(state.copyWith(failure: exception)),
+      );
+    } else {
+      await _saveLabTest(labTestId: labTestId, isActive: true);
+    }
+
+    _setBusyLabTest(labTestId, false);
+  }
+
+  void setTestPrice(int? labTestId, String price) {
+    if (labTestId == null) return;
+    emit(
+      state.copyWith(
+        labTestPriceDrafts: {...state.labTestPriceDrafts, labTestId: price},
+      ),
+    );
+    if (!state.testState(labTestId).enabled) return;
+    _priceDebounceTimers[labTestId]?.cancel();
+    _priceDebounceTimers[labTestId] = Timer(
+      const Duration(milliseconds: 450),
+      () => _saveLabTest(labTestId: labTestId, isActive: true),
+    );
+  }
+
+  Future<void> _loadLabSections() async {
+    final result = await _repository.labSections();
+    result.when(
+      success: (response) => emit(
+        state.copyWith(
+          labSections: response.result?.list ?? const [],
+          failure: null,
+        ),
+      ),
+      failure: (exception) => emit(state.copyWith(failure: exception)),
+    );
+  }
+
+  Future<void> _loadAvailableLabTests({
+    required int page,
+    ClinicLabSectionModel? section,
+    bool reset = false,
+  }) async {
+    final pagination = state.availableLabTests;
+    if (pagination.isBusy && !reset) return;
+    if (reset) pagination.reset();
+    pagination.isInitialLoading.value = page == 1;
+    pagination.isLoadingMore.value = page > 1;
+
+    final result = await _repository.labTests(
+      page: page,
+      perPage: pagination.perPage,
+      search: state.labSearch,
+      sectionId: section?.sectionId,
+      sectionSlug: section?.slug,
+    );
+    result.when(
+      success: (response) {
+        pagination.setPage(
+          data: response.result?.list ?? const [],
+          page: page,
+          meta: response.meta,
+        );
+        _syncSelectedLabSectionsFromEnabledTests();
+        _clearPaginationLoading(pagination);
+        emit(state.copyWith(failure: null));
+      },
+      failure: (exception) {
+        _clearPaginationLoading(pagination);
+        emit(state.copyWith(failure: exception));
+      },
+    );
+  }
+
+  Future<void> _loadEnabledLabTests({
+    required int page,
+    ClinicLabSectionModel? section,
+    bool reset = false,
+  }) async {
+    final pagination = state.enabledLabTests;
+    if (pagination.isBusy && !reset) return;
+    if (reset) pagination.reset();
+    pagination.isInitialLoading.value = page == 1;
+    pagination.isLoadingMore.value = page > 1;
+
+    final result = await _repository.enabledLabTests(
+      page: page,
+      perPage: pagination.perPage,
+      search: state.labSearch,
+      sectionId: section?.sectionId,
+    );
+    result.when(
+      success: (response) {
+        pagination.setPage(
+          data: response.result?.list ?? const [],
+          page: page,
+          meta: response.meta,
+        );
+        _clearPaginationLoading(pagination);
+        emit(state.copyWith(failure: null));
+      },
+      failure: (exception) {
+        _clearPaginationLoading(pagination);
+        emit(state.copyWith(failure: exception));
+      },
+    );
+  }
+
+  Future<void> _loadAvailableSpecializations({
+    required int page,
+    bool reset = true,
+  }) async {
+    final pagination = state.availableSpecializations;
+    if (pagination.isBusy && !reset) return;
+    if (reset) pagination.reset();
+    pagination.isInitialLoading.value = page == 1;
+    pagination.isLoadingMore.value = page > 1;
+
+    final result = await _repository.specializations(
+      page: page,
+      perPage: pagination.perPage,
+      search: state.specializationSearch,
+    );
+    result.when(
+      success: (response) {
+        pagination.setPage(
+          data: response.result?.list ?? const [],
+          page: page,
+          meta: response.meta,
+        );
+        _clearPaginationLoading(pagination);
+        emit(state.copyWith(failure: null));
+      },
+      failure: (exception) {
+        _clearPaginationLoading(pagination);
+        emit(state.copyWith(failure: exception));
+      },
+    );
+  }
+
+  Future<void> _loadEnabledSpecializations({
+    required int page,
+    bool reset = true,
+  }) async {
+    final pagination = state.enabledSpecializations;
+    if (pagination.isBusy && !reset) return;
+    if (reset) pagination.reset();
+    pagination.isInitialLoading.value = page == 1;
+    pagination.isLoadingMore.value = page > 1;
+
+    final result = await _repository.enabledSpecializations(
+      page: page,
+      perPage: pagination.perPage,
+      search: state.specializationSearch,
+    );
+    result.when(
+      success: (response) {
+        pagination.setPage(
+          data: response.result?.list ?? const [],
+          page: page,
+          meta: response.meta,
+        );
+        _clearPaginationLoading(pagination);
+        emit(state.copyWith(failure: null));
+      },
+      failure: (exception) {
+        _clearPaginationLoading(pagination);
+        emit(state.copyWith(failure: exception));
+      },
+    );
+  }
+
+  Future<void> _saveLabTest({
+    required int labTestId,
+    required bool isActive,
+  }) async {
+    final price = num.tryParse(state.testState(labTestId).price);
+    if (price == null) return;
+
+    final exists = state.enabledLabTests.items.value.any(
+      (item) => item.labTestId == labTestId,
+    );
+    final result = exists
+        ? await _repository.updateLabTest(
+            labTestId: labTestId,
+            price: price,
+            isActive: isActive,
+          )
+        : await _repository.enableLabTest(
+            labTestId: labTestId,
+            price: price,
+            isActive: isActive,
+          );
+
+    result.when(
+      success: (response) {
+        final item = response.result;
+        if (item != null) _upsertLabTest(item);
+        emit(state.copyWith(failure: null));
+      },
+      failure: (exception) => emit(state.copyWith(failure: exception)),
+    );
+  }
+
+  void _upsertLabTest(ClinicEnabledLabTestModel item) {
+    final items = [...state.enabledLabTests.items.value];
+    final index = items.indexWhere((test) => test.labTestId == item.labTestId);
+    if (index == -1) {
+      items.add(item);
+    } else {
+      items[index] = item;
+    }
+    state.enabledLabTests.items.assignAll(items);
+    final sectionId = item.sectionId;
+    if (sectionId != null && !state.selectedLabSectionIds.contains(sectionId)) {
+      emit(
+        state.copyWith(
+          selectedLabSectionIds: {...state.selectedLabSectionIds, sectionId},
+        ),
+      );
+    }
+  }
+
+  void _upsertSpecialization(ClinicEnabledSpecializationModel item) {
+    final items = [...state.enabledSpecializations.items.value];
+    final index = items.indexWhere(
+      (specialty) => specialty.specializationId == item.specializationId,
+    );
+    if (index == -1) {
+      items.add(item);
+    } else {
+      items[index] = item;
+    }
+    state.enabledSpecializations.items.assignAll(items);
+  }
+
+  void _setBusyLabTest(int id, bool busy) {
+    final ids = {...state.busyLabTestIds};
+    busy ? ids.add(id) : ids.remove(id);
+    emit(state.copyWith(busyLabTestIds: ids));
+  }
+
+  void _setBusySpecialization(int id, bool busy) {
+    final ids = {...state.busySpecializationIds};
+    busy ? ids.add(id) : ids.remove(id);
+    emit(state.copyWith(busySpecializationIds: ids));
+  }
+
+  void _clearPaginationLoading<T>(PaginationState<T> pagination) {
+    pagination.isInitialLoading.value = false;
+    pagination.isLoadingMore.value = false;
+    pagination.isRefreshing.value = false;
+  }
+
+  void _syncSelectedLabSectionsFromEnabledTests() {
+    final enabledSectionIds = state.enabledLabTests.items.value
+        .map((item) => item.sectionId)
+        .whereType<int>()
+        .toSet();
+    if (enabledSectionIds.isEmpty) return;
+    final merged = {...state.selectedLabSectionIds, ...enabledSectionIds};
+    if (merged.length == state.selectedLabSectionIds.length) return;
+    emit(state.copyWith(selectedLabSectionIds: merged));
+  }
+
+  @override
+  Future<void> close() {
+    for (final timer in _priceDebounceTimers.values) {
+      timer.cancel();
+    }
+    _searchDebounceTimer?.cancel();
+    return super.close();
+  }
 }

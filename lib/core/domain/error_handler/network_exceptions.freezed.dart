@@ -290,7 +290,7 @@ return unexpectedError(_that.error);case _:
 
 class RequestCancelled with DiagnosticableTreeMixin implements NetworkExceptions {
   const RequestCancelled();
-
+  
 
 
 
@@ -328,7 +328,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class UnauthorizedRequest with DiagnosticableTreeMixin implements NetworkExceptions {
   const UnauthorizedRequest(this.reason);
-
+  
 
  final  String reason;
 
@@ -400,7 +400,7 @@ as String,
 
 class LoggingInRequired with DiagnosticableTreeMixin implements NetworkExceptions {
   const LoggingInRequired();
-
+  
 
 
 
@@ -438,7 +438,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class BadRequest with DiagnosticableTreeMixin implements NetworkExceptions {
   const BadRequest();
-
+  
 
 
 
@@ -476,7 +476,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class NotFound with DiagnosticableTreeMixin implements NetworkExceptions {
   const NotFound(this.reason);
-
+  
 
  final  String reason;
 
@@ -548,7 +548,7 @@ as String,
 
 class MethodNotAllowed with DiagnosticableTreeMixin implements NetworkExceptions {
   const MethodNotAllowed();
-
+  
 
 
 
@@ -586,7 +586,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class NotAcceptable with DiagnosticableTreeMixin implements NetworkExceptions {
   const NotAcceptable();
-
+  
 
 
 
@@ -624,7 +624,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class RequestTimeout with DiagnosticableTreeMixin implements NetworkExceptions {
   const RequestTimeout();
-
+  
 
 
 
@@ -662,7 +662,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class SendTimeout with DiagnosticableTreeMixin implements NetworkExceptions {
   const SendTimeout();
-
+  
 
 
 
@@ -700,7 +700,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class UnprocessableEntity with DiagnosticableTreeMixin implements NetworkExceptions {
   const UnprocessableEntity(this.reason);
-
+  
 
  final  String reason;
 
@@ -772,7 +772,7 @@ as String,
 
 class Conflict with DiagnosticableTreeMixin implements NetworkExceptions {
   const Conflict();
-
+  
 
 
 
@@ -810,7 +810,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class InternalServerError with DiagnosticableTreeMixin implements NetworkExceptions {
   const InternalServerError(this.reason);
-
+  
 
  final  String reason;
 
@@ -882,7 +882,7 @@ as String,
 
 class NotImplemented with DiagnosticableTreeMixin implements NetworkExceptions {
   const NotImplemented();
-
+  
 
 
 
@@ -920,7 +920,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class ServiceUnavailable with DiagnosticableTreeMixin implements NetworkExceptions {
   const ServiceUnavailable();
-
+  
 
 
 
@@ -958,7 +958,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class NoInternetConnection with DiagnosticableTreeMixin implements NetworkExceptions {
   const NoInternetConnection();
-
+  
 
 
 
@@ -996,7 +996,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class FormatException with DiagnosticableTreeMixin implements NetworkExceptions {
   const FormatException();
-
+  
 
 
 
@@ -1034,7 +1034,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class UnableToProcess with DiagnosticableTreeMixin implements NetworkExceptions {
   const UnableToProcess();
-
+  
 
 
 
@@ -1072,7 +1072,7 @@ String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
 
 class DefaultError with DiagnosticableTreeMixin implements NetworkExceptions {
   const DefaultError(this.error);
-
+  
 
  final  String error;
 
@@ -1144,7 +1144,7 @@ as String,
 
 class UnexpectedError with DiagnosticableTreeMixin implements NetworkExceptions {
   const UnexpectedError(this.error);
-
+  
 
  final  String? error;
 

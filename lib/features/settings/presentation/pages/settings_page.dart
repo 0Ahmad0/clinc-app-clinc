@@ -30,7 +30,8 @@ class _SettingsScaffold extends StatelessWidget {
       buildWhen: (previous, current) => previous.section != current.section,
       listenWhen: (previous, current) =>
           previous.failure != current.failure ||
-          previous.passwordChanged != current.passwordChanged,
+          previous.passwordChanged != current.passwordChanged ||
+          previous.profileSaved != current.profileSaved,
       listener: (context, state) {
         if (state.failure != null) {
           AppToast.show(
@@ -40,6 +41,16 @@ class _SettingsScaffold extends StatelessWidget {
             type: AppFeedbackType.danger,
           );
         }
+
+        if (state.profileSaved) {
+          AppToast.show(
+            context,
+            title: context.l10n.toastSuccess,
+            message: context.l10n.settingsProfileTitle,
+            type: AppFeedbackType.success,
+          );
+        }
+
         if (state.passwordChanged) {
           AppToast.show(
             context,

@@ -17,6 +17,13 @@ class SettingsMainHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
+    final clinic = context.select((SettingsCubit cubit) => cubit.state.clinic);
+    final clinicName = clinic?.name?.trim().isNotEmpty == true
+        ? clinic!.name!
+        : l10n.settingsClinicName;
+    final clinicEmail = clinic?.email?.trim().isNotEmpty == true
+        ? clinic!.email!
+        : l10n.settingsClinicEmail;
     return Container(
       width: double.infinity,
       clipBehavior: Clip.antiAlias,
@@ -119,14 +126,14 @@ class SettingsMainHeader extends StatelessWidget {
                 ),
                 AppGaps.h8,
                 Text(
-                  l10n.settingsClinicName,
+                  clinicName,
                   style: context.textTheme.titleMedium?.copyWith(
                     color: colors.onBrand,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
-                  l10n.settingsClinicEmail,
+                  clinicEmail,
                   textDirection: TextDirection.ltr,
                   style: context.textTheme.bodySmall?.copyWith(
                     color: colors.onBrand.withValues(alpha: 0.72),

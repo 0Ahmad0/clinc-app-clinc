@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../core/utils/app_url.dart';
 import '../../domain/appointment_kind.dart';
 import '../../domain/appointment_status.dart';
 
@@ -45,4 +47,47 @@ extension ClinicAppointmentModelX on ClinicAppointmentModel {
     'lab' => AppointmentKind.lab,
     _ => AppointmentKind.clinic,
   };
+
+  Uri? get resultFileUri {
+    final raw = resultFile?.trim();
+    if (raw == null || raw.isEmpty) return null;
+    final uri = Uri.tryParse(raw);
+    if (uri == null) return null;
+
+    if (uri.host.toLowerCase() != 'localhost') return uri;
+
+    final base = Uri.tryParse(baseServSlashLess);
+    if (base == null) return uri;
+    return uri.replace(
+      scheme: base.scheme.isEmpty ? uri.scheme : base.scheme,
+      host: base.host.isEmpty ? uri.host : base.host,
+      port: base.hasPort ? base.port : uri.port,
+    );
+  }
+
+  String get formattedDateTime {
+    final rawDate = date?.trim();
+    final rawTime = time?.trim();
+    if ((rawDate == null || rawDate.isEmpty) &&
+        (rawTime == null || rawTime.isEmpty)) {
+      return '-';
+    }
+
+    final formattedTime = _formatTime(rawTime);
+    if (rawDate == null || rawDate.isEmpty) return formattedTime ?? '-';
+    if (formattedTime == null || formattedTime.isEmpty) return rawDate;
+    return '$rawDate $formattedTime';
+  }
+
+  String? _formatTime(String? rawTime) {
+    if (rawTime == null || rawTime.isEmpty) return null;
+    for (final pattern in const ['HH:mm:ss', 'HH:mm', 'h:mm a', 'h:mm aaa']) {
+      final parsed = DateFormat(pattern).tryParseStrict(rawTime);
+      if (parsed != null) {
+        final formatted = DateFormat('h:mm a').format(parsed);
+        return formatted.replaceAll('AM', 'am').replaceAll('PM', 'pm');
+      }
+    }
+    return rawTime.replaceAll('AM', 'am').replaceAll('PM', 'pm');
+  }
 }

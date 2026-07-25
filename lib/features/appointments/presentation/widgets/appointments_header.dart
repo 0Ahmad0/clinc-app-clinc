@@ -20,10 +20,10 @@ class AppointmentsHeader extends StatelessWidget {
     );
     return BlocBuilder<AppointmentsCubit, AppointmentsState>(
       builder: (context, state) {
-        final items = state.pagination.items.value;
-        final pending = items.where((e) => e.status == 'pending').length;
-        final confirmed = items.where((e) => e.status == 'accepted').length;
-        final done = items.where((e) => e.status == 'completed').length;
+        final total = state.totalCount;
+        final pending = state.pendingCount;
+        final confirmed = state.confirmedCount;
+        final done = state.doneCount;
         return Container(
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
@@ -86,9 +86,7 @@ class AppointmentsHeader extends StatelessWidget {
                           ),
                           Text(
                             l10n.apptHeaderLine(
-                              format.format(
-                                state.pagination.total ?? items.length,
-                              ),
+                              format.format(total),
                               format.format(pending),
                             ),
                             style: context.textTheme.bodySmall?.copyWith(

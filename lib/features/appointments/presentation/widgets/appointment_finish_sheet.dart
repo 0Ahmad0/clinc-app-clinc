@@ -19,9 +19,14 @@ class AppointmentFinishResult {
 /// Bottom sheet for finishing an appointment. Lab appointments must attach a
 /// result PDF first (picked via `file_picker`).
 class AppointmentFinishSheet extends StatefulWidget {
-  const AppointmentFinishSheet({super.key, required this.requiresResult});
+  const AppointmentFinishSheet({
+    super.key,
+    required this.requiresResult,
+    this.resultOnly = false,
+  });
 
   final bool requiresResult;
+  final bool resultOnly;
 
   @override
   State<AppointmentFinishSheet> createState() => _AppointmentFinishSheetState();
@@ -79,7 +84,9 @@ class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.requiresResult
+                      widget.resultOnly
+                          ? _uploadResultTitle(context)
+                          : widget.requiresResult
                           ? l10n.apptFinishLab
                           : l10n.apptFinish,
                       style: context.textTheme.titleMedium?.copyWith(
@@ -88,7 +95,9 @@ class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
                       ),
                     ),
                     Text(
-                      widget.requiresResult
+                      widget.resultOnly
+                          ? _uploadResultSubtitle(context)
+                          : widget.requiresResult
                           ? l10n.apptFinishSubLab
                           : l10n.apptFinishSub,
                       style: context.textTheme.labelSmall?.copyWith(
@@ -129,7 +138,9 @@ class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
           ),
           AppGaps.h16,
           AppointmentConfirmButton(
-            label: widget.requiresResult
+            label: widget.resultOnly
+                ? _uploadResultConfirm(context)
+                : widget.requiresResult
                 ? l10n.apptFinishConfirmLab
                 : l10n.apptFinishConfirm,
             enabled: _canConfirm,
@@ -145,4 +156,19 @@ class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
       ),
     );
   }
+
+  String _uploadResultTitle(BuildContext context) =>
+      Localizations.localeOf(context).languageCode == 'ar'
+      ? 'رفع النتيجة'
+      : 'Upload result';
+
+  String _uploadResultSubtitle(BuildContext context) =>
+      Localizations.localeOf(context).languageCode == 'ar'
+      ? 'أرفق ملف نتيجة التحليل PDF'
+      : 'Attach the lab result PDF';
+
+  String _uploadResultConfirm(BuildContext context) =>
+      Localizations.localeOf(context).languageCode == 'ar'
+      ? 'رفع النتيجة'
+      : 'Upload result';
 }

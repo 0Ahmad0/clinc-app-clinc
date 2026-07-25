@@ -12,6 +12,11 @@ abstract class AppointmentsState with _$AppointmentsState {
   const factory AppointmentsState({
     required PaginationState<ClinicAppointmentModel> pagination,
     @Default(AppointmentTab.all) AppointmentTab tab,
+    @Default(0) int totalCount,
+    @Default(0) int pendingCount,
+    @Default(0) int confirmedCount,
+    @Default(0) int doneCount,
+    @Default(0) int rejectedCount,
     String? selectedId,
     ClinicAppointmentModel? selected,
     NetworkExceptions? failure,

@@ -182,7 +182,7 @@ return failure(_that.networkExceptions);case _:
 
 class Success<T> implements ApiResponse<T> {
   const Success(this.data);
-
+  
 
  final  T data;
 
@@ -248,7 +248,7 @@ as T,
 
 class Failure<T> implements ApiResponse<T> {
   const Failure(this.networkExceptions);
-
+  
 
  final  NetworkExceptions networkExceptions;
 
@@ -311,7 +311,7 @@ as NetworkExceptions,
 @override
 @pragma('vm:prefer-inline')
 $NetworkExceptionsCopyWith<$Res> get networkExceptions {
-
+  
   return $NetworkExceptionsCopyWith<$Res>(_self.networkExceptions, (value) {
     return _then(_self.copyWith(networkExceptions: value));
   });

@@ -13,6 +13,7 @@ class AddDoctorTextField extends StatelessWidget {
     this.iconColor,
     this.keyboardType,
     this.maxLines = 1,
+    this.controller,
   });
 
   final IconData icon;
@@ -20,6 +21,7 @@ class AddDoctorTextField extends StatelessWidget {
   final Color? iconColor;
   final TextInputType? keyboardType;
   final int maxLines;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,7 @@ class AddDoctorTextField extends StatelessWidget {
           AppGaps.w8,
           Expanded(
             child: TextField(
+              controller: controller,
               keyboardType: keyboardType,
               maxLines: maxLines,
               minLines: multiline ? maxLines : null,

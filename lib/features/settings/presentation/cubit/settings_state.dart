@@ -14,6 +14,7 @@ abstract class SettingsState with _$SettingsState {
     @Default(false) bool pendingUpdate,
     @Default(false) bool isLoading,
     @Default(false) bool isSavingProfile,
+    @Default(false) bool profileSaved,
     @Default(false) bool isChangingPassword,
     @Default(false) bool passwordChanged,
     NetworkExceptions? failure,

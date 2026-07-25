@@ -18,15 +18,20 @@ import '../../features/reports/domain/clinic_reports_repository.dart';
 import '../../features/reports/presentation/cubit/reports_cubit.dart';
 import '../../features/settings/data/clinic_settings_remote_data_source.dart';
 import '../../features/settings/domain/clinic_settings_repository.dart';
+import '../../features/services/data/clinic_services_remote_data_source.dart';
+import '../../features/services/domain/clinic_services_repository.dart';
 import '../../features/services/presentation/cubit/services_cubit.dart';
 import '../../features/settings/presentation/cubit/settings_cubit.dart';
 import '../../features/doctors/presentation/cubit/add_doctor_cubit.dart';
 import '../../features/appointments/data/clinic_appointments_remote_data_source.dart';
 import '../../features/appointments/domain/clinic_appointments_repository.dart';
 import '../../features/doctors/data/clinic_doctors_remote_data_source.dart';
+import '../../features/doctors/data/models/clinic_doctor_model.dart';
 import '../../features/doctors/domain/clinic_doctors_repository.dart';
 import '../../features/appointments/presentation/cubit/appointments_cubit.dart';
 import '../../features/doctors/presentation/cubit/doctors_cubit.dart';
+import '../../features/notifications/data/clinic_notifications_remote_data_source.dart';
+import '../../features/notifications/domain/clinic_notifications_repository.dart';
 import '../../features/notifications/presentation/cubit/notifications_cubit.dart';
 
 /// Global service locator. Register services as `registerLazySingleton` and
@@ -62,6 +67,12 @@ void configureDependencies() {
   sl.registerLazySingleton<ClinicAppointmentsRepository>(
     () => ClinicAppointmentsRepository(sl()),
   );
+  sl.registerLazySingleton<ClinicNotificationsRemoteDataSource>(
+    () => ClinicNotificationsRemoteDataSource(sl()),
+  );
+  sl.registerLazySingleton<ClinicNotificationsRepository>(
+    () => ClinicNotificationsRepository(sl()),
+  );
   sl.registerLazySingleton<ClinicReportsRemoteDataSource>(
     () => ClinicReportsRemoteDataSource(sl()),
   );
@@ -74,16 +85,24 @@ void configureDependencies() {
   sl.registerLazySingleton<ClinicSettingsRepository>(
     () => ClinicSettingsRepository(sl()),
   );
+  sl.registerLazySingleton<ClinicServicesRemoteDataSource>(
+    () => ClinicServicesRemoteDataSource(sl()),
+  );
+  sl.registerLazySingleton<ClinicServicesRepository>(
+    () => ClinicServicesRepository(sl()),
+  );
 
   sl.registerFactory<OnboardingCubit>(OnboardingCubit.new);
   sl.registerFactory<AuthCubit>(() => AuthCubit(sl()));
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl()));
   sl.registerFactory<DoctorsCubit>(() => DoctorsCubit(sl()));
-  sl.registerFactory<AddDoctorCubit>(AddDoctorCubit.new);
-  sl.registerFactory<NotificationsCubit>(NotificationsCubit.new);
+  sl.registerFactoryParam<AddDoctorCubit, ClinicDoctorModel?, void>(
+    (doctor, _) => AddDoctorCubit(sl(), initialDoctor: doctor),
+  );
+  sl.registerFactory<NotificationsCubit>(() => NotificationsCubit(sl()));
   sl.registerFactory<AppointmentsCubit>(() => AppointmentsCubit(sl()));
   sl.registerFactoryParam<ServicesCubit, AccountType, void>(
-    (accountType, _) => ServicesCubit(accountType),
+    (accountType, _) => ServicesCubit(accountType, sl()),
   );
   sl.registerFactoryParam<ReportsCubit, AccountType, void>(
     (accountType, _) => ReportsCubit(accountType, sl()),

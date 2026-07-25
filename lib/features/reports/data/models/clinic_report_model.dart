@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../core/utils/app_url.dart';
 import '../../domain/report_breakdown.dart';
 import '../../domain/report_period.dart';
 import '../../domain/report_type.dart';
@@ -90,4 +92,30 @@ extension ClinicGeneratedReportModelX on ClinicGeneratedReportModel {
   };
 
   ReportType get typeValue => reportTypeFromBackend(type);
+
+  String get formattedGeneratedAt {
+    final raw = generatedAt?.trim();
+    if (raw == null || raw.isEmpty) return '-';
+    final parsed = DateTime.tryParse(raw);
+    if (parsed == null) return raw;
+    final formatted = DateFormat('yyyy-MM-dd h:mm a').format(parsed);
+    return formatted.replaceAll('AM', 'am').replaceAll('PM', 'pm');
+  }
+
+  Uri? get downloadableUri {
+    final raw = fileUrl?.trim();
+    if (raw == null || raw.isEmpty) return null;
+    final uri = Uri.tryParse(raw);
+    if (uri == null) return null;
+
+    if (uri.host.toLowerCase() != 'localhost') return uri;
+
+    final base = Uri.tryParse(baseServSlashLess);
+    if (base == null) return uri;
+    return uri.replace(
+      scheme: base.scheme.isEmpty ? uri.scheme : base.scheme,
+      host: base.host.isEmpty ? uri.host : base.host,
+      port: base.hasPort ? base.port : uri.port,
+    );
+  }
 }

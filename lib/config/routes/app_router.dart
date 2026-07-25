@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/pages/auth_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/doctors/data/models/clinic_doctor_model.dart';
+import '../../features/doctors/domain/doctor_specialty.dart';
 import '../../features/doctors/domain/doctor_summary.dart';
 import '../../features/doctors/presentation/pages/add_doctor_page.dart';
 import '../../features/doctors/presentation/pages/doctor_profile_page.dart';
@@ -13,6 +15,7 @@ import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/reports/presentation/pages/reports_page.dart';
 import '../../features/services/presentation/pages/services_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
+import '../../core/services/storage_service.dart';
 import 'app_routes.dart';
 
 /// App router. Routes are declared here and reference [AppRoutes] constants.
@@ -24,7 +27,9 @@ class AppRouter {
 
   static final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
-    initialLocation: AppRoutes.onboarding,
+    initialLocation: StorageService.instance.getAccessToken().isNotEmpty
+        ? AppRoutes.home
+        : AppRoutes.onboarding,
     routes: [
       GoRoute(
         path: AppRoutes.onboarding,
@@ -44,14 +49,21 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.addDoctor,
-        builder: (context, state) => const AddDoctorPage(),
+        builder: (context, state) =>
+            AddDoctorPage(initialDoctor: state.extra as ClinicDoctorModel?),
       ),
       GoRoute(
         path: AppRoutes.doctorProfile,
         builder: (context, state) {
-          final doctor = state.extra as DoctorSummary?;
+          final extra = state.extra;
+          final clinicDoctor = extra is ClinicDoctorModel ? extra : null;
+          final doctor = extra is DoctorSummary
+              ? extra
+              : clinicDoctor == null
+              ? null
+              : _doctorSummary(clinicDoctor);
           if (doctor == null) return const DoctorsPage();
-          return DoctorProfilePage(doctor: doctor);
+          return DoctorProfilePage(doctor: doctor, initialDoctor: clinicDoctor);
         },
       ),
       GoRoute(
@@ -76,4 +88,21 @@ class AppRouter {
       ),
     ],
   );
+
+  static DoctorSummary _doctorSummary(ClinicDoctorModel doctor) {
+    final name = doctor.name ?? doctor.nameAr ?? doctor.nameEn ?? '-';
+    return DoctorSummary(
+      id: int.tryParse(doctor.doctorId ?? '') ?? 0,
+      name: name,
+      initials: name.characters.isEmpty ? '-' : name.characters.first,
+      specialty: DoctorSpecialty.all,
+      specialtyName: doctor.specializationName ?? '-',
+      experienceYears: doctor.experienceYears,
+      fee: doctor.consultationFee.round(),
+      imageUrl: doctor.imageUrl,
+      rating: doctor.rating.toDouble(),
+      patients: doctor.patientsCount,
+      doctorId: doctor.doctorId,
+    );
+  }
 }

@@ -97,6 +97,7 @@ class DoctorsList extends StatelessWidget {
       imageUrl: doctor.imageUrl,
       rating: doctor.rating.toDouble(),
       patients: doctor.patientsCount,
+      doctorId: doctor.doctorId,
     );
   }
 }

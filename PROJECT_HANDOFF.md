@@ -73,6 +73,24 @@
   - `POST /api/clinic/change-password`
   - `GET /api/clinic/notification-settings`
   - `PUT /api/clinic/notification-settings`
+  - `POST /api/clinic/device-token`
+  - `GET /api/clinic/notifications`
+  - `POST /api/clinic/notifications/{notification}/read`
+  - `POST /api/clinic/notifications/mark-all-read`
+  - `GET /api/clinic/notifications/unread-count`
+  - `DELETE /api/clinic/notifications/{notification}`
+  - `DELETE /api/clinic/notifications`
+  - `GET /api/clinic/services/lab-sections`
+  - `GET /api/clinic/services/lab-tests`
+  - `GET /api/clinic/services/enabled-lab-tests`
+  - `POST /api/clinic/services/lab-tests/{labTest}`
+  - `PUT /api/clinic/services/lab-tests/{labTest}`
+  - `DELETE /api/clinic/services/lab-tests/{labTest}`
+  - `GET /api/clinic/services/specializations`
+  - `GET /api/clinic/services/enabled-specializations`
+  - `POST /api/clinic/services/specializations/{specialization}`
+  - `PUT /api/clinic/services/specializations/{specialization}`
+  - `DELETE /api/clinic/services/specializations/{specialization}`
 - Clinic register request fields: `name`, `license_number`, `email`, `password`, `type`.
 - Clinic register `type` values: `clinic`, `lab`, `both`.
 - Clinic login request fields: `email`, `password`, optional `device_name`; the backend accepts email or license number through the `email` field.
@@ -83,7 +101,7 @@
 - Clinic dashboard request query fields: optional `date`.
 - Clinic protected endpoints use the `clinic.auth` middleware.
 - Clinic dashboard response returns clinic info, stats, nearest 5 appointments, and unread notifications count.
-- Missing operational APIs: notifications list/actions and services.
+- Services APIs are now available and integrated in Flutter.
 
 ## Clean Architecture Rules
 - Required flow for all backend-integrated Clinic features:
@@ -360,14 +378,332 @@ locator.registerFactory<FeatureCubit>(
   - `BACKEND_NOTES.md`
   - `PROJECT_HANDOFF.md`
 
+## Completed: Clinic Notifications Integration
+- Date: 2026-07-24.
+- Integrated notifications list/read/mark all/unread count/delete/clear and device token data layer.
+- Added notification models, remote data source, repository, Cubit pagination, and Freezed state.
+- Registered Notifications dependencies in GetIt.
+- Files added/modified:
+  - `lib/features/notifications/data/clinic_notifications_remote_data_source.dart`
+  - `lib/features/notifications/data/models/clinic_notification_model.dart`
+  - `lib/features/notifications/domain/clinic_notifications_repository.dart`
+  - `lib/features/notifications/presentation/cubit/notifications_cubit.dart`
+  - `lib/features/notifications/presentation/cubit/notifications_state.dart`
+  - `lib/features/notifications/presentation/pages/notifications_page.dart`
+  - `lib/features/notifications/presentation/pages/notifications_view.dart`
+  - `lib/features/notifications/presentation/widgets/notification_card.dart`
+  - `lib/features/notifications/presentation/widgets/notification_group.dart`
+  - `lib/features/notifications/presentation/widgets/notifications_header.dart`
+  - `lib/features/notifications/presentation/widgets/notifications_tabs.dart`
+  - `lib/core/di/service_locator.dart`
+  - `lib/core/utils/app_url.dart`
+  - `BACKEND_NOTES.md`
+  - `PROJECT_HANDOFF.md`
+
+## Completed: Clinic Services Integration
+- Date: 2026-07-24.
+- Integrated lab sections, available/enabled lab tests, available/enabled service specializations, enable/update/remove lab tests, and enable specializations.
+- Added services models, remote data source, repository, Cubit pagination/search/debounced price sync, and Freezed state.
+- Registered Services dependencies in GetIt.
+- Files added/modified:
+  - `lib/features/services/data/clinic_services_remote_data_source.dart`
+  - `lib/features/services/data/models/clinic_service_model.dart`
+  - `lib/features/services/domain/clinic_services_repository.dart`
+  - `lib/features/services/presentation/cubit/services_cubit.dart`
+  - `lib/features/services/presentation/cubit/services_state.dart`
+  - `lib/features/services/presentation/pages/services_page.dart`
+  - `lib/features/services/presentation/pages/services_view.dart`
+  - `lib/features/services/presentation/services_l10n.dart`
+  - `lib/features/services/presentation/widgets/service_test_card.dart`
+  - `lib/features/services/presentation/widgets/services_add_sheet.dart`
+  - `lib/features/services/presentation/widgets/services_catalog_grid.dart`
+  - `lib/features/services/presentation/widgets/services_detail_list.dart`
+  - `lib/features/services/presentation/widgets/services_header.dart`
+  - `lib/features/services/presentation/widgets/services_tab_switcher.dart`
+  - `lib/core/di/service_locator.dart`
+  - `lib/core/utils/app_url.dart`
+  - `PROJECT_HANDOFF.md`
+
 ## Verification Notes
 - `flutter pub get`: passed.
 - `dart run build_runner build`: passed.
 - `flutter analyze`: passed with no issues.
 - `flutter build apk --debug`: passed.
 - `git diff --check`: passed.
-- `flutter test`: failed in an existing Doctors UI viewport test due RenderFlex overflows in `doctor_card.dart` and `doctors_header.dart`; Auth cubit test passed.
+- `flutter test`: passed.
+
+## Completed: Notifications Counters Stability Fix
+- Date: 2026-07-24.
+- Kept user on profile screen after save and made clinic name updates visible immediately in settings/home.
+- Fixed notification tab counters drifting after read/delete/mark-all by separating total/read/unread counters in notifications state and syncing them with tab-specific pagination totals plus unread-count endpoint.
+- No backend API contract changes were required.
+- Files added/modified:
+  - `lib/features/notifications/presentation/cubit/notifications_cubit.dart`
+  - `lib/features/notifications/presentation/cubit/notifications_state.dart`
+  - `lib/features/notifications/presentation/cubit/notifications_cubit.freezed.dart`
+  - `lib/features/notifications/presentation/widgets/notifications_tabs.dart`
+  - `lib/features/settings/presentation/cubit/settings_cubit.dart`
+  - `lib/features/settings/presentation/widgets/settings_main_header.dart`
+  - `lib/features/home/presentation/widgets/home_top_section.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Home Clinic Name Live Refresh Fix
+- Date: 2026-07-24.
+- Fixed stale clinic name on Home after profile updates by notifying app listeners whenever cached clinic data changes.
+- Files added/modified:
+  - `lib/core/services/storage_service.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Settings Profile Save Toast
+- Date: 2026-07-24.
+- Added success toast feedback after profile update completes successfully.
+- Files added/modified:
+  - `lib/features/settings/presentation/cubit/settings_cubit.dart`
+  - `lib/features/settings/presentation/cubit/settings_state.dart`
+  - `lib/features/settings/presentation/cubit/settings_cubit.freezed.dart`
+  - `lib/features/settings/presentation/pages/settings_page.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Notifications Open Without Full Reload
+- Date: 2026-07-24.
+- Updated notifications open flow to avoid full list refresh on card tap.
+- `open()` now marks notification as read and updates list/counters locally.
+- `loadInitial()` remains for first page load and pull-to-refresh.
+- Files added/modified:
+  - `lib/features/notifications/presentation/cubit/notifications_cubit.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Services Account Type Routing Fix
+- Date: 2026-07-24.
+- Services page now derives the real clinic account type (`clinic`/`lab`/`both`) from cached clinic data instead of defaulting to `both`.
+- Prevents invalid lab-services calls for clinic-only accounts and keeps services tab/data aligned with backend permissions.
+- Files added/modified:
+  - `lib/features/services/presentation/pages/services_page.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Services Tabs Always Visible
+- Date: 2026-07-24.
+- Kept both services tabs visible (`lab` and `specialty`) for UI consistency.
+- Role-restricted tab remains visible but disabled instead of being hidden.
+- Files added/modified:
+  - `lib/features/services/presentation/widgets/services_tab_switcher.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Services Tabs Click + Specialty Data Visibility Fix
+- Date: 2026-07-24.
+- Made both services tabs clickable, including role-restricted flows (backend now returns the explicit permission error which is shown as toast).
+- Added services-page failure toast handling to surface backend errors clearly.
+- Updated specialties catalog to show enabled specialties when present, otherwise show available specialties list so non-empty API data is visible.
+- Files added/modified:
+  - `lib/features/services/presentation/cubit/services_cubit.dart`
+  - `lib/features/services/presentation/pages/services_view.dart`
+  - `lib/features/services/presentation/widgets/services_tab_switcher.dart`
+  - `lib/features/services/presentation/widgets/services_catalog_grid.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Custom Dio API Logger
+- Date: 2026-07-24.
+- Replaced noisy inline Dio logs with a reusable custom interceptor/logger.
+- Added structured request/response/error logs with request ID, duration, endpoint, status code, pagination summary, validation errors, and sensitive-data masking.
+- Added optional full-response pretty logging toggle through `logFullApiResponse`.
+- Disabled duplicate logs by removing existing `LogInterceptor` and old inline interceptor before registering the new one.
+- Files added/modified:
+  - `lib/core/network/interceptors/api_logger_interceptor.dart`
+  - `lib/core/network/utils/api_log_formatter.dart`
+  - `lib/core/network/utils/api_log_sanitizer.dart`
+  - `lib/core/domain/services/api_services_imp.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Raw Body Logging View
+- Date: 2026-07-24.
+- API logger now prints request/response/error body as-is in dedicated body sections.
+- Files added/modified:
+  - `lib/core/network/utils/api_log_formatter.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
 
 ## Important Current Blocker
-- Protected Clinic authentication is now available.
-- Do not implement Clinic operational feature integration until each required feature endpoint is documented in `BACKEND_NOTES.md` or verified directly in current backend code.
+- No current Services blocker.
+- Do not implement any future feature endpoint unless it is documented in `BACKEND_NOTES.md` or verified directly in current backend code.
+
+## Completed: Services Tabs Availability-Hide Restore
+- Date: 2026-07-24.
+- Restored tab visibility behavior to show only service kinds allowed by account type; unavailable kinds are hidden.
+- If only one kind is available, the tab switcher is hidden.
+- Files added/modified:
+  - `lib/features/services/presentation/widgets/services_tab_switcher.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Reports Card Border Crash Fix
+- Date: 2026-07-24.
+- Fixed Flutter paint assertion caused by mixing non-uniform border colors with `borderRadius` in reports entry card.
+- Replaced directional mixed-color border decoration with a uniform border plus a clipped start accent strip.
+- Files added/modified:
+  - `lib/features/reports/presentation/widgets/report_entry_card.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Services Numeric/String Parsing Compatibility Fix
+- Date: 2026-07-24.
+- Fixed services parsing failures (`Unable to process data`) caused by backend returning numeric identifiers as strings in services payloads.
+- Added robust `fromJson` converters for services IDs/prices/boolean flags to support string and numeric forms without crashing.
+- Files added/modified:
+  - `lib/features/services/data/models/clinic_service_model.dart`
+  - `lib/features/services/data/models/clinic_service_model.g.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Lab Sections Add/Remove Flow Restore
+- Date: 2026-07-24.
+- Restored lab-services UX so the catalog shows only added lab section types.
+- Bottom sheet lab section tap now toggles add/remove, and opening an added section still loads tests with enable/disable and pricing.
+- Added automatic sync of added lab sections from enabled lab tests returned by backend.
+- Files added/modified:
+  - `lib/features/services/presentation/cubit/services_cubit.dart`
+  - `lib/features/services/presentation/cubit/services_state.dart`
+  - `lib/features/services/presentation/cubit/services_cubit.freezed.dart`
+  - `lib/features/services/presentation/widgets/services_catalog_grid.dart`
+  - `lib/features/services/presentation/widgets/services_add_sheet.dart`
+  - `lib/features/services/presentation/pages/services_view.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Reports Date Format + File Open
+- Date: 2026-07-24.
+- Formatted generated report date display to `yyyy-MM-dd h:mm am/pm`.
+- Added report card tap-to-open behavior when `file_url` is present.
+- Added `localhost` file URL fallback to current backend host for device access.
+- Added `url_launcher` dependency for opening report links externally.
+- Files added/modified:
+  - `lib/features/reports/data/models/clinic_report_model.dart`
+  - `lib/features/reports/presentation/widgets/report_entry_card.dart`
+  - `pubspec.yaml`
+  - `pubspec.lock`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Clinic Doctor Add/Edit/Details Integration
+- Date: 2026-07-25.
+- Integrated doctor details through `GET /api/clinic/doctors/{doctor}`.
+- Integrated add doctor through `POST /api/clinic/doctors`.
+- Integrated edit doctor through `PUT /api/clinic/doctors/{doctor}`.
+- Add/edit now submits documented fields including `schedules.*.day/from/to/is_active`.
+- Add/edit uses backend specializations from `GET /api/clinic/specializations`.
+- Doctor image picker now uses the shared media bottom sheet and sends `image` as multipart when selected.
+- Qualification picker now accepts PDF files and sends `qualification_files[]` as multipart when selected.
+- Removing a newly selected image/file before save is supported locally.
+- Removing already-uploaded server assets is not implemented because no remove-field contract is documented.
+- Files added/modified:
+  - `lib/features/doctors/data/clinic_doctors_remote_data_source.dart`
+  - `lib/features/doctors/domain/clinic_doctors_repository.dart`
+  - `lib/features/doctors/domain/doctor_summary.dart`
+  - `lib/features/doctors/presentation/cubit/add_doctor_cubit.dart`
+  - `lib/features/doctors/presentation/cubit/add_doctor_state.dart`
+  - `lib/features/doctors/presentation/cubit/add_doctor_cubit.freezed.dart`
+  - `lib/features/doctors/presentation/cubit/doctors_cubit.dart`
+  - `lib/features/doctors/presentation/cubit/doctors_state.dart`
+  - `lib/features/doctors/presentation/cubit/doctors_state.freezed.dart`
+  - `lib/features/doctors/presentation/pages/add_doctor_page.dart`
+  - `lib/features/doctors/presentation/pages/add_doctor_view.dart`
+  - `lib/features/doctors/presentation/pages/doctor_profile_page.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_button.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_basic_section.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_header.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_professional_section.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_qualifications_section.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_save_bar.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_specialty_picker.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_text_field.dart`
+  - `lib/features/doctors/presentation/widgets/doctor_profile_header.dart`
+  - `lib/features/doctors/presentation/widgets/doctor_profile_schedule.dart`
+  - `lib/features/doctors/presentation/widgets/doctors_list.dart`
+  - `lib/config/routes/app_router.dart`
+  - `lib/core/di/service_locator.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Appointments Counters Fix
+- Date: 2026-07-25.
+- Appointments header counters now use backend pagination totals from lightweight `per_page=1` requests for all/pending/accepted/completed.
+- Appointment filter chip counters now calculate visible counts from the currently loaded list items by status, so non-selected filters no longer show hardcoded zero.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/appointments/presentation/cubit/appointments_cubit.dart`
+  - `lib/features/appointments/presentation/cubit/appointments_state.dart`
+  - `lib/features/appointments/presentation/cubit/appointments_state.freezed.dart`
+  - `lib/features/appointments/presentation/widgets/appointments_header.dart`
+  - `lib/features/appointments/presentation/widgets/appointments_tabs.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Accepted Appointment Finish/Result Actions
+- Date: 2026-07-25.
+- Accepted normal appointments show one action: finish appointment via existing `finish` flow.
+- Accepted lab/result-required appointments show two separate actions:
+  - finish appointment via existing `finish` flow.
+  - upload result via existing `result` flow.
+- Uploading a result no longer replaces the explicit finish action.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/appointments/presentation/pages/appointment_detail_view.dart`
+  - `lib/features/appointments/presentation/widgets/appointment_actions.dart`
+  - `lib/features/appointments/presentation/widgets/appointment_card.dart`
+  - `lib/features/appointments/presentation/widgets/appointment_finish_sheet.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Appointment Detail Result/Notes Display
+- Date: 2026-07-25.
+- Appointment details now display backend `notes` when present.
+- Appointment details now display an open-result-file action when backend `result_file` is present.
+- Result file URLs use the same localhost-to-backend-host fallback used by reports.
+- Appointment actions now update the currently opened detail item from the action response before reloading the list.
+- No backend changes required if `ClinicAppointmentResource` already returns `notes` and `result_file`.
+- Files added/modified:
+  - `lib/features/appointments/data/models/clinic_appointment_model.dart`
+  - `lib/features/appointments/presentation/cubit/appointments_cubit.dart`
+  - `lib/features/appointments/presentation/pages/appointment_detail_view.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Home Quick Actions Navigation
+- Date: 2026-07-25.
+- Home Services quick action now navigates to `/services`.
+- Home Reports quick action now navigates to `/reports`.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/home/presentation/widgets/home_top_section.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Appointment Card Date-Time Display
+- Date: 2026-07-25.
+- Appointment cards now display both backend `date` and `time`.
+- Time is formatted as `h:mm am/pm` when backend sends `HH:mm`, `HH:mm:ss`, or AM/PM time.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/appointments/data/models/clinic_appointment_model.dart`
+  - `lib/features/appointments/presentation/widgets/appointment_card.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Notifications Counters Pagination Pattern
+- Date: 2026-07-25.
+- Notifications header now uses full backend totals from lightweight `per_page=1` calls for all/unread/read.
+- Notifications tab counters now calculate counts from currently loaded paginated list items.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/notifications/presentation/cubit/notifications_cubit.dart`
+  - `lib/features/notifications/presentation/widgets/notifications_header.dart`
+  - `lib/features/notifications/presentation/widgets/notifications_tabs.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`

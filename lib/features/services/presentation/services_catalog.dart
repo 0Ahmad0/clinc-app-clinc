@@ -15,11 +15,19 @@ Map<LabSection, List<LabTest>> localizedLabTests(AppLocalizations l10n) => {
   ],
   LabSection.hormones: [
     LabTest(code: 'TSH', name: l10n.testTsh, sub: l10n.serviceSubThyroid),
-    LabTest(code: 'TES', name: l10n.testTestosterone, sub: l10n.serviceSubSexHormone),
+    LabTest(
+      code: 'TES',
+      name: l10n.testTestosterone,
+      sub: l10n.serviceSubSexHormone,
+    ),
   ],
   LabSection.vitamins: [
     LabTest(code: 'D3', name: l10n.testVitaminD, sub: l10n.serviceSubVitaminD),
-    LabTest(code: 'B12', name: l10n.testVitaminB12, sub: l10n.serviceSubVitaminB12),
+    LabTest(
+      code: 'B12',
+      name: l10n.testVitaminB12,
+      sub: l10n.serviceSubVitaminB12,
+    ),
   ],
 };
 

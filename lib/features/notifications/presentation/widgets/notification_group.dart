@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
-import '../../domain/app_notification.dart';
+import '../../data/models/clinic_notification_model.dart';
 import '../cubit/notifications_cubit.dart';
 import 'notification_card.dart';
 
@@ -16,13 +16,12 @@ class NotificationGroup extends StatelessWidget {
   });
 
   final String label;
-  final List<AppNotification> items;
+  final List<ClinicNotificationModel> items;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final cubit = context.read<NotificationsCubit>();
-    final state = cubit.state;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -56,7 +55,7 @@ class NotificationGroup extends StatelessWidget {
             padding: const EdgeInsetsDirectional.only(bottom: AppSpacing.sm),
             child: NotificationCard(
               notification: notification,
-              unread: state.isUnread(notification),
+              unread: notification.unread,
               onTap: () => cubit.open(notification.id),
             ),
           ),

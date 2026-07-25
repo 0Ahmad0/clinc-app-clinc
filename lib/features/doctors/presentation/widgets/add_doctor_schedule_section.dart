@@ -6,7 +6,6 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../domain/weekday.dart';
 import '../cubit/add_doctor_cubit.dart';
-import '../cubit/add_doctor_state.dart';
 import 'add_doctor_schedule_row.dart';
 import '../../../../shared/widgets/app_section_card.dart';
 

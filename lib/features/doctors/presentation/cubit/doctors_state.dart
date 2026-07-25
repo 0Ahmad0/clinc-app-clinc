@@ -15,6 +15,8 @@ abstract class DoctorsState with _$DoctorsState {
     List<ClinicSpecializationModel> specializations,
     String? selectedSpecializationId,
     @Default('') String query,
+    ClinicDoctorModel? selectedDoctor,
+    @Default(false) bool isDetailsLoading,
     NetworkExceptions? failure,
   }) = _DoctorsState;
 }

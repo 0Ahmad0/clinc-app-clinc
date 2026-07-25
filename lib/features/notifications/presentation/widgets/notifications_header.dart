@@ -7,8 +7,6 @@ import 'package:intl/intl.dart' show NumberFormat;
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../cubit/notifications_cubit.dart';
-import '../cubit/notifications_state.dart';
-import '../notifications_catalog.dart';
 import 'notifications_header_action.dart';
 
 /// Blue gradient header: back button, bell with unread dot, title, unread
@@ -20,15 +18,14 @@ class NotificationsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
-    final all = localizedNotifications(l10n);
     final format = NumberFormat.decimalPattern(
       Localizations.localeOf(context).toLanguageTag(),
     );
     return BlocBuilder<NotificationsCubit, NotificationsState>(
       builder: (context, state) {
         final cubit = context.read<NotificationsCubit>();
-        final activeIds = cubit.active(all).map((n) => n.id);
-        final unread = cubit.unreadCount(all);
+        final total = state.totalCount;
+        final unread = state.unreadCount;
         return Container(
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
@@ -119,9 +116,12 @@ class NotificationsHeader extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            unread > 0
-                                ? l10n.notifUnreadLine(format.format(unread))
-                                : l10n.notifAllRead,
+                            _headerLine(
+                              context,
+                              total: format.format(total),
+                              unread: format.format(unread),
+                              hasUnread: unread > 0,
+                            ),
                             style: context.textTheme.bodySmall?.copyWith(
                               color: colors.onBrand.withValues(alpha: 0.72),
                             ),
@@ -132,13 +132,13 @@ class NotificationsHeader extends StatelessWidget {
                     NotificationsHeaderAction(
                       icon: Iconsax.tick_square,
                       tooltip: l10n.notifMarkAllRead,
-                      onTap: () => cubit.markAllRead(activeIds),
+                      onTap: cubit.markAllRead,
                     ),
                     AppGaps.w8,
                     NotificationsHeaderAction(
                       icon: Iconsax.trash,
                       tooltip: l10n.notifClearAll,
-                      onTap: () => cubit.clearAll(activeIds),
+                      onTap: cubit.clearAll,
                     ),
                   ],
                 ),
@@ -148,5 +148,22 @@ class NotificationsHeader extends StatelessWidget {
         );
       },
     );
+  }
+
+  String _headerLine(
+    BuildContext context, {
+    required String total,
+    required String unread,
+    required bool hasUnread,
+  }) {
+    final isAr = Localizations.localeOf(context).languageCode == 'ar';
+    if (isAr) {
+      return hasUnread
+          ? '$total إشعار، $unread غير مقروء'
+          : '$total إشعار، الكل مقروء';
+    }
+    return hasUnread
+        ? '$total notifications, $unread unread'
+        : '$total notifications, all read';
   }
 }

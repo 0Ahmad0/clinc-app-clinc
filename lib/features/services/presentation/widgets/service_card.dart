@@ -68,7 +68,9 @@ class ServiceCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: context.textTheme.bodySmall?.copyWith(color: colors.gray),
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: colors.gray,
+                ),
               ),
             ],
           ),

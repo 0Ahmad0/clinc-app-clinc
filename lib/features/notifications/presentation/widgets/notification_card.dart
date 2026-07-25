@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
-import '../../domain/app_notification.dart';
+import '../../data/models/clinic_notification_model.dart';
 import '../notification_kind_style.dart';
 
 /// A single notification row: kind icon, title + time, body and a "new" chip
@@ -16,7 +16,7 @@ class NotificationCard extends StatelessWidget {
     required this.onTap,
   });
 
-  final AppNotification notification;
+  final ClinicNotificationModel notification;
   final bool unread;
   final VoidCallback onTap;
 
@@ -37,9 +37,7 @@ class NotificationCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(AppRadius.homeQuickAction),
               border: Border.all(
-                color: unread
-                    ? accent.withValues(alpha: 0.14)
-                    : colors.line,
+                color: unread ? accent.withValues(alpha: 0.14) : colors.line,
                 width: unread ? 1.5 : 1,
               ),
               boxShadow: unread ? AppShadows.homeCard : null,
@@ -71,7 +69,7 @@ class NotificationCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              notification.title,
+                              notification.displayTitle,
                               style: context.textTheme.bodyMedium?.copyWith(
                                 color: colors.ink,
                                 fontWeight: FontWeight.w700,
@@ -80,7 +78,7 @@ class NotificationCard extends StatelessWidget {
                           ),
                           AppGaps.w8,
                           Text(
-                            notification.time,
+                            notification.displayTime,
                             textDirection: TextDirection.ltr,
                             style: context.textTheme.labelSmall?.copyWith(
                               color: colors.muted,
@@ -90,7 +88,7 @@ class NotificationCard extends StatelessWidget {
                       ),
                       AppGaps.h8,
                       Text(
-                        notification.body,
+                        notification.displayBody,
                         style: context.textTheme.bodySmall?.copyWith(
                           color: colors.gray,
                         ),

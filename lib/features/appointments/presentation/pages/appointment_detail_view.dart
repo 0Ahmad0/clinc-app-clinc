@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../core/enums/app_button_variant.dart';
+import '../../../../core/enums/app_feedback_type.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_section_card.dart';
+import '../../../../shared/widgets/app_toast.dart';
 import '../../data/models/clinic_appointment_model.dart';
 import '../appointment_kind_style.dart';
 import '../cubit/appointments_cubit.dart';
@@ -24,6 +27,11 @@ class AppointmentDetailView extends StatelessWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final cubit = context.read<AppointmentsCubit>();
+    final requiresResult = appointment.kindValue.requiresResult;
+    final notes = appointment.notes?.trim();
+    final resultUri = appointment.resultFileUri;
+    final hasCompletionDetails =
+        (notes != null && notes.isNotEmpty) || resultUri != null;
     final hasActions =
         appointment.status == 'pending' || appointment.status == 'accepted';
     return ListView(
@@ -94,6 +102,35 @@ class AppointmentDetailView extends StatelessWidget {
                   ],
                 ),
               ),
+              if (hasCompletionDetails) ...[
+                AppGaps.h16,
+                AppSectionCard(
+                  icon: Iconsax.document_text,
+                  tint: colors.primary600,
+                  title: _completionDetailsTitle(context),
+                  child: Column(
+                    children: [
+                      if (notes != null && notes.isNotEmpty)
+                        AppointmentInfoRow(
+                          icon: Iconsax.note_text,
+                          label: _notesLabel(context),
+                          value: notes,
+                        ),
+                      if (notes != null &&
+                          notes.isNotEmpty &&
+                          resultUri != null)
+                        AppGaps.h12,
+                      if (resultUri != null)
+                        AppButton(
+                          label: _openResultLabel(context),
+                          icon: Iconsax.document_download,
+                          variant: AppButtonVariant.secondary,
+                          onPressed: () => _openResult(context, resultUri),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
               if (hasActions) ...[
                 AppGaps.h16,
                 AppSectionCard(
@@ -130,8 +167,37 @@ class AppointmentDetailView extends StatelessWidget {
                             ),
                           ],
                         )
+                      : requiresResult
+                      ? Row(
+                          children: [
+                            Expanded(
+                              child: AppButton(
+                                label: l10n.apptFinish,
+                                icon: Iconsax.tick_square,
+                                onPressed: () => openFinishSheet(
+                                  context,
+                                  cubit,
+                                  appointment,
+                                ),
+                              ),
+                            ),
+                            AppGaps.w12,
+                            Expanded(
+                              child: AppButton(
+                                label: _uploadResultLabel(context),
+                                icon: Iconsax.document_upload,
+                                variant: AppButtonVariant.secondary,
+                                onPressed: () => openResultSheet(
+                                  context,
+                                  cubit,
+                                  appointment,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
                       : AppButton(
-                          label: appointment.kindValue.finishLabel(l10n),
+                          label: l10n.apptFinish,
                           icon: Iconsax.tick_square,
                           onPressed: () =>
                               openFinishSheet(context, cubit, appointment),
@@ -142,6 +208,38 @@ class AppointmentDetailView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  String _uploadResultLabel(BuildContext context) =>
+      Localizations.localeOf(context).languageCode == 'ar'
+      ? 'رفع النتيجة'
+      : 'Upload result';
+
+  String _completionDetailsTitle(BuildContext context) =>
+      Localizations.localeOf(context).languageCode == 'ar'
+      ? 'النتيجة والملاحظات'
+      : 'Result and notes';
+
+  String _notesLabel(BuildContext context) =>
+      Localizations.localeOf(context).languageCode == 'ar'
+      ? 'الملاحظات'
+      : 'Notes';
+
+  String _openResultLabel(BuildContext context) =>
+      Localizations.localeOf(context).languageCode == 'ar'
+      ? 'فتح ملف النتيجة'
+      : 'Open result file';
+
+  Future<void> _openResult(BuildContext context, Uri uri) async {
+    final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (opened) return;
+    if (!context.mounted) return;
+    AppToast.show(
+      context,
+      title: context.l10n.toastFailure,
+      message: uri.toString(),
+      type: AppFeedbackType.danger,
     );
   }
 }

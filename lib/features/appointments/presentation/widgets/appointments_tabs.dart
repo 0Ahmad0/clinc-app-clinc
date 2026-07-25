@@ -20,32 +20,40 @@ class AppointmentsTabs extends StatelessWidget {
       Localizations.localeOf(context).toLanguageTag(),
     );
     return BlocBuilder<AppointmentsCubit, AppointmentsState>(
-      buildWhen: (previous, current) => previous.tab != current.tab,
-      builder: (context, state) => SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsetsDirectional.fromSTEB(
-          AppSpacing.screen,
-          AppSpacing.md,
-          AppSpacing.screen,
-          AppSpacing.xxs,
-        ),
-        child: Row(
-          children: [
-            for (final tab in AppointmentTab.values)
-              Padding(
-                padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
-                child: AppTabChip(
-                  label: tab.label(l10n),
-                  count: state.tab == tab
-                      ? format.format(state.pagination.total ?? 0)
-                      : '0',
-                  selected: state.tab == tab,
-                  onTap: () => context.read<AppointmentsCubit>().selectTab(tab),
+      builder: (context, state) {
+        final counts = {
+          AppointmentTab.all: state.totalCount,
+          AppointmentTab.pending: state.pendingCount,
+          AppointmentTab.confirmed: state.confirmedCount,
+          AppointmentTab.done: state.doneCount,
+          AppointmentTab.rejected: state.rejectedCount,
+        };
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsetsDirectional.fromSTEB(
+            AppSpacing.screen,
+            AppSpacing.md,
+            AppSpacing.screen,
+            AppSpacing.xxs,
+          ),
+          child: Row(
+            children: [
+              for (final tab in AppointmentTab.values)
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
+                  child: AppTabChip(
+                    label: tab.label(l10n),
+                    count: format.format(counts[tab] ?? 0),
+                    selected: state.tab == tab,
+                    onTap: () =>
+                        context.read<AppointmentsCubit>().selectTab(tab),
+                  ),
                 ),
-              ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

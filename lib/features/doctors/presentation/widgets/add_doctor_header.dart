@@ -1,14 +1,23 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../cubit/add_doctor_cubit.dart';
 
-/// Blue gradient header for the add-doctor screen: a back button, title and a
-/// tappable avatar placeholder (image picker wired once the feature needs it).
 class AddDoctorHeader extends StatelessWidget {
-  const AddDoctorHeader({super.key});
+  const AddDoctorHeader({
+    super.key,
+    required this.onPickImage,
+    required this.onRemoveImage,
+  });
+
+  final VoidCallback onPickImage;
+  final VoidCallback onRemoveImage;
 
   @override
   Widget build(BuildContext context) {
@@ -78,53 +87,93 @@ class AddDoctorHeader extends StatelessWidget {
                   ],
                 ),
                 AppGaps.h16,
-                SizedBox(
-                  width: AppSizes.addDoctorAvatar,
-                  height: AppSizes.addDoctorAvatar,
-                  child: Stack(
-                    children: [
-                      Container(
+                BlocBuilder<AddDoctorCubit, AddDoctorState>(
+                  builder: (context, state) {
+                    final imagePath =
+                        state.imagePath ?? state.initialDoctor?.imageUrl;
+                    return GestureDetector(
+                      onTap: onPickImage,
+                      child: SizedBox(
                         width: AppSizes.addDoctorAvatar,
                         height: AppSizes.addDoctorAvatar,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colors.onBrand.withValues(alpha: 0.14),
-                          border: Border.all(
-                            color: colors.onBrand.withValues(alpha: 0.4),
-                            width: 2,
-                          ),
-                        ),
-                        child: Icon(
-                          Iconsax.user,
-                          color: colors.onBrand.withValues(alpha: 0.85),
-                          size: AppSizes.iconLg + AppSpacing.md,
-                        ),
-                      ),
-                      PositionedDirectional(
-                        bottom: 0,
-                        end: 0,
-                        child: Container(
-                          width: AppSizes.addDoctorAvatarBadge,
-                          height: AppSizes.addDoctorAvatarBadge,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: colors.surface,
-                            border: Border.all(
-                              color: colors.primary600,
-                              width: 2,
+                        child: Stack(
+                          children: [
+                            Container(
+                              width: AppSizes.addDoctorAvatar,
+                              height: AppSizes.addDoctorAvatar,
+                              clipBehavior: Clip.antiAlias,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: colors.onBrand.withValues(alpha: 0.14),
+                                border: Border.all(
+                                  color: colors.onBrand.withValues(alpha: 0.4),
+                                  width: 2,
+                                ),
+                              ),
+                              child: imagePath == null
+                                  ? Icon(
+                                      Iconsax.user,
+                                      color: colors.onBrand.withValues(
+                                        alpha: 0.85,
+                                      ),
+                                      size: AppSizes.iconLg + AppSpacing.md,
+                                    )
+                                  : _DoctorImage(path: imagePath),
                             ),
-                          ),
-                          child: Icon(
-                            Iconsax.camera,
-                            color: colors.primary600,
-                            size: AppSizes.iconSm - 2,
-                          ),
+                            PositionedDirectional(
+                              bottom: 0,
+                              end: 0,
+                              child: Container(
+                                width: AppSizes.addDoctorAvatarBadge,
+                                height: AppSizes.addDoctorAvatarBadge,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: colors.surface,
+                                  border: Border.all(
+                                    color: colors.primary600,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Icon(
+                                  Iconsax.camera,
+                                  color: colors.primary600,
+                                  size: AppSizes.iconSm - 2,
+                                ),
+                              ),
+                            ),
+                            if (state.imagePath != null)
+                              PositionedDirectional(
+                                top: 0,
+                                start: 0,
+                                child: GestureDetector(
+                                  onTap: onRemoveImage,
+                                  child: Container(
+                                    width: AppSizes.addDoctorAvatarBadge,
+                                    height: AppSizes.addDoctorAvatarBadge,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: colors.dangerFg,
+                                      border: Border.all(
+                                        color: colors.surface,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Iconsax.close_circle,
+                                      color: colors.onBrand,
+                                      size: AppSizes.iconXs,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
                 AppGaps.h8,
                 Text(
@@ -139,5 +188,17 @@ class AddDoctorHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _DoctorImage extends StatelessWidget {
+  const _DoctorImage({required this.path});
+
+  final String path;
+
+  @override
+  Widget build(BuildContext context) {
+    if (path.startsWith('http')) return Image.network(path, fit: BoxFit.cover);
+    return Image.file(File(path), fit: BoxFit.cover);
   }
 }

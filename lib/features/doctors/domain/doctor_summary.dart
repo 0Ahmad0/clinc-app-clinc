@@ -12,6 +12,7 @@ class DoctorSummary {
     this.imageUrl,
     this.rating = 4.8,
     this.patients = 340,
+    this.doctorId,
   });
 
   final int id;
@@ -28,4 +29,6 @@ class DoctorSummary {
   /// Profile stats (server-supplied; sensible defaults until then).
   final double rating;
   final int patients;
+
+  final String? doctorId;
 }

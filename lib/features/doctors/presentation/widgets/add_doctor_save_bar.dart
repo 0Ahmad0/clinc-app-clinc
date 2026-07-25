@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../cubit/add_doctor_cubit.dart';
 
 /// Bottom save bar that fades over the scrolling form (save wired once the
 /// endpoint exists).
 class AddDoctorSaveBar extends StatelessWidget {
-  const AddDoctorSaveBar({super.key});
+  const AddDoctorSaveBar({super.key, required this.onSave});
+
+  final VoidCallback onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +32,12 @@ class AddDoctorSaveBar extends StatelessWidget {
           stops: const [0, 0.55],
         ),
       ),
-      child: AppButton(
-        label: context.l10n.addDoctorSave,
-        icon: Iconsax.save_2,
-        onPressed: () {},
+      child: BlocBuilder<AddDoctorCubit, AddDoctorState>(
+        builder: (context, state) => AppButton(
+          label: state.isSaving ? '...' : context.l10n.addDoctorSave,
+          icon: Iconsax.save_2,
+          onPressed: state.isSaving ? null : onSave,
+        ),
       ),
     );
   }

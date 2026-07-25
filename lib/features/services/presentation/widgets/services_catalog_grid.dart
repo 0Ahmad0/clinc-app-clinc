@@ -5,8 +5,6 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../domain/service_kind.dart';
 import '../cubit/services_cubit.dart';
-import '../cubit/services_state.dart';
-import '../services_catalog.dart';
 import '../services_l10n.dart';
 import 'service_card.dart';
 import 'services_add_card.dart';
@@ -22,31 +20,45 @@ class ServicesCatalogGrid extends StatelessWidget {
     final l10n = context.l10n;
     final colors = context.colors;
     final cubit = context.read<ServicesCubit>();
-    final catalog = localizedLabTests(l10n);
 
     return BlocBuilder<ServicesCubit, ServicesState>(
       builder: (context, state) {
         final isLab = state.kind == ServiceKind.lab;
+        if (state.isLoading) {
+          return const Padding(
+            padding: EdgeInsets.only(top: AppSpacing.xl),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
         final cards = <Widget>[
           if (isLab)
-            for (final section in state.sections)
+            for (final section in state.visibleLabSections)
               ServiceCard(
-                icon: section.icon,
+                icon: section.iconData,
                 accent: section.accent(colors),
-                name: section.label(l10n),
+                name: section.label(context),
                 sub: l10n.servicesTestsAvailable(
-                  '${catalog[section]!.length}',
+                  '${state.enabledLabTests.items.value.where((item) => item.sectionId == section.sectionId).length}',
                 ),
                 onTap: () => cubit.openDetail(section),
               )
           else
-            for (final specialty in state.specialties)
-              ServiceCard(
-                icon: specialty.icon,
-                accent: specialty.accent(colors),
-                name: specialty.label(l10n),
-                sub: l10n.servicesSpecialtyLabel,
-              ),
+            if (state.enabledSpecializations.items.value.isNotEmpty)
+              for (final specialty in state.enabledSpecializations.items.value)
+                ServiceCard(
+                  icon: specialty.iconData,
+                  accent: specialty.accent(colors),
+                  name: specialty.label(context),
+                  sub: l10n.servicesSpecialtyLabel,
+                )
+            else
+              for (final specialty in state.availableSpecializations.items.value)
+                ServiceCard(
+                  icon: specialty.iconData,
+                  accent: specialty.accent(colors),
+                  name: specialty.label(context),
+                  sub: l10n.servicesSpecialtyLabel,
+                ),
           ServicesAddCard(
             label: isLab ? l10n.servicesAddSection : l10n.servicesAddSpecialty,
             onTap: () => _openSheet(context, cubit),
@@ -79,10 +91,8 @@ class ServicesCatalogGrid extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => BlocProvider.value(
-        value: cubit,
-        child: const ServicesAddSheet(),
-      ),
+      builder: (_) =>
+          BlocProvider.value(value: cubit, child: const ServicesAddSheet()),
     );
   }
 }

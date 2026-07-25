@@ -29,6 +29,32 @@ class ClinicDoctorsRepository {
   Future<ApiResponse<BaseModel<ClinicDoctorModel>>> getDoctor(String id) =>
       _execute(() => _remoteDataSource.getDoctor(id));
 
+  Future<ApiResponse<BaseModel<ClinicDoctorModel>>> createDoctor(
+    Map<String, dynamic> body, {
+    String? imagePath,
+    List<String> qualificationFilePaths = const [],
+  }) => _execute(
+    () => _remoteDataSource.createDoctor(
+      body: body,
+      imagePath: imagePath,
+      qualificationFilePaths: qualificationFilePaths,
+    ),
+  );
+
+  Future<ApiResponse<BaseModel<ClinicDoctorModel>>> updateDoctor({
+    required String id,
+    required Map<String, dynamic> body,
+    String? imagePath,
+    List<String> qualificationFilePaths = const [],
+  }) => _execute(
+    () => _remoteDataSource.updateDoctor(
+      id: id,
+      body: body,
+      imagePath: imagePath,
+      qualificationFilePaths: qualificationFilePaths,
+    ),
+  );
+
   Future<ApiResponse<BaseModel<ClinicDoctorModel>>> updateAvailability({
     required String id,
     required bool isActive,

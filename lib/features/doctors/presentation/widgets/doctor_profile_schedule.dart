@@ -3,27 +3,34 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../data/models/clinic_doctor_model.dart';
 import '../../domain/weekday.dart';
 import '../weekday_l10n.dart';
 import 'doctor_profile_section_title.dart';
 
 /// Working days as chips (off days struck through) plus the working-hours line.
 class DoctorProfileSchedule extends StatelessWidget {
-  const DoctorProfileSchedule({super.key});
+  const DoctorProfileSchedule({super.key, required this.schedules});
 
-  // Server-supplied later; a sensible default pattern for now.
-  static const Set<Weekday> _activeDays = {
-    Weekday.saturday,
-    Weekday.sunday,
-    Weekday.monday,
-    Weekday.wednesday,
-    Weekday.thursday,
-  };
+  final List<ClinicDoctorScheduleModel> schedules;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
+    final activeDays = {
+      for (final schedule in schedules)
+        if (schedule.isActive) _weekday(schedule.day),
+    };
+    final activeSchedules = schedules.where((schedule) => schedule.isActive);
+    final hoursText = activeSchedules.isEmpty
+        ? l10n.doctorProfileHours
+        : activeSchedules
+              .map(
+                (schedule) => '${schedule.from ?? '-'} - ${schedule.to ?? '-'}',
+              )
+              .toSet()
+              .join(' / ');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -39,7 +46,7 @@ class DoctorProfileSchedule extends StatelessWidget {
               for (final day in Weekday.values)
                 _DayChip(
                   label: day.label(l10n),
-                  active: _activeDays.contains(day),
+                  active: activeDays.contains(day),
                 ),
             ],
           ),
@@ -69,7 +76,7 @@ class DoctorProfileSchedule extends StatelessWidget {
               AppGaps.w8,
               Expanded(
                 child: Text(
-                  l10n.doctorProfileHours,
+                  hoursText,
                   style: context.textTheme.bodySmall?.copyWith(
                     color: colors.slate,
                     fontWeight: FontWeight.w600,
@@ -80,6 +87,13 @@ class DoctorProfileSchedule extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Weekday _weekday(String? value) {
+    return Weekday.values.firstWhere(
+      (day) => day.name == (value ?? '').toLowerCase(),
+      orElse: () => Weekday.saturday,
     );
   }
 }

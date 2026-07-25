@@ -4,7 +4,7 @@ import 'package:intl/intl.dart' show NumberFormat;
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
-import '../../domain/lab_section.dart';
+import '../../data/models/clinic_service_model.dart';
 import '../services_l10n.dart';
 
 /// Gradient screen header. In list mode it shows a briefcase, the title and two
@@ -20,7 +20,7 @@ class ServicesHeader extends StatelessWidget {
     required this.onBack,
   });
 
-  final LabSection? detail;
+  final ClinicLabSectionModel? detail;
   final int detailCount;
   final int labTotal;
   final int specTotal;
@@ -85,7 +85,7 @@ class ServicesHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        inDetail ? detail!.label(l10n) : l10n.servicesTitle,
+                        inDetail ? detail!.label(context) : l10n.servicesTitle,
                         style: context.textTheme.titleLarge?.copyWith(
                           color: colors.onBrand,
                           fontWeight: FontWeight.w700,

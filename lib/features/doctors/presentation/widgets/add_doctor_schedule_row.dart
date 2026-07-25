@@ -4,10 +4,10 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../domain/weekday.dart';
-import '../cubit/add_doctor_state.dart';
+import '../cubit/add_doctor_cubit.dart';
 import '../weekday_l10n.dart';
-import 'add_doctor_time_box.dart';
 import '../../../../shared/widgets/app_switch.dart';
+import 'add_doctor_time_box.dart';
 
 /// One weekday row in the schedule card: a toggle plus the working hours that
 /// appear when the day is switched on. The hours open a time picker.

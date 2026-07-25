@@ -3,6 +3,8 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../config/theme/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../shared/extensions/context_extensions.dart';
+import '../data/models/clinic_service_model.dart';
 import '../domain/clinic_specialty.dart';
 import '../domain/lab_section.dart';
 import '../domain/service_kind.dart';
@@ -68,4 +70,61 @@ extension ClinicSpecialtyL10n on ClinicSpecialty {
     ClinicSpecialty.orthopedics => colors.warningFg,
     ClinicSpecialty.internal => colors.teal,
   };
+}
+
+extension ClinicLabSectionModelL10n on ClinicLabSectionModel {
+  String label(BuildContext context) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    return (isArabic ? nameAr : nameEn) ?? name ?? nameAr ?? nameEn ?? '-';
+  }
+
+  IconData get iconData => switch (slug) {
+    'marriage' || 'pre-marriage' => Iconsax.heart,
+    'hormones' => Iconsax.flash_1,
+    'vitamins' => Iconsax.sun_1,
+    _ => Iconsax.chart_21,
+  };
+
+  Color accent(AppColorsTheme colors) => switch (slug) {
+    'marriage' || 'pre-marriage' => colors.pink,
+    'hormones' => colors.purple,
+    'vitamins' => colors.warningFg,
+    _ => colors.primary600,
+  };
+}
+
+extension ClinicAvailableLabTestModelL10n on ClinicAvailableLabTestModel {
+  String label(BuildContext context) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    return (isArabic ? nameAr : nameEn) ?? name ?? nameAr ?? nameEn ?? '-';
+  }
+
+  String subtitle(BuildContext context) {
+    if ((description ?? '').trim().isNotEmpty) return description!.trim();
+    return sectionName ?? context.l10n.servicesLabTab;
+  }
+}
+
+extension ClinicAvailableSpecializationModelL10n
+    on ClinicAvailableSpecializationModel {
+  String label(BuildContext context) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    return (isArabic ? nameAr : nameEn) ?? name ?? nameAr ?? nameEn ?? '-';
+  }
+
+  IconData get iconData => Iconsax.hospital;
+
+  Color accent(AppColorsTheme colors) => colors.primary600;
+}
+
+extension ClinicEnabledSpecializationModelL10n
+    on ClinicEnabledSpecializationModel {
+  String label(BuildContext context) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    return (isArabic ? nameAr : nameEn) ?? name ?? nameAr ?? nameEn ?? '-';
+  }
+
+  IconData get iconData => Iconsax.hospital;
+
+  Color accent(AppColorsTheme colors) => colors.primary600;
 }

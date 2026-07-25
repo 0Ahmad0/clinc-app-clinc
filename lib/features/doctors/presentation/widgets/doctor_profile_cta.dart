@@ -8,9 +8,10 @@ import '../../../../shared/extensions/context_extensions.dart';
 /// Bottom action bar over a fade: the primary "appointments" button and a
 /// secondary call button.
 class DoctorProfileCta extends StatelessWidget {
-  const DoctorProfileCta({super.key, required this.onBook});
+  const DoctorProfileCta({super.key, required this.onBook, this.onCall});
 
   final VoidCallback onBook;
+  final VoidCallback? onCall;
 
   @override
   Widget build(BuildContext context) {
@@ -68,25 +69,34 @@ class DoctorProfileCta extends StatelessWidget {
               ),
             ),
           ),
-          AppGaps.w12,
-          Container(
-            width: AppSizes.buttonHeightSm,
-            height: AppSizes.buttonHeightSm,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
+          if (onCall != null) ...[
+            AppGaps.w12,
+            Material(
               color: colors.primary500.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(AppRadius.field),
-              border: Border.all(
-                color: colors.primary500.withValues(alpha: 0.35),
-                width: 1.5,
+              child: InkWell(
+                onTap: onCall,
+                borderRadius: BorderRadius.circular(AppRadius.field),
+                child: Container(
+                  width: AppSizes.buttonHeightSm,
+                  height: AppSizes.buttonHeightSm,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(AppRadius.field),
+                    border: Border.all(
+                      color: colors.primary500.withValues(alpha: 0.35),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Icon(
+                    Iconsax.call,
+                    color: colors.primary600,
+                    size: AppSizes.iconMd,
+                  ),
+                ),
               ),
             ),
-            child: Icon(
-              Iconsax.call,
-              color: colors.primary600,
-              size: AppSizes.iconMd,
-            ),
-          ),
+          ],
         ],
       ),
     );

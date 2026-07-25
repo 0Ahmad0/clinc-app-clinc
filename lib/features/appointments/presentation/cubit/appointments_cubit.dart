@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/data/base_model.dart';
 import '../../../../core/data/pagination/pagination_state.dart';
 import '../../../../core/data/remote/api_response.dart';
 import '../../data/models/clinic_appointment_model.dart';
@@ -21,9 +22,16 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
   final ClinicAppointmentsRepository _repository;
   final ScrollController scrollController = ScrollController();
 
-  Future<void> loadInitial() => _loadPage(page: 1, reset: true);
+  Future<void> loadInitial() async {
+    await Future.wait([_loadPage(page: 1, reset: true), _loadCounters()]);
+  }
 
-  Future<void> refresh() => _loadPage(page: 1, reset: true, refreshing: true);
+  Future<void> refresh() async {
+    await Future.wait([
+      _loadPage(page: 1, reset: true, refreshing: true),
+      _loadCounters(),
+    ]);
+  }
 
   Future<void> loadMore() async {
     final pagination = state.pagination;
@@ -59,11 +67,58 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
   Future<void> uploadResult(String id, String filePath) =>
       _action(() => _repository.uploadResult(id: id, filePath: filePath));
 
-  Future<void> _action(Future<ApiResponse<dynamic>> Function() action) async {
+  Future<void> _action(
+    Future<ApiResponse<BaseModel<ClinicAppointmentModel>>> Function() action,
+  ) async {
     final result = await action();
     result.when(
-      success: (_) => _loadPage(page: 1, reset: true),
+      success: (response) async {
+        final updated = response.result;
+        if (updated != null) {
+          emit(
+            state.copyWith(
+              selected: updated,
+              selectedId: updated.appointmentId ?? state.selectedId,
+              failure: null,
+            ),
+          );
+        }
+        await Future.wait([_loadPage(page: 1, reset: true), _loadCounters()]);
+      },
       failure: (exception) => emit(state.copyWith(failure: exception)),
+    );
+  }
+
+  Future<void> _loadCounters() async {
+    final results = await Future.wait([
+      _countFor(null),
+      _countFor('pending'),
+      _countFor('accepted'),
+      _countFor('completed'),
+      _countFor('rejected'),
+    ]);
+    emit(
+      state.copyWith(
+        totalCount: results[0],
+        pendingCount: results[1],
+        confirmedCount: results[2],
+        doneCount: results[3],
+        rejectedCount: results[4],
+        failure: null,
+      ),
+    );
+  }
+
+  Future<int> _countFor(String? status) async {
+    final result = await _repository.getAppointments(
+      page: 1,
+      perPage: 1,
+      status: status,
+    );
+    return result.when(
+      success: (response) =>
+          response.meta?.total ?? response.result?.list.length ?? 0,
+      failure: (_) => 0,
     );
   }
 

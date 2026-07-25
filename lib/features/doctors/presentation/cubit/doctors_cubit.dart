@@ -52,8 +52,30 @@ class DoctorsCubit extends Cubit<DoctorsState> {
       isActive: !doctor.isActive,
     );
     result.when(
-      success: (_) => _loadPage(page: 1, reset: true),
+      success: (response) {
+        if (state.selectedDoctor?.doctorId == id) {
+          emit(state.copyWith(selectedDoctor: response.result, failure: null));
+        }
+        _loadPage(page: 1, reset: true);
+      },
       failure: (exception) => emit(state.copyWith(failure: exception)),
+    );
+  }
+
+  Future<void> loadDoctor(String? id) async {
+    if (id == null || id.isEmpty) return;
+    emit(state.copyWith(isDetailsLoading: true, failure: null));
+    final result = await _repository.getDoctor(id);
+    result.when(
+      success: (response) => emit(
+        state.copyWith(
+          selectedDoctor: response.result,
+          isDetailsLoading: false,
+          failure: null,
+        ),
+      ),
+      failure: (exception) =>
+          emit(state.copyWith(isDetailsLoading: false, failure: exception)),
     );
   }
 

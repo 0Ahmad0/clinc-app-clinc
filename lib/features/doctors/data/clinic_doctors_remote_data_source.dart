@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 import '../../../core/data/base_model.dart';
 import '../../../core/domain/services/api_service.dart';
 import '../../../core/utils/app_url.dart';
@@ -43,6 +45,39 @@ class ClinicDoctorsRemoteDataSource {
     return _doctorResponse(response);
   }
 
+  Future<BaseModel<ClinicDoctorModel>> createDoctor({
+    required Map<String, dynamic> body,
+    String? imagePath,
+    List<String> qualificationFilePaths = const [],
+  }) async {
+    final response = await _apiServices.post(
+      AppUrl.clinicDoctors,
+      formData: await _doctorFormData(
+        body: body,
+        imagePath: imagePath,
+        qualificationFilePaths: qualificationFilePaths,
+      ),
+    );
+    return _doctorResponse(response);
+  }
+
+  Future<BaseModel<ClinicDoctorModel>> updateDoctor({
+    required String id,
+    required Map<String, dynamic> body,
+    String? imagePath,
+    List<String> qualificationFilePaths = const [],
+  }) async {
+    final response = await _apiServices.put(
+      AppUrl.clinicDoctor(id),
+      formData: await _doctorFormData(
+        body: body,
+        imagePath: imagePath,
+        qualificationFilePaths: qualificationFilePaths,
+      ),
+    );
+    return _doctorResponse(response);
+  }
+
   Future<BaseModel<ClinicDoctorModel>> updateAvailability({
     required String id,
     required bool isActive,
@@ -74,6 +109,50 @@ class ClinicDoctorsRemoteDataSource {
       (json) =>
           ClinicDoctorModel.fromJson(Map<String, dynamic>.from(json as Map)),
     );
+  }
+
+  Future<FormData> _doctorFormData({
+    required Map<String, dynamic> body,
+    String? imagePath,
+    List<String> qualificationFilePaths = const [],
+  }) async {
+    final form = FormData();
+    for (final entry in body.entries) {
+      final value = entry.value;
+      if (value is List) {
+        for (var index = 0; index < value.length; index++) {
+          final item = value[index];
+          if (item is Map<String, dynamic>) {
+            for (final itemEntry in item.entries) {
+              form.fields.add(
+                MapEntry(
+                  '${entry.key}[$index][${itemEntry.key}]',
+                  _fieldValue(itemEntry.value),
+                ),
+              );
+            }
+          }
+        }
+      } else if (value != null) {
+        form.fields.add(MapEntry(entry.key, _fieldValue(value)));
+      }
+    }
+    if (imagePath != null) {
+      form.files.add(
+        MapEntry('image', await MultipartFile.fromFile(imagePath)),
+      );
+    }
+    for (final path in qualificationFilePaths) {
+      form.files.add(
+        MapEntry('qualification_files[]', await MultipartFile.fromFile(path)),
+      );
+    }
+    return form;
+  }
+
+  String _fieldValue(dynamic value) {
+    if (value is bool) return value ? '1' : '0';
+    return value.toString();
   }
 
   Map<String, dynamic> _normalizePaginatedResponse(Map<String, dynamic> json) {

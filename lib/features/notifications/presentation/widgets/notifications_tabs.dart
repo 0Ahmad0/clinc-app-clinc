@@ -6,8 +6,6 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../domain/notification_tab.dart';
 import '../cubit/notifications_cubit.dart';
-import '../cubit/notifications_state.dart';
-import '../notifications_catalog.dart';
 import '../../../../shared/widgets/app_tab_chip.dart';
 
 /// The all / unread / read filter row.
@@ -17,19 +15,19 @@ class NotificationsTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final all = localizedNotifications(l10n);
     final format = NumberFormat.decimalPattern(
       Localizations.localeOf(context).toLanguageTag(),
     );
     return BlocBuilder<NotificationsCubit, NotificationsState>(
       builder: (context, state) {
-        final cubit = context.read<NotificationsCubit>();
-        final total = cubit.active(all).length;
-        final unread = cubit.unreadCount(all);
+        final items = state.pagination.items.value;
+        final total = items.length;
+        final unread = items.where((item) => item.unread).length;
+        final read = items.where((item) => item.isRead).length;
         final counts = {
           NotificationTab.all: total,
           NotificationTab.unread: unread,
-          NotificationTab.read: total - unread,
+          NotificationTab.read: read,
         };
         final labels = {
           NotificationTab.all: l10n.notifTabAll,
@@ -52,7 +50,8 @@ class NotificationsTabs extends StatelessWidget {
                     label: labels[tab]!,
                     count: format.format(counts[tab]),
                     selected: state.tab == tab,
-                    onTap: () => cubit.selectTab(tab),
+                    onTap: () =>
+                        context.read<NotificationsCubit>().selectTab(tab),
                   ),
                 ),
             ],
