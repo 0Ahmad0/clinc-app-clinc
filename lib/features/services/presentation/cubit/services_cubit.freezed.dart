@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ServicesState {
 
- ServiceKind get kind; ClinicLabSectionModel? get detail; List<ClinicLabSectionModel> get labSections; Set<int> get selectedLabSectionIds; NetworkExceptions? get failure; bool get isLoading; bool get isMutating; String get labSearch; String get specializationSearch; Map<int, String> get labTestPriceDrafts; Set<int> get busyLabTestIds; Set<int> get busySpecializationIds; PaginationState<ClinicAvailableLabTestModel> get availableLabTests; PaginationState<ClinicEnabledLabTestModel> get enabledLabTests; PaginationState<ClinicAvailableSpecializationModel> get availableSpecializations; PaginationState<ClinicEnabledSpecializationModel> get enabledSpecializations;
+ ServiceKind get kind; ClinicLabSectionModel? get detail; List<ClinicLabSectionModel> get labSections; Set<int> get selectedLabSectionIds; NetworkExceptions? get failure; bool get isLoading; bool get isMutating; String get labSearch; String get specializationSearch; Map<int, String> get labTestPriceDrafts; Set<int> get busyLabTestIds; Set<int> get busySpecializationIds; int get version; PaginationState<ClinicAvailableLabTestModel> get availableLabTests; PaginationState<ClinicEnabledLabTestModel> get enabledLabTests; PaginationState<ClinicAvailableSpecializationModel> get availableSpecializations; PaginationState<ClinicEnabledSpecializationModel> get enabledSpecializations;
 /// Create a copy of ServicesState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ServicesStateCopyWith<ServicesState> get copyWith => _$ServicesStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServicesState&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.detail, detail) || other.detail == detail)&&const DeepCollectionEquality().equals(other.labSections, labSections)&&const DeepCollectionEquality().equals(other.selectedLabSectionIds, selectedLabSectionIds)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isMutating, isMutating) || other.isMutating == isMutating)&&(identical(other.labSearch, labSearch) || other.labSearch == labSearch)&&(identical(other.specializationSearch, specializationSearch) || other.specializationSearch == specializationSearch)&&const DeepCollectionEquality().equals(other.labTestPriceDrafts, labTestPriceDrafts)&&const DeepCollectionEquality().equals(other.busyLabTestIds, busyLabTestIds)&&const DeepCollectionEquality().equals(other.busySpecializationIds, busySpecializationIds)&&(identical(other.availableLabTests, availableLabTests) || other.availableLabTests == availableLabTests)&&(identical(other.enabledLabTests, enabledLabTests) || other.enabledLabTests == enabledLabTests)&&(identical(other.availableSpecializations, availableSpecializations) || other.availableSpecializations == availableSpecializations)&&(identical(other.enabledSpecializations, enabledSpecializations) || other.enabledSpecializations == enabledSpecializations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ServicesState&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.detail, detail) || other.detail == detail)&&const DeepCollectionEquality().equals(other.labSections, labSections)&&const DeepCollectionEquality().equals(other.selectedLabSectionIds, selectedLabSectionIds)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isMutating, isMutating) || other.isMutating == isMutating)&&(identical(other.labSearch, labSearch) || other.labSearch == labSearch)&&(identical(other.specializationSearch, specializationSearch) || other.specializationSearch == specializationSearch)&&const DeepCollectionEquality().equals(other.labTestPriceDrafts, labTestPriceDrafts)&&const DeepCollectionEquality().equals(other.busyLabTestIds, busyLabTestIds)&&const DeepCollectionEquality().equals(other.busySpecializationIds, busySpecializationIds)&&(identical(other.version, version) || other.version == version)&&(identical(other.availableLabTests, availableLabTests) || other.availableLabTests == availableLabTests)&&(identical(other.enabledLabTests, enabledLabTests) || other.enabledLabTests == enabledLabTests)&&(identical(other.availableSpecializations, availableSpecializations) || other.availableSpecializations == availableSpecializations)&&(identical(other.enabledSpecializations, enabledSpecializations) || other.enabledSpecializations == enabledSpecializations));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,kind,detail,const DeepCollectionEquality().hash(labSections),const DeepCollectionEquality().hash(selectedLabSectionIds),failure,isLoading,isMutating,labSearch,specializationSearch,const DeepCollectionEquality().hash(labTestPriceDrafts),const DeepCollectionEquality().hash(busyLabTestIds),const DeepCollectionEquality().hash(busySpecializationIds),availableLabTests,enabledLabTests,availableSpecializations,enabledSpecializations);
+int get hashCode => Object.hash(runtimeType,kind,detail,const DeepCollectionEquality().hash(labSections),const DeepCollectionEquality().hash(selectedLabSectionIds),failure,isLoading,isMutating,labSearch,specializationSearch,const DeepCollectionEquality().hash(labTestPriceDrafts),const DeepCollectionEquality().hash(busyLabTestIds),const DeepCollectionEquality().hash(busySpecializationIds),version,availableLabTests,enabledLabTests,availableSpecializations,enabledSpecializations);
 
 @override
 String toString() {
-  return 'ServicesState(kind: $kind, detail: $detail, labSections: $labSections, selectedLabSectionIds: $selectedLabSectionIds, failure: $failure, isLoading: $isLoading, isMutating: $isMutating, labSearch: $labSearch, specializationSearch: $specializationSearch, labTestPriceDrafts: $labTestPriceDrafts, busyLabTestIds: $busyLabTestIds, busySpecializationIds: $busySpecializationIds, availableLabTests: $availableLabTests, enabledLabTests: $enabledLabTests, availableSpecializations: $availableSpecializations, enabledSpecializations: $enabledSpecializations)';
+  return 'ServicesState(kind: $kind, detail: $detail, labSections: $labSections, selectedLabSectionIds: $selectedLabSectionIds, failure: $failure, isLoading: $isLoading, isMutating: $isMutating, labSearch: $labSearch, specializationSearch: $specializationSearch, labTestPriceDrafts: $labTestPriceDrafts, busyLabTestIds: $busyLabTestIds, busySpecializationIds: $busySpecializationIds, version: $version, availableLabTests: $availableLabTests, enabledLabTests: $enabledLabTests, availableSpecializations: $availableSpecializations, enabledSpecializations: $enabledSpecializations)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ServicesStateCopyWith<$Res>  {
   factory $ServicesStateCopyWith(ServicesState value, $Res Function(ServicesState) _then) = _$ServicesStateCopyWithImpl;
 @useResult
 $Res call({
- ServiceKind kind, ClinicLabSectionModel? detail, List<ClinicLabSectionModel> labSections, Set<int> selectedLabSectionIds, NetworkExceptions? failure, bool isLoading, bool isMutating, String labSearch, String specializationSearch, Map<int, String> labTestPriceDrafts, Set<int> busyLabTestIds, Set<int> busySpecializationIds, PaginationState<ClinicAvailableLabTestModel> availableLabTests, PaginationState<ClinicEnabledLabTestModel> enabledLabTests, PaginationState<ClinicAvailableSpecializationModel> availableSpecializations, PaginationState<ClinicEnabledSpecializationModel> enabledSpecializations
+ ServiceKind kind, ClinicLabSectionModel? detail, List<ClinicLabSectionModel> labSections, Set<int> selectedLabSectionIds, NetworkExceptions? failure, bool isLoading, bool isMutating, String labSearch, String specializationSearch, Map<int, String> labTestPriceDrafts, Set<int> busyLabTestIds, Set<int> busySpecializationIds, int version, PaginationState<ClinicAvailableLabTestModel> availableLabTests, PaginationState<ClinicEnabledLabTestModel> enabledLabTests, PaginationState<ClinicAvailableSpecializationModel> availableSpecializations, PaginationState<ClinicEnabledSpecializationModel> enabledSpecializations
 });
 
 
@@ -62,7 +62,7 @@ class _$ServicesStateCopyWithImpl<$Res>
 
 /// Create a copy of ServicesState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? kind = null,Object? detail = freezed,Object? labSections = null,Object? selectedLabSectionIds = null,Object? failure = freezed,Object? isLoading = null,Object? isMutating = null,Object? labSearch = null,Object? specializationSearch = null,Object? labTestPriceDrafts = null,Object? busyLabTestIds = null,Object? busySpecializationIds = null,Object? availableLabTests = null,Object? enabledLabTests = null,Object? availableSpecializations = null,Object? enabledSpecializations = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? kind = null,Object? detail = freezed,Object? labSections = null,Object? selectedLabSectionIds = null,Object? failure = freezed,Object? isLoading = null,Object? isMutating = null,Object? labSearch = null,Object? specializationSearch = null,Object? labTestPriceDrafts = null,Object? busyLabTestIds = null,Object? busySpecializationIds = null,Object? version = null,Object? availableLabTests = null,Object? enabledLabTests = null,Object? availableSpecializations = null,Object? enabledSpecializations = null,}) {
   return _then(_self.copyWith(
 kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
 as ServiceKind,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,8 @@ as String,specializationSearch: null == specializationSearch ? _self.specializat
 as String,labTestPriceDrafts: null == labTestPriceDrafts ? _self.labTestPriceDrafts : labTestPriceDrafts // ignore: cast_nullable_to_non_nullable
 as Map<int, String>,busyLabTestIds: null == busyLabTestIds ? _self.busyLabTestIds : busyLabTestIds // ignore: cast_nullable_to_non_nullable
 as Set<int>,busySpecializationIds: null == busySpecializationIds ? _self.busySpecializationIds : busySpecializationIds // ignore: cast_nullable_to_non_nullable
-as Set<int>,availableLabTests: null == availableLabTests ? _self.availableLabTests : availableLabTests // ignore: cast_nullable_to_non_nullable
+as Set<int>,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as int,availableLabTests: null == availableLabTests ? _self.availableLabTests : availableLabTests // ignore: cast_nullable_to_non_nullable
 as PaginationState<ClinicAvailableLabTestModel>,enabledLabTests: null == enabledLabTests ? _self.enabledLabTests : enabledLabTests // ignore: cast_nullable_to_non_nullable
 as PaginationState<ClinicEnabledLabTestModel>,availableSpecializations: null == availableSpecializations ? _self.availableSpecializations : availableSpecializations // ignore: cast_nullable_to_non_nullable
 as PaginationState<ClinicAvailableSpecializationModel>,enabledSpecializations: null == enabledSpecializations ? _self.enabledSpecializations : enabledSpecializations // ignore: cast_nullable_to_non_nullable
@@ -189,10 +190,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ServiceKind kind,  ClinicLabSectionModel? detail,  List<ClinicLabSectionModel> labSections,  Set<int> selectedLabSectionIds,  NetworkExceptions? failure,  bool isLoading,  bool isMutating,  String labSearch,  String specializationSearch,  Map<int, String> labTestPriceDrafts,  Set<int> busyLabTestIds,  Set<int> busySpecializationIds,  PaginationState<ClinicAvailableLabTestModel> availableLabTests,  PaginationState<ClinicEnabledLabTestModel> enabledLabTests,  PaginationState<ClinicAvailableSpecializationModel> availableSpecializations,  PaginationState<ClinicEnabledSpecializationModel> enabledSpecializations)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ServiceKind kind,  ClinicLabSectionModel? detail,  List<ClinicLabSectionModel> labSections,  Set<int> selectedLabSectionIds,  NetworkExceptions? failure,  bool isLoading,  bool isMutating,  String labSearch,  String specializationSearch,  Map<int, String> labTestPriceDrafts,  Set<int> busyLabTestIds,  Set<int> busySpecializationIds,  int version,  PaginationState<ClinicAvailableLabTestModel> availableLabTests,  PaginationState<ClinicEnabledLabTestModel> enabledLabTests,  PaginationState<ClinicAvailableSpecializationModel> availableSpecializations,  PaginationState<ClinicEnabledSpecializationModel> enabledSpecializations)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ServicesState() when $default != null:
-return $default(_that.kind,_that.detail,_that.labSections,_that.selectedLabSectionIds,_that.failure,_that.isLoading,_that.isMutating,_that.labSearch,_that.specializationSearch,_that.labTestPriceDrafts,_that.busyLabTestIds,_that.busySpecializationIds,_that.availableLabTests,_that.enabledLabTests,_that.availableSpecializations,_that.enabledSpecializations);case _:
+return $default(_that.kind,_that.detail,_that.labSections,_that.selectedLabSectionIds,_that.failure,_that.isLoading,_that.isMutating,_that.labSearch,_that.specializationSearch,_that.labTestPriceDrafts,_that.busyLabTestIds,_that.busySpecializationIds,_that.version,_that.availableLabTests,_that.enabledLabTests,_that.availableSpecializations,_that.enabledSpecializations);case _:
   return orElse();
 
 }
@@ -210,10 +211,10 @@ return $default(_that.kind,_that.detail,_that.labSections,_that.selectedLabSecti
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ServiceKind kind,  ClinicLabSectionModel? detail,  List<ClinicLabSectionModel> labSections,  Set<int> selectedLabSectionIds,  NetworkExceptions? failure,  bool isLoading,  bool isMutating,  String labSearch,  String specializationSearch,  Map<int, String> labTestPriceDrafts,  Set<int> busyLabTestIds,  Set<int> busySpecializationIds,  PaginationState<ClinicAvailableLabTestModel> availableLabTests,  PaginationState<ClinicEnabledLabTestModel> enabledLabTests,  PaginationState<ClinicAvailableSpecializationModel> availableSpecializations,  PaginationState<ClinicEnabledSpecializationModel> enabledSpecializations)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ServiceKind kind,  ClinicLabSectionModel? detail,  List<ClinicLabSectionModel> labSections,  Set<int> selectedLabSectionIds,  NetworkExceptions? failure,  bool isLoading,  bool isMutating,  String labSearch,  String specializationSearch,  Map<int, String> labTestPriceDrafts,  Set<int> busyLabTestIds,  Set<int> busySpecializationIds,  int version,  PaginationState<ClinicAvailableLabTestModel> availableLabTests,  PaginationState<ClinicEnabledLabTestModel> enabledLabTests,  PaginationState<ClinicAvailableSpecializationModel> availableSpecializations,  PaginationState<ClinicEnabledSpecializationModel> enabledSpecializations)  $default,) {final _that = this;
 switch (_that) {
 case _ServicesState():
-return $default(_that.kind,_that.detail,_that.labSections,_that.selectedLabSectionIds,_that.failure,_that.isLoading,_that.isMutating,_that.labSearch,_that.specializationSearch,_that.labTestPriceDrafts,_that.busyLabTestIds,_that.busySpecializationIds,_that.availableLabTests,_that.enabledLabTests,_that.availableSpecializations,_that.enabledSpecializations);case _:
+return $default(_that.kind,_that.detail,_that.labSections,_that.selectedLabSectionIds,_that.failure,_that.isLoading,_that.isMutating,_that.labSearch,_that.specializationSearch,_that.labTestPriceDrafts,_that.busyLabTestIds,_that.busySpecializationIds,_that.version,_that.availableLabTests,_that.enabledLabTests,_that.availableSpecializations,_that.enabledSpecializations);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -230,10 +231,10 @@ return $default(_that.kind,_that.detail,_that.labSections,_that.selectedLabSecti
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ServiceKind kind,  ClinicLabSectionModel? detail,  List<ClinicLabSectionModel> labSections,  Set<int> selectedLabSectionIds,  NetworkExceptions? failure,  bool isLoading,  bool isMutating,  String labSearch,  String specializationSearch,  Map<int, String> labTestPriceDrafts,  Set<int> busyLabTestIds,  Set<int> busySpecializationIds,  PaginationState<ClinicAvailableLabTestModel> availableLabTests,  PaginationState<ClinicEnabledLabTestModel> enabledLabTests,  PaginationState<ClinicAvailableSpecializationModel> availableSpecializations,  PaginationState<ClinicEnabledSpecializationModel> enabledSpecializations)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ServiceKind kind,  ClinicLabSectionModel? detail,  List<ClinicLabSectionModel> labSections,  Set<int> selectedLabSectionIds,  NetworkExceptions? failure,  bool isLoading,  bool isMutating,  String labSearch,  String specializationSearch,  Map<int, String> labTestPriceDrafts,  Set<int> busyLabTestIds,  Set<int> busySpecializationIds,  int version,  PaginationState<ClinicAvailableLabTestModel> availableLabTests,  PaginationState<ClinicEnabledLabTestModel> enabledLabTests,  PaginationState<ClinicAvailableSpecializationModel> availableSpecializations,  PaginationState<ClinicEnabledSpecializationModel> enabledSpecializations)?  $default,) {final _that = this;
 switch (_that) {
 case _ServicesState() when $default != null:
-return $default(_that.kind,_that.detail,_that.labSections,_that.selectedLabSectionIds,_that.failure,_that.isLoading,_that.isMutating,_that.labSearch,_that.specializationSearch,_that.labTestPriceDrafts,_that.busyLabTestIds,_that.busySpecializationIds,_that.availableLabTests,_that.enabledLabTests,_that.availableSpecializations,_that.enabledSpecializations);case _:
+return $default(_that.kind,_that.detail,_that.labSections,_that.selectedLabSectionIds,_that.failure,_that.isLoading,_that.isMutating,_that.labSearch,_that.specializationSearch,_that.labTestPriceDrafts,_that.busyLabTestIds,_that.busySpecializationIds,_that.version,_that.availableLabTests,_that.enabledLabTests,_that.availableSpecializations,_that.enabledSpecializations);case _:
   return null;
 
 }
@@ -245,7 +246,7 @@ return $default(_that.kind,_that.detail,_that.labSections,_that.selectedLabSecti
 
 
 class _ServicesState extends ServicesState {
-  const _ServicesState({required this.kind, this.detail, final  List<ClinicLabSectionModel> labSections = const [], final  Set<int> selectedLabSectionIds = const {}, this.failure, this.isLoading = false, this.isMutating = false, this.labSearch = '', this.specializationSearch = '', final  Map<int, String> labTestPriceDrafts = const {}, final  Set<int> busyLabTestIds = const {}, final  Set<int> busySpecializationIds = const {}, required this.availableLabTests, required this.enabledLabTests, required this.availableSpecializations, required this.enabledSpecializations}): _labSections = labSections,_selectedLabSectionIds = selectedLabSectionIds,_labTestPriceDrafts = labTestPriceDrafts,_busyLabTestIds = busyLabTestIds,_busySpecializationIds = busySpecializationIds,super._();
+  const _ServicesState({required this.kind, this.detail, final  List<ClinicLabSectionModel> labSections = const [], final  Set<int> selectedLabSectionIds = const {}, this.failure, this.isLoading = false, this.isMutating = false, this.labSearch = '', this.specializationSearch = '', final  Map<int, String> labTestPriceDrafts = const {}, final  Set<int> busyLabTestIds = const {}, final  Set<int> busySpecializationIds = const {}, this.version = 0, required this.availableLabTests, required this.enabledLabTests, required this.availableSpecializations, required this.enabledSpecializations}): _labSections = labSections,_selectedLabSectionIds = selectedLabSectionIds,_labTestPriceDrafts = labTestPriceDrafts,_busyLabTestIds = busyLabTestIds,_busySpecializationIds = busySpecializationIds,super._();
   
 
 @override final  ServiceKind kind;
@@ -290,6 +291,7 @@ class _ServicesState extends ServicesState {
   return EqualUnmodifiableSetView(_busySpecializationIds);
 }
 
+@override@JsonKey() final  int version;
 @override final  PaginationState<ClinicAvailableLabTestModel> availableLabTests;
 @override final  PaginationState<ClinicEnabledLabTestModel> enabledLabTests;
 @override final  PaginationState<ClinicAvailableSpecializationModel> availableSpecializations;
@@ -305,16 +307,16 @@ _$ServicesStateCopyWith<_ServicesState> get copyWith => __$ServicesStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServicesState&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.detail, detail) || other.detail == detail)&&const DeepCollectionEquality().equals(other._labSections, _labSections)&&const DeepCollectionEquality().equals(other._selectedLabSectionIds, _selectedLabSectionIds)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isMutating, isMutating) || other.isMutating == isMutating)&&(identical(other.labSearch, labSearch) || other.labSearch == labSearch)&&(identical(other.specializationSearch, specializationSearch) || other.specializationSearch == specializationSearch)&&const DeepCollectionEquality().equals(other._labTestPriceDrafts, _labTestPriceDrafts)&&const DeepCollectionEquality().equals(other._busyLabTestIds, _busyLabTestIds)&&const DeepCollectionEquality().equals(other._busySpecializationIds, _busySpecializationIds)&&(identical(other.availableLabTests, availableLabTests) || other.availableLabTests == availableLabTests)&&(identical(other.enabledLabTests, enabledLabTests) || other.enabledLabTests == enabledLabTests)&&(identical(other.availableSpecializations, availableSpecializations) || other.availableSpecializations == availableSpecializations)&&(identical(other.enabledSpecializations, enabledSpecializations) || other.enabledSpecializations == enabledSpecializations));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ServicesState&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.detail, detail) || other.detail == detail)&&const DeepCollectionEquality().equals(other._labSections, _labSections)&&const DeepCollectionEquality().equals(other._selectedLabSectionIds, _selectedLabSectionIds)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isMutating, isMutating) || other.isMutating == isMutating)&&(identical(other.labSearch, labSearch) || other.labSearch == labSearch)&&(identical(other.specializationSearch, specializationSearch) || other.specializationSearch == specializationSearch)&&const DeepCollectionEquality().equals(other._labTestPriceDrafts, _labTestPriceDrafts)&&const DeepCollectionEquality().equals(other._busyLabTestIds, _busyLabTestIds)&&const DeepCollectionEquality().equals(other._busySpecializationIds, _busySpecializationIds)&&(identical(other.version, version) || other.version == version)&&(identical(other.availableLabTests, availableLabTests) || other.availableLabTests == availableLabTests)&&(identical(other.enabledLabTests, enabledLabTests) || other.enabledLabTests == enabledLabTests)&&(identical(other.availableSpecializations, availableSpecializations) || other.availableSpecializations == availableSpecializations)&&(identical(other.enabledSpecializations, enabledSpecializations) || other.enabledSpecializations == enabledSpecializations));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,kind,detail,const DeepCollectionEquality().hash(_labSections),const DeepCollectionEquality().hash(_selectedLabSectionIds),failure,isLoading,isMutating,labSearch,specializationSearch,const DeepCollectionEquality().hash(_labTestPriceDrafts),const DeepCollectionEquality().hash(_busyLabTestIds),const DeepCollectionEquality().hash(_busySpecializationIds),availableLabTests,enabledLabTests,availableSpecializations,enabledSpecializations);
+int get hashCode => Object.hash(runtimeType,kind,detail,const DeepCollectionEquality().hash(_labSections),const DeepCollectionEquality().hash(_selectedLabSectionIds),failure,isLoading,isMutating,labSearch,specializationSearch,const DeepCollectionEquality().hash(_labTestPriceDrafts),const DeepCollectionEquality().hash(_busyLabTestIds),const DeepCollectionEquality().hash(_busySpecializationIds),version,availableLabTests,enabledLabTests,availableSpecializations,enabledSpecializations);
 
 @override
 String toString() {
-  return 'ServicesState(kind: $kind, detail: $detail, labSections: $labSections, selectedLabSectionIds: $selectedLabSectionIds, failure: $failure, isLoading: $isLoading, isMutating: $isMutating, labSearch: $labSearch, specializationSearch: $specializationSearch, labTestPriceDrafts: $labTestPriceDrafts, busyLabTestIds: $busyLabTestIds, busySpecializationIds: $busySpecializationIds, availableLabTests: $availableLabTests, enabledLabTests: $enabledLabTests, availableSpecializations: $availableSpecializations, enabledSpecializations: $enabledSpecializations)';
+  return 'ServicesState(kind: $kind, detail: $detail, labSections: $labSections, selectedLabSectionIds: $selectedLabSectionIds, failure: $failure, isLoading: $isLoading, isMutating: $isMutating, labSearch: $labSearch, specializationSearch: $specializationSearch, labTestPriceDrafts: $labTestPriceDrafts, busyLabTestIds: $busyLabTestIds, busySpecializationIds: $busySpecializationIds, version: $version, availableLabTests: $availableLabTests, enabledLabTests: $enabledLabTests, availableSpecializations: $availableSpecializations, enabledSpecializations: $enabledSpecializations)';
 }
 
 
@@ -325,7 +327,7 @@ abstract mixin class _$ServicesStateCopyWith<$Res> implements $ServicesStateCopy
   factory _$ServicesStateCopyWith(_ServicesState value, $Res Function(_ServicesState) _then) = __$ServicesStateCopyWithImpl;
 @override @useResult
 $Res call({
- ServiceKind kind, ClinicLabSectionModel? detail, List<ClinicLabSectionModel> labSections, Set<int> selectedLabSectionIds, NetworkExceptions? failure, bool isLoading, bool isMutating, String labSearch, String specializationSearch, Map<int, String> labTestPriceDrafts, Set<int> busyLabTestIds, Set<int> busySpecializationIds, PaginationState<ClinicAvailableLabTestModel> availableLabTests, PaginationState<ClinicEnabledLabTestModel> enabledLabTests, PaginationState<ClinicAvailableSpecializationModel> availableSpecializations, PaginationState<ClinicEnabledSpecializationModel> enabledSpecializations
+ ServiceKind kind, ClinicLabSectionModel? detail, List<ClinicLabSectionModel> labSections, Set<int> selectedLabSectionIds, NetworkExceptions? failure, bool isLoading, bool isMutating, String labSearch, String specializationSearch, Map<int, String> labTestPriceDrafts, Set<int> busyLabTestIds, Set<int> busySpecializationIds, int version, PaginationState<ClinicAvailableLabTestModel> availableLabTests, PaginationState<ClinicEnabledLabTestModel> enabledLabTests, PaginationState<ClinicAvailableSpecializationModel> availableSpecializations, PaginationState<ClinicEnabledSpecializationModel> enabledSpecializations
 });
 
 
@@ -342,7 +344,7 @@ class __$ServicesStateCopyWithImpl<$Res>
 
 /// Create a copy of ServicesState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? kind = null,Object? detail = freezed,Object? labSections = null,Object? selectedLabSectionIds = null,Object? failure = freezed,Object? isLoading = null,Object? isMutating = null,Object? labSearch = null,Object? specializationSearch = null,Object? labTestPriceDrafts = null,Object? busyLabTestIds = null,Object? busySpecializationIds = null,Object? availableLabTests = null,Object? enabledLabTests = null,Object? availableSpecializations = null,Object? enabledSpecializations = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? kind = null,Object? detail = freezed,Object? labSections = null,Object? selectedLabSectionIds = null,Object? failure = freezed,Object? isLoading = null,Object? isMutating = null,Object? labSearch = null,Object? specializationSearch = null,Object? labTestPriceDrafts = null,Object? busyLabTestIds = null,Object? busySpecializationIds = null,Object? version = null,Object? availableLabTests = null,Object? enabledLabTests = null,Object? availableSpecializations = null,Object? enabledSpecializations = null,}) {
   return _then(_ServicesState(
 kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
 as ServiceKind,detail: freezed == detail ? _self.detail : detail // ignore: cast_nullable_to_non_nullable
@@ -356,7 +358,8 @@ as String,specializationSearch: null == specializationSearch ? _self.specializat
 as String,labTestPriceDrafts: null == labTestPriceDrafts ? _self._labTestPriceDrafts : labTestPriceDrafts // ignore: cast_nullable_to_non_nullable
 as Map<int, String>,busyLabTestIds: null == busyLabTestIds ? _self._busyLabTestIds : busyLabTestIds // ignore: cast_nullable_to_non_nullable
 as Set<int>,busySpecializationIds: null == busySpecializationIds ? _self._busySpecializationIds : busySpecializationIds // ignore: cast_nullable_to_non_nullable
-as Set<int>,availableLabTests: null == availableLabTests ? _self.availableLabTests : availableLabTests // ignore: cast_nullable_to_non_nullable
+as Set<int>,version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
+as int,availableLabTests: null == availableLabTests ? _self.availableLabTests : availableLabTests // ignore: cast_nullable_to_non_nullable
 as PaginationState<ClinicAvailableLabTestModel>,enabledLabTests: null == enabledLabTests ? _self.enabledLabTests : enabledLabTests // ignore: cast_nullable_to_non_nullable
 as PaginationState<ClinicEnabledLabTestModel>,availableSpecializations: null == availableSpecializations ? _self.availableSpecializations : availableSpecializations // ignore: cast_nullable_to_non_nullable
 as PaginationState<ClinicAvailableSpecializationModel>,enabledSpecializations: null == enabledSpecializations ? _self.enabledSpecializations : enabledSpecializations // ignore: cast_nullable_to_non_nullable

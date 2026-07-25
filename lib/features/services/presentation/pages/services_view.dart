@@ -43,7 +43,9 @@ class ServicesView extends StatelessWidget {
                   children: [
                     ServicesHeader(
                       detail: detail,
-                      detailCount: state.availableLabTests.items.length,
+                      detailCount:
+                          state.availableLabTests.total ??
+                          state.availableLabTests.items.length,
                       labTotal: state.visibleLabSections.length,
                       specTotal: state.availableSpecializations.items.length,
                       activeCount: state.activeCount,
@@ -51,10 +53,7 @@ class ServicesView extends StatelessWidget {
                     ),
                     Expanded(
                       child: detail != null
-                          ? ServicesDetailList(
-                              section: detail,
-                              tests: state.availableLabTests.items.value,
-                            )
+                          ? ServicesDetailList(section: detail)
                           : const SingleChildScrollView(
                               child: Column(
                                 children: [

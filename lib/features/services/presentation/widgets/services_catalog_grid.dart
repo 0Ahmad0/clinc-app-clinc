@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/specialization_visual.dart';
 import '../../domain/service_kind.dart';
 import '../cubit/services_cubit.dart';
 import '../services_l10n.dart';
@@ -36,6 +37,13 @@ class ServicesCatalogGrid extends StatelessWidget {
               ServiceCard(
                 icon: section.iconData,
                 accent: section.accent(colors),
+                iconView: (section.icon ?? '').trim().isEmpty
+                    ? null
+                    : SpecializationIconView(
+                        value: section.icon,
+                        color: section.accent(colors),
+                        size: AppSizes.iconLg,
+                      ),
                 name: section.label(context),
                 sub: l10n.servicesTestsAvailable(
                   '${state.enabledLabTests.items.value.where((item) => item.sectionId == section.sectionId).length}',
@@ -43,22 +51,18 @@ class ServicesCatalogGrid extends StatelessWidget {
                 onTap: () => cubit.openDetail(section),
               )
           else
-            if (state.enabledSpecializations.items.value.isNotEmpty)
-              for (final specialty in state.enabledSpecializations.items.value)
-                ServiceCard(
-                  icon: specialty.iconData,
-                  accent: specialty.accent(colors),
-                  name: specialty.label(context),
-                  sub: l10n.servicesSpecialtyLabel,
-                )
-            else
-              for (final specialty in state.availableSpecializations.items.value)
-                ServiceCard(
-                  icon: specialty.iconData,
-                  accent: specialty.accent(colors),
-                  name: specialty.label(context),
-                  sub: l10n.servicesSpecialtyLabel,
+            for (final specialty in state.enabledSpecializations.items.value)
+              ServiceCard(
+                icon: specialty.iconData,
+                accent: specialty.accent(colors),
+                iconView: SpecializationIconView(
+                  value: specialty.icon,
+                  color: specialty.accent(colors),
+                  size: AppSizes.iconLg,
                 ),
+                name: specialty.label(context),
+                sub: l10n.servicesSpecialtyLabel,
+              ),
           ServicesAddCard(
             label: isLab ? l10n.servicesAddSection : l10n.servicesAddSpecialty,
             onTap: () => _openSheet(context, cubit),

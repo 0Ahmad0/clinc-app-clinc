@@ -17,6 +17,9 @@ class AppBottomSheet extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: Container(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * 0.88,
+        ),
         decoration: BoxDecoration(
           color: colors.surface,
           borderRadius: const BorderRadius.vertical(
@@ -47,7 +50,7 @@ class AppBottomSheet extends StatelessWidget {
                   ),
                 ),
                 AppGaps.h16,
-                child,
+                Flexible(child: SingleChildScrollView(child: child)),
               ],
             ),
           ),

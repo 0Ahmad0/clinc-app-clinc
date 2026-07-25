@@ -11,6 +11,7 @@ abstract class ClinicSpecializationModel with _$ClinicSpecializationModel {
     @JsonKey(name: 'name_ar') String? nameAr,
     @JsonKey(name: 'name_en') String? nameEn,
     String? icon,
+    String? color,
     @JsonKey(name: 'is_active') @Default(false) bool isActive,
   }) = _ClinicSpecializationModel;
 

@@ -10,14 +10,9 @@ import 'service_test_card.dart';
 
 /// Scrollable list of a section's tests, each with its enable toggle and price.
 class ServicesDetailList extends StatelessWidget {
-  const ServicesDetailList({
-    super.key,
-    required this.section,
-    required this.tests,
-  });
+  const ServicesDetailList({super.key, required this.section});
 
   final ClinicLabSectionModel section;
-  final List<ClinicAvailableLabTestModel> tests;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +24,7 @@ class ServicesDetailList extends StatelessWidget {
         if (state.availableLabTests.isInitialLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
+        final tests = state.availableLabTests.items.value;
         return ListView.separated(
           padding: const EdgeInsetsDirectional.fromSTEB(
             AppSpacing.screen,
@@ -41,10 +37,11 @@ class ServicesDetailList extends StatelessWidget {
           itemBuilder: (context, index) {
             final test = tests[index];
             final testState = state.testState(test.labTestId);
+            final testAccent = test.accent(context.colors, fallback: accent);
             return ServiceTestCard(
               key: ValueKey(test.labTestId ?? test.code),
               test: test,
-              accent: accent,
+              accent: testAccent,
               enabled: testState.enabled,
               price: testState.price,
               onToggle: () => cubit.toggleTest(test.labTestId),

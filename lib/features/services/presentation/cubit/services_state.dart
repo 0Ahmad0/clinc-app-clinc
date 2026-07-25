@@ -17,6 +17,7 @@ abstract class ServicesState with _$ServicesState {
     @Default({}) Map<int, String> labTestPriceDrafts,
     @Default({}) Set<int> busyLabTestIds,
     @Default({}) Set<int> busySpecializationIds,
+    @Default(0) int version,
     required PaginationState<ClinicAvailableLabTestModel> availableLabTests,
     required PaginationState<ClinicEnabledLabTestModel> enabledLabTests,
     required PaginationState<ClinicAvailableSpecializationModel>

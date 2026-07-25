@@ -6,6 +6,7 @@ import '../../../../config/theme/app_motion.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/specialization_visual.dart';
 import '../../data/models/clinic_specialization_model.dart';
 import '../cubit/add_doctor_cubit.dart';
 
@@ -22,6 +23,10 @@ class AddDoctorSpecialtyPicker extends StatelessWidget {
       builder: (context, state) {
         final selected = state.selectedSpecialization;
         final specializations = state.specializations;
+        final selectedAccent = SpecializationVisual.color(
+          selected?.color,
+          colors.primary500,
+        );
         return Column(
           children: [
             GestureDetector(
@@ -43,11 +48,17 @@ class AddDoctorSpecialtyPicker extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Iconsax.add,
-                      size: AppSizes.iconSm,
-                      color: colors.primary500,
-                    ),
+                    selected == null
+                        ? Icon(
+                            Iconsax.add,
+                            size: AppSizes.iconSm,
+                            color: colors.primary500,
+                          )
+                        : SpecializationIconView(
+                            value: selected.icon,
+                            color: selectedAccent,
+                            size: AppSizes.iconSm,
+                          ),
                     AppGaps.w8,
                     Expanded(
                       child: Text(
@@ -91,42 +102,64 @@ class AddDoctorSpecialtyPicker extends StatelessWidget {
                 child: Column(
                   children: [
                     for (final specialty in specializations)
-                      Material(
-                        color: colors.surface.withValues(alpha: 0),
-                        child: InkWell(
-                          onTap: specialty.specializationId == null
-                              ? null
-                              : () => cubit.selectSpecialization(
-                                  specialty.specializationId!,
-                                ),
-                          borderRadius: BorderRadius.circular(AppRadius.sm),
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsetsDirectional.symmetric(
-                              horizontal: AppSpacing.sm,
-                              vertical: AppSpacing.sm,
-                            ),
-                            decoration: BoxDecoration(
-                              color:
-                                  specialty.specializationId ==
-                                      state.selectedSpecializationId
-                                  ? colors.primary500.withValues(alpha: 0.1)
-                                  : null,
+                      Builder(
+                        builder: (context) {
+                          final selected =
+                              specialty.specializationId ==
+                              state.selectedSpecializationId;
+                          final accent = SpecializationVisual.color(
+                            specialty.color,
+                            colors.primary600,
+                          );
+                          return Material(
+                            color: colors.surface.withValues(alpha: 0),
+                            child: InkWell(
+                              onTap: specialty.specializationId == null
+                                  ? null
+                                  : () => cubit.selectSpecialization(
+                                      specialty.specializationId!,
+                                    ),
                               borderRadius: BorderRadius.circular(AppRadius.sm),
-                            ),
-                            child: Text(
-                              _label(context, specialty),
-                              style: context.textTheme.bodyMedium?.copyWith(
-                                color:
-                                    specialty.specializationId ==
-                                        state.selectedSpecializationId
-                                    ? colors.primary600
-                                    : colors.ink,
-                                fontWeight: FontWeight.w600,
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsetsDirectional.symmetric(
+                                  horizontal: AppSpacing.sm,
+                                  vertical: AppSpacing.sm,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: selected
+                                      ? accent.withValues(alpha: 0.1)
+                                      : null,
+                                  borderRadius: BorderRadius.circular(
+                                    AppRadius.sm,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SpecializationIconView(
+                                      value: specialty.icon,
+                                      color: selected ? accent : colors.gray,
+                                      size: AppSizes.iconSm,
+                                    ),
+                                    AppGaps.w8,
+                                    Expanded(
+                                      child: Text(
+                                        _label(context, specialty),
+                                        style: context.textTheme.bodyMedium
+                                            ?.copyWith(
+                                              color: selected
+                                                  ? accent
+                                                  : colors.ink,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                   ],
                 ),

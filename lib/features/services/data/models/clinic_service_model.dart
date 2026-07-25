@@ -36,6 +36,7 @@ abstract class ClinicLabSectionModel with _$ClinicLabSectionModel {
     @JsonKey(name: 'name_en') String? nameEn,
     String? description,
     String? icon,
+    String? color,
     @JsonKey(name: 'is_active', fromJson: _boolFromJson)
     @Default(false)
     bool isActive,
@@ -57,6 +58,8 @@ abstract class ClinicAvailableLabTestModel with _$ClinicAvailableLabTestModel {
     @JsonKey(name: 'section_id', fromJson: _intFromJson) int? sectionId,
     @JsonKey(name: 'section_slug') String? sectionSlug,
     @JsonKey(name: 'section_name') String? sectionName,
+    @JsonKey(name: 'section_icon') String? icon,
+    @JsonKey(name: 'section_color') String? color,
     @JsonKey(name: 'default_price', fromJson: _numFromJson) num? defaultPrice,
     @JsonKey(name: 'is_active', fromJson: _boolFromJson)
     @Default(false)
@@ -80,6 +83,8 @@ abstract class ClinicEnabledLabTestModel with _$ClinicEnabledLabTestModel {
     @JsonKey(name: 'section_id', fromJson: _intFromJson) int? sectionId,
     @JsonKey(name: 'section_slug') String? sectionSlug,
     @JsonKey(name: 'section_name') String? sectionName,
+    @JsonKey(name: 'section_icon') String? icon,
+    @JsonKey(name: 'section_color') String? color,
     @JsonKey(fromJson: _numFromJson) num? price,
     @JsonKey(name: 'default_price', fromJson: _numFromJson) num? defaultPrice,
     @JsonKey(name: 'is_active', fromJson: _boolFromJson)
@@ -103,6 +108,7 @@ abstract class ClinicAvailableSpecializationModel
     @JsonKey(name: 'name_en') String? nameEn,
     String? description,
     String? icon,
+    String? color,
     @JsonKey(name: 'is_active', fromJson: _boolFromJson)
     @Default(false)
     bool isActive,
@@ -126,6 +132,7 @@ abstract class ClinicEnabledSpecializationModel
     @JsonKey(name: 'name_ar') String? nameAr,
     @JsonKey(name: 'name_en') String? nameEn,
     String? icon,
+    String? color,
     @JsonKey(name: 'is_active', fromJson: _boolFromJson)
     @Default(false)
     bool isActive,

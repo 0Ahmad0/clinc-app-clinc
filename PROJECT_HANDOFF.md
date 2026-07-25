@@ -743,3 +743,109 @@ locator.registerFactory<FeatureCubit>(
   - `lib/features/reports/presentation/widgets/report_entry_card.dart`
   - `PROJECT_HANDOFF.md`
   - `BACKEND_NOTES.md`
+
+## Completed: Services Enabled Specializations Display Fix
+- Date: 2026-07-25.
+- Services specialties grid now displays only enabled specializations.
+- Available/all specializations remain visible only inside the add bottom sheet.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/services/presentation/widgets/services_catalog_grid.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Specialization Icon/Color Rendering
+- Date: 2026-07-25.
+- Added shared specialization visual helper for icon key, image URL/path, and hex color rendering.
+- Supported icon keys in Flutter: `stethoscope`, `heart`, `heart-pulse`, `eye`, `tooth`, `skin`, `ear`, `stomach`, `brain`, `female`, `bone`, `baby-face`, `kidney`, `hospital`, `general`, `dermatology`, `cardiology`, `ophthalmology`, `orthopedics`, `pediatrics`, `dentistry`.
+- Added `color` parsing for doctor specializations and service specializations.
+- Services specialty cards and add sheet now use backend `icon` and `color`.
+- Doctors filters, add/edit doctor specialty picker, and doctor cards now use backend specialization visual data when available.
+- Unknown/null icon falls back to hospital icon; null/invalid color falls back to existing primary color.
+- Files added/modified:
+  - `lib/shared/widgets/specialization_visual.dart`
+  - `lib/features/doctors/data/models/clinic_doctor_model.dart`
+  - `lib/features/doctors/data/models/clinic_doctor_model.freezed.dart`
+  - `lib/features/doctors/data/models/clinic_doctor_model.g.dart`
+  - `lib/features/doctors/data/models/clinic_specialization_model.dart`
+  - `lib/features/doctors/data/models/clinic_specialization_model.freezed.dart`
+  - `lib/features/doctors/data/models/clinic_specialization_model.g.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_specialty_picker.dart`
+  - `lib/features/doctors/presentation/widgets/doctor_card.dart`
+  - `lib/features/doctors/presentation/widgets/doctors_filter_chips.dart`
+  - `lib/features/doctors/presentation/widgets/doctors_list.dart`
+  - `lib/features/services/data/models/clinic_service_model.dart`
+  - `lib/features/services/data/models/clinic_service_model.freezed.dart`
+  - `lib/features/services/data/models/clinic_service_model.g.dart`
+  - `lib/features/services/presentation/services_l10n.dart`
+  - `lib/features/services/presentation/widgets/service_card.dart`
+  - `lib/features/services/presentation/widgets/services_add_sheet.dart`
+  - `lib/features/services/presentation/widgets/services_catalog_grid.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Services Add Specialization Sheet Scroll/Color Fix
+- Date: 2026-07-25.
+- Shared bottom sheet shell now constrains height and scrolls large content to prevent vertical overflow.
+- Add-specialization bottom sheet tiles now apply specialization color to tile tint, border, and icon.
+- No backend changes required.
+- Files added/modified:
+  - `lib/shared/widgets/app_bottom_sheet.dart`
+  - `lib/features/services/presentation/widgets/services_add_sheet.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Services Specialization Remove From Add Sheet
+- Date: 2026-07-25.
+- Add-specialization bottom sheet now toggles enabled specializations.
+- Tapping an already-added specialization calls existing remove-specialization API and removes it from the enabled grid.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/services/presentation/cubit/services_cubit.dart`
+  - `lib/features/services/presentation/widgets/services_add_sheet.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Services Lab Section Detail Link Fix
+- Date: 2026-07-25.
+- Enabled lab tests now sync their `section_id` values into the visible lab sections list after loading from the backend.
+- Tapping a lab section card opens the existing detail page and loads that section's available tests plus enabled prices/states.
+- Lab detail header count now uses pagination total when available.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/services/presentation/cubit/services_cubit.dart`
+  - `lib/features/services/presentation/pages/services_view.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Lab Services Icon/Color Rendering
+- Date: 2026-07-25.
+- Lab sections and lab tests now use the same polymorphic `icon` and hex `color` parser used by specializations.
+- Lab section cards and add sheet render backend icon/color with existing slug fallback.
+- Lab test detail cards read `section_icon`/`section_color`, render the icon inside the code chip, and use section color fallback.
+- Added lab icon keys: `lab`, `laboratory`, `analysis`, `analyses`, `test`, `tests`, `test-tube`, `blood`, `dna`, `marriage`, `pre-marriage`, `hormones`, `vitamins`.
+- No backend changes required beyond the documented `icon`/`color` response fields.
+- Files added/modified:
+  - `lib/features/services/data/models/clinic_service_model.dart`
+  - `lib/features/services/data/models/clinic_service_model.freezed.dart`
+  - `lib/features/services/data/models/clinic_service_model.g.dart`
+  - `lib/features/services/presentation/services_l10n.dart`
+  - `lib/features/services/presentation/widgets/service_test_card.dart`
+  - `lib/features/services/presentation/widgets/services_add_sheet.dart`
+  - `lib/features/services/presentation/widgets/services_catalog_grid.dart`
+  - `lib/shared/widgets/specialization_visual.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Lab Detail Pagination Rebuild Fix
+- Date: 2026-07-25.
+- Services state now increments a lightweight `version` after internal pagination list updates so Bloc rebuilds when `PaginationState` changes.
+- Lab detail list reads available tests from the latest Cubit state and displays all returned `lab-tests` even when `enabled-lab-tests` is empty.
+- Enabled lab tests remain the source for active status and clinic price overrides.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/services/presentation/cubit/services_cubit.dart`
+  - `lib/features/services/presentation/cubit/services_state.dart`
+  - `lib/features/services/presentation/cubit/services_cubit.freezed.dart`
+  - `lib/features/services/presentation/widgets/services_detail_list.dart`
+  - `PROJECT_HANDOFF.md`

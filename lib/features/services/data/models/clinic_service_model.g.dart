@@ -16,6 +16,7 @@ _ClinicLabSectionModel _$ClinicLabSectionModelFromJson(
   nameEn: json['name_en'] as String?,
   description: json['description'] as String?,
   icon: json['icon'] as String?,
+  color: json['color'] as String?,
   isActive: json['is_active'] == null
       ? false
       : _boolFromJson(json['is_active']),
@@ -31,6 +32,7 @@ Map<String, dynamic> _$ClinicLabSectionModelToJson(
   'name_en': instance.nameEn,
   'description': instance.description,
   'icon': instance.icon,
+  'color': instance.color,
   'is_active': instance.isActive,
 };
 
@@ -46,6 +48,8 @@ _ClinicAvailableLabTestModel _$ClinicAvailableLabTestModelFromJson(
   sectionId: _intFromJson(json['section_id']),
   sectionSlug: json['section_slug'] as String?,
   sectionName: json['section_name'] as String?,
+  icon: json['section_icon'] as String?,
+  color: json['section_color'] as String?,
   defaultPrice: _numFromJson(json['default_price']),
   isActive: json['is_active'] == null
       ? false
@@ -64,6 +68,8 @@ Map<String, dynamic> _$ClinicAvailableLabTestModelToJson(
   'section_id': instance.sectionId,
   'section_slug': instance.sectionSlug,
   'section_name': instance.sectionName,
+  'section_icon': instance.icon,
+  'section_color': instance.color,
   'default_price': instance.defaultPrice,
   'is_active': instance.isActive,
 };
@@ -80,6 +86,8 @@ _ClinicEnabledLabTestModel _$ClinicEnabledLabTestModelFromJson(
   sectionId: _intFromJson(json['section_id']),
   sectionSlug: json['section_slug'] as String?,
   sectionName: json['section_name'] as String?,
+  icon: json['section_icon'] as String?,
+  color: json['section_color'] as String?,
   price: _numFromJson(json['price']),
   defaultPrice: _numFromJson(json['default_price']),
   isActive: json['is_active'] == null
@@ -99,6 +107,8 @@ Map<String, dynamic> _$ClinicEnabledLabTestModelToJson(
   'section_id': instance.sectionId,
   'section_slug': instance.sectionSlug,
   'section_name': instance.sectionName,
+  'section_icon': instance.icon,
+  'section_color': instance.color,
   'price': instance.price,
   'default_price': instance.defaultPrice,
   'is_active': instance.isActive,
@@ -114,6 +124,7 @@ _$ClinicAvailableSpecializationModelFromJson(Map<String, dynamic> json) =>
       nameEn: json['name_en'] as String?,
       description: json['description'] as String?,
       icon: json['icon'] as String?,
+      color: json['color'] as String?,
       isActive: json['is_active'] == null
           ? false
           : _boolFromJson(json['is_active']),
@@ -129,6 +140,7 @@ Map<String, dynamic> _$ClinicAvailableSpecializationModelToJson(
   'name_en': instance.nameEn,
   'description': instance.description,
   'icon': instance.icon,
+  'color': instance.color,
   'is_active': instance.isActive,
 };
 
@@ -142,6 +154,7 @@ _ClinicEnabledSpecializationModel _$ClinicEnabledSpecializationModelFromJson(
   nameAr: json['name_ar'] as String?,
   nameEn: json['name_en'] as String?,
   icon: json['icon'] as String?,
+  color: json['color'] as String?,
   isActive: json['is_active'] == null
       ? false
       : _boolFromJson(json['is_active']),
@@ -157,6 +170,7 @@ Map<String, dynamic> _$ClinicEnabledSpecializationModelToJson(
   'name_ar': instance.nameAr,
   'name_en': instance.nameEn,
   'icon': instance.icon,
+  'color': instance.color,
   'is_active': instance.isActive,
 };
 

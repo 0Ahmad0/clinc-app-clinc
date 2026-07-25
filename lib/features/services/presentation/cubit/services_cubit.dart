@@ -172,9 +172,31 @@ class ServicesCubit extends Cubit<ServicesState> {
       success: (response) {
         final item = response.result;
         if (item != null) _upsertSpecialization(item);
-        emit(state.copyWith(failure: null));
+        _emitVersioned();
       },
-      failure: (exception) => emit(state.copyWith(failure: exception)),
+      failure: (exception) => _emitVersioned(failure: exception),
+    );
+    _setBusySpecialization(id, false);
+  }
+
+  Future<void> removeSpecialty(
+    ClinicAvailableSpecializationModel specialty,
+  ) async {
+    final id = specialty.specializationId;
+    if (id == null || state.busySpecializationIds.contains(id)) return;
+    if (!state.isSpecializationEnabled(id)) return;
+    _setBusySpecialization(id, true);
+    final result = await _repository.removeSpecialization(specializationId: id);
+    result.when(
+      success: (_) {
+        state.enabledSpecializations.items.assignAll(
+          state.enabledSpecializations.items.value.where(
+            (item) => item.specializationId != id,
+          ),
+        );
+        _emitVersioned();
+      },
+      failure: (exception) => _emitVersioned(failure: exception),
     );
     _setBusySpecialization(id, false);
   }
@@ -193,9 +215,9 @@ class ServicesCubit extends Cubit<ServicesState> {
               (item) => item.labTestId != labTestId,
             ),
           );
-          emit(state.copyWith(failure: null));
+          _emitVersioned();
         },
-        failure: (exception) => emit(state.copyWith(failure: exception)),
+        failure: (exception) => _emitVersioned(failure: exception),
       );
     } else {
       await _saveLabTest(labTestId: labTestId, isActive: true);
@@ -228,7 +250,7 @@ class ServicesCubit extends Cubit<ServicesState> {
           failure: null,
         ),
       ),
-      failure: (exception) => emit(state.copyWith(failure: exception)),
+      failure: (exception) => _emitVersioned(failure: exception),
     );
   }
 
@@ -259,11 +281,11 @@ class ServicesCubit extends Cubit<ServicesState> {
         );
         _syncSelectedLabSectionsFromEnabledTests();
         _clearPaginationLoading(pagination);
-        emit(state.copyWith(failure: null));
+        _emitVersioned();
       },
       failure: (exception) {
         _clearPaginationLoading(pagination);
-        emit(state.copyWith(failure: exception));
+        _emitVersioned(failure: exception);
       },
     );
   }
@@ -292,12 +314,13 @@ class ServicesCubit extends Cubit<ServicesState> {
           page: page,
           meta: response.meta,
         );
+        _syncSelectedLabSectionsFromEnabledTests();
         _clearPaginationLoading(pagination);
-        emit(state.copyWith(failure: null));
+        _emitVersioned();
       },
       failure: (exception) {
         _clearPaginationLoading(pagination);
-        emit(state.copyWith(failure: exception));
+        _emitVersioned(failure: exception);
       },
     );
   }
@@ -325,11 +348,11 @@ class ServicesCubit extends Cubit<ServicesState> {
           meta: response.meta,
         );
         _clearPaginationLoading(pagination);
-        emit(state.copyWith(failure: null));
+        _emitVersioned();
       },
       failure: (exception) {
         _clearPaginationLoading(pagination);
-        emit(state.copyWith(failure: exception));
+        _emitVersioned(failure: exception);
       },
     );
   }
@@ -357,11 +380,11 @@ class ServicesCubit extends Cubit<ServicesState> {
           meta: response.meta,
         );
         _clearPaginationLoading(pagination);
-        emit(state.copyWith(failure: null));
+        _emitVersioned();
       },
       failure: (exception) {
         _clearPaginationLoading(pagination);
-        emit(state.copyWith(failure: exception));
+        _emitVersioned(failure: exception);
       },
     );
   }
@@ -392,9 +415,9 @@ class ServicesCubit extends Cubit<ServicesState> {
       success: (response) {
         final item = response.result;
         if (item != null) _upsertLabTest(item);
-        emit(state.copyWith(failure: null));
+        _emitVersioned();
       },
-      failure: (exception) => emit(state.copyWith(failure: exception)),
+      failure: (exception) => _emitVersioned(failure: exception),
     );
   }
 
@@ -428,6 +451,10 @@ class ServicesCubit extends Cubit<ServicesState> {
       items[index] = item;
     }
     state.enabledSpecializations.items.assignAll(items);
+  }
+
+  void _emitVersioned({NetworkExceptions? failure}) {
+    emit(state.copyWith(version: state.version + 1, failure: failure));
   }
 
   void _setBusyLabTest(int id, bool busy) {

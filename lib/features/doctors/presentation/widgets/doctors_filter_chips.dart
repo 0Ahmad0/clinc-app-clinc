@@ -6,6 +6,8 @@ import '../../../../config/theme/app_motion.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/specialization_visual.dart';
+import '../../data/models/clinic_specialization_model.dart';
 import '../cubit/doctors_cubit.dart';
 import '../cubit/doctors_state.dart';
 
@@ -46,8 +48,20 @@ class DoctorsFilterChips extends StatelessWidget {
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
                 child: _FilterChip(
-                  label: specialty.name ?? '-',
-                  icon: Iconsax.health,
+                  label: _label(context, specialty),
+                  icon: SpecializationVisual.iconData(specialty.icon),
+                  iconView: SpecializationIconView(
+                    value: specialty.icon,
+                    color:
+                        state.selectedSpecializationId ==
+                            specialty.specializationId
+                        ? context.colors.onBrand
+                        : SpecializationVisual.color(
+                            specialty.color,
+                            context.colors.gray,
+                          ),
+                    size: AppSizes.filterChipIcon,
+                  ),
                   selected:
                       state.selectedSpecializationId ==
                       specialty.specializationId,
@@ -61,6 +75,14 @@ class DoctorsFilterChips extends StatelessWidget {
       ),
     );
   }
+
+  String _label(BuildContext context, ClinicSpecializationModel specialty) {
+    final locale = Localizations.localeOf(context).languageCode;
+    if (locale == 'ar') {
+      return specialty.nameAr ?? specialty.name ?? specialty.nameEn ?? '-';
+    }
+    return specialty.nameEn ?? specialty.name ?? specialty.nameAr ?? '-';
+  }
 }
 
 class _FilterChip extends StatelessWidget {
@@ -69,12 +91,14 @@ class _FilterChip extends StatelessWidget {
     required this.icon,
     required this.selected,
     required this.onTap,
+    this.iconView,
   });
 
   final String label;
   final IconData icon;
   final bool selected;
   final VoidCallback onTap;
+  final Widget? iconView;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +128,8 @@ class _FilterChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: AppSizes.filterChipIcon, color: foreground),
+            iconView ??
+                Icon(icon, size: AppSizes.filterChipIcon, color: foreground),
             AppGaps.w8,
             Text(
               label,

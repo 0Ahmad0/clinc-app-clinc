@@ -14,6 +14,7 @@ _ClinicSpecializationModel _$ClinicSpecializationModelFromJson(
   nameAr: json['name_ar'] as String?,
   nameEn: json['name_en'] as String?,
   icon: json['icon'] as String?,
+  color: json['color'] as String?,
   isActive: json['is_active'] as bool? ?? false,
 );
 
@@ -25,5 +26,6 @@ Map<String, dynamic> _$ClinicSpecializationModelToJson(
   'name_ar': instance.nameAr,
   'name_en': instance.nameEn,
   'icon': instance.icon,
+  'color': instance.color,
   'is_active': instance.isActive,
 };

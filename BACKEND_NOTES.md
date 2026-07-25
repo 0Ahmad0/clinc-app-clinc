@@ -406,6 +406,7 @@
   - `name_en`
   - `description`
   - `icon`
+  - `color`
   - `is_active`
 
 ### Clinic Available Lab Tests
@@ -436,6 +437,8 @@
   - `section_id`
   - `section_slug`
   - `section_name`
+  - `section_icon`
+  - `section_color`
   - `default_price`
   - `is_active`
 
@@ -467,6 +470,8 @@
   - `section_id`
   - `section_slug`
   - `section_name`
+  - `section_icon`
+  - `section_color`
   - `price`
   - `default_price`
   - `is_active`
@@ -500,6 +505,16 @@
 - Response resource: `ClinicServiceRemovalResource`.
 - Response data fields:
   - `removed`
+
+### Flutter Lab Section Detail Integration Note
+- Status: implemented on 2026-07-25.
+- No backend changes required.
+- Flutter uses:
+  - `GET /api/clinic/services/lab-sections` for lab section cards.
+  - `GET /api/clinic/services/enabled-lab-tests` to derive visible enabled section IDs.
+  - `GET /api/clinic/services/lab-tests?section_id=...` for the tapped section detail list.
+  - `POST|PUT|DELETE /api/clinic/services/lab-tests/{labTest}` for enable/update/remove.
+- Detail count uses paginated `meta.total` when present.
 
 ### Clinic Available Service Specializations
 - Endpoint: `GET /api/clinic/services/specializations`
@@ -631,3 +646,8 @@
 - No new backend endpoints were required for notifications duplicate page 2 fix; Flutter now normalizes existing `current_page/per_page` pagination meta correctly.
 - No new backend endpoints were required for reports export toast message fix; Flutter now displays the existing response `message` instead of `data.file_url`.
 - No new backend endpoints were required for reports generated-time display helper; Flutter formats existing `generated_at` locally.
+- No new backend endpoints were required for services enabled specializations display fix; Flutter now renders only `enabled-specializations` in the main grid and keeps available specializations in the add sheet.
+- No new backend endpoints were required for specialization icon/color rendering; Flutter now reads existing `icon` and new `color` fields and supports icon keys or image URL/path values.
+- Flutter supported specialization icon keys: `stethoscope`, `heart`, `heart-pulse`, `eye`, `tooth`, `skin`, `ear`, `stomach`, `brain`, `female`, `bone`, `baby-face`, `kidney`, `hospital`, `general`, `dermatology`, `cardiology`, `ophthalmology`, `orthopedics`, `pediatrics`, `dentistry`.
+- No new backend endpoints were required for services add-specialization sheet scroll/color fix; this is Flutter layout and presentation only.
+- No new backend endpoints were required for services specialization remove from add sheet; Flutter uses existing `DELETE /api/clinic/services/specializations/{specialization}`.

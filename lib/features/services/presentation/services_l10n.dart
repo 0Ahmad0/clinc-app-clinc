@@ -4,6 +4,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../config/theme/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../shared/extensions/context_extensions.dart';
+import '../../../shared/widgets/specialization_visual.dart';
 import '../data/models/clinic_service_model.dart';
 import '../domain/clinic_specialty.dart';
 import '../domain/lab_section.dart';
@@ -78,19 +79,27 @@ extension ClinicLabSectionModelL10n on ClinicLabSectionModel {
     return (isArabic ? nameAr : nameEn) ?? name ?? nameAr ?? nameEn ?? '-';
   }
 
-  IconData get iconData => switch (slug) {
-    'marriage' || 'pre-marriage' => Iconsax.heart,
-    'hormones' => Iconsax.flash_1,
-    'vitamins' => Iconsax.sun_1,
-    _ => Iconsax.chart_21,
-  };
+  IconData get iconData {
+    if ((icon ?? '').trim().isNotEmpty) {
+      return SpecializationVisual.iconData(icon);
+    }
+    return switch (slug) {
+      'marriage' || 'pre-marriage' => Iconsax.heart,
+      'hormones' => Iconsax.flash_1,
+      'vitamins' => Iconsax.sun_1,
+      _ => Iconsax.chart_21,
+    };
+  }
 
-  Color accent(AppColorsTheme colors) => switch (slug) {
-    'marriage' || 'pre-marriage' => colors.pink,
-    'hormones' => colors.purple,
-    'vitamins' => colors.warningFg,
-    _ => colors.primary600,
-  };
+  Color accent(AppColorsTheme colors) {
+    final fallback = switch (slug) {
+      'marriage' || 'pre-marriage' => colors.pink,
+      'hormones' => colors.purple,
+      'vitamins' => colors.warningFg,
+      _ => colors.primary600,
+    };
+    return SpecializationVisual.color(color, fallback);
+  }
 }
 
 extension ClinicAvailableLabTestModelL10n on ClinicAvailableLabTestModel {
@@ -103,6 +112,18 @@ extension ClinicAvailableLabTestModelL10n on ClinicAvailableLabTestModel {
     if ((description ?? '').trim().isNotEmpty) return description!.trim();
     return sectionName ?? context.l10n.servicesLabTab;
   }
+
+  IconData get iconData => SpecializationVisual.iconData(icon);
+
+  Color accent(AppColorsTheme colors, {Color? fallback}) =>
+      SpecializationVisual.color(color, fallback ?? colors.primary600);
+}
+
+extension ClinicEnabledLabTestModelL10n on ClinicEnabledLabTestModel {
+  IconData get iconData => SpecializationVisual.iconData(icon);
+
+  Color accent(AppColorsTheme colors, {Color? fallback}) =>
+      SpecializationVisual.color(color, fallback ?? colors.primary600);
 }
 
 extension ClinicAvailableSpecializationModelL10n
@@ -112,9 +133,10 @@ extension ClinicAvailableSpecializationModelL10n
     return (isArabic ? nameAr : nameEn) ?? name ?? nameAr ?? nameEn ?? '-';
   }
 
-  IconData get iconData => Iconsax.hospital;
+  IconData get iconData => SpecializationVisual.iconData(icon);
 
-  Color accent(AppColorsTheme colors) => colors.primary600;
+  Color accent(AppColorsTheme colors) =>
+      SpecializationVisual.color(color, colors.primary600);
 }
 
 extension ClinicEnabledSpecializationModelL10n
@@ -124,7 +146,8 @@ extension ClinicEnabledSpecializationModelL10n
     return (isArabic ? nameAr : nameEn) ?? name ?? nameAr ?? nameEn ?? '-';
   }
 
-  IconData get iconData => Iconsax.hospital;
+  IconData get iconData => SpecializationVisual.iconData(icon);
 
-  Color accent(AppColorsTheme colors) => colors.primary600;
+  Color accent(AppColorsTheme colors) =>
+      SpecializationVisual.color(color, colors.primary600);
 }

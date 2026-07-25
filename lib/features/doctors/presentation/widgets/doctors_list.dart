@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/specialization_visual.dart';
 import '../../data/models/clinic_doctor_model.dart';
 import '../../domain/doctor_specialty.dart';
 import '../../domain/doctor_summary.dart';
@@ -17,14 +18,6 @@ class DoctorsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accents = [
-      context.colors.dangerFg,
-      context.colors.purple,
-      context.colors.primary600,
-      context.colors.teal,
-      context.colors.warningFg,
-    ];
-
     return BlocBuilder<DoctorsCubit, DoctorsState>(
       builder: (context, state) => SliverToBoxAdapter(
         child: AnimatedBuilder(
@@ -68,7 +61,10 @@ class DoctorsList extends StatelessWidget {
                 final doctor = doctors[index];
                 return DoctorCard(
                   doctor: doctor,
-                  accent: accents[index % accents.length],
+                  accent: SpecializationVisual.color(
+                    doctor.specializationColor,
+                    context.colors.primary600,
+                  ),
                   onToggle: () =>
                       context.read<DoctorsCubit>().toggleAvailability(doctor),
                   onTap: () => context.push(

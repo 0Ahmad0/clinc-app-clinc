@@ -5,6 +5,7 @@ import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_switch.dart';
+import '../../../../shared/widgets/specialization_visual.dart';
 import '../../data/models/clinic_service_model.dart';
 import '../services_l10n.dart';
 
@@ -49,6 +50,7 @@ class _ServiceTestCardState extends State<ServiceTestCard> {
     final colors = context.colors;
     final l10n = context.l10n;
     final accent = widget.accent;
+    final hasIcon = (widget.test.icon ?? '').trim().isNotEmpty;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       padding: const EdgeInsetsDirectional.all(AppSpacing.md),
@@ -81,13 +83,26 @@ class _ServiceTestCardState extends State<ServiceTestCard> {
                   color: accent.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
-                child: Text(
-                  widget.test.code ?? '-',
-                  textDirection: TextDirection.ltr,
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: accent,
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (hasIcon) ...[
+                      SpecializationIconView(
+                        value: widget.test.icon,
+                        color: accent,
+                        size: AppSizes.filterChipIcon,
+                      ),
+                      const SizedBox(width: AppSpacing.xxs),
+                    ],
+                    Text(
+                      widget.test.code ?? '-',
+                      textDirection: TextDirection.ltr,
+                      style: context.textTheme.labelSmall?.copyWith(
+                        color: accent,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               AppGaps.w12,

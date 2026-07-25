@@ -13,6 +13,7 @@ class ServiceCard extends StatelessWidget {
     required this.accent,
     required this.name,
     required this.sub,
+    this.iconView,
     this.onTap,
   });
 
@@ -20,6 +21,7 @@ class ServiceCard extends StatelessWidget {
   final Color accent;
   final String name;
   final String sub;
+  final Widget? iconView;
   final VoidCallback? onTap;
 
   @override
@@ -49,7 +51,9 @@ class ServiceCard extends StatelessWidget {
                   color: accent.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppRadius.field),
                 ),
-                child: Icon(icon, color: accent, size: AppSizes.iconLg),
+                child:
+                    iconView ??
+                    Icon(icon, color: accent, size: AppSizes.iconLg),
               ),
               AppGaps.h8,
               Text(

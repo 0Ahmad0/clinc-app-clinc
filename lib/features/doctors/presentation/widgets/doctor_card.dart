@@ -7,6 +7,7 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_avatar.dart';
 import '../../../../shared/widgets/app_switch.dart';
+import '../../../../shared/widgets/specialization_visual.dart';
 import '../../data/models/clinic_doctor_model.dart';
 
 class DoctorCard extends StatelessWidget {
@@ -112,12 +113,25 @@ class DoctorCard extends StatelessWidget {
                         ],
                       ),
                       AppGaps.h8,
-                      Text(
-                        doctor.specializationName ?? '-',
-                        style: context.textTheme.labelSmall?.copyWith(
-                          color: accent,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      Row(
+                        children: [
+                          SpecializationIconView(
+                            value: doctor.specializationIcon,
+                            color: accent,
+                            size: AppSizes.iconXs,
+                          ),
+                          const SizedBox(width: AppSpacing.xxs + 1),
+                          Expanded(
+                            child: Text(
+                              doctor.specializationName ?? '-',
+                              overflow: TextOverflow.ellipsis,
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: accent,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       AppGaps.h8,
                       Row(

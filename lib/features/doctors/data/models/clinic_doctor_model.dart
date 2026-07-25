@@ -13,6 +13,7 @@ abstract class ClinicDoctorModel with _$ClinicDoctorModel {
     @JsonKey(name: 'specialization_id') String? specializationId,
     @JsonKey(name: 'specialization_name') String? specializationName,
     @JsonKey(name: 'specialization_icon') String? specializationIcon,
+    @JsonKey(name: 'specialization_color') String? specializationColor,
     String? gender,
     String? phone,
     String? email,

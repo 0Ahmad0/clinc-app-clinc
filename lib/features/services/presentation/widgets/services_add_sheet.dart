@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_bottom_sheet.dart';
+import '../../../../shared/widgets/specialization_visual.dart';
 import '../../domain/service_kind.dart';
 import '../cubit/services_cubit.dart';
 import '../services_l10n.dart';
@@ -47,6 +48,13 @@ class ServicesAddSheet extends StatelessWidget {
                 child: _AddTile(
                   icon: section.iconData,
                   accent: section.accent(colors),
+                  iconView: (section.icon ?? '').trim().isEmpty
+                      ? null
+                      : SpecializationIconView(
+                          value: section.icon,
+                          color: section.accent(colors),
+                          size: AppSizes.iconSm,
+                        ),
                   name: section.label(context),
                   added: state.isLabSectionAdded(section.sectionId),
                   onTap: () {
@@ -68,12 +76,23 @@ class ServicesAddSheet extends StatelessWidget {
                 child: _AddTile(
                   icon: specialty.iconData,
                   accent: specialty.accent(colors),
+                  iconView: SpecializationIconView(
+                    value: specialty.icon,
+                    color: specialty.accent(colors),
+                    size: AppSizes.iconSm,
+                  ),
                   name: specialty.label(context),
                   added: state.isSpecializationEnabled(
                     specialty.specializationId,
                   ),
                   onTap: () {
-                    cubit.addSpecialty(specialty);
+                    if (state.isSpecializationEnabled(
+                      specialty.specializationId,
+                    )) {
+                      cubit.removeSpecialty(specialty);
+                    } else {
+                      cubit.addSpecialty(specialty);
+                    }
                     Navigator.of(context).pop();
                   },
                 ),
@@ -91,6 +110,7 @@ class _AddTile extends StatelessWidget {
     required this.name,
     required this.added,
     required this.onTap,
+    this.iconView,
   });
 
   final IconData icon;
@@ -98,21 +118,26 @@ class _AddTile extends StatelessWidget {
   final String name;
   final bool added;
   final VoidCallback onTap;
+  final Widget? iconView;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     return Material(
-      color: added ? colors.fill : colors.surface,
+      color: added
+          ? accent.withValues(alpha: 0.08)
+          : accent.withValues(alpha: 0.03),
       borderRadius: BorderRadius.circular(AppRadius.field),
       child: InkWell(
-        onTap: added ? null : onTap,
+        onTap: onTap,
         borderRadius: BorderRadius.circular(AppRadius.field),
         child: Container(
           padding: const EdgeInsetsDirectional.all(AppSpacing.sm),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.field),
-            border: Border.all(color: colors.line),
+            border: Border.all(
+              color: accent.withValues(alpha: added ? 0.38 : 0.2),
+            ),
           ),
           child: Row(
             children: [
@@ -124,14 +149,16 @@ class _AddTile extends StatelessWidget {
                   color: accent.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
-                child: Icon(icon, color: accent, size: AppSizes.iconSm),
+                child:
+                    iconView ??
+                    Icon(icon, color: accent, size: AppSizes.iconSm),
               ),
               AppGaps.w12,
               Expanded(
                 child: Text(
                   name,
                   style: context.textTheme.titleSmall?.copyWith(
-                    color: colors.ink,
+                    color: added ? colors.gray : colors.ink,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
