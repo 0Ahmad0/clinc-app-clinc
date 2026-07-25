@@ -15,6 +15,7 @@ abstract class ServicesState with _$ServicesState {
     @Default('') String labSearch,
     @Default('') String specializationSearch,
     @Default({}) Map<int, String> labTestPriceDrafts,
+    @Default({}) Map<int, int> labSectionEnabledCounts,
     @Default({}) Set<int> busyLabTestIds,
     @Default({}) Set<int> busySpecializationIds,
     @Default(0) int version,
@@ -67,9 +68,18 @@ abstract class ServicesState with _$ServicesState {
     );
   }
 
+
   bool isLabSectionAdded(int? sectionId) {
     if (sectionId == null) return false;
     return selectedLabSectionIds.contains(sectionId);
+  }
+
+  int labSectionEnabledCount(int? sectionId) {
+    if (sectionId == null) return 0;
+    return labSectionEnabledCounts[sectionId] ??
+        enabledLabTests.items.value
+            .where((item) => item.sectionId == sectionId)
+            .length;
   }
 
   String _formatPrice(num? value) {

@@ -210,10 +210,13 @@ class ServicesCubit extends Cubit<ServicesState> {
       final result = await _repository.removeLabTest(labTestId: labTestId);
       result.when(
         success: (_) {
-          state.enabledLabTests.items.assignAll(
-            state.enabledLabTests.items.value.where(
-              (item) => item.labTestId != labTestId,
-            ),
+          final items = state.enabledLabTests.items.value
+              .where((item) => item.labTestId != labTestId)
+              .toList(growable: false);
+          state.enabledLabTests.items.assignAll(items);
+          _syncLabSectionEnabledCounts(
+            items: items,
+            sectionId: state.detail?.sectionId,
           );
           _emitVersioned();
         },
@@ -274,11 +277,8 @@ class ServicesCubit extends Cubit<ServicesState> {
     );
     result.when(
       success: (response) {
-        pagination.setPage(
-          data: response.result?.list ?? const [],
-          page: page,
-          meta: response.meta,
-        );
+        final items = response.result?.list ?? const [];
+        pagination.setPage(data: items, page: page, meta: response.meta);
         _syncSelectedLabSectionsFromEnabledTests();
         _clearPaginationLoading(pagination);
         _emitVersioned();
@@ -309,10 +309,12 @@ class ServicesCubit extends Cubit<ServicesState> {
     );
     result.when(
       success: (response) {
-        pagination.setPage(
-          data: response.result?.list ?? const [],
-          page: page,
-          meta: response.meta,
+        final items = response.result?.list ?? const [];
+        pagination.setPage(data: items, page: page, meta: response.meta);
+        _syncLabSectionEnabledCounts(
+          items: items,
+          sectionId: section?.sectionId,
+          total: response.meta?.total,
         );
         _syncSelectedLabSectionsFromEnabledTests();
         _clearPaginationLoading(pagination);
@@ -430,6 +432,7 @@ class ServicesCubit extends Cubit<ServicesState> {
       items[index] = item;
     }
     state.enabledLabTests.items.assignAll(items);
+    _syncLabSectionEnabledCounts(items: items, sectionId: item.sectionId);
     final sectionId = item.sectionId;
     if (sectionId != null && !state.selectedLabSectionIds.contains(sectionId)) {
       emit(
@@ -451,6 +454,32 @@ class ServicesCubit extends Cubit<ServicesState> {
       items[index] = item;
     }
     state.enabledSpecializations.items.assignAll(items);
+  }
+
+  void _syncLabSectionEnabledCounts({
+    required List<ClinicEnabledLabTestModel> items,
+    int? sectionId,
+    int? total,
+  }) {
+    final counts = {...state.labSectionEnabledCounts};
+    if (sectionId != null) {
+      counts[sectionId] = total ?? items.where((item) => item.isActive).length;
+    } else {
+      counts
+        ..clear()
+        ..addAll(_groupEnabledLabCounts(items));
+    }
+    emit(state.copyWith(labSectionEnabledCounts: counts));
+  }
+
+  Map<int, int> _groupEnabledLabCounts(List<ClinicEnabledLabTestModel> items) {
+    final counts = <int, int>{};
+    for (final item in items) {
+      final sectionId = item.sectionId;
+      if (sectionId == null || !item.isActive) continue;
+      counts[sectionId] = (counts[sectionId] ?? 0) + 1;
+    }
+    return counts;
   }
 
   void _emitVersioned({NetworkExceptions? failure}) {

@@ -46,7 +46,7 @@ class ServicesCatalogGrid extends StatelessWidget {
                       ),
                 name: section.label(context),
                 sub: l10n.servicesTestsAvailable(
-                  '${state.enabledLabTests.items.value.where((item) => item.sectionId == section.sectionId).length}',
+                  '${state.labSectionEnabledCount(section.sectionId)}',
                 ),
                 onTap: () => cubit.openDetail(section),
               )

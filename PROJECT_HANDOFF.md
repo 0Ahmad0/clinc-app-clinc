@@ -849,3 +849,15 @@ locator.registerFactory<FeatureCubit>(
   - `lib/features/services/presentation/cubit/services_cubit.freezed.dart`
   - `lib/features/services/presentation/widgets/services_detail_list.dart`
   - `PROJECT_HANDOFF.md`
+
+## Completed: Lab Section Counter Preservation Fix
+- Date: 2026-07-25.
+- Lab section card counters are now stored per `section_id` in `ServicesState`.
+- Opening one lab section updates only that section's counter and no longer zeroes counters for other visible lab sections.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/services/presentation/cubit/services_cubit.dart`
+  - `lib/features/services/presentation/cubit/services_state.dart`
+  - `lib/features/services/presentation/cubit/services_cubit.freezed.dart`
+  - `lib/features/services/presentation/widgets/services_catalog_grid.dart`
+  - `PROJECT_HANDOFF.md`
