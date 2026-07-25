@@ -39,12 +39,14 @@ class ReportsCubit extends Cubit<ReportsState> {
   Future<void> refresh() => loadInitial();
 
   Future<void> selectPeriod(ReportPeriod period) async {
-    emit(state.copyWith(period: period, exportedReport: null));
+    emit(
+      state.copyWith(period: period, exportedReport: null, exportMessage: null),
+    );
     await loadInitial();
   }
 
   Future<void> selectType(ReportType type) async {
-    emit(state.copyWith(type: type, exportedReport: null));
+    emit(state.copyWith(type: type, exportedReport: null, exportMessage: null));
     await loadInitial();
   }
 
@@ -83,6 +85,7 @@ class ReportsCubit extends Cubit<ReportsState> {
         isExportingPdf: format == 'pdf',
         isExportingXlsx: format == 'xlsx',
         exportedReport: null,
+        exportMessage: null,
         failure: null,
       ),
     );
@@ -96,6 +99,7 @@ class ReportsCubit extends Cubit<ReportsState> {
         emit(
           state.copyWith(
             exportedReport: response.result,
+            exportMessage: response.message,
             isExportingPdf: false,
             isExportingXlsx: false,
             failure: null,

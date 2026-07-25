@@ -20,14 +20,10 @@ class NotificationsTabs extends StatelessWidget {
     );
     return BlocBuilder<NotificationsCubit, NotificationsState>(
       builder: (context, state) {
-        final items = state.pagination.items.value;
-        final total = items.length;
-        final unread = items.where((item) => item.unread).length;
-        final read = items.where((item) => item.isRead).length;
         final counts = {
-          NotificationTab.all: total,
-          NotificationTab.unread: unread,
-          NotificationTab.read: read,
+          NotificationTab.all: state.totalCount,
+          NotificationTab.unread: state.unreadCount,
+          NotificationTab.read: state.readCount,
         };
         final labels = {
           NotificationTab.all: l10n.notifTabAll,

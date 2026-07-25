@@ -38,7 +38,9 @@ class ReportsView extends StatelessWidget {
                 AppToast.show(
                   context,
                   title: context.l10n.reportsExportSoonTitle,
-                  message: state.exportedReport!.fileUrl ?? '',
+                  message:
+                      state.exportMessage ??
+                      context.l10n.reportsExportSoonMessage,
                   type: AppFeedbackType.success,
                 );
               }

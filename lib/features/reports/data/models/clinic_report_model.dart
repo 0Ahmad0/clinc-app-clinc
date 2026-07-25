@@ -96,9 +96,34 @@ extension ClinicGeneratedReportModelX on ClinicGeneratedReportModel {
   String get formattedGeneratedAt {
     final raw = generatedAt?.trim();
     if (raw == null || raw.isEmpty) return '-';
-    final parsed = DateTime.tryParse(raw);
+    final parsed = DateTime.tryParse(raw)?.toLocal();
     if (parsed == null) return raw;
     final formatted = DateFormat('yyyy-MM-dd h:mm a').format(parsed);
+    return formatted.replaceAll('AM', 'am').replaceAll('PM', 'pm');
+  }
+
+  String displayGeneratedAt({required String languageCode}) {
+    final raw = generatedAt?.trim();
+    if (raw == null || raw.isEmpty) return '-';
+    final parsed = DateTime.tryParse(raw)?.toLocal();
+    if (parsed == null) return raw;
+
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final generatedDay = DateTime(parsed.year, parsed.month, parsed.day);
+    final time = _formatReportTime(parsed);
+
+    if (generatedDay == today) return time;
+    if (generatedDay == today.subtract(const Duration(days: 1))) {
+      return languageCode == 'ar' ? 'أمس $time' : 'Yesterday $time';
+    }
+
+    final date = DateFormat('yyyy-MM-dd').format(parsed);
+    return '$date $time';
+  }
+
+  String _formatReportTime(DateTime value) {
+    final formatted = DateFormat('h:mm a').format(value);
     return formatted.replaceAll('AM', 'am').replaceAll('PM', 'pm');
   }
 

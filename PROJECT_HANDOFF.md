@@ -699,11 +699,47 @@ locator.registerFactory<FeatureCubit>(
 ## Completed: Notifications Counters Pagination Pattern
 - Date: 2026-07-25.
 - Notifications header now uses full backend totals from lightweight `per_page=1` calls for all/unread/read.
-- Notifications tab counters now calculate counts from currently loaded paginated list items.
+- Notifications tab counters now use the same full backend totals, so selecting a tab does not reset other counters to zero while the filtered page loads.
 - No backend changes required.
 - Files added/modified:
   - `lib/features/notifications/presentation/cubit/notifications_cubit.dart`
   - `lib/features/notifications/presentation/widgets/notifications_header.dart`
   - `lib/features/notifications/presentation/widgets/notifications_tabs.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Notifications Duplicate Page 2 Fix
+- Date: 2026-07-25.
+- Fixed notifications pagination meta normalization to read backend `current_page/per_page` as well as `currentPage/perPage`.
+- This prevents Flutter from resetting `currentPage` to 1 after loading page 2 and requesting page 2 again at the list bottom.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/notifications/data/clinic_notifications_remote_data_source.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Reports Export Toast Message Fix
+- Date: 2026-07-25.
+- Reports export success toast now displays the backend response `message`.
+- The report `file_url` is no longer used as the toast message.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/reports/presentation/cubit/reports_cubit.dart`
+  - `lib/features/reports/presentation/cubit/reports_state.dart`
+  - `lib/features/reports/presentation/cubit/reports_cubit.freezed.dart`
+  - `lib/features/reports/presentation/pages/reports_view.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Reports Generated Time Display Helper
+- Date: 2026-07-25.
+- Added report generated-time display helper in `ClinicGeneratedReportModelX`.
+- Reports generated today show time only.
+- Reports generated yesterday show yesterday label plus time.
+- Older reports show date plus time.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/reports/data/models/clinic_report_model.dart`
+  - `lib/features/reports/presentation/widgets/report_entry_card.dart`
   - `PROJECT_HANDOFF.md`
   - `BACKEND_NOTES.md`

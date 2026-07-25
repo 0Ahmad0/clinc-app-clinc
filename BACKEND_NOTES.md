@@ -627,4 +627,7 @@
 - No new backend endpoints were required for appointment detail result/notes display; Flutter reads existing `notes` and `result_file` fields from `ClinicAppointmentResource`.
 - No new backend endpoints were required for home quick actions navigation; this is Flutter routing only.
 - No new backend endpoints were required for appointment card date-time display; Flutter formats existing `date` and `time` fields.
-- No new backend endpoints were required for notifications counters pagination pattern; Flutter reads full totals from existing paginated notifications meta and calculates tab counters from loaded items.
+- No new backend endpoints were required for notifications counters pagination pattern; Flutter reads full totals from existing paginated notifications meta and keeps tab counters stable when filtered pages load.
+- No new backend endpoints were required for notifications duplicate page 2 fix; Flutter now normalizes existing `current_page/per_page` pagination meta correctly.
+- No new backend endpoints were required for reports export toast message fix; Flutter now displays the existing response `message` instead of `data.file_url`.
+- No new backend endpoints were required for reports generated-time display helper; Flutter formats existing `generated_at` locally.

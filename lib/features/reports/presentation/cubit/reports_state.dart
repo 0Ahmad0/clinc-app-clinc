@@ -7,6 +7,7 @@ abstract class ReportsState with _$ReportsState {
     required ReportType type,
     ClinicReportSummaryModel? summary,
     ClinicGeneratedReportModel? exportedReport,
+    String? exportMessage,
     NetworkExceptions? failure,
     @Default(false) bool isSummaryLoading,
     @Default(false) bool isExportingPdf,

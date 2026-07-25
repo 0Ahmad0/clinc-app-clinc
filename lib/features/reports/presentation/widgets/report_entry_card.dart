@@ -20,6 +20,7 @@ class ReportEntryCard extends StatelessWidget {
     final format = report.format?.toUpperCase() ?? '-';
     final status = report.status ?? '-';
     final fileUri = report.downloadableUri;
+    final languageCode = Localizations.localeOf(context).languageCode;
 
     return Material(
       color: colors.surface,
@@ -90,7 +91,9 @@ class ReportEntryCard extends StatelessWidget {
                             ),
                             const SizedBox(height: AppSpacing.xxs),
                             Text(
-                              report.formattedGeneratedAt,
+                              report.displayGeneratedAt(
+                                languageCode: languageCode,
+                              ),
                               textDirection: TextDirection.ltr,
                               textAlign: TextAlign.start,
                               style: context.textTheme.labelSmall?.copyWith(

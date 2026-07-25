@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReportsState {
 
- ReportPeriod get period; ReportType get type; ClinicReportSummaryModel? get summary; ClinicGeneratedReportModel? get exportedReport; NetworkExceptions? get failure; bool get isSummaryLoading; bool get isExportingPdf; bool get isExportingXlsx; PaginationState<ClinicGeneratedReportModel> get pagination;
+ ReportPeriod get period; ReportType get type; ClinicReportSummaryModel? get summary; ClinicGeneratedReportModel? get exportedReport; String? get exportMessage; NetworkExceptions? get failure; bool get isSummaryLoading; bool get isExportingPdf; bool get isExportingXlsx; PaginationState<ClinicGeneratedReportModel> get pagination;
 /// Create a copy of ReportsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ReportsStateCopyWith<ReportsState> get copyWith => _$ReportsStateCopyWithImpl<R
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportsState&&(identical(other.period, period) || other.period == period)&&(identical(other.type, type) || other.type == type)&&(identical(other.summary, summary) || other.summary == summary)&&(identical(other.exportedReport, exportedReport) || other.exportedReport == exportedReport)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isSummaryLoading, isSummaryLoading) || other.isSummaryLoading == isSummaryLoading)&&(identical(other.isExportingPdf, isExportingPdf) || other.isExportingPdf == isExportingPdf)&&(identical(other.isExportingXlsx, isExportingXlsx) || other.isExportingXlsx == isExportingXlsx)&&(identical(other.pagination, pagination) || other.pagination == pagination));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReportsState&&(identical(other.period, period) || other.period == period)&&(identical(other.type, type) || other.type == type)&&(identical(other.summary, summary) || other.summary == summary)&&(identical(other.exportedReport, exportedReport) || other.exportedReport == exportedReport)&&(identical(other.exportMessage, exportMessage) || other.exportMessage == exportMessage)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isSummaryLoading, isSummaryLoading) || other.isSummaryLoading == isSummaryLoading)&&(identical(other.isExportingPdf, isExportingPdf) || other.isExportingPdf == isExportingPdf)&&(identical(other.isExportingXlsx, isExportingXlsx) || other.isExportingXlsx == isExportingXlsx)&&(identical(other.pagination, pagination) || other.pagination == pagination));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,period,type,summary,exportedReport,failure,isSummaryLoading,isExportingPdf,isExportingXlsx,pagination);
+int get hashCode => Object.hash(runtimeType,period,type,summary,exportedReport,exportMessage,failure,isSummaryLoading,isExportingPdf,isExportingXlsx,pagination);
 
 @override
 String toString() {
-  return 'ReportsState(period: $period, type: $type, summary: $summary, exportedReport: $exportedReport, failure: $failure, isSummaryLoading: $isSummaryLoading, isExportingPdf: $isExportingPdf, isExportingXlsx: $isExportingXlsx, pagination: $pagination)';
+  return 'ReportsState(period: $period, type: $type, summary: $summary, exportedReport: $exportedReport, exportMessage: $exportMessage, failure: $failure, isSummaryLoading: $isSummaryLoading, isExportingPdf: $isExportingPdf, isExportingXlsx: $isExportingXlsx, pagination: $pagination)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ReportsStateCopyWith<$Res>  {
   factory $ReportsStateCopyWith(ReportsState value, $Res Function(ReportsState) _then) = _$ReportsStateCopyWithImpl;
 @useResult
 $Res call({
- ReportPeriod period, ReportType type, ClinicReportSummaryModel? summary, ClinicGeneratedReportModel? exportedReport, NetworkExceptions? failure, bool isSummaryLoading, bool isExportingPdf, bool isExportingXlsx, PaginationState<ClinicGeneratedReportModel> pagination
+ ReportPeriod period, ReportType type, ClinicReportSummaryModel? summary, ClinicGeneratedReportModel? exportedReport, String? exportMessage, NetworkExceptions? failure, bool isSummaryLoading, bool isExportingPdf, bool isExportingXlsx, PaginationState<ClinicGeneratedReportModel> pagination
 });
 
 
@@ -62,13 +62,14 @@ class _$ReportsStateCopyWithImpl<$Res>
 
 /// Create a copy of ReportsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? period = null,Object? type = null,Object? summary = freezed,Object? exportedReport = freezed,Object? failure = freezed,Object? isSummaryLoading = null,Object? isExportingPdf = null,Object? isExportingXlsx = null,Object? pagination = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? period = null,Object? type = null,Object? summary = freezed,Object? exportedReport = freezed,Object? exportMessage = freezed,Object? failure = freezed,Object? isSummaryLoading = null,Object? isExportingPdf = null,Object? isExportingXlsx = null,Object? pagination = null,}) {
   return _then(_self.copyWith(
 period: null == period ? _self.period : period // ignore: cast_nullable_to_non_nullable
 as ReportPeriod,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ReportType,summary: freezed == summary ? _self.summary : summary // ignore: cast_nullable_to_non_nullable
 as ClinicReportSummaryModel?,exportedReport: freezed == exportedReport ? _self.exportedReport : exportedReport // ignore: cast_nullable_to_non_nullable
-as ClinicGeneratedReportModel?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
+as ClinicGeneratedReportModel?,exportMessage: freezed == exportMessage ? _self.exportMessage : exportMessage // ignore: cast_nullable_to_non_nullable
+as String?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as NetworkExceptions?,isSummaryLoading: null == isSummaryLoading ? _self.isSummaryLoading : isSummaryLoading // ignore: cast_nullable_to_non_nullable
 as bool,isExportingPdf: null == isExportingPdf ? _self.isExportingPdf : isExportingPdf // ignore: cast_nullable_to_non_nullable
 as bool,isExportingXlsx: null == isExportingXlsx ? _self.isExportingXlsx : isExportingXlsx // ignore: cast_nullable_to_non_nullable
@@ -194,10 +195,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ReportPeriod period,  ReportType type,  ClinicReportSummaryModel? summary,  ClinicGeneratedReportModel? exportedReport,  NetworkExceptions? failure,  bool isSummaryLoading,  bool isExportingPdf,  bool isExportingXlsx,  PaginationState<ClinicGeneratedReportModel> pagination)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ReportPeriod period,  ReportType type,  ClinicReportSummaryModel? summary,  ClinicGeneratedReportModel? exportedReport,  String? exportMessage,  NetworkExceptions? failure,  bool isSummaryLoading,  bool isExportingPdf,  bool isExportingXlsx,  PaginationState<ClinicGeneratedReportModel> pagination)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReportsState() when $default != null:
-return $default(_that.period,_that.type,_that.summary,_that.exportedReport,_that.failure,_that.isSummaryLoading,_that.isExportingPdf,_that.isExportingXlsx,_that.pagination);case _:
+return $default(_that.period,_that.type,_that.summary,_that.exportedReport,_that.exportMessage,_that.failure,_that.isSummaryLoading,_that.isExportingPdf,_that.isExportingXlsx,_that.pagination);case _:
   return orElse();
 
 }
@@ -215,10 +216,10 @@ return $default(_that.period,_that.type,_that.summary,_that.exportedReport,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ReportPeriod period,  ReportType type,  ClinicReportSummaryModel? summary,  ClinicGeneratedReportModel? exportedReport,  NetworkExceptions? failure,  bool isSummaryLoading,  bool isExportingPdf,  bool isExportingXlsx,  PaginationState<ClinicGeneratedReportModel> pagination)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ReportPeriod period,  ReportType type,  ClinicReportSummaryModel? summary,  ClinicGeneratedReportModel? exportedReport,  String? exportMessage,  NetworkExceptions? failure,  bool isSummaryLoading,  bool isExportingPdf,  bool isExportingXlsx,  PaginationState<ClinicGeneratedReportModel> pagination)  $default,) {final _that = this;
 switch (_that) {
 case _ReportsState():
-return $default(_that.period,_that.type,_that.summary,_that.exportedReport,_that.failure,_that.isSummaryLoading,_that.isExportingPdf,_that.isExportingXlsx,_that.pagination);case _:
+return $default(_that.period,_that.type,_that.summary,_that.exportedReport,_that.exportMessage,_that.failure,_that.isSummaryLoading,_that.isExportingPdf,_that.isExportingXlsx,_that.pagination);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -235,10 +236,10 @@ return $default(_that.period,_that.type,_that.summary,_that.exportedReport,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ReportPeriod period,  ReportType type,  ClinicReportSummaryModel? summary,  ClinicGeneratedReportModel? exportedReport,  NetworkExceptions? failure,  bool isSummaryLoading,  bool isExportingPdf,  bool isExportingXlsx,  PaginationState<ClinicGeneratedReportModel> pagination)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ReportPeriod period,  ReportType type,  ClinicReportSummaryModel? summary,  ClinicGeneratedReportModel? exportedReport,  String? exportMessage,  NetworkExceptions? failure,  bool isSummaryLoading,  bool isExportingPdf,  bool isExportingXlsx,  PaginationState<ClinicGeneratedReportModel> pagination)?  $default,) {final _that = this;
 switch (_that) {
 case _ReportsState() when $default != null:
-return $default(_that.period,_that.type,_that.summary,_that.exportedReport,_that.failure,_that.isSummaryLoading,_that.isExportingPdf,_that.isExportingXlsx,_that.pagination);case _:
+return $default(_that.period,_that.type,_that.summary,_that.exportedReport,_that.exportMessage,_that.failure,_that.isSummaryLoading,_that.isExportingPdf,_that.isExportingXlsx,_that.pagination);case _:
   return null;
 
 }
@@ -250,13 +251,14 @@ return $default(_that.period,_that.type,_that.summary,_that.exportedReport,_that
 
 
 class _ReportsState implements ReportsState {
-  const _ReportsState({this.period = ReportPeriod.week, required this.type, this.summary, this.exportedReport, this.failure, this.isSummaryLoading = false, this.isExportingPdf = false, this.isExportingXlsx = false, required this.pagination});
+  const _ReportsState({this.period = ReportPeriod.week, required this.type, this.summary, this.exportedReport, this.exportMessage, this.failure, this.isSummaryLoading = false, this.isExportingPdf = false, this.isExportingXlsx = false, required this.pagination});
   
 
 @override@JsonKey() final  ReportPeriod period;
 @override final  ReportType type;
 @override final  ClinicReportSummaryModel? summary;
 @override final  ClinicGeneratedReportModel? exportedReport;
+@override final  String? exportMessage;
 @override final  NetworkExceptions? failure;
 @override@JsonKey() final  bool isSummaryLoading;
 @override@JsonKey() final  bool isExportingPdf;
@@ -273,16 +275,16 @@ _$ReportsStateCopyWith<_ReportsState> get copyWith => __$ReportsStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportsState&&(identical(other.period, period) || other.period == period)&&(identical(other.type, type) || other.type == type)&&(identical(other.summary, summary) || other.summary == summary)&&(identical(other.exportedReport, exportedReport) || other.exportedReport == exportedReport)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isSummaryLoading, isSummaryLoading) || other.isSummaryLoading == isSummaryLoading)&&(identical(other.isExportingPdf, isExportingPdf) || other.isExportingPdf == isExportingPdf)&&(identical(other.isExportingXlsx, isExportingXlsx) || other.isExportingXlsx == isExportingXlsx)&&(identical(other.pagination, pagination) || other.pagination == pagination));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReportsState&&(identical(other.period, period) || other.period == period)&&(identical(other.type, type) || other.type == type)&&(identical(other.summary, summary) || other.summary == summary)&&(identical(other.exportedReport, exportedReport) || other.exportedReport == exportedReport)&&(identical(other.exportMessage, exportMessage) || other.exportMessage == exportMessage)&&(identical(other.failure, failure) || other.failure == failure)&&(identical(other.isSummaryLoading, isSummaryLoading) || other.isSummaryLoading == isSummaryLoading)&&(identical(other.isExportingPdf, isExportingPdf) || other.isExportingPdf == isExportingPdf)&&(identical(other.isExportingXlsx, isExportingXlsx) || other.isExportingXlsx == isExportingXlsx)&&(identical(other.pagination, pagination) || other.pagination == pagination));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,period,type,summary,exportedReport,failure,isSummaryLoading,isExportingPdf,isExportingXlsx,pagination);
+int get hashCode => Object.hash(runtimeType,period,type,summary,exportedReport,exportMessage,failure,isSummaryLoading,isExportingPdf,isExportingXlsx,pagination);
 
 @override
 String toString() {
-  return 'ReportsState(period: $period, type: $type, summary: $summary, exportedReport: $exportedReport, failure: $failure, isSummaryLoading: $isSummaryLoading, isExportingPdf: $isExportingPdf, isExportingXlsx: $isExportingXlsx, pagination: $pagination)';
+  return 'ReportsState(period: $period, type: $type, summary: $summary, exportedReport: $exportedReport, exportMessage: $exportMessage, failure: $failure, isSummaryLoading: $isSummaryLoading, isExportingPdf: $isExportingPdf, isExportingXlsx: $isExportingXlsx, pagination: $pagination)';
 }
 
 
@@ -293,7 +295,7 @@ abstract mixin class _$ReportsStateCopyWith<$Res> implements $ReportsStateCopyWi
   factory _$ReportsStateCopyWith(_ReportsState value, $Res Function(_ReportsState) _then) = __$ReportsStateCopyWithImpl;
 @override @useResult
 $Res call({
- ReportPeriod period, ReportType type, ClinicReportSummaryModel? summary, ClinicGeneratedReportModel? exportedReport, NetworkExceptions? failure, bool isSummaryLoading, bool isExportingPdf, bool isExportingXlsx, PaginationState<ClinicGeneratedReportModel> pagination
+ ReportPeriod period, ReportType type, ClinicReportSummaryModel? summary, ClinicGeneratedReportModel? exportedReport, String? exportMessage, NetworkExceptions? failure, bool isSummaryLoading, bool isExportingPdf, bool isExportingXlsx, PaginationState<ClinicGeneratedReportModel> pagination
 });
 
 
@@ -310,13 +312,14 @@ class __$ReportsStateCopyWithImpl<$Res>
 
 /// Create a copy of ReportsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? period = null,Object? type = null,Object? summary = freezed,Object? exportedReport = freezed,Object? failure = freezed,Object? isSummaryLoading = null,Object? isExportingPdf = null,Object? isExportingXlsx = null,Object? pagination = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? period = null,Object? type = null,Object? summary = freezed,Object? exportedReport = freezed,Object? exportMessage = freezed,Object? failure = freezed,Object? isSummaryLoading = null,Object? isExportingPdf = null,Object? isExportingXlsx = null,Object? pagination = null,}) {
   return _then(_ReportsState(
 period: null == period ? _self.period : period // ignore: cast_nullable_to_non_nullable
 as ReportPeriod,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as ReportType,summary: freezed == summary ? _self.summary : summary // ignore: cast_nullable_to_non_nullable
 as ClinicReportSummaryModel?,exportedReport: freezed == exportedReport ? _self.exportedReport : exportedReport // ignore: cast_nullable_to_non_nullable
-as ClinicGeneratedReportModel?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
+as ClinicGeneratedReportModel?,exportMessage: freezed == exportMessage ? _self.exportMessage : exportMessage // ignore: cast_nullable_to_non_nullable
+as String?,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as NetworkExceptions?,isSummaryLoading: null == isSummaryLoading ? _self.isSummaryLoading : isSummaryLoading // ignore: cast_nullable_to_non_nullable
 as bool,isExportingPdf: null == isExportingPdf ? _self.isExportingPdf : isExportingPdf // ignore: cast_nullable_to_non_nullable
 as bool,isExportingXlsx: null == isExportingXlsx ? _self.isExportingXlsx : isExportingXlsx // ignore: cast_nullable_to_non_nullable
