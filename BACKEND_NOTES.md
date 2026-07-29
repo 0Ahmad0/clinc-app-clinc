@@ -660,3 +660,5 @@
 - Flutter supported specialization icon keys: `stethoscope`, `heart`, `heart-pulse`, `eye`, `tooth`, `skin`, `ear`, `stomach`, `brain`, `female`, `bone`, `baby-face`, `kidney`, `hospital`, `general`, `dermatology`, `cardiology`, `ophthalmology`, `orthopedics`, `pediatrics`, `dentistry`.
 - No new backend endpoints were required for services add-specialization sheet scroll/color fix; this is Flutter layout and presentation only.
 - No new backend endpoints were required for services specialization remove from add sheet; Flutter uses existing `DELETE /api/clinic/services/specializations/{specialization}`.
+- No new backend endpoints were required for doctors header overflow fix; this is Flutter layout/text constraint behavior only.
+- No new backend endpoints were required for settings clinic logo/cover fallback; Flutter reads existing `logo` and `cover` fields and falls back locally on loading/error.

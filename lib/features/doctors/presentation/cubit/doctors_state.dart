@@ -13,6 +13,7 @@ abstract class DoctorsState with _$DoctorsState {
     required PaginationState<ClinicDoctorModel> pagination,
     @Default(<ClinicSpecializationModel>[])
     List<ClinicSpecializationModel> specializations,
+    @Default(false) bool isFiltersLoading,
     String? selectedSpecializationId,
     @Default('') String query,
     ClinicDoctorModel? selectedDoctor,

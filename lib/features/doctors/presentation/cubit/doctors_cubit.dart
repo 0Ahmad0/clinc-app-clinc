@@ -20,7 +20,8 @@ class DoctorsCubit extends Cubit<DoctorsState> {
   Timer? _debounce;
 
   Future<void> loadInitial() async {
-    await Future.wait([loadSpecializations(), _loadPage(page: 1, reset: true)]);
+    await loadSpecializations();
+    await _loadPage(page: 1, reset: true);
   }
 
   Future<void> refresh() => _loadPage(page: 1, reset: true, refreshing: true);
@@ -80,17 +81,20 @@ class DoctorsCubit extends Cubit<DoctorsState> {
   }
 
   Future<void> loadSpecializations() async {
+    emit(state.copyWith(isFiltersLoading: true, failure: null));
     final result = await _repository.getSpecializations();
     result.when(
       success: (response) {
         emit(
           state.copyWith(
             specializations: response.result?.list ?? const [],
+            isFiltersLoading: false,
             failure: null,
           ),
         );
       },
-      failure: (exception) => emit(state.copyWith(failure: exception)),
+      failure: (exception) =>
+          emit(state.copyWith(isFiltersLoading: false, failure: exception)),
     );
   }
 

@@ -86,8 +86,10 @@ class AppointmentDetailHeader extends StatelessWidget {
               ),
             ),
             AppGaps.h12,
-            Row(
-              mainAxisSize: MainAxisSize.min,
+            Wrap(
+              alignment: WrapAlignment.center,
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
               children: [
                 Container(
                   padding: const EdgeInsetsDirectional.symmetric(
@@ -106,7 +108,6 @@ class AppointmentDetailHeader extends StatelessWidget {
                     ),
                   ),
                 ),
-                AppGaps.w8,
                 Container(
                   padding: const EdgeInsetsDirectional.symmetric(
                     horizontal: AppSpacing.md,

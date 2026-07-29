@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,6 +6,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/extensions/image_extension.dart';
 import '../../domain/settings_section.dart';
 import '../cubit/settings_cubit.dart';
 
@@ -24,6 +26,7 @@ class SettingsMainHeader extends StatelessWidget {
     final clinicEmail = clinic?.email?.trim().isNotEmpty == true
         ? clinic!.email!
         : l10n.settingsClinicEmail;
+    final clinicLogo = clinic?.logo?.trim();
     return Container(
       width: double.infinity,
       clipBehavior: Clip.antiAlias,
@@ -76,6 +79,7 @@ class SettingsMainHeader extends StatelessWidget {
                         width: AppSizes.settingsAvatar,
                         height: AppSizes.settingsAvatar,
                         alignment: Alignment.center,
+                        clipBehavior: Clip.antiAlias,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: colors.onBrand.withValues(alpha: 0.16),
@@ -84,14 +88,10 @@ class SettingsMainHeader extends StatelessWidget {
                             width: 2,
                           ),
                         ),
-                        child: SvgPicture.asset(
-                          'assets/images/app_logo.svg',
-                          width: AppSizes.settingsLogo,
-                          height: AppSizes.settingsLogo,
-                          colorFilter: ColorFilter.mode(
-                            colors.onBrand,
-                            BlendMode.srcIn,
-                          ),
+                        child: _SettingsClinicLogo(
+                          imageUrl: clinicLogo?.isNotEmpty == true
+                              ? clinicLogo!.withStorage()
+                              : null,
                         ),
                       ),
                       PositionedDirectional(
@@ -143,6 +143,46 @@ class SettingsMainHeader extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SettingsClinicLogo extends StatelessWidget {
+  const _SettingsClinicLogo({this.imageUrl});
+
+  final String? imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    final fallback = _SettingsClinicLogoFallback(color: context.colors.onBrand);
+    final url = imageUrl;
+    if (url == null || url.isEmpty) return fallback;
+
+    return CachedNetworkImage(
+      imageUrl: url,
+      width: AppSizes.settingsAvatar,
+      height: AppSizes.settingsAvatar,
+      fit: BoxFit.cover,
+      placeholder: (_, __) => fallback,
+      errorWidget: (_, __, ___) => fallback,
+    );
+  }
+}
+
+class _SettingsClinicLogoFallback extends StatelessWidget {
+  const _SettingsClinicLogoFallback({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SvgPicture.asset(
+        'assets/images/app_logo.svg',
+        width: AppSizes.settingsLogo,
+        height: AppSizes.settingsLogo,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
       ),
     );
   }

@@ -920,3 +920,58 @@ locator.registerFactory<FeatureCubit>(
   - `lib/features/auth/data/clinic_auth_remote_data_source.dart`
   - `PROJECT_HANDOFF.md`
   - `BACKEND_NOTES.md`
+
+## Completed: Doctors Header Overflow Fix
+- Date: 2026-07-29.
+- Fixed the doctors header text column overflow on the 390x844 reference viewport.
+- Header title and summary are constrained to one line with ellipsis and tighter line height.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/doctors/presentation/widgets/doctors_header.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Shimmer And Empty States
+- Date: 2026-07-29.
+- Added reusable `SharedEmptyWidget` for themed image/icon empty states with title and optional subtitle.
+- Added section shimmer widgets for filters, lists, grids, and Home dashboard loading.
+- Home now shows dashboard shimmer while loading, then a shared empty state if no dashboard data is available; today's appointments use the shared empty state when the API returns an empty list.
+- Doctors now loads API filters first (`isFiltersLoading`), then shows list shimmer until doctors load; filters and list loading are handled independently.
+- Appointments now use list shimmer while loading and shared empty state for empty tabs.
+- Services/Labs now use independent filter/list loading flags for lab sections and specialty filters, plus grid/list/detail shimmers and shared empty states for empty service catalogs and lab test details.
+- Literal `Clinics`, `Insurance List`, and `Insurance Details` modules are not present in this clinic-side workspace; reusable shared widgets are ready for those modules if added later.
+- No backend changes required.
+- Verification:
+  - `flutter analyze`
+  - `flutter test test/design_system_test.dart test/home_view_test.dart test/doctors_view_test.dart test/doctors_cubit_test.dart`
+- Files added/modified:
+  - `lib/shared/widgets/shared_empty_widget.dart`
+  - `lib/shared/widgets/app_section_shimmers.dart`
+  - `lib/features/home/presentation/pages/home_view.dart`
+  - `lib/features/home/presentation/widgets/home_appointments_section.dart`
+  - `lib/features/doctors/presentation/cubit/doctors_state.dart`
+  - `lib/features/doctors/presentation/cubit/doctors_state.freezed.dart`
+  - `lib/features/doctors/presentation/cubit/doctors_cubit.dart`
+  - `lib/features/doctors/presentation/widgets/doctors_filter_chips.dart`
+  - `lib/features/doctors/presentation/widgets/doctors_list.dart`
+  - `lib/features/appointments/presentation/pages/appointments_list_view.dart`
+  - `lib/features/appointments/presentation/widgets/appointments_empty.dart`
+  - `lib/features/services/presentation/cubit/services_state.dart`
+  - `lib/features/services/presentation/cubit/services_cubit.freezed.dart`
+  - `lib/features/services/presentation/cubit/services_cubit.dart`
+  - `lib/features/services/presentation/widgets/services_catalog_grid.dart`
+  - `lib/features/services/presentation/widgets/services_detail_list.dart`
+  - `PROJECT_HANDOFF.md`
+
+## Completed: Settings Clinic Images Fallback
+- Date: 2026-07-29.
+- Settings main header now shows the clinic logo when `clinic.logo` exists.
+- Settings profile cover/avatar now show backend images when available.
+- Loading or failed image loads keep the existing empty/default cover and avatar visuals.
+- Relative storage paths and full URLs are supported through existing image URL normalization.
+- No backend changes required.
+- Files added/modified:
+  - `lib/features/settings/presentation/widgets/settings_main_header.dart`
+  - `lib/features/settings/presentation/widgets/settings_profile_cover.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`

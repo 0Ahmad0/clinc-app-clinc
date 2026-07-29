@@ -5,6 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_section_shimmers.dart';
+import '../../../../shared/widgets/app_shimmer_placeholder.dart';
+import '../../../../shared/widgets/shared_empty_widget.dart';
 import '../../../../shared/widgets/specialization_visual.dart';
 import '../../data/models/clinic_doctor_model.dart';
 import '../../domain/doctor_specialty.dart';
@@ -25,22 +28,13 @@ class DoctorsList extends StatelessWidget {
           builder: (context, _) {
             final doctors = state.pagination.items.value;
             if (state.pagination.isInitialLoading.value && doctors.isEmpty) {
-              return const Padding(
-                padding: EdgeInsetsDirectional.all(AppSpacing.lg),
-                child: Center(child: CircularProgressIndicator()),
-              );
+              return const ListShimmer(itemHeight: 132);
             }
             if (doctors.isEmpty) {
-              return Padding(
-                padding: const EdgeInsetsDirectional.all(AppSpacing.lg),
-                child: Center(
-                  child: Text(
-                    context.l10n.doctorsNoResults,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: context.colors.muted,
-                    ),
-                  ),
-                ),
+              return SharedEmptyWidget(
+                icon: Icons.medical_services_outlined,
+                title: context.l10n.doctorsNoResults,
+                subtitle: context.l10n.doctorsSearchHint,
               );
             }
             return ListView.separated(
@@ -56,7 +50,10 @@ class DoctorsList extends StatelessWidget {
               separatorBuilder: (_, __) => AppGaps.h12,
               itemBuilder: (context, index) {
                 if (index >= doctors.length) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const AppShimmerPlaceholder(
+                    height: 132,
+                    borderRadius: AppRadius.card,
+                  );
                 }
                 final doctor = doctors[index];
                 return DoctorCard(

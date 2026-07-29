@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_section_shimmers.dart';
+import '../../../../shared/widgets/app_shimmer_placeholder.dart';
+import '../../../../shared/widgets/shared_empty_widget.dart';
 import '../../data/models/clinic_service_model.dart';
 import '../cubit/services_cubit.dart';
 import '../services_l10n.dart';
@@ -22,9 +25,19 @@ class ServicesDetailList extends StatelessWidget {
     return BlocBuilder<ServicesCubit, ServicesState>(
       builder: (context, state) {
         if (state.availableLabTests.isInitialLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return const ListShimmer(
+            itemHeight: 118,
+            bottomPadding: AppSpacing.xl,
+          );
         }
         final tests = state.availableLabTests.items.value;
+        if (tests.isEmpty) {
+          return SharedEmptyWidget(
+            icon: Icons.science_outlined,
+            title: section.label(context),
+            subtitle: context.l10n.noDataYet,
+          );
+        }
         return ListView.separated(
           padding: const EdgeInsetsDirectional.fromSTEB(
             AppSpacing.screen,
@@ -32,9 +45,15 @@ class ServicesDetailList extends StatelessWidget {
             AppSpacing.screen,
             AppSpacing.xl,
           ),
-          itemCount: tests.length,
-          separatorBuilder: (_, __) => AppGaps.h12,
+          itemCount: tests.length + (state.availableLabTests.hasMore ? 1 : 0),
+          separatorBuilder: (_, separatorIndex) => AppGaps.h12,
           itemBuilder: (context, index) {
+            if (index >= tests.length) {
+              return const AppShimmerPlaceholder(
+                height: 118,
+                borderRadius: AppRadius.card,
+              );
+            }
             final test = tests[index];
             final testState = state.testState(test.labTestId);
             final testAccent = test.accent(context.colors, fallback: accent);

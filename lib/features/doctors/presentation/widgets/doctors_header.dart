@@ -72,23 +72,30 @@ class DoctorsHeader extends StatelessWidget {
                     AppGaps.w12,
                     Expanded(
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             context.l10n.doctorsTitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: context.textTheme.titleLarge?.copyWith(
                               color: colors.onBrand,
                               fontWeight: FontWeight.w700,
+                              height: 1.05,
                             ),
                           ),
-                          AppGaps.h8,
+                          const SizedBox(height: AppSpacing.xs),
                           Text(
                             context.l10n.doctorsHeaderLine(
                               format.format(total),
                               format.format(available),
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: context.textTheme.bodySmall?.copyWith(
                               color: colors.onBrand.withValues(alpha: 0.72),
+                              height: 1.05,
                             ),
                           ),
                         ],

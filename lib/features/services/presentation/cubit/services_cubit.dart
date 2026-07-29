@@ -49,16 +49,23 @@ class ServicesCubit extends Cubit<ServicesState> {
     emit(state.copyWith(isLoading: true, failure: null));
     final tasks = <Future<void>>[];
     if (_canUseLab) {
-      tasks.addAll([_loadLabSections(), _loadEnabledLabTests(page: 1)]);
+      tasks.add(_loadLabInitial());
     }
     if (_canUseSpecialty) {
-      tasks.addAll([
-        _loadAvailableSpecializations(page: 1),
-        _loadEnabledSpecializations(page: 1),
-      ]);
+      tasks.add(_loadSpecialtyInitial());
     }
     await Future.wait(tasks);
     emit(state.copyWith(isLoading: false));
+  }
+
+  Future<void> _loadLabInitial() async {
+    await _loadLabSections();
+    await _loadEnabledLabTests(page: 1);
+  }
+
+  Future<void> _loadSpecialtyInitial() async {
+    await _loadAvailableSpecializations(page: 1);
+    await _loadEnabledSpecializations(page: 1);
   }
 
   Future<void> refresh() => loadInitial();
@@ -245,15 +252,23 @@ class ServicesCubit extends Cubit<ServicesState> {
   }
 
   Future<void> _loadLabSections() async {
+    emit(state.copyWith(isLabSectionsLoading: true, failure: null));
     final result = await _repository.labSections();
     result.when(
       success: (response) => emit(
         state.copyWith(
           labSections: response.result?.list ?? const [],
+          isLabSectionsLoading: false,
           failure: null,
         ),
       ),
-      failure: (exception) => _emitVersioned(failure: exception),
+      failure: (exception) => emit(
+        state.copyWith(
+          isLabSectionsLoading: false,
+          failure: exception,
+          version: state.version + 1,
+        ),
+      ),
     );
   }
 
@@ -334,6 +349,9 @@ class ServicesCubit extends Cubit<ServicesState> {
     final pagination = state.availableSpecializations;
     if (pagination.isBusy && !reset) return;
     if (reset) pagination.reset();
+    if (page == 1) {
+      emit(state.copyWith(isSpecializationFiltersLoading: true, failure: null));
+    }
     pagination.isInitialLoading.value = page == 1;
     pagination.isLoadingMore.value = page > 1;
 
@@ -350,11 +368,23 @@ class ServicesCubit extends Cubit<ServicesState> {
           meta: response.meta,
         );
         _clearPaginationLoading(pagination);
-        _emitVersioned();
+        emit(
+          state.copyWith(
+            isSpecializationFiltersLoading: false,
+            version: state.version + 1,
+            failure: null,
+          ),
+        );
       },
       failure: (exception) {
         _clearPaginationLoading(pagination);
-        _emitVersioned(failure: exception);
+        emit(
+          state.copyWith(
+            isSpecializationFiltersLoading: false,
+            version: state.version + 1,
+            failure: exception,
+          ),
+        );
       },
     );
   }

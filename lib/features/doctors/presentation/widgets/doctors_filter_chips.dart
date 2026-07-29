@@ -6,6 +6,7 @@ import '../../../../config/theme/app_motion.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_section_shimmers.dart';
 import '../../../../shared/widgets/specialization_visual.dart';
 import '../../data/models/clinic_specialization_model.dart';
 import '../cubit/doctors_cubit.dart';
@@ -23,56 +24,61 @@ class DoctorsFilterChips extends StatelessWidget {
       buildWhen: (previous, current) =>
           previous.selectedSpecializationId !=
               current.selectedSpecializationId ||
+          previous.isFiltersLoading != current.isFiltersLoading ||
           previous.specializations != current.specializations,
-      builder: (context, state) => SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsetsDirectional.fromSTEB(
-          AppSpacing.screen,
-          AppSpacing.sm,
-          AppSpacing.screen,
-          AppSpacing.xxs,
-        ),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
-              child: _FilterChip(
-                label: l10n.doctorsAll,
-                icon: Iconsax.category,
-                selected: state.selectedSpecializationId == null,
-                onTap: () =>
-                    context.read<DoctorsCubit>().selectSpecialization(null),
-              ),
-            ),
-            for (final specialty in state.specializations)
+      builder: (context, state) {
+        if (state.isFiltersLoading) return const FiltersShimmer();
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsetsDirectional.fromSTEB(
+            AppSpacing.screen,
+            AppSpacing.sm,
+            AppSpacing.screen,
+            AppSpacing.xxs,
+          ),
+          child: Row(
+            children: [
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
                 child: _FilterChip(
-                  label: _label(context, specialty),
-                  icon: SpecializationVisual.iconData(specialty.icon),
-                  iconView: SpecializationIconView(
-                    value: specialty.icon,
-                    color:
-                        state.selectedSpecializationId ==
-                            specialty.specializationId
-                        ? context.colors.onBrand
-                        : SpecializationVisual.color(
-                            specialty.color,
-                            context.colors.gray,
-                          ),
-                    size: AppSizes.filterChipIcon,
-                  ),
-                  selected:
-                      state.selectedSpecializationId ==
-                      specialty.specializationId,
-                  onTap: () => context
-                      .read<DoctorsCubit>()
-                      .selectSpecialization(specialty.specializationId),
+                  label: l10n.doctorsAll,
+                  icon: Iconsax.category,
+                  selected: state.selectedSpecializationId == null,
+                  onTap: () =>
+                      context.read<DoctorsCubit>().selectSpecialization(null),
                 ),
               ),
-          ],
-        ),
-      ),
+              for (final specialty in state.specializations)
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(end: AppSpacing.xs),
+                  child: _FilterChip(
+                    label: _label(context, specialty),
+                    icon: SpecializationVisual.iconData(specialty.icon),
+                    iconView: SpecializationIconView(
+                      value: specialty.icon,
+                      color:
+                          state.selectedSpecializationId ==
+                              specialty.specializationId
+                          ? context.colors.onBrand
+                          : SpecializationVisual.color(
+                              specialty.color,
+                              context.colors.gray,
+                            ),
+                      size: AppSizes.filterChipIcon,
+                    ),
+                    selected:
+                        state.selectedSpecializationId ==
+                        specialty.specializationId,
+                    onTap: () => context
+                        .read<DoctorsCubit>()
+                        .selectSpecialization(specialty.specializationId),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -104,6 +110,7 @@ class _FilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final foreground = selected ? colors.onBrand : colors.gray;
+
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(

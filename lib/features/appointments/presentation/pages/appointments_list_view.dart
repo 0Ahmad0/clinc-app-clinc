@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/widgets/app_bottom_navigation.dart';
+import '../../../../shared/widgets/app_section_shimmers.dart';
+import '../../../../shared/widgets/app_shimmer_placeholder.dart';
 import '../cubit/appointments_cubit.dart';
 import '../cubit/appointments_state.dart';
 import '../widgets/appointment_card.dart';
@@ -32,7 +34,7 @@ class AppointmentsListView extends StatelessWidget {
                       final appointments = state.pagination.items.value;
                       if (state.pagination.isInitialLoading.value &&
                           appointments.isEmpty) {
-                        return const Center(child: CircularProgressIndicator());
+                        return const ListShimmer(itemHeight: 116);
                       }
                       if (appointments.isEmpty)
                         return const AppointmentsEmpty();
@@ -52,8 +54,9 @@ class AppointmentsListView extends StatelessWidget {
                         separatorBuilder: (_, __) => AppGaps.h12,
                         itemBuilder: (context, index) {
                           if (index >= appointments.length) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
+                            return const AppShimmerPlaceholder(
+                              height: 116,
+                              borderRadius: AppRadius.card,
                             );
                           }
                           return AppointmentCard(

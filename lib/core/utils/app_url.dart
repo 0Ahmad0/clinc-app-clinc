@@ -16,10 +16,8 @@ const sheikh = "sheikh/";
 const psychologist = "psychologist/";
 const app = "app/";
 
-
 class AppUrl {
   static const appSettings = "${baseUrl}app/settings";
-
   static const clinicRegister = "${baseUrl}clinic/register";
   static const clinicLogin = "${baseUrl}clinic/login";
   static const clinicMe = "${baseUrl}clinic/me";

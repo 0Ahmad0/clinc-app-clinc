@@ -11,6 +11,8 @@ abstract class ServicesState with _$ServicesState {
     @Default({}) Set<int> selectedLabSectionIds,
     NetworkExceptions? failure,
     @Default(false) bool isLoading,
+    @Default(false) bool isLabSectionsLoading,
+    @Default(false) bool isSpecializationFiltersLoading,
     @Default(false) bool isMutating,
     @Default('') String labSearch,
     @Default('') String specializationSearch,
@@ -28,6 +30,10 @@ abstract class ServicesState with _$ServicesState {
   }) = _ServicesState;
 
   bool get inDetail => detail != null;
+
+  bool get isCurrentFiltersLoading => kind == ServiceKind.lab
+      ? isLabSectionsLoading
+      : isSpecializationFiltersLoading;
 
   List<ClinicLabSectionModel> get visibleLabSections {
     if (selectedLabSectionIds.isEmpty) return const [];
@@ -67,7 +73,6 @@ abstract class ServicesState with _$ServicesState {
       (item) => item.specializationId == specializationId && item.isActive,
     );
   }
-
 
   bool isLabSectionAdded(int? sectionId) {
     if (sectionId == null) return false;

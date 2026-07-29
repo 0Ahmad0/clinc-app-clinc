@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_section_shimmers.dart';
+import '../../../../shared/widgets/shared_empty_widget.dart';
 import '../../../../shared/widgets/specialization_visual.dart';
 import '../../domain/service_kind.dart';
 import '../cubit/services_cubit.dart';
@@ -25,12 +27,22 @@ class ServicesCatalogGrid extends StatelessWidget {
     return BlocBuilder<ServicesCubit, ServicesState>(
       builder: (context, state) {
         final isLab = state.kind == ServiceKind.lab;
-        if (state.isLoading) {
-          return const Padding(
-            padding: EdgeInsets.only(top: AppSpacing.xl),
-            child: Center(child: CircularProgressIndicator()),
+        final isListLoading = isLab
+            ? state.enabledLabTests.isInitialLoading.value
+            : state.enabledSpecializations.isInitialLoading.value;
+        if (state.isCurrentFiltersLoading) {
+          return const Column(
+            children: [
+              FiltersShimmer(),
+              CardsGridShimmer(bottomPadding: AppSpacing.xl),
+            ],
           );
         }
+        if (isListLoading) return const CardsGridShimmer();
+
+        final isEmpty = isLab
+            ? state.visibleLabSections.isEmpty
+            : state.enabledSpecializations.items.isEmpty;
         final cards = <Widget>[
           if (isLab)
             for (final section in state.visibleLabSections)
@@ -69,22 +81,44 @@ class ServicesCatalogGrid extends StatelessWidget {
           ),
         ];
 
-        return GridView(
-          padding: const EdgeInsetsDirectional.fromSTEB(
-            AppSpacing.screen,
-            AppSpacing.md,
-            AppSpacing.screen,
-            AppSizes.homeBottomClearance,
-          ),
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisExtent: AppSizes.servicesCardMinHeight,
-            crossAxisSpacing: AppSpacing.sm,
-            mainAxisSpacing: AppSpacing.sm,
-          ),
-          children: cards,
+        return Column(
+          children: [
+            if (isEmpty)
+              SharedEmptyWidget(
+                icon: isLab
+                    ? Icons.science_outlined
+                    : Icons.medical_services_outlined,
+                title: isLab
+                    ? l10n.servicesAddSection
+                    : l10n.servicesAddSpecialtyTitle,
+                subtitle: isLab
+                    ? l10n.servicesAddSectionSub
+                    : l10n.servicesAddSpecialtySub,
+                padding: const EdgeInsetsDirectional.fromSTEB(
+                  AppSpacing.xl,
+                  AppSpacing.xl,
+                  AppSpacing.xl,
+                  AppSpacing.sm,
+                ),
+              ),
+            GridView(
+              padding: const EdgeInsetsDirectional.fromSTEB(
+                AppSpacing.screen,
+                AppSpacing.md,
+                AppSpacing.screen,
+                AppSizes.homeBottomClearance,
+              ),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisExtent: AppSizes.servicesCardMinHeight,
+                crossAxisSpacing: AppSpacing.sm,
+                mainAxisSpacing: AppSpacing.sm,
+              ),
+              children: cards,
+            ),
+          ],
         );
       },
     );

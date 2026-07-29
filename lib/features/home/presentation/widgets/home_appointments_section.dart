@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/shared_empty_widget.dart';
 import '../../data/models/clinic_dashboard_model.dart';
 import 'home_stats_section.dart';
 
@@ -91,16 +92,12 @@ class HomeAppointmentsSection extends StatelessWidget {
               ),
             ]
           else if (appointments!.isEmpty)
-            Padding(
+            SharedEmptyWidget(
+              icon: Icons.event_busy_outlined,
+              title: l10n.homeTodayAppointments,
+              subtitle: context.l10n.noDataYet,
               padding: const EdgeInsetsDirectional.symmetric(
-                vertical: AppSpacing.lg,
-              ),
-              child: Text(
-                l10n.homeTodayAppointments,
-                textAlign: TextAlign.center,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colors.gray,
-                ),
+                vertical: AppSpacing.xl,
               ),
             )
           else
