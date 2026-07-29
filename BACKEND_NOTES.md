@@ -34,6 +34,11 @@
   - `email`: required email, max 255, unique in `clinics`.
   - `password`: required string, min 8.
   - `type`: required enum: `clinic`, `lab`, `both`.
+  - `fcm_token`: nullable string.
+  - `platform`: nullable enum/string: `android`, `ios`, `web`.
+  - `locale`: nullable string.
+  - `device_id`: nullable string.
+  - `app_version`: nullable string.
 - Response model:
   - `ClinicResource`
 - Response data fields currently include:
@@ -58,6 +63,8 @@
 - Business behavior:
   - Creates a clinic with `status: pending`.
   - Request goes to admin approval workflow.
+  - If `fcm_token` is present, backend stores it against the newly created clinic without requiring Authorization.
+  - Admin status changes to `approved`, `rejected`, or `pending` create a clinic notification and send FCM to active clinic devices.
 
 ### Clinic Login
 - Endpoint: `POST /api/clinic/login`
@@ -348,6 +355,8 @@
 - Authorization: `clinic.auth`.
 - Request fields: `token`, `platform`, `device_id`, `app_version`, `locale`.
 - Response: `UserDeviceResource`.
+- Flutter sends FCM tokens through this endpoint at app startup when authenticated, after login/me success, and on Firebase token refresh.
+- Current Flutter payload uses: `token`, `platform`, `locale`.
 
 ### Clinic Notifications List
 - Endpoint: `GET /api/clinic/notifications`

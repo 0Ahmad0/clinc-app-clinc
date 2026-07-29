@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
@@ -17,6 +18,7 @@ class AuthTextField extends StatefulWidget {
     this.keyboardType,
     this.textInputAction = TextInputAction.next,
     this.validator,
+    this.inputFormatters,
   });
 
   final String hint;
@@ -26,6 +28,7 @@ class AuthTextField extends StatefulWidget {
   final TextInputType? keyboardType;
   final TextInputAction textInputAction;
   final FormFieldValidator<String>? validator;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<AuthTextField> createState() => _AuthTextFieldState();
@@ -50,6 +53,7 @@ class _AuthTextFieldState extends State<AuthTextField> {
       obscureText: _obscured,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
+      inputFormatters: widget.inputFormatters,
       style: context.textTheme.bodyMedium?.copyWith(
         fontWeight: FontWeight.w500,
         color: colors.ink,

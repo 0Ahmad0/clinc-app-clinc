@@ -7,6 +7,7 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/media/media_service.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/input/email_input.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/media_source_sheet.dart';
 import '../cubit/settings_cubit.dart';
@@ -55,7 +56,7 @@ class _SettingsProfileViewState extends State<SettingsProfileView> {
           _name.text = clinic.name ?? '';
           _location.text = clinic.location ?? '';
           _license.text = clinic.licenseNumber ?? '';
-          _email.text = clinic.email ?? '';
+          _email.text = normalizeEmailInput(clinic.email ?? '');
           _phone.text = clinic.phone ?? '';
           _website.text = clinic.website ?? '';
           _description.text = clinic.description ?? '';
@@ -89,6 +90,8 @@ class _SettingsProfileViewState extends State<SettingsProfileView> {
                 label: l10n.settingsFieldEmail,
                 icon: Iconsax.sms,
                 controller: _email,
+                keyboardType: TextInputType.emailAddress,
+                inputFormatters: const [EmailInputFormatter()],
               ),
               SettingsProfileField(
                 label: l10n.settingsFieldPhone,
@@ -178,7 +181,7 @@ class _SettingsProfileViewState extends State<SettingsProfileView> {
                       ? null
                       : () => context.read<SettingsCubit>().updateProfile(
                           name: _name.text.trim(),
-                          email: _email.text.trim(),
+                          email: normalizeEmailInput(_email.text),
                           phone: _phone.text.trim(),
                           location: _location.text.trim(),
                           description: _description.text.trim(),

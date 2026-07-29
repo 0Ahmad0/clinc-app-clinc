@@ -4,6 +4,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/input/email_input.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../domain/auth_layer.dart';
 import '../../domain/auth_validators.dart';
@@ -96,6 +97,7 @@ class ForgotLayerState extends State<ForgotLayer> {
                     hint: l10n.authForgotFieldHint,
                     icon: Iconsax.sms,
                     keyboardType: TextInputType.emailAddress,
+                    inputFormatters: const [EmailInputFormatter()],
                     textInputAction: TextInputAction.done,
                     validator: (value) =>
                         AuthValidators.required(value, l10n.validationRequired),
@@ -115,7 +117,9 @@ class ForgotLayerState extends State<ForgotLayer> {
                               FocusScope.of(context).unfocus();
                               if (formKey.currentState?.validate() ?? false) {
                                 cubit.forgotPassword(
-                                  email: emailController.text,
+                                  email: normalizeEmailInput(
+                                    emailController.text,
+                                  ),
                                 );
                               }
                             },

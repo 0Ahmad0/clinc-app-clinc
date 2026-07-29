@@ -8,6 +8,7 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/domain/error_handler/network_exceptions.dart';
 import '../../../../core/media/media_service.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/input/email_input.dart';
 import '../../../../shared/widgets/media_source_sheet.dart';
 import '../cubit/add_doctor_cubit.dart';
 import '../widgets/add_doctor_basic_section.dart';
@@ -44,7 +45,9 @@ class _AddDoctorViewState extends State<AddDoctorView> {
       text: doctor?.consultationFee.toString() ?? '',
     );
     _phoneController = TextEditingController(text: doctor?.phone ?? '');
-    _emailController = TextEditingController(text: doctor?.email ?? '');
+    _emailController = TextEditingController(
+      text: normalizeEmailInput(doctor?.email ?? ''),
+    );
     _licenseController = TextEditingController(
       text: doctor?.licenseNumber ?? '',
     );
@@ -145,7 +148,7 @@ class _AddDoctorViewState extends State<AddDoctorView> {
       nameAr: _nameArController.text,
       nameEn: _nameEnController.text,
       phone: _phoneController.text,
-      email: _emailController.text,
+      email: normalizeEmailInput(_emailController.text),
       licenseNumber: _licenseController.text,
       experienceYears: _experienceController.text,
       consultationFee: _feeController.text,

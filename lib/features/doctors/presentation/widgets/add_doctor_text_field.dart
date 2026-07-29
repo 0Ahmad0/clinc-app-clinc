@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
@@ -14,6 +15,7 @@ class AddDoctorTextField extends StatelessWidget {
     this.keyboardType,
     this.maxLines = 1,
     this.controller,
+    this.inputFormatters,
   });
 
   final IconData icon;
@@ -22,6 +24,7 @@ class AddDoctorTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final int maxLines;
   final TextEditingController? controller;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +63,7 @@ class AddDoctorTextField extends StatelessWidget {
             child: TextField(
               controller: controller,
               keyboardType: keyboardType,
+              inputFormatters: inputFormatters,
               maxLines: maxLines,
               minLines: multiline ? maxLines : null,
               style: context.textTheme.bodyMedium?.copyWith(

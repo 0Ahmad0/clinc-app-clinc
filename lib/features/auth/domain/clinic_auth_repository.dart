@@ -29,6 +29,7 @@ class ClinicAuthRepository {
     required String email,
     required String password,
     required String type,
+    Map<String, dynamic> fcmPayload = const {},
   }) {
     return _execute(
       () => _remoteDataSource.register(
@@ -37,6 +38,7 @@ class ClinicAuthRepository {
         email: email,
         password: password,
         type: type,
+        fcmPayload: fcmPayload,
       ),
     );
   }

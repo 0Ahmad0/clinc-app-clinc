@@ -5,6 +5,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/input/email_input.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../domain/auth_layer.dart';
 import '../../domain/auth_validators.dart';
@@ -82,6 +83,8 @@ class LoginLayerState extends State<LoginLayer> {
                     controller: identifierController,
                     hint: l10n.authIdentifierHint,
                     icon: Iconsax.sms,
+                    keyboardType: TextInputType.emailAddress,
+                    inputFormatters: const [EmailInputFormatter()],
                     validator: (value) =>
                         AuthValidators.required(value, l10n.validationRequired),
                   ),
@@ -128,7 +131,9 @@ class LoginLayerState extends State<LoginLayer> {
                               FocusScope.of(context).unfocus();
                               if (formKey.currentState?.validate() ?? false) {
                                 cubit.login(
-                                  identifier: identifierController.text,
+                                  identifier: normalizeEmailInput(
+                                    identifierController.text,
+                                  ),
                                   password: passwordController.text,
                                 );
                               }

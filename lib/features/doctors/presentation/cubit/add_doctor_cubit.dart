@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../core/data/remote/api_response.dart';
 import '../../../../core/domain/error_handler/network_exceptions.dart';
+import '../../../../shared/input/email_input.dart';
 import '../../data/models/clinic_doctor_model.dart';
 import '../../data/models/clinic_specialization_model.dart';
 import '../../domain/clinic_doctors_repository.dart';
@@ -134,7 +135,7 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
       'specialization_id': specializationId,
       'gender': state.gender,
       'phone': _nullable(phone),
-      'email': _nullable(email),
+      'email': _nullable(normalizeEmailInput(email)),
       'license_number': _nullable(licenseNumber),
       'experience_years': int.tryParse(experienceYears.trim()) ?? 0,
       'consultation_fee': num.tryParse(consultationFee.trim()) ?? 0,

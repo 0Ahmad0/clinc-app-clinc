@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
@@ -13,6 +14,8 @@ class SettingsProfileField extends StatelessWidget {
     this.value,
     this.controller,
     this.readOnly = false,
+    this.keyboardType,
+    this.inputFormatters,
   });
 
   final String label;
@@ -20,6 +23,8 @@ class SettingsProfileField extends StatelessWidget {
   final String? value;
   final TextEditingController? controller;
   final bool readOnly;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +58,8 @@ class SettingsProfileField extends StatelessWidget {
                   controller: controller,
                   initialValue: controller == null ? value : null,
                   readOnly: readOnly,
+                  keyboardType: keyboardType,
+                  inputFormatters: inputFormatters,
                   textDirection: TextDirection.ltr,
                   style: context.textTheme.bodyMedium?.copyWith(
                     color: colors.ink,

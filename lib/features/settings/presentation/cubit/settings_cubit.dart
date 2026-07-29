@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../../core/data/remote/api_response.dart';
 import '../../../../core/domain/error_handler/network_exceptions.dart';
 import '../../../../core/services/storage_service.dart';
+import '../../../../shared/input/email_input.dart';
 import '../../data/models/clinic_settings_model.dart';
 import '../../domain/app_language.dart';
 import '../../domain/app_theme_choice.dart';
@@ -99,11 +100,14 @@ class SettingsCubit extends Cubit<SettingsState> {
     required String description,
     required String website,
   }) async {
-    emit(state.copyWith(isSavingProfile: true, profileSaved: false, failure: null));
+    emit(
+      state.copyWith(isSavingProfile: true, profileSaved: false, failure: null),
+    );
+    final normalizedEmail = normalizeEmailInput(email);
     final result = await _repository.updateProfile(
       fields: {
         'name': name,
-        'email': email,
+        'email': normalizedEmail,
         'phone': phone,
         'location': location,
         'description': description,
@@ -118,7 +122,7 @@ class SettingsCubit extends Cubit<SettingsState> {
             response.result?.clinic ??
             _mergeClinicAfterProfileUpdate(
               name: name,
-              email: email,
+              email: normalizedEmail,
               phone: phone,
               location: location,
               description: description,
@@ -139,14 +143,13 @@ class SettingsCubit extends Cubit<SettingsState> {
           ),
         );
       },
-      failure: (exception) =>
-          emit(
-            state.copyWith(
-              isSavingProfile: false,
-              profileSaved: false,
-              failure: exception,
-            ),
-          ),
+      failure: (exception) => emit(
+        state.copyWith(
+          isSavingProfile: false,
+          profileSaved: false,
+          failure: exception,
+        ),
+      ),
     );
   }
 

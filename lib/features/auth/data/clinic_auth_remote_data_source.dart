@@ -40,6 +40,7 @@ class ClinicAuthRemoteDataSource {
     required String email,
     required String password,
     required String type,
+    Map<String, dynamic> fcmPayload = const {},
   }) async {
     final response = await _apiServices.post(
       AppUrl.clinicRegister,
@@ -49,6 +50,7 @@ class ClinicAuthRemoteDataSource {
         'email': email,
         'password': password,
         'type': type,
+        ...fcmPayload,
       },
       hasToken: false,
     );

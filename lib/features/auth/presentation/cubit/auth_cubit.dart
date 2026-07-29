@@ -1,9 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:async';
 
 import '../../../../core/data/base_model.dart';
 import '../../../../core/data/remote/api_response.dart';
 import '../../../../core/domain/error_handler/network_exceptions.dart';
+import '../../../../core/services/fcm_token_sync_service.dart';
 import '../../../../core/services/storage_service.dart';
+import '../../../../shared/input/email_input.dart';
 import '../../data/models/clinic_login_model.dart';
 import '../../data/models/clinic_model.dart';
 import '../../data/models/clinic_otp_status_model.dart';
@@ -15,9 +18,11 @@ import '../../domain/clinic_auth_repository.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit(this._repository) : super(const AuthState());
+  AuthCubit(this._repository, [this._fcmTokenSyncService])
+    : super(const AuthState());
 
   final ClinicAuthRepository _repository;
+  final FcmTokenSyncService? _fcmTokenSyncService;
 
   void show(AuthLayer layer) => emit(state.copyWith(layer: layer));
 
@@ -32,7 +37,7 @@ class AuthCubit extends Cubit<AuthState> {
     _start(AuthAction.login);
 
     final result = await _repository.login(
-      email: identifier.trim(),
+      email: normalizeEmailInput(identifier),
       password: password,
     );
 
@@ -50,13 +55,16 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     if (state.isLoading) return;
     _start(AuthAction.register);
+    final fcmPayload =
+        await _fcmTokenSyncService?.registerPayload() ?? const {};
 
     final result = await _repository.register(
       name: name.trim(),
       licenseNumber: licenseNumber.trim(),
-      email: email.trim(),
+      email: normalizeEmailInput(email),
       password: password,
       type: state.accountType.name,
+      fcmPayload: fcmPayload,
     );
 
     result.when(
@@ -69,7 +77,9 @@ class AuthCubit extends Cubit<AuthState> {
     if (state.isLoading) return;
     _start(AuthAction.forgotPassword);
 
-    final result = await _repository.forgotPassword(email: email.trim());
+    final result = await _repository.forgotPassword(
+      email: normalizeEmailInput(email),
+    );
 
     result.when(
       success: _handleForgotPasswordSuccess,
@@ -97,7 +107,7 @@ class AuthCubit extends Cubit<AuthState> {
     _start(AuthAction.verifyOtp);
 
     final result = await _repository.verifyOtp(
-      identifier: identifier.trim(),
+      identifier: normalizeEmailInput(identifier),
       otp: otp.trim(),
     );
 
@@ -111,7 +121,9 @@ class AuthCubit extends Cubit<AuthState> {
     if (state.isLoading) return;
     _start(AuthAction.resendOtp);
 
-    final result = await _repository.resendOtp(identifier: identifier.trim());
+    final result = await _repository.resendOtp(
+      identifier: normalizeEmailInput(identifier),
+    );
 
     result.when(
       success: _handleForgotPasswordSuccess,
@@ -179,6 +191,10 @@ class AuthCubit extends Cubit<AuthState> {
       await StorageService.instance.setProfileCompleted(
         !payload.needsCompletion,
       );
+      final fcmTokenSyncService = _fcmTokenSyncService;
+      if (fcmTokenSyncService != null) {
+        unawaited(fcmTokenSyncService.syncCurrentToken());
+      }
     }
 
     emit(

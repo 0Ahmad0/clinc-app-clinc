@@ -861,3 +861,62 @@ locator.registerFactory<FeatureCubit>(
   - `lib/features/services/presentation/cubit/services_cubit.freezed.dart`
   - `lib/features/services/presentation/widgets/services_catalog_grid.dart`
   - `PROJECT_HANDOFF.md`
+
+## Completed: Clinic FCM Notifications
+- Date: 2026-07-29.
+- Firebase Messaging is initialized at app startup with a top-level background handler.
+- Foreground FCM messages are shown through `flutter_local_notifications`.
+- Notification taps route to appointments, reports, doctors, or notifications based on payload `type`.
+- FCM token sync now runs at startup when authenticated, after login/me success, and on token refresh.
+- Device tokens are sent to existing `POST /api/clinic/device-token` with `token`, `platform`, and `locale`.
+- Removed unused Cloud Functions test dependency.
+- Android manifest includes notification permission and iOS Info.plist includes remote notification background mode.
+- Files added/modified:
+  - `lib/core/services/fcm_token_sync_service.dart`
+  - `lib/core/services/notification_service.dart`
+  - `lib/core/di/service_locator.dart`
+  - `lib/features/auth/presentation/cubit/auth_cubit.dart`
+  - `lib/features/notifications/presentation/cubit/notifications_cubit.dart`
+  - `lib/main.dart`
+  - `android/app/src/main/AndroidManifest.xml`
+  - `ios/Runner/Info.plist`
+  - `pubspec.yaml`
+  - `pubspec.lock`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`
+
+## Completed: Email Input Normalization
+- Date: 2026-07-29.
+- Email fields now lowercase input and strip leading/trailing spaces while typing.
+- Email values are normalized again before backend requests for auth, doctors, and clinic profile updates.
+- Applied to signup, login identifier, forgot password, add/edit doctor, and settings profile email fields.
+- No backend changes required.
+- Files added/modified:
+  - `lib/shared/input/email_input.dart`
+  - `lib/features/auth/presentation/widgets/auth_text_field.dart`
+  - `lib/features/auth/presentation/widgets/signup_layer.dart`
+  - `lib/features/auth/presentation/widgets/login_layer.dart`
+  - `lib/features/auth/presentation/widgets/forgot_layer.dart`
+  - `lib/features/auth/presentation/cubit/auth_cubit.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_text_field.dart`
+  - `lib/features/doctors/presentation/widgets/add_doctor_basic_section.dart`
+  - `lib/features/doctors/presentation/pages/add_doctor_view.dart`
+  - `lib/features/doctors/presentation/cubit/add_doctor_cubit.dart`
+  - `lib/features/settings/presentation/widgets/settings_profile_field.dart`
+  - `lib/features/settings/presentation/pages/settings_profile_view.dart`
+  - `lib/features/settings/presentation/cubit/settings_cubit.dart`
+  - `PROJECT_HANDOFF.md`
+
+## Completed: FCM Token On Clinic Register
+- Date: 2026-07-29.
+- Flutter now sends optional FCM fields during `POST /api/clinic/register` when Firebase returns a token.
+- Register payload includes `fcm_token`, `platform`, and `locale`.
+- Existing register response shape is unchanged.
+- Authenticated token refresh and login/me sync still use `POST /api/clinic/device-token`.
+- Files added/modified:
+  - `lib/core/services/fcm_token_sync_service.dart`
+  - `lib/features/auth/presentation/cubit/auth_cubit.dart`
+  - `lib/features/auth/domain/clinic_auth_repository.dart`
+  - `lib/features/auth/data/clinic_auth_remote_data_source.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`

@@ -3,6 +3,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/input/email_input.dart';
 import '../../../../shared/widgets/app_section_card.dart';
 import 'add_doctor_specialty_picker.dart';
 import 'add_doctor_text_field.dart';
@@ -78,6 +79,7 @@ class AddDoctorBasicSection extends StatelessWidget {
                   icon: Iconsax.sms,
                   hint: l10n.addDoctorEmail,
                   keyboardType: TextInputType.emailAddress,
+                  inputFormatters: const [EmailInputFormatter()],
                   controller: emailController,
                 ),
               ),

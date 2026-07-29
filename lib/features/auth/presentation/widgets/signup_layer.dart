@@ -6,6 +6,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/input/email_input.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../domain/account_type.dart';
 import '../../domain/auth_layer.dart';
@@ -97,6 +98,7 @@ class SignupLayerState extends State<SignupLayer> {
               hint: l10n.authEmailHint,
               icon: Iconsax.sms,
               keyboardType: TextInputType.emailAddress,
+              inputFormatters: const [EmailInputFormatter()],
               validator: (value) => AuthValidators.email(
                 value,
                 requiredMessage: l10n.validationRequired,
@@ -146,7 +148,7 @@ class SignupLayerState extends State<SignupLayer> {
                           cubit.register(
                             name: nameController.text,
                             licenseNumber: licenseController.text,
-                            email: emailController.text,
+                            email: normalizeEmailInput(emailController.text),
                             password: passwordController.text,
                           );
                         }

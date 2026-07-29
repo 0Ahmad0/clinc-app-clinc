@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +28,6 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
   Future<void> loadInitial() async {
     await Future.wait([_loadPage(page: 1, reset: true), _loadCounters()]);
-    await registerDeviceToken();
   }
 
   Future<void> refresh() => loadInitial();
@@ -118,16 +116,6 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
   Future<void> loadUnreadCount() async {
     await _loadCounters();
-  }
-
-  Future<void> registerDeviceToken() async {
-    try {
-      final token = await FirebaseMessaging.instance.getToken();
-      if (token == null || token.isEmpty) return;
-      await _repository.storeDeviceToken(token: token, platform: _platform);
-    } catch (_) {
-      return;
-    }
   }
 
   List<({String label, List<ClinicNotificationModel> items})> grouped() {
@@ -247,14 +235,6 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     NotificationTab.unread => false,
     NotificationTab.read => true,
   };
-
-  String get _platform {
-    if (kIsWeb) return 'web';
-    return switch (defaultTargetPlatform) {
-      TargetPlatform.iOS => 'ios',
-      _ => 'android',
-    };
-  }
 
   void _clearLoading() {
     state.pagination.isInitialLoading.value = false;

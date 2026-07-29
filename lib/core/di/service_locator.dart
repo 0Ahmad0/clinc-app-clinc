@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 
 import '../media/media_service.dart';
+import '../services/fcm_token_sync_service.dart';
 import '../domain/services/api_service.dart';
 import '../domain/services/api_services_imp.dart';
 
@@ -73,6 +74,9 @@ void configureDependencies() {
   sl.registerLazySingleton<ClinicNotificationsRepository>(
     () => ClinicNotificationsRepository(sl()),
   );
+  sl.registerLazySingleton<FcmTokenSyncService>(
+    () => FcmTokenSyncService(sl()),
+  );
   sl.registerLazySingleton<ClinicReportsRemoteDataSource>(
     () => ClinicReportsRemoteDataSource(sl()),
   );
@@ -93,7 +97,7 @@ void configureDependencies() {
   );
 
   sl.registerFactory<OnboardingCubit>(OnboardingCubit.new);
-  sl.registerFactory<AuthCubit>(() => AuthCubit(sl()));
+  sl.registerFactory<AuthCubit>(() => AuthCubit(sl(), sl()));
   sl.registerFactory<HomeCubit>(() => HomeCubit(sl()));
   sl.registerFactory<DoctorsCubit>(() => DoctorsCubit(sl()));
   sl.registerFactoryParam<AddDoctorCubit, ClinicDoctorModel?, void>(

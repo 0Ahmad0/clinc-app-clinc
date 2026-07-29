@@ -2,13 +2,22 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../config/routes/app_router.dart';
+import '../../config/routes/app_routes.dart';
+import '../../firebase_options.dart';
 import '../../l10n/app_localizations.dart';
+
+@pragma('vm:entry-point')
+Future<void> clinicFirebaseMessagingBackgroundHandler(RemoteMessage msg) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await NotificationService.showRemoteMessageNotification(msg);
+}
 
 class NotificationService {
   NotificationService._internal();
@@ -21,9 +30,9 @@ class NotificationService {
   bool _isInitialized = false;
 
   // Android channel details
-  static const _channelId = 'vaccination_requests';
-  static const _channelName = 'requests';
-  static const _channelDesc = 'new notification';
+  static const _channelId = 'clinic_notifications';
+  static const _channelName = 'Clinic notifications';
+  static const _channelDesc = 'Clinic app notifications';
 
   final AndroidNotificationChannel _androidChannel =
       const AndroidNotificationChannel(
@@ -66,7 +75,6 @@ class NotificationService {
     // Register FCM handlers
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
-    FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(_handleTap);
 
     // Handle app opened by notification
@@ -77,28 +85,6 @@ class NotificationService {
 
     _isInitialized = true;
     debugPrint('✅ NotificationService initialized');
-  }
-
-  Future<void> sendNotificationToMyself() async {
-    final token = await FirebaseMessaging.instance.getToken();
-
-    if (token == null) {
-      print('FCM token not found');
-      return;
-    }
-
-    final callable = FirebaseFunctions.instance.httpsCallable(
-      'sendNotification',
-    );
-
-    final result = await callable.call({
-      'token': token,
-      'title': 'Test Notification',
-      'body': 'Hello from Firebase Functions',
-      'data': {'type': 'test'},
-    });
-
-    print(result.data);
   }
 
   Future<void> _requestPermissions() async {
@@ -129,9 +115,14 @@ class NotificationService {
     // dispatcher.emit(_buildKey(data), data);
   }
 
-  // Background must be top-level or static
-  static Future<void> _handleBackgroundMessage(RemoteMessage msg) async {
-    if (msg.notification == null) return;
+  static Future<void> showRemoteMessageNotification(RemoteMessage msg) async {
+    final title = msg.notification?.title ?? msg.data['title']?.toString();
+    final body =
+        msg.notification?.body ??
+        msg.data['body']?.toString() ??
+        msg.data['message']?.toString();
+    if ((title ?? '').isEmpty && (body ?? '').isEmpty) return;
+
     final plugin = FlutterLocalNotificationsPlugin();
     await plugin
         .resolvePlatformSpecificImplementation<
@@ -143,8 +134,8 @@ class NotificationService {
 
     await plugin.show(
       id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      title: msg.notification!.title,
-      body: msg.notification!.body,
+      title: title,
+      body: body,
       notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           _channelId,
@@ -186,19 +177,20 @@ class NotificationService {
   }
 
   void _navigateFromData(Map<String, dynamic> data) {
-    final type = data['type'];
-    final currentRoute = AppRouter.router.routeInformationProvider.value.uri
-        .toString();
-    log("📍 Current route: $currentRoute");
+    final type = data['type']?.toString().toLowerCase() ?? '';
+    final route = _routeForType(type);
+    log('📍 Notification route: $route');
+    AppRouter.rootNavigatorKey.currentContext?.go(route);
+  }
 
-    if (type == 'appointment_canceled' || type == 'appointment_booked') {
-      // Get.to(const DashboardScreen(
-      //   initialIndex: 2,
-      // ));
-    } else {
-      // Default action if unknown type
-      // Get.toNamed(DashboardScreen.id);
+  String _routeForType(String type) {
+    if (type.contains('appointment')) return AppRoutes.appointments;
+    if (type.contains('lab') || type.contains('result')) {
+      return AppRoutes.appointments;
     }
+    if (type.contains('report')) return AppRoutes.reports;
+    if (type.contains('doctor')) return AppRoutes.doctors;
+    return AppRoutes.notifications;
   }
 
   Future<void> _showSystemNotification(
