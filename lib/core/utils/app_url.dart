@@ -1,9 +1,9 @@
 // const baseServ = "http://192.168.1.114/";
 
-// const baseServ = "https://clinic.hivetech.space/";
-// const baseServSlashLess = "https://clinic.hivetech.space/";
-const baseServ = "http://10.173.67.203:8000/";
-const baseServSlashLess = "http://10.173.67.203:8000/";
+const baseServ = "https://clinic.hivetech.space/";
+const baseServSlashLess = "https://clinic.hivetech.space/";
+// const baseServ = "http://10.173.67.203:8000/";
+// const baseServSlashLess = "http://10.173.67.203:8000/";
 
 const baseUrl = "${baseServSlashLess}api/";
 const storageUrl = "${baseServSlashLess}storage/";
