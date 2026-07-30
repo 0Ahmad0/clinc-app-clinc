@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DoctorsState {
 
- PaginationState<ClinicDoctorModel> get pagination; List<ClinicSpecializationModel> get specializations; bool get isFiltersLoading; String? get selectedSpecializationId; String get query; ClinicDoctorModel? get selectedDoctor; bool get isDetailsLoading; NetworkExceptions? get failure;
+ PaginationState<ClinicDoctorModel> get pagination; List<ClinicSpecializationModel> get specializations; bool get isFiltersLoading; String? get selectedSpecializationId; String get query; int get totalCount; int get availableCount; int get unavailableCount; Set<String> get busyDoctorIds; ClinicDoctorModel? get selectedDoctor; bool get isDetailsLoading; NetworkExceptions? get failure;
 /// Create a copy of DoctorsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $DoctorsStateCopyWith<DoctorsState> get copyWith => _$DoctorsStateCopyWithImpl<D
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DoctorsState&&(identical(other.pagination, pagination) || other.pagination == pagination)&&const DeepCollectionEquality().equals(other.specializations, specializations)&&(identical(other.isFiltersLoading, isFiltersLoading) || other.isFiltersLoading == isFiltersLoading)&&(identical(other.selectedSpecializationId, selectedSpecializationId) || other.selectedSpecializationId == selectedSpecializationId)&&(identical(other.query, query) || other.query == query)&&(identical(other.selectedDoctor, selectedDoctor) || other.selectedDoctor == selectedDoctor)&&(identical(other.isDetailsLoading, isDetailsLoading) || other.isDetailsLoading == isDetailsLoading)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DoctorsState&&(identical(other.pagination, pagination) || other.pagination == pagination)&&const DeepCollectionEquality().equals(other.specializations, specializations)&&(identical(other.isFiltersLoading, isFiltersLoading) || other.isFiltersLoading == isFiltersLoading)&&(identical(other.selectedSpecializationId, selectedSpecializationId) || other.selectedSpecializationId == selectedSpecializationId)&&(identical(other.query, query) || other.query == query)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.availableCount, availableCount) || other.availableCount == availableCount)&&(identical(other.unavailableCount, unavailableCount) || other.unavailableCount == unavailableCount)&&const DeepCollectionEquality().equals(other.busyDoctorIds, busyDoctorIds)&&(identical(other.selectedDoctor, selectedDoctor) || other.selectedDoctor == selectedDoctor)&&(identical(other.isDetailsLoading, isDetailsLoading) || other.isDetailsLoading == isDetailsLoading)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,pagination,const DeepCollectionEquality().hash(specializations),isFiltersLoading,selectedSpecializationId,query,selectedDoctor,isDetailsLoading,failure);
+int get hashCode => Object.hash(runtimeType,pagination,const DeepCollectionEquality().hash(specializations),isFiltersLoading,selectedSpecializationId,query,totalCount,availableCount,unavailableCount,const DeepCollectionEquality().hash(busyDoctorIds),selectedDoctor,isDetailsLoading,failure);
 
 @override
 String toString() {
-  return 'DoctorsState(pagination: $pagination, specializations: $specializations, isFiltersLoading: $isFiltersLoading, selectedSpecializationId: $selectedSpecializationId, query: $query, selectedDoctor: $selectedDoctor, isDetailsLoading: $isDetailsLoading, failure: $failure)';
+  return 'DoctorsState(pagination: $pagination, specializations: $specializations, isFiltersLoading: $isFiltersLoading, selectedSpecializationId: $selectedSpecializationId, query: $query, totalCount: $totalCount, availableCount: $availableCount, unavailableCount: $unavailableCount, busyDoctorIds: $busyDoctorIds, selectedDoctor: $selectedDoctor, isDetailsLoading: $isDetailsLoading, failure: $failure)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $DoctorsStateCopyWith<$Res>  {
   factory $DoctorsStateCopyWith(DoctorsState value, $Res Function(DoctorsState) _then) = _$DoctorsStateCopyWithImpl;
 @useResult
 $Res call({
- PaginationState<ClinicDoctorModel> pagination, List<ClinicSpecializationModel> specializations, bool isFiltersLoading, String? selectedSpecializationId, String query, ClinicDoctorModel? selectedDoctor, bool isDetailsLoading, NetworkExceptions? failure
+ PaginationState<ClinicDoctorModel> pagination, List<ClinicSpecializationModel> specializations, bool isFiltersLoading, String? selectedSpecializationId, String query, int totalCount, int availableCount, int unavailableCount, Set<String> busyDoctorIds, ClinicDoctorModel? selectedDoctor, bool isDetailsLoading, NetworkExceptions? failure
 });
 
 
@@ -62,14 +62,18 @@ class _$DoctorsStateCopyWithImpl<$Res>
 
 /// Create a copy of DoctorsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? pagination = null,Object? specializations = null,Object? isFiltersLoading = null,Object? selectedSpecializationId = freezed,Object? query = null,Object? selectedDoctor = freezed,Object? isDetailsLoading = null,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? pagination = null,Object? specializations = null,Object? isFiltersLoading = null,Object? selectedSpecializationId = freezed,Object? query = null,Object? totalCount = null,Object? availableCount = null,Object? unavailableCount = null,Object? busyDoctorIds = null,Object? selectedDoctor = freezed,Object? isDetailsLoading = null,Object? failure = freezed,}) {
   return _then(_self.copyWith(
 pagination: null == pagination ? _self.pagination : pagination // ignore: cast_nullable_to_non_nullable
 as PaginationState<ClinicDoctorModel>,specializations: null == specializations ? _self.specializations : specializations // ignore: cast_nullable_to_non_nullable
 as List<ClinicSpecializationModel>,isFiltersLoading: null == isFiltersLoading ? _self.isFiltersLoading : isFiltersLoading // ignore: cast_nullable_to_non_nullable
 as bool,selectedSpecializationId: freezed == selectedSpecializationId ? _self.selectedSpecializationId : selectedSpecializationId // ignore: cast_nullable_to_non_nullable
 as String?,query: null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
-as String,selectedDoctor: freezed == selectedDoctor ? _self.selectedDoctor : selectedDoctor // ignore: cast_nullable_to_non_nullable
+as String,totalCount: null == totalCount ? _self.totalCount : totalCount // ignore: cast_nullable_to_non_nullable
+as int,availableCount: null == availableCount ? _self.availableCount : availableCount // ignore: cast_nullable_to_non_nullable
+as int,unavailableCount: null == unavailableCount ? _self.unavailableCount : unavailableCount // ignore: cast_nullable_to_non_nullable
+as int,busyDoctorIds: null == busyDoctorIds ? _self.busyDoctorIds : busyDoctorIds // ignore: cast_nullable_to_non_nullable
+as Set<String>,selectedDoctor: freezed == selectedDoctor ? _self.selectedDoctor : selectedDoctor // ignore: cast_nullable_to_non_nullable
 as ClinicDoctorModel?,isDetailsLoading: null == isDetailsLoading ? _self.isDetailsLoading : isDetailsLoading // ignore: cast_nullable_to_non_nullable
 as bool,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as NetworkExceptions?,
@@ -181,10 +185,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PaginationState<ClinicDoctorModel> pagination,  List<ClinicSpecializationModel> specializations,  bool isFiltersLoading,  String? selectedSpecializationId,  String query,  ClinicDoctorModel? selectedDoctor,  bool isDetailsLoading,  NetworkExceptions? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PaginationState<ClinicDoctorModel> pagination,  List<ClinicSpecializationModel> specializations,  bool isFiltersLoading,  String? selectedSpecializationId,  String query,  int totalCount,  int availableCount,  int unavailableCount,  Set<String> busyDoctorIds,  ClinicDoctorModel? selectedDoctor,  bool isDetailsLoading,  NetworkExceptions? failure)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DoctorsState() when $default != null:
-return $default(_that.pagination,_that.specializations,_that.isFiltersLoading,_that.selectedSpecializationId,_that.query,_that.selectedDoctor,_that.isDetailsLoading,_that.failure);case _:
+return $default(_that.pagination,_that.specializations,_that.isFiltersLoading,_that.selectedSpecializationId,_that.query,_that.totalCount,_that.availableCount,_that.unavailableCount,_that.busyDoctorIds,_that.selectedDoctor,_that.isDetailsLoading,_that.failure);case _:
   return orElse();
 
 }
@@ -202,10 +206,10 @@ return $default(_that.pagination,_that.specializations,_that.isFiltersLoading,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PaginationState<ClinicDoctorModel> pagination,  List<ClinicSpecializationModel> specializations,  bool isFiltersLoading,  String? selectedSpecializationId,  String query,  ClinicDoctorModel? selectedDoctor,  bool isDetailsLoading,  NetworkExceptions? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PaginationState<ClinicDoctorModel> pagination,  List<ClinicSpecializationModel> specializations,  bool isFiltersLoading,  String? selectedSpecializationId,  String query,  int totalCount,  int availableCount,  int unavailableCount,  Set<String> busyDoctorIds,  ClinicDoctorModel? selectedDoctor,  bool isDetailsLoading,  NetworkExceptions? failure)  $default,) {final _that = this;
 switch (_that) {
 case _DoctorsState():
-return $default(_that.pagination,_that.specializations,_that.isFiltersLoading,_that.selectedSpecializationId,_that.query,_that.selectedDoctor,_that.isDetailsLoading,_that.failure);case _:
+return $default(_that.pagination,_that.specializations,_that.isFiltersLoading,_that.selectedSpecializationId,_that.query,_that.totalCount,_that.availableCount,_that.unavailableCount,_that.busyDoctorIds,_that.selectedDoctor,_that.isDetailsLoading,_that.failure);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -222,10 +226,10 @@ return $default(_that.pagination,_that.specializations,_that.isFiltersLoading,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PaginationState<ClinicDoctorModel> pagination,  List<ClinicSpecializationModel> specializations,  bool isFiltersLoading,  String? selectedSpecializationId,  String query,  ClinicDoctorModel? selectedDoctor,  bool isDetailsLoading,  NetworkExceptions? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PaginationState<ClinicDoctorModel> pagination,  List<ClinicSpecializationModel> specializations,  bool isFiltersLoading,  String? selectedSpecializationId,  String query,  int totalCount,  int availableCount,  int unavailableCount,  Set<String> busyDoctorIds,  ClinicDoctorModel? selectedDoctor,  bool isDetailsLoading,  NetworkExceptions? failure)?  $default,) {final _that = this;
 switch (_that) {
 case _DoctorsState() when $default != null:
-return $default(_that.pagination,_that.specializations,_that.isFiltersLoading,_that.selectedSpecializationId,_that.query,_that.selectedDoctor,_that.isDetailsLoading,_that.failure);case _:
+return $default(_that.pagination,_that.specializations,_that.isFiltersLoading,_that.selectedSpecializationId,_that.query,_that.totalCount,_that.availableCount,_that.unavailableCount,_that.busyDoctorIds,_that.selectedDoctor,_that.isDetailsLoading,_that.failure);case _:
   return null;
 
 }
@@ -237,7 +241,7 @@ return $default(_that.pagination,_that.specializations,_that.isFiltersLoading,_t
 
 
 class _DoctorsState implements DoctorsState {
-  const _DoctorsState({required this.pagination, final  List<ClinicSpecializationModel> specializations = const <ClinicSpecializationModel>[], this.isFiltersLoading = false, this.selectedSpecializationId, this.query = '', this.selectedDoctor, this.isDetailsLoading = false, this.failure}): _specializations = specializations;
+  const _DoctorsState({required this.pagination, final  List<ClinicSpecializationModel> specializations = const <ClinicSpecializationModel>[], this.isFiltersLoading = false, this.selectedSpecializationId, this.query = '', this.totalCount = 0, this.availableCount = 0, this.unavailableCount = 0, final  Set<String> busyDoctorIds = const <String>{}, this.selectedDoctor, this.isDetailsLoading = false, this.failure}): _specializations = specializations,_busyDoctorIds = busyDoctorIds;
   
 
 @override final  PaginationState<ClinicDoctorModel> pagination;
@@ -251,6 +255,16 @@ class _DoctorsState implements DoctorsState {
 @override@JsonKey() final  bool isFiltersLoading;
 @override final  String? selectedSpecializationId;
 @override@JsonKey() final  String query;
+@override@JsonKey() final  int totalCount;
+@override@JsonKey() final  int availableCount;
+@override@JsonKey() final  int unavailableCount;
+ final  Set<String> _busyDoctorIds;
+@override@JsonKey() Set<String> get busyDoctorIds {
+  if (_busyDoctorIds is EqualUnmodifiableSetView) return _busyDoctorIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableSetView(_busyDoctorIds);
+}
+
 @override final  ClinicDoctorModel? selectedDoctor;
 @override@JsonKey() final  bool isDetailsLoading;
 @override final  NetworkExceptions? failure;
@@ -265,16 +279,16 @@ _$DoctorsStateCopyWith<_DoctorsState> get copyWith => __$DoctorsStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DoctorsState&&(identical(other.pagination, pagination) || other.pagination == pagination)&&const DeepCollectionEquality().equals(other._specializations, _specializations)&&(identical(other.isFiltersLoading, isFiltersLoading) || other.isFiltersLoading == isFiltersLoading)&&(identical(other.selectedSpecializationId, selectedSpecializationId) || other.selectedSpecializationId == selectedSpecializationId)&&(identical(other.query, query) || other.query == query)&&(identical(other.selectedDoctor, selectedDoctor) || other.selectedDoctor == selectedDoctor)&&(identical(other.isDetailsLoading, isDetailsLoading) || other.isDetailsLoading == isDetailsLoading)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DoctorsState&&(identical(other.pagination, pagination) || other.pagination == pagination)&&const DeepCollectionEquality().equals(other._specializations, _specializations)&&(identical(other.isFiltersLoading, isFiltersLoading) || other.isFiltersLoading == isFiltersLoading)&&(identical(other.selectedSpecializationId, selectedSpecializationId) || other.selectedSpecializationId == selectedSpecializationId)&&(identical(other.query, query) || other.query == query)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.availableCount, availableCount) || other.availableCount == availableCount)&&(identical(other.unavailableCount, unavailableCount) || other.unavailableCount == unavailableCount)&&const DeepCollectionEquality().equals(other._busyDoctorIds, _busyDoctorIds)&&(identical(other.selectedDoctor, selectedDoctor) || other.selectedDoctor == selectedDoctor)&&(identical(other.isDetailsLoading, isDetailsLoading) || other.isDetailsLoading == isDetailsLoading)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,pagination,const DeepCollectionEquality().hash(_specializations),isFiltersLoading,selectedSpecializationId,query,selectedDoctor,isDetailsLoading,failure);
+int get hashCode => Object.hash(runtimeType,pagination,const DeepCollectionEquality().hash(_specializations),isFiltersLoading,selectedSpecializationId,query,totalCount,availableCount,unavailableCount,const DeepCollectionEquality().hash(_busyDoctorIds),selectedDoctor,isDetailsLoading,failure);
 
 @override
 String toString() {
-  return 'DoctorsState(pagination: $pagination, specializations: $specializations, isFiltersLoading: $isFiltersLoading, selectedSpecializationId: $selectedSpecializationId, query: $query, selectedDoctor: $selectedDoctor, isDetailsLoading: $isDetailsLoading, failure: $failure)';
+  return 'DoctorsState(pagination: $pagination, specializations: $specializations, isFiltersLoading: $isFiltersLoading, selectedSpecializationId: $selectedSpecializationId, query: $query, totalCount: $totalCount, availableCount: $availableCount, unavailableCount: $unavailableCount, busyDoctorIds: $busyDoctorIds, selectedDoctor: $selectedDoctor, isDetailsLoading: $isDetailsLoading, failure: $failure)';
 }
 
 
@@ -285,7 +299,7 @@ abstract mixin class _$DoctorsStateCopyWith<$Res> implements $DoctorsStateCopyWi
   factory _$DoctorsStateCopyWith(_DoctorsState value, $Res Function(_DoctorsState) _then) = __$DoctorsStateCopyWithImpl;
 @override @useResult
 $Res call({
- PaginationState<ClinicDoctorModel> pagination, List<ClinicSpecializationModel> specializations, bool isFiltersLoading, String? selectedSpecializationId, String query, ClinicDoctorModel? selectedDoctor, bool isDetailsLoading, NetworkExceptions? failure
+ PaginationState<ClinicDoctorModel> pagination, List<ClinicSpecializationModel> specializations, bool isFiltersLoading, String? selectedSpecializationId, String query, int totalCount, int availableCount, int unavailableCount, Set<String> busyDoctorIds, ClinicDoctorModel? selectedDoctor, bool isDetailsLoading, NetworkExceptions? failure
 });
 
 
@@ -302,14 +316,18 @@ class __$DoctorsStateCopyWithImpl<$Res>
 
 /// Create a copy of DoctorsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? pagination = null,Object? specializations = null,Object? isFiltersLoading = null,Object? selectedSpecializationId = freezed,Object? query = null,Object? selectedDoctor = freezed,Object? isDetailsLoading = null,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? pagination = null,Object? specializations = null,Object? isFiltersLoading = null,Object? selectedSpecializationId = freezed,Object? query = null,Object? totalCount = null,Object? availableCount = null,Object? unavailableCount = null,Object? busyDoctorIds = null,Object? selectedDoctor = freezed,Object? isDetailsLoading = null,Object? failure = freezed,}) {
   return _then(_DoctorsState(
 pagination: null == pagination ? _self.pagination : pagination // ignore: cast_nullable_to_non_nullable
 as PaginationState<ClinicDoctorModel>,specializations: null == specializations ? _self._specializations : specializations // ignore: cast_nullable_to_non_nullable
 as List<ClinicSpecializationModel>,isFiltersLoading: null == isFiltersLoading ? _self.isFiltersLoading : isFiltersLoading // ignore: cast_nullable_to_non_nullable
 as bool,selectedSpecializationId: freezed == selectedSpecializationId ? _self.selectedSpecializationId : selectedSpecializationId // ignore: cast_nullable_to_non_nullable
 as String?,query: null == query ? _self.query : query // ignore: cast_nullable_to_non_nullable
-as String,selectedDoctor: freezed == selectedDoctor ? _self.selectedDoctor : selectedDoctor // ignore: cast_nullable_to_non_nullable
+as String,totalCount: null == totalCount ? _self.totalCount : totalCount // ignore: cast_nullable_to_non_nullable
+as int,availableCount: null == availableCount ? _self.availableCount : availableCount // ignore: cast_nullable_to_non_nullable
+as int,unavailableCount: null == unavailableCount ? _self.unavailableCount : unavailableCount // ignore: cast_nullable_to_non_nullable
+as int,busyDoctorIds: null == busyDoctorIds ? _self._busyDoctorIds : busyDoctorIds // ignore: cast_nullable_to_non_nullable
+as Set<String>,selectedDoctor: freezed == selectedDoctor ? _self.selectedDoctor : selectedDoctor // ignore: cast_nullable_to_non_nullable
 as ClinicDoctorModel?,isDetailsLoading: null == isDetailsLoading ? _self.isDetailsLoading : isDetailsLoading // ignore: cast_nullable_to_non_nullable
 as bool,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as NetworkExceptions?,

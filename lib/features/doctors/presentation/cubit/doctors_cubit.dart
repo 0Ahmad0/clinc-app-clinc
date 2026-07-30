@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/data/pagination/pagination_state.dart';
 import '../../../../core/data/remote/api_response.dart';
+import '../../../../core/domain/error_handler/network_exceptions.dart';
 import '../../data/models/clinic_doctor_model.dart';
 import '../../domain/clinic_doctors_repository.dart';
 import 'doctors_state.dart';
@@ -48,18 +49,25 @@ class DoctorsCubit extends Cubit<DoctorsState> {
   Future<void> toggleAvailability(ClinicDoctorModel doctor) async {
     final id = doctor.doctorId;
     if (id == null) return;
+    if (state.busyDoctorIds.contains(id)) return;
+    emit(state.copyWith(busyDoctorIds: {...state.busyDoctorIds, id}));
     final result = await _repository.updateAvailability(
       id: id,
       isActive: !doctor.isActive,
     );
     result.when(
       success: (response) {
+        final updatedDoctor =
+            response.result ?? doctor.copyWith(isActive: !doctor.isActive);
+        _replaceDoctor(updatedDoctor);
         if (state.selectedDoctor?.doctorId == id) {
-          emit(state.copyWith(selectedDoctor: response.result, failure: null));
+          emit(state.copyWith(selectedDoctor: updatedDoctor));
         }
-        _loadPage(page: 1, reset: true);
+        _emitDoctorCounts(failure: null, clearBusyId: id);
       },
-      failure: (exception) => emit(state.copyWith(failure: exception)),
+      failure: (exception) => emit(
+        state.copyWith(failure: exception, busyDoctorIds: _clearBusy(id)),
+      ),
     );
   }
 
@@ -125,8 +133,22 @@ class DoctorsCubit extends Cubit<DoctorsState> {
           page: page,
           meta: response.meta,
         );
+        final items = pagination.items.value;
+        final availableCount = items.where((doctor) => doctor.isActive).length;
+        final totalCount = response.meta?.total ?? items.length;
         _clearLoading();
-        emit(state.copyWith(failure: null));
+        emit(
+          state.copyWith(
+            totalCount: totalCount,
+            availableCount: availableCount,
+            unavailableCount: (totalCount - availableCount).clamp(
+              0,
+              totalCount,
+            ),
+            busyDoctorIds: const {},
+            failure: null,
+          ),
+        );
       },
       failure: (exception) {
         _clearLoading();
@@ -145,6 +167,35 @@ class DoctorsCubit extends Cubit<DoctorsState> {
     state.pagination.isLoadingMore.value = false;
     state.pagination.isRefreshing.value = false;
   }
+
+  void _replaceDoctor(ClinicDoctorModel doctor) {
+    final id = doctor.doctorId;
+    final items = [...state.pagination.items.value];
+    final index = items.indexWhere((item) => item.doctorId == id);
+    if (index == -1) return;
+    items[index] = doctor;
+    state.pagination.items.assignAll(items);
+  }
+
+  void _emitDoctorCounts({NetworkExceptions? failure, String? clearBusyId}) {
+    final items = state.pagination.items.value;
+    final totalCount = state.totalCount == 0 ? items.length : state.totalCount;
+    final availableCount = items.where((doctor) => doctor.isActive).length;
+    emit(
+      state.copyWith(
+        totalCount: totalCount,
+        availableCount: availableCount,
+        unavailableCount: (totalCount - availableCount).clamp(0, totalCount),
+        busyDoctorIds: clearBusyId == null
+            ? state.busyDoctorIds
+            : _clearBusy(clearBusyId),
+        failure: failure,
+      ),
+    );
+  }
+
+  Set<String> _clearBusy(String id) =>
+      state.busyDoctorIds.where((doctorId) => doctorId != id).toSet();
 
   @override
   Future<void> close() {

@@ -238,7 +238,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeOpenStatus => 'Clinic open — 8:00 AM to 8:00 PM';
 
   @override
-  String get homeNewAppointment => 'New appointment';
+  String get homeNewAppointment => 'Appointments';
 
   @override
   String get homeDoctors => 'Doctors';
@@ -353,7 +353,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String doctorsHeaderLine(String total, String available) {
-    return '$total doctors • $available available now';
+    return '$total doctors • $available available';
   }
 
   @override
@@ -690,7 +690,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get apptReject => 'Reject';
 
   @override
-  String get apptFinish => 'Finish appointment';
+  String get apptFinish => 'Finish';
 
   @override
   String get apptFinishLab => 'Finish & upload result';

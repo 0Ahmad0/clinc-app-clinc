@@ -56,12 +56,16 @@ class DoctorsList extends StatelessWidget {
                   );
                 }
                 final doctor = doctors[index];
+                final doctorId = doctor.doctorId;
                 return DoctorCard(
                   doctor: doctor,
                   accent: SpecializationVisual.color(
                     doctor.specializationColor,
                     context.colors.primary600,
                   ),
+                  isToggling:
+                      doctorId != null &&
+                      state.busyDoctorIds.contains(doctorId),
                   onToggle: () =>
                       context.read<DoctorsCubit>().toggleAvailability(doctor),
                   onTap: () => context.push(

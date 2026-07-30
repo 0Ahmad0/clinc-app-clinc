@@ -17,12 +17,14 @@ class DoctorCard extends StatelessWidget {
     required this.accent,
     required this.onToggle,
     required this.onTap,
+    this.isToggling = false,
   });
 
   final ClinicDoctorModel doctor;
   final Color accent;
   final VoidCallback onToggle;
   final VoidCallback onTap;
+  final bool isToggling;
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +175,11 @@ class DoctorCard extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    AppSwitch(value: available, onChanged: onToggle),
+                    AppSwitch(
+                      value: available,
+                      loading: isToggling,
+                      onChanged: onToggle,
+                    ),
                     AppGaps.h12,
                     Icon(
                       Directionality.of(context) == TextDirection.rtl

@@ -545,7 +545,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeNewAppointment.
   ///
   /// In en, this message translates to:
-  /// **'New appointment'**
+  /// **'Appointments'**
   String get homeNewAppointment;
 
   /// No description provided for @homeDoctors.
@@ -773,7 +773,7 @@ abstract class AppLocalizations {
   /// No description provided for @doctorsHeaderLine.
   ///
   /// In en, this message translates to:
-  /// **'{total} doctors • {available} available now'**
+  /// **'{total} doctors • {available} available'**
   String doctorsHeaderLine(String total, String available);
 
   /// No description provided for @doctorsTotal.
@@ -1421,7 +1421,7 @@ abstract class AppLocalizations {
   /// No description provided for @apptFinish.
   ///
   /// In en, this message translates to:
-  /// **'Finish appointment'**
+  /// **'Finish'**
   String get apptFinish;
 
   /// No description provided for @apptFinishLab.

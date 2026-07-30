@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -298,7 +299,11 @@ class HomeQuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final actions = [
-      (Iconsax.calendar_add, l10n.homeNewAppointment, () {}),
+      (
+        Iconsax.calendar,
+        l10n.homeNewAppointment,
+        () => context.go(AppRoutes.appointments),
+      ),
       (
         Iconsax.profile_2user,
         l10n.homeDoctors,
@@ -338,6 +343,7 @@ class HomeQuickActionButton extends StatelessWidget {
     required this.onTap,
   });
 
+
   final IconData icon;
   final String label;
   final bool primary;
@@ -347,6 +353,8 @@ class HomeQuickActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final foreground = primary ? colors.onBrand : colors.ink;
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: primary ? colors.ctaGradient : null,
@@ -370,6 +378,7 @@ class HomeQuickActionButton extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: context.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w600,
+                  fontSize: isArabic ? 10.sp : 9.sp,
                   color: foreground,
                 ),
               ),

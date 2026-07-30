@@ -237,7 +237,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get homeOpenStatus => 'العيادة مفتوحة — ٨:٠٠ ص إلى ٨:٠٠ م';
 
   @override
-  String get homeNewAppointment => 'موعد جديد';
+  String get homeNewAppointment => 'المواعيد';
 
   @override
   String get homeDoctors => 'الأطباء';
@@ -687,7 +687,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get apptReject => 'رفض';
 
   @override
-  String get apptFinish => 'إنهاء الموعد';
+  String get apptFinish => 'إنهاء';
 
   @override
   String get apptFinishLab => 'إنهاء ورفع النتيجة';

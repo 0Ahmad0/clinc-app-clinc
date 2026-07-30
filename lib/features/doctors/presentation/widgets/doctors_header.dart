@@ -16,9 +16,9 @@ class DoctorsHeader extends StatelessWidget {
     final colors = context.colors;
     return BlocBuilder<DoctorsCubit, DoctorsState>(
       builder: (context, state) {
-        final items = state.pagination.items.value;
-        final available = items.where((value) => value.isActive).length;
-        final total = state.pagination.total ?? items.length;
+        final total = state.totalCount;
+        final available = state.availableCount;
+        final unavailable = state.unavailableCount;
         final format = NumberFormat.decimalPattern(
           Localizations.localeOf(context).toLanguageTag(),
         );
@@ -91,7 +91,7 @@ class DoctorsHeader extends StatelessWidget {
                               format.format(total),
                               format.format(available),
                             ),
-                            maxLines: 1,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: context.textTheme.bodySmall?.copyWith(
                               color: colors.onBrand.withValues(alpha: 0.72),
@@ -104,7 +104,7 @@ class DoctorsHeader extends StatelessWidget {
                     for (final item in [
                       (format.format(total), context.l10n.doctorsTotal),
                       (
-                        format.format(total - available),
+                        format.format(unavailable),
                         context.l10n.doctorsUnavailable,
                       ),
                     ])

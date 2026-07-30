@@ -975,3 +975,43 @@ locator.registerFactory<FeatureCubit>(
   - `lib/features/settings/presentation/widgets/settings_profile_cover.dart`
   - `PROJECT_HANDOFF.md`
   - `BACKEND_NOTES.md`
+
+## Completed: Reports Summary Shimmer
+- Date: 2026-07-31.
+- Added a report-specific summary shimmer for the area after report type chips.
+- The shimmer mirrors the reports summary layout: three stat cards followed by a chart card with title, legend, bars, and labels.
+- Reports now show this shimmer while `isSummaryLoading` is true instead of showing fallback stats/chart data.
+- No backend changes required.
+- Verification:
+  - `dart analyze lib/features/reports/presentation/pages/reports_view.dart lib/features/reports/presentation/widgets/reports_summary_shimmer.dart`
+  - `flutter analyze` was also run, but it is currently blocked by an unrelated pre-existing unused import warning in `lib/features/home/presentation/widgets/home_top_section.dart`.
+- Files added/modified:
+  - `lib/features/reports/presentation/pages/reports_view.dart`
+  - `lib/features/reports/presentation/widgets/reports_summary_shimmer.dart`
+  - `PROJECT_HANDOFF.md`
+
+## Completed: Home Appointments Action And Doctors Toggle State
+- Date: 2026-07-31.
+- Home quick action now shows Appointments/المواعيد instead of New appointment/موعد جديد and navigates to `/appointments`.
+- Home quick action label size now uses `10.sp` for Arabic and `9.sp` for English to keep the English label inside its card.
+- Doctors header counters now read explicit state counters instead of mutable pagination internals, so they update after doctors load.
+- Doctor availability switches now show an inline shimmer while updating.
+- Doctor availability updates no longer refresh or re-fetch the doctors list; the updated doctor and header counters are applied locally after the API succeeds.
+- No backend changes required.
+- Verification:
+  - `flutter analyze`
+  - `flutter test test/doctors_cubit_test.dart test/doctors_view_test.dart`
+- Files added/modified:
+  - `lib/features/home/presentation/widgets/home_top_section.dart`
+  - `lib/l10n/app_ar.arb`
+  - `lib/l10n/app_en.arb`
+  - `lib/l10n/app_localizations_ar.dart`
+  - `lib/l10n/app_localizations_en.dart`
+  - `lib/features/doctors/presentation/cubit/doctors_state.dart`
+  - `lib/features/doctors/presentation/cubit/doctors_state.freezed.dart`
+  - `lib/features/doctors/presentation/cubit/doctors_cubit.dart`
+  - `lib/features/doctors/presentation/widgets/doctors_header.dart`
+  - `lib/features/doctors/presentation/widgets/doctors_list.dart`
+  - `lib/features/doctors/presentation/widgets/doctor_card.dart`
+  - `lib/shared/widgets/app_switch.dart`
+  - `PROJECT_HANDOFF.md`
