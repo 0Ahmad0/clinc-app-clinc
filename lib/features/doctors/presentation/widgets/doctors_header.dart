@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -90,7 +92,7 @@ class DoctorsHeader extends StatelessWidget {
                           ),
                           const SizedBox(height: AppSpacing.xs),
                           isLoading
-                              ? AppShimmerPlaceholder(
+                              ? const _HeaderBlurShimmer(
                                   width: 168,
                                   height: 14,
                                   borderRadius: AppRadius.pill,
@@ -167,7 +169,7 @@ class _HeaderStat extends StatelessWidget {
             height: 23,
             child: Center(
               child: isLoading
-                  ? const AppShimmerPlaceholder(
+                  ? const _HeaderBlurShimmer(
                       width: 28,
                       height: 16,
                       borderRadius: AppRadius.pill,
@@ -191,6 +193,48 @@ class _HeaderStat extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _HeaderBlurShimmer extends StatelessWidget {
+  const _HeaderBlurShimmer({
+    required this.width,
+    required this.height,
+    required this.borderRadius,
+  });
+
+  final double width;
+  final double height;
+  final double borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: colors.onBrand.withValues(alpha: 0.14),
+            borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(
+              color: colors.onBrand.withValues(alpha: 0.18),
+              width: 0.7,
+            ),
+          ),
+          
+          child: ImageFiltered(
+            imageFilter: ImageFilter.blur(sigmaX: 0.6, sigmaY: 0.6),
+            child: AppShimmerPlaceholder(
+              width: width,
+              height: height,
+              borderRadius: borderRadius,
+            ),
+          ),
+        ),
       ),
     );
   }

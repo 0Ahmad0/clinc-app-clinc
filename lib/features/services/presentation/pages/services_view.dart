@@ -51,6 +51,17 @@ class ServicesView extends StatelessWidget {
                       activeCount: state.activeCount,
                       kind: state.kind,
                       availableKinds: cubit.availableKinds,
+                      isLoading:
+                          state.isLoading ||
+                          state.isCurrentFiltersLoading ||
+                          (detail == null &&
+                              (state.enabledLabTests.isInitialLoading.value ||
+                                  state
+                                      .enabledSpecializations
+                                      .isInitialLoading
+                                      .value)) ||
+                          (detail != null &&
+                              state.availableLabTests.isInitialLoading.value),
                       onBack: cubit.closeDetail,
                     ),
                     Expanded(

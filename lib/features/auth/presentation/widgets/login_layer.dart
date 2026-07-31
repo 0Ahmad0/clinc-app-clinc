@@ -142,7 +142,6 @@ class LoginLayerState extends State<LoginLayer> {
                             },
                     ),
                   ),
-
                   const SizedBox(height: AppSpacing.sm),
                   if(false)
                   const _GuestButton(onPressed: null),

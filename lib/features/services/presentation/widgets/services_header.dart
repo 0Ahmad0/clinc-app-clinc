@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:intl/intl.dart' show NumberFormat;
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_shimmer_placeholder.dart';
 import '../../data/models/clinic_service_model.dart';
 import '../../domain/service_kind.dart';
 import '../services_l10n.dart';
@@ -20,6 +23,7 @@ class ServicesHeader extends StatelessWidget {
     required this.activeCount,
     required this.kind,
     required this.availableKinds,
+    required this.isLoading,
     required this.onBack,
   });
 
@@ -30,6 +34,7 @@ class ServicesHeader extends StatelessWidget {
   final int activeCount;
   final ServiceKind kind;
   final List<ServiceKind> availableKinds;
+  final bool isLoading;
   final VoidCallback onBack;
 
   @override
@@ -102,18 +107,24 @@ class ServicesHeader extends StatelessWidget {
                         ),
                       ),
                       AppGaps.h8,
-                      Text(
-                        inDetail
-                            ? l10n.servicesTestsAvailable(
-                                format.format(detailCount),
-                              )
-                            : l10n.servicesActiveLine(
-                                format.format(activeCount),
+                      isLoading
+                          ? const _HeaderBlurShimmer(
+                              width: 142,
+                              height: 14,
+                              borderRadius: AppRadius.pill,
+                            )
+                          : Text(
+                              inDetail
+                                  ? l10n.servicesTestsAvailable(
+                                      format.format(detailCount),
+                                    )
+                                  : l10n.servicesActiveLine(
+                                      format.format(activeCount),
+                                    ),
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: colors.onBrand.withValues(alpha: 0.72),
                               ),
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: colors.onBrand.withValues(alpha: 0.72),
-                        ),
-                      ),
+                            ),
                     ],
                   ),
                 ),
@@ -124,40 +135,117 @@ class ServicesHeader extends StatelessWidget {
                     if (showSpecialtyStat)
                       (format.format(specTotal), l10n.servicesSpecialtyStat),
                   ])
-                    Container(
-                      margin: const EdgeInsetsDirectional.only(
-                        start: AppSpacing.xs,
-                      ),
-                      padding: const EdgeInsetsDirectional.symmetric(
-                        horizontal: AppSpacing.sm,
-                        vertical: AppSpacing.xs,
-                      ),
-                      decoration: BoxDecoration(
-                        color: colors.onBrand.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(AppRadius.sm),
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            pill.$1,
-                            style: context.textTheme.titleMedium?.copyWith(
-                              color: colors.onBrand,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Text(
-                            pill.$2,
-                            style: context.textTheme.labelSmall?.copyWith(
-                              color: colors.onBrand.withValues(alpha: 0.7),
-                            ),
-                          ),
-                        ],
-                      ),
+                    _HeaderStat(
+                      value: pill.$1,
+                      label: pill.$2,
+                      isLoading: isLoading,
                     ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _HeaderStat extends StatelessWidget {
+  const _HeaderStat({
+    required this.value,
+    required this.label,
+    required this.isLoading,
+  });
+
+  final String value;
+  final String label;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Container(
+      margin: const EdgeInsetsDirectional.only(start: AppSpacing.xs),
+      constraints: const BoxConstraints(minWidth: 58, minHeight: 40),
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs - 1,
+      ),
+      decoration: BoxDecoration(
+        color: colors.onBrand.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 23,
+            child: Center(
+              child: isLoading
+                  ? const _HeaderBlurShimmer(
+                      width: 28,
+                      height: 16,
+                      borderRadius: AppRadius.pill,
+                    )
+                  : Text(
+                      value,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        color: colors.onBrand,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+            ),
+          ),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.textTheme.labelSmall?.copyWith(
+              color: colors.onBrand.withValues(alpha: 0.7),
+              height: 1.0,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HeaderBlurShimmer extends StatelessWidget {
+  const _HeaderBlurShimmer({
+    required this.width,
+    required this.height,
+    required this.borderRadius,
+  });
+
+  final double width;
+  final double height;
+  final double borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: colors.onBrand.withValues(alpha: 0.14),
+            borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(
+              color: colors.onBrand.withValues(alpha: 0.18),
+              width: 0.7,
+            ),
+          ),
+          child: ImageFiltered(
+            imageFilter: ImageFilter.blur(sigmaX: 0.6, sigmaY: 0.6),
+            child: AppShimmerPlaceholder(
+              width: width,
+              height: height,
+              borderRadius: borderRadius,
+            ),
+          ),
+        ),
       ),
     );
   }
