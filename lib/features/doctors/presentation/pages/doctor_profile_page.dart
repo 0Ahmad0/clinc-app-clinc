@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../config/routes/app_routes.dart';
@@ -138,6 +139,10 @@ class _DoctorProfileView extends StatelessWidget {
                               ),
                             ),
                           ),
+                          if (model?.qualificationFiles.isNotEmpty == true)
+                            _DoctorProfileQualifications(
+                              files: model!.qualificationFiles,
+                            ),
                           DoctorProfileSchedule(
                             schedules: model?.schedules ?? const [],
                           ),
@@ -200,6 +205,117 @@ class _DoctorProfileView extends StatelessWidget {
     }
 
     await launchUrl(phoneUri, mode: LaunchMode.externalApplication);
+  }
+}
+
+class _DoctorProfileQualifications extends StatelessWidget {
+  const _DoctorProfileQualifications({required this.files});
+
+  final List<String> files;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final visibleFiles = files
+        .map((file) => file.trim())
+        .where((file) => file.isNotEmpty)
+        .toList(growable: false);
+    if (visibleFiles.isEmpty) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DoctorProfileSectionTitle(title: context.l10n.addDoctorQualSection),
+        Container(
+          margin: const EdgeInsetsDirectional.symmetric(
+            horizontal: AppSpacing.screen,
+          ),
+          padding: const EdgeInsetsDirectional.all(AppSpacing.sm),
+          decoration: BoxDecoration(
+            color: colors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.field),
+            border: Border.all(color: colors.line),
+            boxShadow: AppShadows.homeCard,
+          ),
+          child: Column(
+            children: [
+              for (var index = 0; index < visibleFiles.length; index++) ...[
+                _DoctorProfileQualificationTile(file: visibleFiles[index]),
+                if (index != visibleFiles.length - 1)
+                  Divider(height: AppSpacing.md, color: colors.line),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _DoctorProfileQualificationTile extends StatelessWidget {
+  const _DoctorProfileQualificationTile({required this.file});
+
+  final String file;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return InkWell(
+      onTap: () => _openFile(file),
+      borderRadius: BorderRadius.circular(AppRadius.sm),
+      child: Padding(
+        padding: const EdgeInsetsDirectional.symmetric(
+          horizontal: AppSpacing.xs,
+          vertical: AppSpacing.xs,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 34,
+              height: 34,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: colors.info.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+              ),
+              child: Icon(
+                Iconsax.document_text,
+                color: colors.info,
+                size: AppSizes.iconSm,
+              ),
+            ),
+            AppGaps.w8,
+            Expanded(
+              child: Text(
+                _fileName(file),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: colors.ink,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            Icon(Iconsax.eye, color: colors.primary600, size: AppSizes.iconSm),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _fileName(String path) {
+    final uri = Uri.tryParse(path);
+    final segment = uri?.pathSegments.isNotEmpty == true
+        ? uri!.pathSegments.last
+        : path.split('/').last;
+    final decoded = Uri.decodeComponent(segment).trim();
+    return decoded.isEmpty ? 'qualification.pdf' : decoded;
+  }
+
+  Future<void> _openFile(String path) async {
+    final uri = Uri.tryParse(path.trim());
+    if (uri == null) return;
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }
 

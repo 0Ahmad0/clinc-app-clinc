@@ -13,12 +13,12 @@ import 'package:clinic_app/features/doctors/presentation/widgets/add_doctor_sche
 import 'package:clinic_app/features/doctors/presentation/widgets/doctor_profile_schedule.dart';
 import 'package:clinic_app/features/doctors/presentation/widgets/doctors_header.dart';
 import 'package:clinic_app/features/doctors/presentation/widgets/doctors_list.dart';
-import 'package:clinic_app/shared/widgets/app_shimmer_placeholder.dart';
 import 'package:clinic_app/core/data/pagination/pagination_state.dart';
 import 'package:clinic_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 void main() {
   testWidgets('doctors fits the 390 by 844 reference viewport', (tester) async {
@@ -70,7 +70,7 @@ void main() {
     );
 
     expect(find.text('لا توجد نتائج مطابقة'), findsNothing);
-    expect(find.byType(AppShimmerPlaceholder), findsWidgets);
+    expect(find.byType(Shimmer), findsWidgets);
   });
 
   testWidgets('doctors header stats show shimmer while loading', (
@@ -98,7 +98,7 @@ void main() {
       ),
     );
 
-    expect(find.byType(AppShimmerPlaceholder), findsWidgets);
+    expect(find.byType(Shimmer), findsWidgets);
     expect(find.text('٠'), findsNothing);
   });
 

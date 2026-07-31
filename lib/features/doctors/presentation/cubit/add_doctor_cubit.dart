@@ -20,6 +20,7 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
           initialDoctor: initialDoctor,
           selectedSpecializationId: initialDoctor?.specializationId,
           gender: initialDoctor?.gender ?? 'male',
+          qualificationFiles: _qualificationFilesFrom(initialDoctor),
           activeDays: _activeDaysFrom(initialDoctor),
           hours: _hoursFrom(initialDoctor),
         ),
@@ -173,6 +174,7 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
             body,
             imagePath: state.imagePath,
             qualificationFilePaths: state.qualificationFiles
+                .where((file) => !_isRemoteQualificationPath(file.path))
                 .map((file) => file.path)
                 .toList(growable: false),
           )
@@ -181,6 +183,7 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
             body: body,
             imagePath: state.imagePath,
             qualificationFilePaths: state.qualificationFiles
+                .where((file) => !_isRemoteQualificationPath(file.path))
                 .map((file) => file.path)
                 .toList(growable: false),
           );
@@ -253,5 +256,30 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
       hour: int.tryParse(parts.isNotEmpty ? parts[0] : '') ?? 9,
       minute: int.tryParse(parts.length > 1 ? parts[1] : '') ?? 0,
     );
+  }
+
+  static List<DoctorPickedQualification> _qualificationFilesFrom(
+    ClinicDoctorModel? doctor,
+  ) {
+    final files = doctor?.qualificationFiles ?? const <String>[];
+    return [
+      for (final file in files)
+        if (file.trim().isNotEmpty)
+          (path: file.trim(), name: _qualificationName(file.trim())),
+    ];
+  }
+
+  static String _qualificationName(String path) {
+    final uri = Uri.tryParse(path);
+    final segment = uri?.pathSegments.isNotEmpty == true
+        ? uri!.pathSegments.last
+        : path.split('/').last;
+    final decoded = Uri.decodeComponent(segment).trim();
+    return decoded.isEmpty ? 'qualification.pdf' : decoded;
+  }
+
+  static bool _isRemoteQualificationPath(String path) {
+    final uri = Uri.tryParse(path.trim());
+    return uri?.hasScheme == true && uri?.hasAuthority == true;
   }
 }

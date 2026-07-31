@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
@@ -121,17 +122,30 @@ class _PickedPdfTile extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () => context
-                .read<AddDoctorCubit>()
-                .removeQualificationFile(file.path),
+            onPressed: _isRemote(file.path)
+                ? () => _openFile(file.path)
+                : () => context.read<AddDoctorCubit>().removeQualificationFile(
+                    file.path,
+                  ),
             icon: Icon(
-              Iconsax.trash,
-              color: colors.dangerFg,
+              _isRemote(file.path) ? Iconsax.eye : Iconsax.trash,
+              color: _isRemote(file.path) ? colors.primary600 : colors.dangerFg,
               size: AppSizes.iconSm,
             ),
           ),
         ],
       ),
     );
+  }
+
+  bool _isRemote(String path) {
+    final uri = Uri.tryParse(path.trim());
+    return uri?.hasScheme == true && uri?.hasAuthority == true;
+  }
+
+  Future<void> _openFile(String path) async {
+    final uri = Uri.tryParse(path.trim());
+    if (uri == null) return;
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 }

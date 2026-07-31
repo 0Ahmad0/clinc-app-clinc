@@ -3,10 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:intl/intl.dart' show NumberFormat;
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
-import '../../../../shared/widgets/app_shimmer_placeholder.dart';
 import '../../data/models/clinic_service_model.dart';
 import '../../domain/service_kind.dart';
 import '../services_l10n.dart';
@@ -230,19 +230,42 @@ class _HeaderBlurShimmer extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: colors.onBrand.withValues(alpha: 0.14),
+            color: colors.onBrand.withValues(alpha: 0.13),
             borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
-              color: colors.onBrand.withValues(alpha: 0.18),
+              color: colors.onBrand.withValues(alpha: 0.22),
               width: 0.7,
             ),
           ),
-          child: ImageFiltered(
-            imageFilter: ImageFilter.blur(sigmaX: 0.6, sigmaY: 0.6),
-            child: AppShimmerPlaceholder(
+          child: Shimmer(
+            
+            duration: const Duration(milliseconds: 1150),
+            interval: const Duration(milliseconds: 80),
+            color: colors.primary300,
+            colorOpacity: 0.38,
+            direction: const ShimmerDirection.fromLTRB(),
+            child: Container(
               width: width,
               height: height,
-              borderRadius: borderRadius,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: AlignmentDirectional.centerStart,
+                  end: AlignmentDirectional.centerEnd,
+                  colors: [
+                    colors.onBrand.withValues(alpha: 0.18),
+                    colors.onBrand.withValues(alpha: 0.34),
+                    colors.onBrand.withValues(alpha: 0.18),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(borderRadius),
+                boxShadow: [
+                  BoxShadow(
+                    color: colors.onBrand.withValues(alpha: 0.08),
+                    blurRadius: 10,
+                    spreadRadius: 0.4,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
