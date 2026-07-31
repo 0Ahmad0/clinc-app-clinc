@@ -446,6 +446,78 @@ abstract class AppLocalizations {
   /// **'Back to sign in'**
   String get authBackToLogin;
 
+  /// No description provided for @authOtpTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code'**
+  String get authOtpTitle;
+
+  /// No description provided for @authOtpDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent a {count}-digit code to your email'**
+  String authOtpDesc(int count);
+
+  /// No description provided for @authOtpCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm code'**
+  String get authOtpCta;
+
+  /// No description provided for @authOtpNoCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t get the code?'**
+  String get authOtpNoCode;
+
+  /// No description provided for @authOtpResend.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get authOtpResend;
+
+  /// No description provided for @authOtpResendIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend in {seconds}s'**
+  String authOtpResendIn(int seconds);
+
+  /// No description provided for @authOtpResent.
+  ///
+  /// In en, this message translates to:
+  /// **'We sent you a new code'**
+  String get authOtpResent;
+
+  /// No description provided for @authResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get authResetTitle;
+
+  /// No description provided for @authResetDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'It must differ from your previous password and be at least {count} characters'**
+  String authResetDesc(int count);
+
+  /// No description provided for @authResetNewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get authResetNewHint;
+
+  /// No description provided for @authResetCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Save password'**
+  String get authResetCta;
+
+  /// No description provided for @authResetDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your password has been updated'**
+  String get authResetDone;
+
   /// No description provided for @authPendingTitle.
   ///
   /// In en, this message translates to:
@@ -2012,35 +2084,35 @@ abstract class AppLocalizations {
   /// **'Confirm password'**
   String get settingsPasswordConfirm;
 
-  /// No description provided for @settingsPasswordStrength.
+  /// No description provided for @passwordStrengthLabel.
   ///
   /// In en, this message translates to:
   /// **'Password strength:'**
-  String get settingsPasswordStrength;
+  String get passwordStrengthLabel;
 
-  /// No description provided for @settingsStrengthNone.
+  /// No description provided for @passwordStrengthNone.
   ///
   /// In en, this message translates to:
   /// **'Enter a password'**
-  String get settingsStrengthNone;
+  String get passwordStrengthNone;
 
-  /// No description provided for @settingsStrengthWeak.
+  /// No description provided for @passwordStrengthWeak.
   ///
   /// In en, this message translates to:
   /// **'Weak'**
-  String get settingsStrengthWeak;
+  String get passwordStrengthWeak;
 
-  /// No description provided for @settingsStrengthMedium.
+  /// No description provided for @passwordStrengthMedium.
   ///
   /// In en, this message translates to:
   /// **'Medium'**
-  String get settingsStrengthMedium;
+  String get passwordStrengthMedium;
 
-  /// No description provided for @settingsStrengthStrong.
+  /// No description provided for @passwordStrengthStrong.
   ///
   /// In en, this message translates to:
   /// **'Strong'**
-  String get settingsStrengthStrong;
+  String get passwordStrengthStrong;
 
   /// No description provided for @settingsValueAddress.
   ///
@@ -2563,6 +2635,234 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'04 Jul 2026 · 10:22 AM'**
   String get report3Date;
+
+  /// No description provided for @legalCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard'**
+  String get legalCopied;
+
+  /// No description provided for @legalAboutIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'An all-in-one platform for managing clinics and medical labs in Saudi Arabia, connecting care providers and patients through a smooth, dependable digital experience.'**
+  String get legalAboutIntro;
+
+  /// No description provided for @legalAboutFeature1.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment booking'**
+  String get legalAboutFeature1;
+
+  /// No description provided for @legalAboutFeature1Sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize patient and doctor schedules easily'**
+  String get legalAboutFeature1Sub;
+
+  /// No description provided for @legalAboutFeature2.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital lab results'**
+  String get legalAboutFeature2;
+
+  /// No description provided for @legalAboutFeature2Sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload and share test reports securely'**
+  String get legalAboutFeature2Sub;
+
+  /// No description provided for @legalAboutFeature3.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your medical team'**
+  String get legalAboutFeature3;
+
+  /// No description provided for @legalAboutFeature3Sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor profiles, working hours and services'**
+  String get legalAboutFeature3Sub;
+
+  /// No description provided for @legalAboutFeature4.
+  ///
+  /// In en, this message translates to:
+  /// **'High security standards'**
+  String get legalAboutFeature4;
+
+  /// No description provided for @legalAboutFeature4Sub.
+  ///
+  /// In en, this message translates to:
+  /// **'Patient data protected under Saudi regulations'**
+  String get legalAboutFeature4Sub;
+
+  /// No description provided for @legalAboutLinkWebsite.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit our website'**
+  String get legalAboutLinkWebsite;
+
+  /// No description provided for @legalAboutCopyright.
+  ///
+  /// In en, this message translates to:
+  /// **'© 2026 Eyadaty. All rights reserved'**
+  String get legalAboutCopyright;
+
+  /// No description provided for @legalPrivacyUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Last updated: 1 July 2026'**
+  String get legalPrivacyUpdated;
+
+  /// No description provided for @legalPrivacy1.
+  ///
+  /// In en, this message translates to:
+  /// **'Data we collect'**
+  String get legalPrivacy1;
+
+  /// No description provided for @legalPrivacy1Body.
+  ///
+  /// In en, this message translates to:
+  /// **'We collect basic account details (name, email, license number) and the medical data needed to provide booking and lab services, in line with Saudi personal data protection regulations.'**
+  String get legalPrivacy1Body;
+
+  /// No description provided for @legalPrivacy2.
+  ///
+  /// In en, this message translates to:
+  /// **'How we use data'**
+  String get legalPrivacy2;
+
+  /// No description provided for @legalPrivacy2Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is used only to run booking, reporting and notification services. It is never shared with third parties for marketing.'**
+  String get legalPrivacy2Body;
+
+  /// No description provided for @legalPrivacy3.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage and protection'**
+  String get legalPrivacy3;
+
+  /// No description provided for @legalPrivacy3Body.
+  ///
+  /// In en, this message translates to:
+  /// **'All data is stored on encrypted servers inside the Kingdom, with strict access controls limited to authorized staff.'**
+  String get legalPrivacy3Body;
+
+  /// No description provided for @legalPrivacy4.
+  ///
+  /// In en, this message translates to:
+  /// **'Your rights'**
+  String get legalPrivacy4;
+
+  /// No description provided for @legalPrivacy4Body.
+  ///
+  /// In en, this message translates to:
+  /// **'You may request access to your data, correct it, or delete your account entirely at any time by contacting our support team.'**
+  String get legalPrivacy4Body;
+
+  /// No description provided for @legalPrivacy5.
+  ///
+  /// In en, this message translates to:
+  /// **'Cookies and local storage'**
+  String get legalPrivacy5;
+
+  /// No description provided for @legalPrivacy5Body.
+  ///
+  /// In en, this message translates to:
+  /// **'The app keeps limited local storage for your preferences (language, theme) only — no advertising tracking.'**
+  String get legalPrivacy5Body;
+
+  /// No description provided for @legalContactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact us'**
+  String get legalContactTitle;
+
+  /// No description provided for @legalContactPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get legalContactPhone;
+
+  /// No description provided for @legalContactPhoneValue.
+  ///
+  /// In en, this message translates to:
+  /// **'+966 11 234 5678'**
+  String get legalContactPhoneValue;
+
+  /// No description provided for @legalContactEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get legalContactEmail;
+
+  /// No description provided for @legalContactEmailValue.
+  ///
+  /// In en, this message translates to:
+  /// **'support@alshifa-clinic.sa'**
+  String get legalContactEmailValue;
+
+  /// No description provided for @legalContactAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get legalContactAddress;
+
+  /// No description provided for @legalContactAddressValue.
+  ///
+  /// In en, this message translates to:
+  /// **'King Fahd Road, Riyadh'**
+  String get legalContactAddressValue;
+
+  /// No description provided for @legalContactWhatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get legalContactWhatsapp;
+
+  /// No description provided for @legalContactWhatsappValue.
+  ///
+  /// In en, this message translates to:
+  /// **'+966 55 123 4567'**
+  String get legalContactWhatsappValue;
+
+  /// No description provided for @legalContactHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Support hours: Saturday to Thursday, 9 AM — 9 PM Riyadh time'**
+  String get legalContactHours;
+
+  /// No description provided for @legalContactFormTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send us a message'**
+  String get legalContactFormTitle;
+
+  /// No description provided for @legalContactName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full name'**
+  String get legalContactName;
+
+  /// No description provided for @legalContactMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Write your message here...'**
+  String get legalContactMessage;
+
+  /// No description provided for @legalContactSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send message'**
+  String get legalContactSend;
+
+  /// No description provided for @legalContactSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Your message was sent — we\'ll get back to you soon'**
+  String get legalContactSent;
 }
 
 class _AppLocalizationsDelegate

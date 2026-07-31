@@ -65,6 +65,29 @@
   "authForgotCta": "Send verification code",
   "authBackToLogin": "Back to sign in",
 
+  "authOtpTitle": "Verification code",
+  "authOtpDesc": "We sent a {count}-digit code to your email",
+  "@authOtpDesc": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "authOtpCta": "Confirm code",
+  "authOtpNoCode": "Didn't get the code?",
+  "authOtpResend": "Resend code",
+  "authOtpResendIn": "Resend in {seconds}s",
+  "@authOtpResendIn": {
+    "placeholders": { "seconds": { "type": "int" } }
+  },
+  "authOtpResent": "We sent you a new code",
+
+  "authResetTitle": "New password",
+  "authResetDesc": "It must differ from your previous password and be at least {count} characters",
+  "@authResetDesc": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "authResetNewHint": "New password",
+  "authResetCta": "Save password",
+  "authResetDone": "Your password has been updated",
+
   "authPendingTitle": "Your request is under review",
   "authPendingDesc": "Your facility registration request has been sent to the platform admin. You'll be notified once your account is approved — usually within 24 hours.",
   "authStep1Title": "Request sent",
@@ -333,11 +356,11 @@
   "settingsPasswordCurrent": "Current password",
   "settingsPasswordNew": "New password",
   "settingsPasswordConfirm": "Confirm password",
-  "settingsPasswordStrength": "Password strength:",
-  "settingsStrengthNone": "Enter a password",
-  "settingsStrengthWeak": "Weak",
-  "settingsStrengthMedium": "Medium",
-  "settingsStrengthStrong": "Strong",
+  "passwordStrengthLabel": "Password strength:",
+  "passwordStrengthNone": "Enter a password",
+  "passwordStrengthWeak": "Weak",
+  "passwordStrengthMedium": "Medium",
+  "passwordStrengthStrong": "Strong",
   "settingsValueAddress": "King Fahd Road, Riyadh",
   "settingsValueLicense": "MC-2024-1234",
   "settingsValuePhone": "+966 11 234 5678",
@@ -431,5 +454,47 @@
   "@reportsTotalLabel": {"placeholders": {"total": {"type": "String"}}},
   "report1Date": "18 Jul 2026 · 10:22 AM",
   "report2Date": "11 Jul 2026 · 10:22 AM",
-  "report3Date": "04 Jul 2026 · 10:22 AM"
+  "report3Date": "04 Jul 2026 · 10:22 AM",
+
+  "legalCopied": "Copied to clipboard",
+
+  "legalAboutIntro": "An all-in-one platform for managing clinics and medical labs in Saudi Arabia, connecting care providers and patients through a smooth, dependable digital experience.",
+  "legalAboutFeature1": "Appointment booking",
+  "legalAboutFeature1Sub": "Organize patient and doctor schedules easily",
+  "legalAboutFeature2": "Digital lab results",
+  "legalAboutFeature2Sub": "Upload and share test reports securely",
+  "legalAboutFeature3": "Manage your medical team",
+  "legalAboutFeature3Sub": "Doctor profiles, working hours and services",
+  "legalAboutFeature4": "High security standards",
+  "legalAboutFeature4Sub": "Patient data protected under Saudi regulations",
+  "legalAboutLinkWebsite": "Visit our website",
+  "legalAboutCopyright": "© 2026 Eyadaty. All rights reserved",
+
+  "legalPrivacyUpdated": "Last updated: 1 July 2026",
+  "legalPrivacy1": "Data we collect",
+  "legalPrivacy1Body": "We collect basic account details (name, email, license number) and the medical data needed to provide booking and lab services, in line with Saudi personal data protection regulations.",
+  "legalPrivacy2": "How we use data",
+  "legalPrivacy2Body": "Your data is used only to run booking, reporting and notification services. It is never shared with third parties for marketing.",
+  "legalPrivacy3": "Storage and protection",
+  "legalPrivacy3Body": "All data is stored on encrypted servers inside the Kingdom, with strict access controls limited to authorized staff.",
+  "legalPrivacy4": "Your rights",
+  "legalPrivacy4Body": "You may request access to your data, correct it, or delete your account entirely at any time by contacting our support team.",
+  "legalPrivacy5": "Cookies and local storage",
+  "legalPrivacy5Body": "The app keeps limited local storage for your preferences (language, theme) only — no advertising tracking.",
+
+  "legalContactTitle": "Contact us",
+  "legalContactPhone": "Phone",
+  "legalContactPhoneValue": "+966 11 234 5678",
+  "legalContactEmail": "Email",
+  "legalContactEmailValue": "support@alshifa-clinic.sa",
+  "legalContactAddress": "Address",
+  "legalContactAddressValue": "King Fahd Road, Riyadh",
+  "legalContactWhatsapp": "WhatsApp",
+  "legalContactWhatsappValue": "+966 55 123 4567",
+  "legalContactHours": "Support hours: Saturday to Thursday, 9 AM — 9 PM Riyadh time",
+  "legalContactFormTitle": "Send us a message",
+  "legalContactName": "Full name",
+  "legalContactMessage": "Write your message here...",
+  "legalContactSend": "Send message",
+  "legalContactSent": "Your message was sent — we'll get back to you soon"
 }

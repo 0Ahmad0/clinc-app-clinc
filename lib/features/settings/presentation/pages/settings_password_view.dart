@@ -6,12 +6,12 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../core/enums/app_feedback_type.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../../shared/widgets/app_password_strength.dart';
 import '../../../../shared/widgets/app_toast.dart';
 import '../../domain/settings_section.dart';
 import '../cubit/settings_cubit.dart';
 import '../widgets/settings_password_field.dart';
 import '../widgets/settings_password_header.dart';
-import '../widgets/settings_password_strength.dart';
 
 /// Change-password screen: gradient hero header, a requirements banner, the
 /// three password fields, a live strength meter and the submit CTA.
@@ -36,15 +36,7 @@ class _SettingsPasswordViewState extends State<SettingsPasswordView> {
     super.dispose();
   }
 
-  /// 0 empty · 1 weak · 2 medium · 3 strong.
-  int get _strength {
-    final value = _next.text;
-    if (value.isEmpty) return 0;
-    final hasDigit = value.contains(RegExp(r'\d'));
-    final hasLetter = value.contains(RegExp(r'[A-Za-zء-ي]'));
-    if (value.length >= 8 && hasDigit && hasLetter) return 3;
-    return value.length >= 6 ? 2 : 1;
-  }
+  int get _strength => AppPasswordStrength.levelOf(_next.text);
 
   void _submit() {
     final l10n = context.l10n;
@@ -147,7 +139,7 @@ class _SettingsPasswordViewState extends State<SettingsPasswordView> {
                     ),
                   ),
                 AppGaps.h8,
-                SettingsPasswordStrength(level: _strength),
+                AppPasswordStrength(level: _strength),
                 AppGaps.h24,
                 AppButton(
                   label: l10n.settingsPasswordTitle,

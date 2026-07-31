@@ -8,10 +8,12 @@ import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import '../widgets/forgot_layer.dart';
 import '../widgets/login_layer.dart';
+import '../widgets/otp_layer.dart';
 import '../widgets/pending_layer.dart';
+import '../widgets/reset_password_layer.dart';
 import '../widgets/signup_layer.dart';
 
-/// Hosts the auth design and cross-fades between its four layers.
+/// Hosts the auth design and cross-fades between its layers.
 class AuthView extends StatelessWidget {
   const AuthView({super.key});
 
@@ -32,6 +34,10 @@ class AuthView extends StatelessWidget {
               ),
               AuthLayer.forgot => const ForgotLayer(
                 key: ValueKey(AuthLayer.forgot),
+              ),
+              AuthLayer.otp => const OtpLayer(key: ValueKey(AuthLayer.otp)),
+              AuthLayer.reset => const ResetPasswordLayer(
+                key: ValueKey(AuthLayer.reset),
               ),
               AuthLayer.pending => const PendingLayer(
                 key: ValueKey(AuthLayer.pending),

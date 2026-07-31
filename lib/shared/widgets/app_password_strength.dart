@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 
-import '../../../../config/theme/app_spacing.dart';
-import '../../../../shared/extensions/context_extensions.dart';
+import '../../config/theme/app_spacing.dart';
+import '../extensions/context_extensions.dart';
 
 /// Password-strength meter: a caption, a filling bar and a colored label.
-/// [level] runs 0 (empty) → 3 (strong).
-class SettingsPasswordStrength extends StatelessWidget {
-  const SettingsPasswordStrength({super.key, required this.level});
+/// Shared by the change-password and reset-password screens.
+class AppPasswordStrength extends StatelessWidget {
+  const AppPasswordStrength({super.key, required this.level});
 
+  /// 0 empty · 1 weak · 2 medium · 3 strong — see [levelOf].
   final int level;
+
+  /// Rates [password]: strong needs 8+ characters mixing letters and digits,
+  /// medium is 6+, anything shorter is weak.
+  static int levelOf(String password) {
+    if (password.isEmpty) return 0;
+    final hasDigit = password.contains(RegExp(r'\d'));
+    final hasLetter = password.contains(RegExp(r'[A-Za-zء-ي]'));
+    if (password.length >= 8 && hasDigit && hasLetter) return 3;
+    return password.length >= 6 ? 2 : 1;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +32,15 @@ class SettingsPasswordStrength extends StatelessWidget {
       _ => colors.muted,
     };
     final label = switch (level) {
-      1 => l10n.settingsStrengthWeak,
-      2 => l10n.settingsStrengthMedium,
-      3 => l10n.settingsStrengthStrong,
-      _ => l10n.settingsStrengthNone,
+      1 => l10n.passwordStrengthWeak,
+      2 => l10n.passwordStrengthMedium,
+      3 => l10n.passwordStrengthStrong,
+      _ => l10n.passwordStrengthNone,
     };
     return Row(
       children: [
         Text(
-          l10n.settingsPasswordStrength,
+          l10n.passwordStrengthLabel,
           style: context.textTheme.bodySmall?.copyWith(
             color: colors.ink,
             fontWeight: FontWeight.w600,

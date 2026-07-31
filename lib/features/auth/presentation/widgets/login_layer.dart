@@ -7,9 +7,9 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/form_validators.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../domain/auth_layer.dart';
-import '../../domain/auth_validators.dart';
 import '../cubit/auth_cubit.dart';
 import 'auth_footer_link.dart';
 import 'auth_text_field.dart';
@@ -74,7 +74,7 @@ class LoginLayerState extends State<LoginLayer> {
                     hint: l10n.authIdentifierHint,
                     icon: Iconsax.sms,
                     validator: (value) =>
-                        AuthValidators.required(value, l10n.validationRequired),
+                        FormValidators.required(value, l10n.validationRequired),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   AuthTextField(
@@ -82,7 +82,7 @@ class LoginLayerState extends State<LoginLayer> {
                     icon: Iconsax.lock,
                     obscure: true,
                     textInputAction: TextInputAction.done,
-                    validator: (value) => AuthValidators.password(
+                    validator: (value) => FormValidators.password(
                       value,
                       requiredMessage: l10n.validationRequired,
                       shortMessage: l10n.validationPasswordLength,
