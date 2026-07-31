@@ -5,9 +5,9 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/input/email_input.dart';
+import '../../../../shared/form_validators.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../domain/auth_layer.dart';
-import '../../domain/auth_validators.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import 'auth_back_button.dart';
@@ -100,7 +100,7 @@ class ForgotLayerState extends State<ForgotLayer> {
                     inputFormatters: const [EmailInputFormatter()],
                     textInputAction: TextInputAction.done,
                     validator: (value) =>
-                        AuthValidators.required(value, l10n.validationRequired),
+                        FormValidators.required(value, l10n.validationRequired),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   BlocBuilder<AuthCubit, AuthState>(

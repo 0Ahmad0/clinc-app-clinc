@@ -65,6 +65,29 @@
   "authForgotCta": "إرسال رمز التحقق",
   "authBackToLogin": "العودة لتسجيل الدخول",
 
+  "authOtpTitle": "رمز التحقق",
+  "authOtpDesc": "أرسلنا رمزاً مكوناً من {count} أرقام إلى بريدك الإلكتروني",
+  "@authOtpDesc": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "authOtpCta": "تأكيد الرمز",
+  "authOtpNoCode": "لم يصلك الرمز؟",
+  "authOtpResend": "إعادة إرسال الرمز",
+  "authOtpResendIn": "إعادة الإرسال خلال {seconds} ثانية",
+  "@authOtpResendIn": {
+    "placeholders": { "seconds": { "type": "int" } }
+  },
+  "authOtpResent": "أعدنا إرسال رمز التحقق",
+
+  "authResetTitle": "كلمة مرور جديدة",
+  "authResetDesc": "يجب أن تختلف عن كلمة المرور السابقة، وألا تقل عن {count} أحرف",
+  "@authResetDesc": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "authResetNewHint": "كلمة المرور الجديدة",
+  "authResetCta": "حفظ كلمة المرور",
+  "authResetDone": "تم تحديث كلمة المرور بنجاح",
+
   "authPendingTitle": "طلبك قيد المراجعة",
   "authPendingDesc": "تم إرسال طلب تسجيل منشأتك إلى إدارة المنصة. سيتم إشعارك فور الموافقة على حسابك — عادةً خلال ٢٤ ساعة.",
   "authStep1Title": "تم إرسال الطلب",
@@ -331,11 +354,11 @@
   "settingsPasswordCurrent": "كلمة المرور الحالية",
   "settingsPasswordNew": "كلمة المرور الجديدة",
   "settingsPasswordConfirm": "تأكيد كلمة المرور",
-  "settingsPasswordStrength": "قوة كلمة المرور:",
-  "settingsStrengthNone": "أدخل كلمة مرور",
-  "settingsStrengthWeak": "ضعيفة",
-  "settingsStrengthMedium": "متوسطة",
-  "settingsStrengthStrong": "قوية",
+  "passwordStrengthLabel": "قوة كلمة المرور:",
+  "passwordStrengthNone": "أدخل كلمة مرور",
+  "passwordStrengthWeak": "ضعيفة",
+  "passwordStrengthMedium": "متوسطة",
+  "passwordStrengthStrong": "قوية",
   "settingsValueAddress": "طريق الملك فهد، الرياض",
   "settingsValueLicense": "MC-2024-1234",
   "settingsValuePhone": "+966 11 234 5678",
@@ -447,4 +470,49 @@
   "chatVideoWithIcon": "فيديو",
   "chatVoiceWithIcon": "رسالة صوتية",
   "chatFileWithIcon": "ملف"
+  "report1Date": "18 Jul 2026 · 10:22 AM",
+  "report2Date": "11 Jul 2026 · 10:22 AM",
+  "report3Date": "04 Jul 2026 · 10:22 AM",
+
+  "legalCopied": "تم النسخ إلى الحافظة",
+
+  "legalAboutIntro": "منصة متكاملة لإدارة العيادات والمخابر الطبية في المملكة العربية السعودية، تربط بين مقدمي الرعاية الصحية والمرضى بتجربة رقمية سلسة وموثوقة.",
+  "legalAboutFeature1": "حجز وإدارة المواعيد",
+  "legalAboutFeature1Sub": "تنظيم مواعيد المرضى والأطباء بسهولة",
+  "legalAboutFeature2": "نتائج المخبر الرقمية",
+  "legalAboutFeature2Sub": "رفع ومشاركة تقارير التحاليل بأمان",
+  "legalAboutFeature3": "إدارة فريق الأطباء",
+  "legalAboutFeature3Sub": "ملفات الأطباء وساعات العمل والخدمات",
+  "legalAboutFeature4": "أمان بمعايير عالية",
+  "legalAboutFeature4Sub": "حماية بيانات المرضى وفق الأنظمة السعودية",
+  "legalAboutLinkWebsite": "زيارة الموقع الإلكتروني",
+  "legalAboutCopyright": "© ٢٠٢٦ عيادتي. جميع الحقوق محفوظة",
+
+  "legalPrivacyUpdated": "آخر تحديث: ١ يوليو ٢٠٢٦",
+  "legalPrivacy1": "جمع البيانات",
+  "legalPrivacy1Body": "نجمع معلومات الحساب الأساسية (الاسم، البريد الإلكتروني، رقم الترخيص) والبيانات الطبية اللازمة لتقديم خدمات الحجز والمخبر، وفقاً لأنظمة حماية البيانات الشخصية في المملكة العربية السعودية.",
+  "legalPrivacy2": "استخدام البيانات",
+  "legalPrivacy2Body": "تُستخدم بياناتك لتشغيل خدمات الحجز والتقارير والإشعارات فقط، ولا تتم مشاركتها مع أي طرف ثالث لأغراض تسويقية.",
+  "legalPrivacy3": "تخزين وحماية البيانات",
+  "legalPrivacy3Body": "تُخزَّن جميع البيانات على خوادم مشفّرة داخل المملكة، مع ضوابط وصول صارمة تقتصر على الموظفين المخوّلين فقط.",
+  "legalPrivacy4": "حقوق المستخدم",
+  "legalPrivacy4Body": "يحق لك في أي وقت طلب الاطلاع على بياناتك أو تعديلها أو حذف حسابك بالكامل من خلال التواصل مع فريق الدعم.",
+  "legalPrivacy5": "ملفات تعريف الارتباط",
+  "legalPrivacy5Body": "يستخدم التطبيق تخزيناً محلياً محدوداً لحفظ تفضيلاتك (اللغة، الثيم) فقط، دون أي تتبع إعلاني.",
+
+  "legalContactTitle": "تواصل معنا",
+  "legalContactPhone": "الهاتف",
+  "legalContactPhoneValue": "+966 11 234 5678",
+  "legalContactEmail": "البريد الإلكتروني",
+  "legalContactEmailValue": "support@alshifa-clinic.sa",
+  "legalContactAddress": "العنوان",
+  "legalContactAddressValue": "طريق الملك فهد، الرياض",
+  "legalContactWhatsapp": "واتساب",
+  "legalContactWhatsappValue": "+966 55 123 4567",
+  "legalContactHours": "أوقات الدعم: من السبت للخميس، ٩ صباحاً — ٩ مساءً بتوقيت الرياض",
+  "legalContactFormTitle": "أرسل لنا رسالة",
+  "legalContactName": "الاسم الكامل",
+  "legalContactMessage": "اكتب رسالتك هنا...",
+  "legalContactSend": "إرسال الرسالة",
+  "legalContactSent": "تم إرسال رسالتك، سنعود إليك قريباً"
 }

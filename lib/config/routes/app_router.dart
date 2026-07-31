@@ -10,6 +10,9 @@ import '../../features/doctors/presentation/pages/add_doctor_page.dart';
 import '../../features/doctors/presentation/pages/doctor_profile_page.dart';
 import '../../features/appointments/presentation/pages/appointments_page.dart';
 import '../../features/doctors/presentation/pages/doctors_page.dart';
+import '../../features/legal/presentation/pages/about_page.dart';
+import '../../features/legal/presentation/pages/contact_page.dart';
+import '../../features/legal/presentation/pages/privacy_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../../features/reports/presentation/pages/reports_page.dart';
@@ -85,6 +88,18 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.settings,
         builder: (context, state) => const SettingsPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.about,
+        builder: (context, state) => const AboutPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.privacy,
+        builder: (context, state) => const PrivacyPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.contact,
+        builder: (context, state) => const ContactPage(),
       ),
     ],
   );

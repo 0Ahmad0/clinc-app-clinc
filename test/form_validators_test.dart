@@ -1,11 +1,11 @@
-import 'package:clinic_app/features/auth/domain/auth_validators.dart';
+import 'package:clinic_app/shared/form_validators.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('auth validators reject invalid signup values', () {
-    expect(AuthValidators.required('  ', 'required'), 'required');
+  test('form validators reject invalid values', () {
+    expect(FormValidators.required('  ', 'required'), 'required');
     expect(
-      AuthValidators.email(
+      FormValidators.email(
         'wrong',
         requiredMessage: 'required',
         invalidMessage: 'email',
@@ -13,7 +13,7 @@ void main() {
       'email',
     );
     expect(
-      AuthValidators.password(
+      FormValidators.password(
         'short',
         requiredMessage: 'required',
         shortMessage: 'short',
@@ -21,7 +21,7 @@ void main() {
       'short',
     );
     expect(
-      AuthValidators.confirmation(
+      FormValidators.confirmation(
         'different',
         'password',
         requiredMessage: 'required',

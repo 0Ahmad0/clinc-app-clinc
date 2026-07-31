@@ -188,6 +188,48 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authBackToLogin => 'Back to sign in';
 
   @override
+  String get authOtpTitle => 'Verification code';
+
+  @override
+  String authOtpDesc(int count) {
+    return 'We sent a $count-digit code to your email';
+  }
+
+  @override
+  String get authOtpCta => 'Confirm code';
+
+  @override
+  String get authOtpNoCode => 'Didn\'t get the code?';
+
+  @override
+  String get authOtpResend => 'Resend code';
+
+  @override
+  String authOtpResendIn(int seconds) {
+    return 'Resend in ${seconds}s';
+  }
+
+  @override
+  String get authOtpResent => 'We sent you a new code';
+
+  @override
+  String get authResetTitle => 'New password';
+
+  @override
+  String authResetDesc(int count) {
+    return 'It must differ from your previous password and be at least $count characters';
+  }
+
+  @override
+  String get authResetNewHint => 'New password';
+
+  @override
+  String get authResetCta => 'Save password';
+
+  @override
+  String get authResetDone => 'Your password has been updated';
+
+  @override
   String get authPendingTitle => 'Your request is under review';
 
   @override
@@ -988,19 +1030,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsPasswordConfirm => 'Confirm password';
 
   @override
-  String get settingsPasswordStrength => 'Password strength:';
+  String get passwordStrengthLabel => 'Password strength:';
 
   @override
-  String get settingsStrengthNone => 'Enter a password';
+  String get passwordStrengthNone => 'Enter a password';
 
   @override
-  String get settingsStrengthWeak => 'Weak';
+  String get passwordStrengthWeak => 'Weak';
 
   @override
-  String get settingsStrengthMedium => 'Medium';
+  String get passwordStrengthMedium => 'Medium';
 
   @override
-  String get settingsStrengthStrong => 'Strong';
+  String get passwordStrengthStrong => 'Strong';
 
   @override
   String get settingsValueAddress => 'King Fahd Road, Riyadh';
@@ -1320,7 +1362,131 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get chatVideoWithIcon => 'Video';
 
+
   @override
+  String get legalCopied => 'Copied to clipboard';
+
+  @override
+  String get legalAboutIntro =>
+      'An all-in-one platform for managing clinics and medical labs in Saudi Arabia, connecting care providers and patients through a smooth, dependable digital experience.';
+
+  @override
+  String get legalAboutFeature1 => 'Appointment booking';
+
+  @override
+  String get legalAboutFeature1Sub =>
+      'Organize patient and doctor schedules easily';
+
+  @override
+  String get legalAboutFeature2 => 'Digital lab results';
+
+  @override
+  String get legalAboutFeature2Sub => 'Upload and share test reports securely';
+
+  @override
+  String get legalAboutFeature3 => 'Manage your medical team';
+
+  @override
+  String get legalAboutFeature3Sub =>
+      'Doctor profiles, working hours and services';
+
+  @override
+  String get legalAboutFeature4 => 'High security standards';
+
+  @override
+  String get legalAboutFeature4Sub =>
+      'Patient data protected under Saudi regulations';
+
+  @override
+  String get legalAboutLinkWebsite => 'Visit our website';
+
+  @override
+  String get legalAboutCopyright => '© 2026 Eyadaty. All rights reserved';
+
+  @override
+  String get legalPrivacyUpdated => 'Last updated: 1 July 2026';
+
+  @override
+  String get legalPrivacy1 => 'Data we collect';
+
+  @override
+  String get legalPrivacy1Body =>
+      'We collect basic account details (name, email, license number) and the medical data needed to provide booking and lab services, in line with Saudi personal data protection regulations.';
+
+  @override
+  String get legalPrivacy2 => 'How we use data';
+
+  @override
+  String get legalPrivacy2Body =>
+      'Your data is used only to run booking, reporting and notification services. It is never shared with third parties for marketing.';
+
+  @override
+  String get legalPrivacy3 => 'Storage and protection';
+
+  @override
+  String get legalPrivacy3Body =>
+      'All data is stored on encrypted servers inside the Kingdom, with strict access controls limited to authorized staff.';
+
+  @override
+  String get legalPrivacy4 => 'Your rights';
+
+  @override
+  String get legalPrivacy4Body =>
+      'You may request access to your data, correct it, or delete your account entirely at any time by contacting our support team.';
+
+  @override
+  String get legalPrivacy5 => 'Cookies and local storage';
+
+  @override
+  String get legalPrivacy5Body =>
+      'The app keeps limited local storage for your preferences (language, theme) only — no advertising tracking.';
+
+  @override
+  String get legalContactTitle => 'Contact us';
+
+  @override
+  String get legalContactPhone => 'Phone';
+
+  @override
+  String get legalContactPhoneValue => '+966 11 234 5678';
+
+  @override
+  String get legalContactEmail => 'Email';
+
+  @override
+  String get legalContactEmailValue => 'support@alshifa-clinic.sa';
+
+  @override
+  String get legalContactAddress => 'Address';
+
+  @override
+  String get legalContactAddressValue => 'King Fahd Road, Riyadh';
+
+  @override
+  String get legalContactWhatsapp => 'WhatsApp';
+
+  @override
+  String get legalContactWhatsappValue => '+966 55 123 4567';
+
+  @override
+  String get legalContactHours =>
+      'Support hours: Saturday to Thursday, 9 AM — 9 PM Riyadh time';
+
+  @override
+  String get legalContactFormTitle => 'Send us a message';
+
+  @override
+  String get legalContactName => 'Full name';
+
+  @override
+  String get legalContactMessage => 'Write your message here...';
+
+  @override
+  String get legalContactSend => 'Send message';
+
+  @override
+  String get legalContactSent =>
+      'Your message was sent — we\'ll get back to you soon';
   String get chatVoiceWithIcon => 'Voice message';
 
   @override

@@ -188,6 +188,48 @@ class AppLocalizationsAr extends AppLocalizations {
   String get authBackToLogin => 'العودة لتسجيل الدخول';
 
   @override
+  String get authOtpTitle => 'رمز التحقق';
+
+  @override
+  String authOtpDesc(int count) {
+    return 'أرسلنا رمزاً مكوناً من $count أرقام إلى بريدك الإلكتروني';
+  }
+
+  @override
+  String get authOtpCta => 'تأكيد الرمز';
+
+  @override
+  String get authOtpNoCode => 'لم يصلك الرمز؟';
+
+  @override
+  String get authOtpResend => 'إعادة إرسال الرمز';
+
+  @override
+  String authOtpResendIn(int seconds) {
+    return 'إعادة الإرسال خلال $seconds ثانية';
+  }
+
+  @override
+  String get authOtpResent => 'أعدنا إرسال رمز التحقق';
+
+  @override
+  String get authResetTitle => 'كلمة مرور جديدة';
+
+  @override
+  String authResetDesc(int count) {
+    return 'يجب أن تختلف عن كلمة المرور السابقة، وألا تقل عن $count أحرف';
+  }
+
+  @override
+  String get authResetNewHint => 'كلمة المرور الجديدة';
+
+  @override
+  String get authResetCta => 'حفظ كلمة المرور';
+
+  @override
+  String get authResetDone => 'تم تحديث كلمة المرور بنجاح';
+
+  @override
   String get authPendingTitle => 'طلبك قيد المراجعة';
 
   @override
@@ -985,19 +1027,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsPasswordConfirm => 'تأكيد كلمة المرور';
 
   @override
-  String get settingsPasswordStrength => 'قوة كلمة المرور:';
+  String get passwordStrengthLabel => 'قوة كلمة المرور:';
 
   @override
-  String get settingsStrengthNone => 'أدخل كلمة مرور';
+  String get passwordStrengthNone => 'أدخل كلمة مرور';
 
   @override
-  String get settingsStrengthWeak => 'ضعيفة';
+  String get passwordStrengthWeak => 'ضعيفة';
 
   @override
-  String get settingsStrengthMedium => 'متوسطة';
+  String get passwordStrengthMedium => 'متوسطة';
 
   @override
-  String get settingsStrengthStrong => 'قوية';
+  String get passwordStrengthStrong => 'قوية';
 
   @override
   String get settingsValueAddress => 'طريق الملك فهد، الرياض';
@@ -1314,7 +1356,128 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get chatVideoWithIcon => 'فيديو';
 
+
   @override
+  String get legalCopied => 'تم النسخ إلى الحافظة';
+
+  @override
+  String get legalAboutIntro =>
+      'منصة متكاملة لإدارة العيادات والمخابر الطبية في المملكة العربية السعودية، تربط بين مقدمي الرعاية الصحية والمرضى بتجربة رقمية سلسة وموثوقة.';
+
+  @override
+  String get legalAboutFeature1 => 'حجز وإدارة المواعيد';
+
+  @override
+  String get legalAboutFeature1Sub => 'تنظيم مواعيد المرضى والأطباء بسهولة';
+
+  @override
+  String get legalAboutFeature2 => 'نتائج المخبر الرقمية';
+
+  @override
+  String get legalAboutFeature2Sub => 'رفع ومشاركة تقارير التحاليل بأمان';
+
+  @override
+  String get legalAboutFeature3 => 'إدارة فريق الأطباء';
+
+  @override
+  String get legalAboutFeature3Sub => 'ملفات الأطباء وساعات العمل والخدمات';
+
+  @override
+  String get legalAboutFeature4 => 'أمان بمعايير عالية';
+
+  @override
+  String get legalAboutFeature4Sub =>
+      'حماية بيانات المرضى وفق الأنظمة السعودية';
+
+  @override
+  String get legalAboutLinkWebsite => 'زيارة الموقع الإلكتروني';
+
+  @override
+  String get legalAboutCopyright => '© ٢٠٢٦ عيادتي. جميع الحقوق محفوظة';
+
+  @override
+  String get legalPrivacyUpdated => 'آخر تحديث: ١ يوليو ٢٠٢٦';
+
+  @override
+  String get legalPrivacy1 => 'جمع البيانات';
+
+  @override
+  String get legalPrivacy1Body =>
+      'نجمع معلومات الحساب الأساسية (الاسم، البريد الإلكتروني، رقم الترخيص) والبيانات الطبية اللازمة لتقديم خدمات الحجز والمخبر، وفقاً لأنظمة حماية البيانات الشخصية في المملكة العربية السعودية.';
+
+  @override
+  String get legalPrivacy2 => 'استخدام البيانات';
+
+  @override
+  String get legalPrivacy2Body =>
+      'تُستخدم بياناتك لتشغيل خدمات الحجز والتقارير والإشعارات فقط، ولا تتم مشاركتها مع أي طرف ثالث لأغراض تسويقية.';
+
+  @override
+  String get legalPrivacy3 => 'تخزين وحماية البيانات';
+
+  @override
+  String get legalPrivacy3Body =>
+      'تُخزَّن جميع البيانات على خوادم مشفّرة داخل المملكة، مع ضوابط وصول صارمة تقتصر على الموظفين المخوّلين فقط.';
+
+  @override
+  String get legalPrivacy4 => 'حقوق المستخدم';
+
+  @override
+  String get legalPrivacy4Body =>
+      'يحق لك في أي وقت طلب الاطلاع على بياناتك أو تعديلها أو حذف حسابك بالكامل من خلال التواصل مع فريق الدعم.';
+
+  @override
+  String get legalPrivacy5 => 'ملفات تعريف الارتباط';
+
+  @override
+  String get legalPrivacy5Body =>
+      'يستخدم التطبيق تخزيناً محلياً محدوداً لحفظ تفضيلاتك (اللغة، الثيم) فقط، دون أي تتبع إعلاني.';
+
+  @override
+  String get legalContactTitle => 'تواصل معنا';
+
+  @override
+  String get legalContactPhone => 'الهاتف';
+
+  @override
+  String get legalContactPhoneValue => '+966 11 234 5678';
+
+  @override
+  String get legalContactEmail => 'البريد الإلكتروني';
+
+  @override
+  String get legalContactEmailValue => 'support@alshifa-clinic.sa';
+
+  @override
+  String get legalContactAddress => 'العنوان';
+
+  @override
+  String get legalContactAddressValue => 'طريق الملك فهد، الرياض';
+
+  @override
+  String get legalContactWhatsapp => 'واتساب';
+
+  @override
+  String get legalContactWhatsappValue => '+966 55 123 4567';
+
+  @override
+  String get legalContactHours =>
+      'أوقات الدعم: من السبت للخميس، ٩ صباحاً — ٩ مساءً بتوقيت الرياض';
+
+  @override
+  String get legalContactFormTitle => 'أرسل لنا رسالة';
+
+  @override
+  String get legalContactName => 'الاسم الكامل';
+
+  @override
+  String get legalContactMessage => 'اكتب رسالتك هنا...';
+
+  @override
+  String get legalContactSend => 'إرسال الرسالة';
+
+  @override
+  String get legalContactSent => 'تم إرسال رسالتك، سنعود إليك قريباً';
   String get chatVoiceWithIcon => 'رسالة صوتية';
 
   @override

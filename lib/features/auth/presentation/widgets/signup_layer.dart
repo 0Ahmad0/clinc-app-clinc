@@ -7,10 +7,10 @@ import '../../../../config/theme/app_spacing.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/input/email_input.dart';
+import '../../../../shared/form_validators.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../domain/account_type.dart';
 import '../../domain/auth_layer.dart';
-import '../../domain/auth_validators.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 import 'account_type_selector.dart';
@@ -79,7 +79,7 @@ class SignupLayerState extends State<SignupLayer> {
                     hint: _facilityHint(l10n, state.accountType),
                     icon: Iconsax.building,
                     validator: (value) =>
-                        AuthValidators.required(value, l10n.validationRequired),
+                        FormValidators.required(value, l10n.validationRequired),
                   ),
                 ],
               ),
@@ -90,7 +90,7 @@ class SignupLayerState extends State<SignupLayer> {
               hint: l10n.authLicenseHint,
               icon: Iconsax.personalcard,
               validator: (value) =>
-                  AuthValidators.required(value, l10n.validationRequired),
+                  FormValidators.required(value, l10n.validationRequired),
             ),
             const SizedBox(height: AppSpacing.sm),
             AuthTextField(
@@ -113,7 +113,7 @@ class SignupLayerState extends State<SignupLayer> {
               hint: l10n.authPasswordHint,
               icon: Iconsax.lock,
               obscure: true,
-              validator: (value) => AuthValidators.password(
+              validator: (value) => FormValidators.password(
                 value,
                 requiredMessage: l10n.validationRequired,
                 shortMessage: l10n.validationPasswordLength,
@@ -125,7 +125,7 @@ class SignupLayerState extends State<SignupLayer> {
               icon: Iconsax.key,
               obscure: true,
               textInputAction: TextInputAction.done,
-              validator: (value) => AuthValidators.confirmation(
+              validator: (value) => FormValidators.confirmation(
                 value,
                 passwordController.text,
                 requiredMessage: l10n.validationRequired,
