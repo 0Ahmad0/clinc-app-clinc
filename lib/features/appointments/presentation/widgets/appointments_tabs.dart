@@ -46,6 +46,7 @@ class AppointmentsTabs extends StatelessWidget {
                     label: tab.label(l10n),
                     count: format.format(counts[tab] ?? 0),
                     selected: state.tab == tab,
+                    isCountLoading: state.isCountersLoading,
                     onTap: () =>
                         context.read<AppointmentsCubit>().selectTab(tab),
                   ),

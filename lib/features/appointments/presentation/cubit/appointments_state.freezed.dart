@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppointmentsState {
 
- PaginationState<ClinicAppointmentModel> get pagination; AppointmentTab get tab; int get totalCount; int get pendingCount; int get confirmedCount; int get doneCount; int get rejectedCount; String? get selectedId; ClinicAppointmentModel? get selected; String? get busyAppointmentId; String? get busyAction; NetworkExceptions? get failure;
+ PaginationState<ClinicAppointmentModel> get pagination; AppointmentTab get tab; int get totalCount; int get pendingCount; int get confirmedCount; int get doneCount; int get rejectedCount; bool get isCountersLoading; String? get selectedId; ClinicAppointmentModel? get selected; String? get busyAppointmentId; String? get busyAction; NetworkExceptions? get failure;
 /// Create a copy of AppointmentsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AppointmentsStateCopyWith<AppointmentsState> get copyWith => _$AppointmentsStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentsState&&(identical(other.pagination, pagination) || other.pagination == pagination)&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.pendingCount, pendingCount) || other.pendingCount == pendingCount)&&(identical(other.confirmedCount, confirmedCount) || other.confirmedCount == confirmedCount)&&(identical(other.doneCount, doneCount) || other.doneCount == doneCount)&&(identical(other.rejectedCount, rejectedCount) || other.rejectedCount == rejectedCount)&&(identical(other.selectedId, selectedId) || other.selectedId == selectedId)&&(identical(other.selected, selected) || other.selected == selected)&&(identical(other.busyAppointmentId, busyAppointmentId) || other.busyAppointmentId == busyAppointmentId)&&(identical(other.busyAction, busyAction) || other.busyAction == busyAction)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppointmentsState&&(identical(other.pagination, pagination) || other.pagination == pagination)&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.pendingCount, pendingCount) || other.pendingCount == pendingCount)&&(identical(other.confirmedCount, confirmedCount) || other.confirmedCount == confirmedCount)&&(identical(other.doneCount, doneCount) || other.doneCount == doneCount)&&(identical(other.rejectedCount, rejectedCount) || other.rejectedCount == rejectedCount)&&(identical(other.isCountersLoading, isCountersLoading) || other.isCountersLoading == isCountersLoading)&&(identical(other.selectedId, selectedId) || other.selectedId == selectedId)&&(identical(other.selected, selected) || other.selected == selected)&&(identical(other.busyAppointmentId, busyAppointmentId) || other.busyAppointmentId == busyAppointmentId)&&(identical(other.busyAction, busyAction) || other.busyAction == busyAction)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,pagination,tab,totalCount,pendingCount,confirmedCount,doneCount,rejectedCount,selectedId,selected,busyAppointmentId,busyAction,failure);
+int get hashCode => Object.hash(runtimeType,pagination,tab,totalCount,pendingCount,confirmedCount,doneCount,rejectedCount,isCountersLoading,selectedId,selected,busyAppointmentId,busyAction,failure);
 
 @override
 String toString() {
-  return 'AppointmentsState(pagination: $pagination, tab: $tab, totalCount: $totalCount, pendingCount: $pendingCount, confirmedCount: $confirmedCount, doneCount: $doneCount, rejectedCount: $rejectedCount, selectedId: $selectedId, selected: $selected, busyAppointmentId: $busyAppointmentId, busyAction: $busyAction, failure: $failure)';
+  return 'AppointmentsState(pagination: $pagination, tab: $tab, totalCount: $totalCount, pendingCount: $pendingCount, confirmedCount: $confirmedCount, doneCount: $doneCount, rejectedCount: $rejectedCount, isCountersLoading: $isCountersLoading, selectedId: $selectedId, selected: $selected, busyAppointmentId: $busyAppointmentId, busyAction: $busyAction, failure: $failure)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $AppointmentsStateCopyWith<$Res>  {
   factory $AppointmentsStateCopyWith(AppointmentsState value, $Res Function(AppointmentsState) _then) = _$AppointmentsStateCopyWithImpl;
 @useResult
 $Res call({
- PaginationState<ClinicAppointmentModel> pagination, AppointmentTab tab, int totalCount, int pendingCount, int confirmedCount, int doneCount, int rejectedCount, String? selectedId, ClinicAppointmentModel? selected, String? busyAppointmentId, String? busyAction, NetworkExceptions? failure
+ PaginationState<ClinicAppointmentModel> pagination, AppointmentTab tab, int totalCount, int pendingCount, int confirmedCount, int doneCount, int rejectedCount, bool isCountersLoading, String? selectedId, ClinicAppointmentModel? selected, String? busyAppointmentId, String? busyAction, NetworkExceptions? failure
 });
 
 
@@ -62,7 +62,7 @@ class _$AppointmentsStateCopyWithImpl<$Res>
 
 /// Create a copy of AppointmentsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? pagination = null,Object? tab = null,Object? totalCount = null,Object? pendingCount = null,Object? confirmedCount = null,Object? doneCount = null,Object? rejectedCount = null,Object? selectedId = freezed,Object? selected = freezed,Object? busyAppointmentId = freezed,Object? busyAction = freezed,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? pagination = null,Object? tab = null,Object? totalCount = null,Object? pendingCount = null,Object? confirmedCount = null,Object? doneCount = null,Object? rejectedCount = null,Object? isCountersLoading = null,Object? selectedId = freezed,Object? selected = freezed,Object? busyAppointmentId = freezed,Object? busyAction = freezed,Object? failure = freezed,}) {
   return _then(_self.copyWith(
 pagination: null == pagination ? _self.pagination : pagination // ignore: cast_nullable_to_non_nullable
 as PaginationState<ClinicAppointmentModel>,tab: null == tab ? _self.tab : tab // ignore: cast_nullable_to_non_nullable
@@ -71,7 +71,8 @@ as int,pendingCount: null == pendingCount ? _self.pendingCount : pendingCount //
 as int,confirmedCount: null == confirmedCount ? _self.confirmedCount : confirmedCount // ignore: cast_nullable_to_non_nullable
 as int,doneCount: null == doneCount ? _self.doneCount : doneCount // ignore: cast_nullable_to_non_nullable
 as int,rejectedCount: null == rejectedCount ? _self.rejectedCount : rejectedCount // ignore: cast_nullable_to_non_nullable
-as int,selectedId: freezed == selectedId ? _self.selectedId : selectedId // ignore: cast_nullable_to_non_nullable
+as int,isCountersLoading: null == isCountersLoading ? _self.isCountersLoading : isCountersLoading // ignore: cast_nullable_to_non_nullable
+as bool,selectedId: freezed == selectedId ? _self.selectedId : selectedId // ignore: cast_nullable_to_non_nullable
 as String?,selected: freezed == selected ? _self.selected : selected // ignore: cast_nullable_to_non_nullable
 as ClinicAppointmentModel?,busyAppointmentId: freezed == busyAppointmentId ? _self.busyAppointmentId : busyAppointmentId // ignore: cast_nullable_to_non_nullable
 as String?,busyAction: freezed == busyAction ? _self.busyAction : busyAction // ignore: cast_nullable_to_non_nullable
@@ -185,10 +186,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PaginationState<ClinicAppointmentModel> pagination,  AppointmentTab tab,  int totalCount,  int pendingCount,  int confirmedCount,  int doneCount,  int rejectedCount,  String? selectedId,  ClinicAppointmentModel? selected,  String? busyAppointmentId,  String? busyAction,  NetworkExceptions? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PaginationState<ClinicAppointmentModel> pagination,  AppointmentTab tab,  int totalCount,  int pendingCount,  int confirmedCount,  int doneCount,  int rejectedCount,  bool isCountersLoading,  String? selectedId,  ClinicAppointmentModel? selected,  String? busyAppointmentId,  String? busyAction,  NetworkExceptions? failure)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppointmentsState() when $default != null:
-return $default(_that.pagination,_that.tab,_that.totalCount,_that.pendingCount,_that.confirmedCount,_that.doneCount,_that.rejectedCount,_that.selectedId,_that.selected,_that.busyAppointmentId,_that.busyAction,_that.failure);case _:
+return $default(_that.pagination,_that.tab,_that.totalCount,_that.pendingCount,_that.confirmedCount,_that.doneCount,_that.rejectedCount,_that.isCountersLoading,_that.selectedId,_that.selected,_that.busyAppointmentId,_that.busyAction,_that.failure);case _:
   return orElse();
 
 }
@@ -206,10 +207,10 @@ return $default(_that.pagination,_that.tab,_that.totalCount,_that.pendingCount,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PaginationState<ClinicAppointmentModel> pagination,  AppointmentTab tab,  int totalCount,  int pendingCount,  int confirmedCount,  int doneCount,  int rejectedCount,  String? selectedId,  ClinicAppointmentModel? selected,  String? busyAppointmentId,  String? busyAction,  NetworkExceptions? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PaginationState<ClinicAppointmentModel> pagination,  AppointmentTab tab,  int totalCount,  int pendingCount,  int confirmedCount,  int doneCount,  int rejectedCount,  bool isCountersLoading,  String? selectedId,  ClinicAppointmentModel? selected,  String? busyAppointmentId,  String? busyAction,  NetworkExceptions? failure)  $default,) {final _that = this;
 switch (_that) {
 case _AppointmentsState():
-return $default(_that.pagination,_that.tab,_that.totalCount,_that.pendingCount,_that.confirmedCount,_that.doneCount,_that.rejectedCount,_that.selectedId,_that.selected,_that.busyAppointmentId,_that.busyAction,_that.failure);case _:
+return $default(_that.pagination,_that.tab,_that.totalCount,_that.pendingCount,_that.confirmedCount,_that.doneCount,_that.rejectedCount,_that.isCountersLoading,_that.selectedId,_that.selected,_that.busyAppointmentId,_that.busyAction,_that.failure);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -226,10 +227,10 @@ return $default(_that.pagination,_that.tab,_that.totalCount,_that.pendingCount,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PaginationState<ClinicAppointmentModel> pagination,  AppointmentTab tab,  int totalCount,  int pendingCount,  int confirmedCount,  int doneCount,  int rejectedCount,  String? selectedId,  ClinicAppointmentModel? selected,  String? busyAppointmentId,  String? busyAction,  NetworkExceptions? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PaginationState<ClinicAppointmentModel> pagination,  AppointmentTab tab,  int totalCount,  int pendingCount,  int confirmedCount,  int doneCount,  int rejectedCount,  bool isCountersLoading,  String? selectedId,  ClinicAppointmentModel? selected,  String? busyAppointmentId,  String? busyAction,  NetworkExceptions? failure)?  $default,) {final _that = this;
 switch (_that) {
 case _AppointmentsState() when $default != null:
-return $default(_that.pagination,_that.tab,_that.totalCount,_that.pendingCount,_that.confirmedCount,_that.doneCount,_that.rejectedCount,_that.selectedId,_that.selected,_that.busyAppointmentId,_that.busyAction,_that.failure);case _:
+return $default(_that.pagination,_that.tab,_that.totalCount,_that.pendingCount,_that.confirmedCount,_that.doneCount,_that.rejectedCount,_that.isCountersLoading,_that.selectedId,_that.selected,_that.busyAppointmentId,_that.busyAction,_that.failure);case _:
   return null;
 
 }
@@ -241,7 +242,7 @@ return $default(_that.pagination,_that.tab,_that.totalCount,_that.pendingCount,_
 
 
 class _AppointmentsState implements AppointmentsState {
-  const _AppointmentsState({required this.pagination, this.tab = AppointmentTab.all, this.totalCount = 0, this.pendingCount = 0, this.confirmedCount = 0, this.doneCount = 0, this.rejectedCount = 0, this.selectedId, this.selected, this.busyAppointmentId, this.busyAction, this.failure});
+  const _AppointmentsState({required this.pagination, this.tab = AppointmentTab.all, this.totalCount = 0, this.pendingCount = 0, this.confirmedCount = 0, this.doneCount = 0, this.rejectedCount = 0, this.isCountersLoading = false, this.selectedId, this.selected, this.busyAppointmentId, this.busyAction, this.failure});
   
 
 @override final  PaginationState<ClinicAppointmentModel> pagination;
@@ -251,6 +252,7 @@ class _AppointmentsState implements AppointmentsState {
 @override@JsonKey() final  int confirmedCount;
 @override@JsonKey() final  int doneCount;
 @override@JsonKey() final  int rejectedCount;
+@override@JsonKey() final  bool isCountersLoading;
 @override final  String? selectedId;
 @override final  ClinicAppointmentModel? selected;
 @override final  String? busyAppointmentId;
@@ -267,16 +269,16 @@ _$AppointmentsStateCopyWith<_AppointmentsState> get copyWith => __$AppointmentsS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentsState&&(identical(other.pagination, pagination) || other.pagination == pagination)&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.pendingCount, pendingCount) || other.pendingCount == pendingCount)&&(identical(other.confirmedCount, confirmedCount) || other.confirmedCount == confirmedCount)&&(identical(other.doneCount, doneCount) || other.doneCount == doneCount)&&(identical(other.rejectedCount, rejectedCount) || other.rejectedCount == rejectedCount)&&(identical(other.selectedId, selectedId) || other.selectedId == selectedId)&&(identical(other.selected, selected) || other.selected == selected)&&(identical(other.busyAppointmentId, busyAppointmentId) || other.busyAppointmentId == busyAppointmentId)&&(identical(other.busyAction, busyAction) || other.busyAction == busyAction)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppointmentsState&&(identical(other.pagination, pagination) || other.pagination == pagination)&&(identical(other.tab, tab) || other.tab == tab)&&(identical(other.totalCount, totalCount) || other.totalCount == totalCount)&&(identical(other.pendingCount, pendingCount) || other.pendingCount == pendingCount)&&(identical(other.confirmedCount, confirmedCount) || other.confirmedCount == confirmedCount)&&(identical(other.doneCount, doneCount) || other.doneCount == doneCount)&&(identical(other.rejectedCount, rejectedCount) || other.rejectedCount == rejectedCount)&&(identical(other.isCountersLoading, isCountersLoading) || other.isCountersLoading == isCountersLoading)&&(identical(other.selectedId, selectedId) || other.selectedId == selectedId)&&(identical(other.selected, selected) || other.selected == selected)&&(identical(other.busyAppointmentId, busyAppointmentId) || other.busyAppointmentId == busyAppointmentId)&&(identical(other.busyAction, busyAction) || other.busyAction == busyAction)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,pagination,tab,totalCount,pendingCount,confirmedCount,doneCount,rejectedCount,selectedId,selected,busyAppointmentId,busyAction,failure);
+int get hashCode => Object.hash(runtimeType,pagination,tab,totalCount,pendingCount,confirmedCount,doneCount,rejectedCount,isCountersLoading,selectedId,selected,busyAppointmentId,busyAction,failure);
 
 @override
 String toString() {
-  return 'AppointmentsState(pagination: $pagination, tab: $tab, totalCount: $totalCount, pendingCount: $pendingCount, confirmedCount: $confirmedCount, doneCount: $doneCount, rejectedCount: $rejectedCount, selectedId: $selectedId, selected: $selected, busyAppointmentId: $busyAppointmentId, busyAction: $busyAction, failure: $failure)';
+  return 'AppointmentsState(pagination: $pagination, tab: $tab, totalCount: $totalCount, pendingCount: $pendingCount, confirmedCount: $confirmedCount, doneCount: $doneCount, rejectedCount: $rejectedCount, isCountersLoading: $isCountersLoading, selectedId: $selectedId, selected: $selected, busyAppointmentId: $busyAppointmentId, busyAction: $busyAction, failure: $failure)';
 }
 
 
@@ -287,7 +289,7 @@ abstract mixin class _$AppointmentsStateCopyWith<$Res> implements $AppointmentsS
   factory _$AppointmentsStateCopyWith(_AppointmentsState value, $Res Function(_AppointmentsState) _then) = __$AppointmentsStateCopyWithImpl;
 @override @useResult
 $Res call({
- PaginationState<ClinicAppointmentModel> pagination, AppointmentTab tab, int totalCount, int pendingCount, int confirmedCount, int doneCount, int rejectedCount, String? selectedId, ClinicAppointmentModel? selected, String? busyAppointmentId, String? busyAction, NetworkExceptions? failure
+ PaginationState<ClinicAppointmentModel> pagination, AppointmentTab tab, int totalCount, int pendingCount, int confirmedCount, int doneCount, int rejectedCount, bool isCountersLoading, String? selectedId, ClinicAppointmentModel? selected, String? busyAppointmentId, String? busyAction, NetworkExceptions? failure
 });
 
 
@@ -304,7 +306,7 @@ class __$AppointmentsStateCopyWithImpl<$Res>
 
 /// Create a copy of AppointmentsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? pagination = null,Object? tab = null,Object? totalCount = null,Object? pendingCount = null,Object? confirmedCount = null,Object? doneCount = null,Object? rejectedCount = null,Object? selectedId = freezed,Object? selected = freezed,Object? busyAppointmentId = freezed,Object? busyAction = freezed,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? pagination = null,Object? tab = null,Object? totalCount = null,Object? pendingCount = null,Object? confirmedCount = null,Object? doneCount = null,Object? rejectedCount = null,Object? isCountersLoading = null,Object? selectedId = freezed,Object? selected = freezed,Object? busyAppointmentId = freezed,Object? busyAction = freezed,Object? failure = freezed,}) {
   return _then(_AppointmentsState(
 pagination: null == pagination ? _self.pagination : pagination // ignore: cast_nullable_to_non_nullable
 as PaginationState<ClinicAppointmentModel>,tab: null == tab ? _self.tab : tab // ignore: cast_nullable_to_non_nullable
@@ -313,7 +315,8 @@ as int,pendingCount: null == pendingCount ? _self.pendingCount : pendingCount //
 as int,confirmedCount: null == confirmedCount ? _self.confirmedCount : confirmedCount // ignore: cast_nullable_to_non_nullable
 as int,doneCount: null == doneCount ? _self.doneCount : doneCount // ignore: cast_nullable_to_non_nullable
 as int,rejectedCount: null == rejectedCount ? _self.rejectedCount : rejectedCount // ignore: cast_nullable_to_non_nullable
-as int,selectedId: freezed == selectedId ? _self.selectedId : selectedId // ignore: cast_nullable_to_non_nullable
+as int,isCountersLoading: null == isCountersLoading ? _self.isCountersLoading : isCountersLoading // ignore: cast_nullable_to_non_nullable
+as bool,selectedId: freezed == selectedId ? _self.selectedId : selectedId // ignore: cast_nullable_to_non_nullable
 as String?,selected: freezed == selected ? _self.selected : selected // ignore: cast_nullable_to_non_nullable
 as ClinicAppointmentModel?,busyAppointmentId: freezed == busyAppointmentId ? _self.busyAppointmentId : busyAppointmentId // ignore: cast_nullable_to_non_nullable
 as String?,busyAction: freezed == busyAction ? _self.busyAction : busyAction // ignore: cast_nullable_to_non_nullable

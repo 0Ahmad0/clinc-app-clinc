@@ -145,23 +145,29 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
   }
 
   Future<void> _loadCounters() async {
-    final results = await Future.wait([
-      _countFor(null),
-      _countFor('pending'),
-      _countFor('accepted'),
-      _countFor('completed'),
-      _countFor('rejected'),
-    ]);
-    emit(
-      state.copyWith(
-        totalCount: results[0],
-        pendingCount: results[1],
-        confirmedCount: results[2],
-        doneCount: results[3],
-        rejectedCount: results[4],
-        failure: null,
-      ),
-    );
+    emit(state.copyWith(isCountersLoading: true, failure: null));
+    try {
+      final results = await Future.wait([
+        _countFor(null),
+        _countFor('pending'),
+        _countFor('accepted'),
+        _countFor('completed'),
+        _countFor('rejected'),
+      ]);
+      emit(
+        state.copyWith(
+          totalCount: results[0],
+          pendingCount: results[1],
+          confirmedCount: results[2],
+          doneCount: results[3],
+          rejectedCount: results[4],
+          isCountersLoading: false,
+          failure: null,
+        ),
+      );
+    } catch (_) {
+      emit(state.copyWith(isCountersLoading: false));
+    }
   }
 
   Future<int> _countFor(String? status) async {

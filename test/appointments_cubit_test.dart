@@ -12,11 +12,14 @@ import 'package:clinic_app/features/appointments/presentation/cubit/appointments
 import 'package:clinic_app/features/appointments/presentation/cubit/appointments_state.dart';
 import 'package:clinic_app/features/appointments/presentation/pages/appointments_view.dart';
 import 'package:clinic_app/features/appointments/presentation/widgets/appointments_empty.dart';
+import 'package:clinic_app/features/appointments/presentation/widgets/appointments_header.dart';
+import 'package:clinic_app/features/appointments/presentation/widgets/appointments_tabs.dart';
 import 'package:clinic_app/l10n/app_localizations.dart';
 import 'package:clinic_app/shared/widgets/app_shimmer_placeholder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
 
 void main() {
   test('appointments initial load updates counters', () async {
@@ -115,6 +118,67 @@ void main() {
       expect(find.byType(AppointmentsEmpty), findsNothing);
     },
   );
+
+  testWidgets('appointments header shimmers while counters load', (
+    tester,
+  ) async {
+    final cubit = AppointmentsCubit(_FakeClinicAppointmentsRepository());
+    addTearDown(cubit.close);
+    cubit.emit(
+      AppointmentsState(
+        pagination: PaginationState<ClinicAppointmentModel>(),
+        isCountersLoading: true,
+      ),
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        locale: const Locale('ar'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: BlocProvider.value(
+          value: cubit,
+          child: const SizedBox(height: 160, child: AppointmentsHeader()),
+        ),
+      ),
+    );
+
+    expect(find.byType(Shimmer), findsWidgets);
+    expect(find.text('٠'), findsNothing);
+  });
+
+  testWidgets('appointments tab counts shimmer while counters load', (
+    tester,
+  ) async {
+    final cubit = AppointmentsCubit(_FakeClinicAppointmentsRepository());
+    addTearDown(cubit.close);
+    cubit.emit(
+      AppointmentsState(
+        pagination: PaginationState<ClinicAppointmentModel>(),
+        isCountersLoading: true,
+      ),
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.light,
+        locale: const Locale('ar'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: BlocProvider.value(
+          value: cubit,
+          child: const Directionality(
+            textDirection: TextDirection.rtl,
+            child: AppointmentsTabs(),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.byType(AppShimmerPlaceholder), findsWidgets);
+    expect(find.text('٠'), findsNothing);
+  });
 
   test(
     'appointments tabs do not reload when already selected or cached',

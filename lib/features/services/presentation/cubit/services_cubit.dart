@@ -47,15 +47,26 @@ class ServicesCubit extends Cubit<ServicesState> {
 
   Future<void> loadInitial() async {
     emit(state.copyWith(isLoading: true, failure: null));
-    final tasks = <Future<void>>[];
-    if (_canUseLab) {
-      tasks.add(_loadLabInitial());
+    try {
+      final tasks = <Future<void>>[];
+      if (_canUseLab) {
+        tasks.add(_loadLabInitial());
+      }
+      if (_canUseSpecialty) {
+        tasks.add(_loadSpecialtyInitial());
+      }
+      await Future.wait(tasks);
+    } finally {
+      _clearAllLoadingFlags();
+      emit(
+        state.copyWith(
+          isLoading: false,
+          isLabSectionsLoading: false,
+          isSpecializationFiltersLoading: false,
+          version: state.version + 1,
+        ),
+      );
     }
-    if (_canUseSpecialty) {
-      tasks.add(_loadSpecialtyInitial());
-    }
-    await Future.wait(tasks);
-    emit(state.copyWith(isLoading: false));
   }
 
   Future<void> _loadLabInitial() async {
@@ -532,6 +543,13 @@ class ServicesCubit extends Cubit<ServicesState> {
     pagination.isInitialLoading.value = false;
     pagination.isLoadingMore.value = false;
     pagination.isRefreshing.value = false;
+  }
+
+  void _clearAllLoadingFlags() {
+    _clearPaginationLoading(state.availableLabTests);
+    _clearPaginationLoading(state.enabledLabTests);
+    _clearPaginationLoading(state.availableSpecializations);
+    _clearPaginationLoading(state.enabledSpecializations);
   }
 
   void _syncSelectedLabSectionsFromEnabledTests() {

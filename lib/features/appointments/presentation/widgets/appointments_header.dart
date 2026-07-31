@@ -29,7 +29,8 @@ class AppointmentsHeader extends StatelessWidget {
         final done = state.doneCount;
         final isLoading =
             state.pagination.isInitialLoading.value ||
-            state.pagination.isRefreshing.value;
+            state.pagination.isRefreshing.value ||
+            state.isCountersLoading;
         return Container(
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(

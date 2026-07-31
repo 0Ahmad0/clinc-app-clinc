@@ -71,7 +71,10 @@ class ReportsView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      ReportsHeader(totals: totals),
+                      ReportsHeader(
+                        totals: totals,
+                        isLoading: state.isSummaryLoading,
+                      ),
                       const ReportsPeriodToggle(),
                       const ReportsTypeChips(),
                       if (state.isSummaryLoading)

@@ -17,6 +17,7 @@ abstract class AppointmentsState with _$AppointmentsState {
     @Default(0) int confirmedCount,
     @Default(0) int doneCount,
     @Default(0) int rejectedCount,
+    @Default(false) bool isCountersLoading,
     String? selectedId,
     ClinicAppointmentModel? selected,
     String? busyAppointmentId,

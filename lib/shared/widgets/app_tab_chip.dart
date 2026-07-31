@@ -4,6 +4,7 @@ import '../../config/theme/app_motion.dart';
 import '../../config/theme/app_shadows.dart';
 import '../../config/theme/app_spacing.dart';
 import '../extensions/context_extensions.dart';
+import 'app_shimmer_placeholder.dart';
 
 /// Filter pill with a trailing count badge. Selected fills with the CTA
 /// gradient and glows; the rest are hairline-outlined.
@@ -14,12 +15,14 @@ class AppTabChip extends StatelessWidget {
     required this.count,
     required this.selected,
     required this.onTap,
+    this.isCountLoading = false,
   });
 
   final String label;
   final String count;
   final bool selected;
   final VoidCallback onTap;
+  final bool isCountLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -70,13 +73,19 @@ class AppTabChip extends StatelessWidget {
                     : colors.ink.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(AppRadius.pill),
               ),
-              child: Text(
-                count,
-                style: context.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: foreground,
-                ),
-              ),
+              child: isCountLoading
+                  ? AppShimmerPlaceholder(
+                      width: AppSpacing.md,
+                      height: AppSpacing.xs + 2,
+                      borderRadius: AppRadius.pill,
+                    )
+                  : Text(
+                      count,
+                      style: context.textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: foreground,
+                      ),
+                    ),
             ),
           ],
         ),
