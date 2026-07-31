@@ -238,7 +238,6 @@ class _HeaderBlurShimmer extends StatelessWidget {
             ),
           ),
           child: Shimmer(
-            
             duration: const Duration(milliseconds: 1150),
             interval: const Duration(milliseconds: 80),
             color: colors.primary300,

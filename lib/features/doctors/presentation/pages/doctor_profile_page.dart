@@ -84,14 +84,17 @@ class _DoctorProfileView extends StatelessWidget {
                       onEdit: model == null
                           ? () {}
                           : () async {
-                              await context.push(
-                                AppRoutes.addDoctor,
-                                extra: model,
-                              );
+                              final updatedDoctor = await context
+                                  .push<ClinicDoctorModel>(
+                                    AppRoutes.addDoctor,
+                                    extra: model,
+                                  );
                               if (!context.mounted) return;
-                              context.read<DoctorsCubit>().loadDoctor(
-                                model.doctorId,
-                              );
+                              if (updatedDoctor != null) {
+                                context
+                                    .read<DoctorsCubit>()
+                                    .updateSelectedDoctor(updatedDoctor);
+                              }
                             },
                     ),
                     Transform.translate(

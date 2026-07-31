@@ -137,6 +137,10 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
       return;
     }
 
+    final remainingRemoteQualificationFiles = state.qualificationFiles
+        .where((file) => _isRemoteQualificationPath(file.path))
+        .map((file) => file.path)
+        .toList(growable: false);
     final body = {
       'name_ar': nameAr.trim(),
       'name_en': _nullable(nameEn),
@@ -149,6 +153,8 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
       'consultation_fee': num.tryParse(consultationFee.trim()) ?? 0,
       'bio': _nullable(bio),
       'is_active': state.initialDoctor?.isActive ?? true,
+      if (state.isEdit)
+        'existing_qualification_files': remainingRemoteQualificationFiles,
       'schedules': [
         for (final day in Weekday.values)
           {

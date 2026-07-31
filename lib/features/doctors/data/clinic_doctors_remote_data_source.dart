@@ -131,6 +131,10 @@ class ClinicDoctorsRemoteDataSource {
                 ),
               );
             }
+          } else {
+            form.fields.add(
+              MapEntry('${entry.key}[$index]', _fieldValue(item)),
+            );
           }
         }
       } else if (value != null) {

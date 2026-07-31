@@ -121,15 +121,22 @@ class _PickedPdfTile extends StatelessWidget {
               ),
             ),
           ),
+          if (_isRemote(file.path))
+            IconButton(
+              onPressed: () => _openFile(file.path),
+              icon: Icon(
+                Iconsax.eye,
+                color: colors.primary600,
+                size: AppSizes.iconSm,
+              ),
+            ),
           IconButton(
-            onPressed: _isRemote(file.path)
-                ? () => _openFile(file.path)
-                : () => context.read<AddDoctorCubit>().removeQualificationFile(
-                    file.path,
-                  ),
+            onPressed: () => context
+                .read<AddDoctorCubit>()
+                .removeQualificationFile(file.path),
             icon: Icon(
-              _isRemote(file.path) ? Iconsax.eye : Iconsax.trash,
-              color: _isRemote(file.path) ? colors.primary600 : colors.dangerFg,
+              Iconsax.trash,
+              color: colors.dangerFg,
               size: AppSizes.iconSm,
             ),
           ),

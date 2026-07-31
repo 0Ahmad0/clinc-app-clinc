@@ -88,6 +88,12 @@ class DoctorsCubit extends Cubit<DoctorsState> {
     );
   }
 
+  void updateSelectedDoctor(ClinicDoctorModel doctor) {
+    _replaceDoctor(doctor);
+    emit(state.copyWith(selectedDoctor: doctor, failure: null));
+    _emitDoctorCounts();
+  }
+
   Future<void> loadSpecializations() async {
     emit(state.copyWith(isFiltersLoading: true, failure: null));
     final result = await _repository.getSpecializations();
