@@ -223,7 +223,7 @@ return $default(_that.id,_that.firstName,_that.lastName,_that.email,_that.gender
 
 class _UserModel extends UserModel {
   const _UserModel({this.id, @JsonKey(name: 'first_name') this.firstName, @JsonKey(name: 'last_name') this.lastName, @JsonKey(name: 'email') this.email, @JsonKey(name: 'gender') this.gender, @JsonKey(name: 'is_verified') this.isVerified, @JsonKey(name: 'email_verified_at') this.emailVerifiedAt, @JsonKey(name: 'birth_day') this.birthDay, @JsonKey(name: 'phone') this.phone, @JsonKey(name: 'account_status') this.accountStatus, @JsonKey(name: 'deleted_at') this.deletedAt, @JsonKey(name: 'last_seen') this.lastSeen, @JsonKey(name: 'personal_photo') this.personalPhoto, @JsonKey(name: 'is_online') this.isOnline, @JsonKey(name: 'profile_image') this.profileImage, @JsonKey(name: 'google_id') this.googleId, @JsonKey(name: 'otp') this.otp}): super._();
-
+  
 
 @override final  int? id;
 @override@JsonKey(name: 'first_name') final  String? firstName;

@@ -17,6 +17,7 @@ import '../widgets/reports_header.dart';
 import '../widgets/reports_list.dart';
 import '../widgets/reports_period_toggle.dart';
 import '../widgets/reports_stat_cards.dart';
+import '../widgets/reports_summary_shimmer.dart';
 import '../widgets/reports_type_chips.dart';
 
 class ReportsView extends StatelessWidget {
@@ -73,8 +74,12 @@ class ReportsView extends StatelessWidget {
                       ReportsHeader(totals: totals),
                       const ReportsPeriodToggle(),
                       const ReportsTypeChips(),
-                      ReportsStatCards(totals: totals),
-                      ReportsChartCard(period: state.period, chart: chart),
+                      if (state.isSummaryLoading)
+                        const ReportsSummaryShimmer()
+                      else ...[
+                        ReportsStatCards(totals: totals),
+                        ReportsChartCard(period: state.period, chart: chart),
+                      ],
                       const ReportsExportButtons(),
                       const ReportsList(),
                     ],

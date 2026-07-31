@@ -32,9 +32,9 @@ class AppShimmerPlaceholder extends StatelessWidget {
       direction: const ShimmerDirection.fromLTRB(),
       child: Container(
         width: width,
-        height: height,
+        height: height, 
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkCard : AppColors.lightCard,
+          color: isDark ? AppColors.darkCard : AppColors.grey.withOpacity(0.1),
           shape: shape,
           borderRadius: shape == BoxShape.circle
               ? null

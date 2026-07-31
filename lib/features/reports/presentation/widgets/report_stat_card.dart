@@ -60,7 +60,7 @@ class ReportStatCard extends StatelessWidget {
           Text(
             outcome.label(context.l10n),
             textAlign: TextAlign.center,
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: context.textTheme.bodySmall?.copyWith(color: colors.gray),
           ),
