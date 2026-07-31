@@ -99,7 +99,7 @@ class SignupLayerState extends State<SignupLayer> {
               icon: Iconsax.sms,
               keyboardType: TextInputType.emailAddress,
               inputFormatters: const [EmailInputFormatter()],
-              validator: (value) => AuthValidators.email(
+              validator: (value) => FormValidators.email(
                 value,
                 requiredMessage: l10n.validationRequired,
                 invalidMessage: l10n.validationEmail,

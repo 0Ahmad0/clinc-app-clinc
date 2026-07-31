@@ -35,6 +35,9 @@ abstract class AuthState with _$AuthState {
     ClinicOtpStatusModel? otpStatus,
     ClinicOtpVerificationModel? otpVerification,
     ClinicPasswordResetModel? passwordReset,
+    @Default(AuthLayer.forgot) AuthLayer otpOrigin,
+    @Default('') String otpDestination,
+    String? resetToken,
     String? message,
     NetworkExceptions? failure,
   }) = _AuthState;

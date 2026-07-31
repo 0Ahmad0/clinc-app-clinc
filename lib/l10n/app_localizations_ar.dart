@@ -1356,6 +1356,11 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get chatVideoWithIcon => 'فيديو';
 
+  @override
+  String get chatVoiceWithIcon => 'رسالة صوتية';
+
+  @override
+  String get chatFileWithIcon => 'ملف';
 
   @override
   String get legalCopied => 'تم النسخ إلى الحافظة';
@@ -1478,8 +1483,4 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get legalContactSent => 'تم إرسال رسالتك، سنعود إليك قريباً';
-  String get chatVoiceWithIcon => 'رسالة صوتية';
-
-  @override
-  String get chatFileWithIcon => 'ملف';
 }

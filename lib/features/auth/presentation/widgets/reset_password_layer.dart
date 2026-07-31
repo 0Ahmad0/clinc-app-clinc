@@ -3,14 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
-import '../../../../core/enums/app_feedback_type.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/form_validators.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_password_strength.dart';
-import '../../../../shared/widgets/app_toast.dart';
 import '../../domain/auth_layer.dart';
 import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
 import 'auth_back_button.dart';
 import 'auth_pulse_badge.dart';
 import 'auth_text_field.dart';
@@ -36,21 +35,21 @@ class _ResetPasswordLayerState extends State<ResetPasswordLayer> {
     super.dispose();
   }
 
-  bool get _mismatch =>
-      _confirm.text.isNotEmpty && _next.text != _confirm.text;
+  bool get _mismatch => _confirm.text.isNotEmpty && _next.text != _confirm.text;
 
   bool get _canSubmit =>
-      _next.text.length >= FormValidators.minPasswordLength && _next.text == _confirm.text;
+      _next.text.length >= FormValidators.minPasswordLength &&
+      _next.text == _confirm.text;
 
   void _submit() {
     FocusScope.of(context).unfocus();
-    AppToast.show(
-      context,
-      title: context.l10n.authResetTitle,
-      message: context.l10n.authResetDone,
-      type: AppFeedbackType.success,
+    final resetToken = context.read<AuthCubit>().state.resetToken;
+    if (resetToken == null || resetToken.isEmpty) return;
+    context.read<AuthCubit>().resetPassword(
+      resetToken: resetToken,
+      password: _next.text,
+      passwordConfirmation: _confirm.text,
     );
-    context.read<AuthCubit>().completeReset();
   }
 
   @override
@@ -127,9 +126,19 @@ class _ResetPasswordLayerState extends State<ResetPasswordLayer> {
             ),
           ],
           const SizedBox(height: AppSpacing.lg),
-          AppButton(
-            label: l10n.authResetCta,
-            onPressed: _canSubmit ? _submit : null,
+          BlocBuilder<AuthCubit, AuthState>(
+            buildWhen: (previous, current) =>
+                previous.isLoading != current.isLoading ||
+                previous.action != current.action,
+            builder: (context, state) {
+              final isLoading =
+                  state.isLoading && state.action == AuthAction.resetPassword;
+              return AppButton(
+                label: l10n.authResetCta,
+                isLoading: isLoading,
+                onPressed: _canSubmit && !isLoading ? _submit : null,
+              );
+            },
           ),
         ],
       ),

@@ -79,13 +79,15 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> forgotPassword({required String email}) async {
     if (state.isLoading) return;
     _start(AuthAction.forgotPassword);
+    final identifier = normalizeEmailInput(email);
 
-    final result = await _repository.forgotPassword(
-      email: normalizeEmailInput(email),
-    );
+    final result = await _repository.forgotPassword(email: identifier);
 
     result.when(
-      success: _handleForgotPasswordSuccess,
+      success: (response) => _handleForgotPasswordSuccess(
+        response,
+        fallbackIdentifier: identifier,
+      ),
       failure: (exception) => _fail(AuthAction.forgotPassword, exception),
     );
   }
@@ -129,7 +131,7 @@ class AuthCubit extends Cubit<AuthState> {
     );
 
     result.when(
-      success: _handleForgotPasswordSuccess,
+      success: _handleResendOtpSuccess,
       failure: (exception) => _fail(AuthAction.resendOtp, exception),
     );
   }
@@ -154,6 +156,8 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
+  void completeReset() => emit(state.copyWith(layer: AuthLayer.login));
+
   Future<void> logout() async {
     if (state.isLoading) return;
     _start(AuthAction.logout);
@@ -165,7 +169,10 @@ class AuthCubit extends Cubit<AuthState> {
         await StorageService.instance.depose();
         emit(const AuthState(action: AuthAction.logout, message: 'Logged out'));
       },
-      failure: (exception) => _fail(AuthAction.logout, exception),
+      failure: (exception) async {
+        await StorageService.instance.depose();
+        emit(const AuthState(action: AuthAction.logout));
+      },
     );
   }
 
@@ -232,12 +239,33 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  void _handleForgotPasswordSuccess(BaseModel<ClinicOtpStatusModel> response) {
+  void _handleForgotPasswordSuccess(
+    BaseModel<ClinicOtpStatusModel> response, {
+    required String fallbackIdentifier,
+  }) {
+    final identifier = response.result?.identifier ?? fallbackIdentifier;
     emit(
       state.copyWith(
+        layer: AuthLayer.otp,
         action: AuthAction.forgotPassword,
         isLoading: false,
         otpStatus: response.result,
+        otpOrigin: AuthLayer.forgot,
+        otpDestination: identifier,
+        message: response.message,
+        failure: null,
+      ),
+    );
+  }
+
+  void _handleResendOtpSuccess(BaseModel<ClinicOtpStatusModel> response) {
+    emit(
+      state.copyWith(
+        layer: AuthLayer.otp,
+        action: AuthAction.resendOtp,
+        isLoading: false,
+        otpStatus: response.result,
+        otpDestination: response.result?.identifier ?? state.otpDestination,
         message: response.message,
         failure: null,
       ),
@@ -247,9 +275,11 @@ class AuthCubit extends Cubit<AuthState> {
   void _handleVerifyOtpSuccess(BaseModel<ClinicOtpVerificationModel> response) {
     emit(
       state.copyWith(
+        layer: AuthLayer.reset,
         action: AuthAction.verifyOtp,
         isLoading: false,
         otpVerification: response.result,
+        resetToken: response.result?.resetToken,
         message: response.message,
         failure: null,
       ),
@@ -261,9 +291,12 @@ class AuthCubit extends Cubit<AuthState> {
   ) {
     emit(
       state.copyWith(
+        layer: AuthLayer.login,
         action: AuthAction.resetPassword,
         isLoading: false,
         passwordReset: response.result,
+        otpVerification: null,
+        resetToken: null,
         message: response.message,
         failure: null,
       ),
@@ -280,27 +313,23 @@ class AuthCubit extends Cubit<AuthState> {
       ),
     );
   }
-  /// Signup sends a code to [email] before the request reaches the admins.
-  void submitSignup(String email) => _requestOtp(AuthLayer.signup, email);
-
-  /// Forgot-password sends a code to the account's [identifier].
-  void submitForgot(String identifier) =>
-      _requestOtp(AuthLayer.forgot, identifier);
+  // /// Signup sends a code to [email] before the request reaches the admins.
+  // void submitSignup(String email) => _requestOtp(AuthLayer.signup, email);
+  //
+  // /// Forgot-password sends a code to the account's [identifier].
+  // void submitForgot(String identifier) =>
+  //     _requestOtp(AuthLayer.forgot, identifier);
 
   /// A verified signup code ends on the pending-approval layer until an admin
   /// approves; a verified reset code goes on to choose a new password.
-  void verifyOtp() => show(
-    state.otpOrigin == AuthLayer.signup ? AuthLayer.pending : AuthLayer.reset,
-  );
-
-  /// The new password is saved — back to sign-in.
-  void completeReset() => show(AuthLayer.login);
-
-  void _requestOtp(AuthLayer origin, String destination) => emit(
-    state.copyWith(
-      layer: AuthLayer.otp,
-      otpOrigin: origin,
-      otpDestination: destination,
-    ),
-  );
+  // void verifyOtp() => show(
+  //   state.otpOrigin == AuthLayer.signup ? AuthLayer.pending : AuthLayer.reset,
+  // );
+  // void _requestOtp(AuthLayer origin, String destination) => emit(
+  //   state.copyWith(
+  //     layer: AuthLayer.otp,
+  //     otpOrigin: origin,
+  //     otpDestination: destination,
+  //   ),
+  // );
 }

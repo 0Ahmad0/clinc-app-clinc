@@ -6,13 +6,12 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../../../config/theme/app_spacing.dart';
-import '../../../../core/enums/app_feedback_type.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
-import '../../../../shared/widgets/app_toast.dart';
 import '../../domain/auth_identifier.dart';
 import '../../domain/auth_layer.dart';
 import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
 import 'auth_back_button.dart';
 import 'auth_pulse_badge.dart';
 
@@ -66,22 +65,22 @@ class _OtpLayerState extends State<OtpLayer> {
   }
 
   void _resend() {
+    final destination = context.read<AuthCubit>().state.otpDestination;
+    if (destination.isEmpty) return;
     _controller.clear();
     setState(() => _secondsLeft = _resendCooldown.inSeconds);
     _startCountdown();
-    AppToast.show(
-      context,
-      title: context.l10n.authOtpTitle,
-      message: context.l10n.authOtpResent,
-      type: AppFeedbackType.success,
-    );
+    context.read<AuthCubit>().resendOtp(identifier: destination);
   }
 
-  // ponytail: no backend yet, so a full code is a valid code — reject it here
-  // once verification is wired and surface the error through the pin theme.
   void _verify() {
     FocusScope.of(context).unfocus();
-    context.read<AuthCubit>().verifyOtp();
+    final destination = context.read<AuthCubit>().state.otpDestination;
+    if (destination.isEmpty || !_isComplete) return;
+    context.read<AuthCubit>().verifyOtp(
+      identifier: destination,
+      otp: _controller.text,
+    );
   }
 
   @override
@@ -109,7 +108,9 @@ class _OtpLayerState extends State<OtpLayer> {
               children: [
                 Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: AuthBackButton(onTap: () => cubit.show(state.otpOrigin)),
+                  child: AuthBackButton(
+                    onTap: () => cubit.show(state.otpOrigin),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 const Center(
@@ -154,16 +155,35 @@ class _OtpLayerState extends State<OtpLayer> {
                   onCompleted: (_) => _verify(),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                AppButton(
-                  label: l10n.authOtpCta,
-                  onPressed: _isComplete ? _verify : null,
+                BlocBuilder<AuthCubit, AuthState>(
+                  buildWhen: (previous, current) =>
+                      previous.isLoading != current.isLoading ||
+                      previous.action != current.action,
+                  builder: (context, state) {
+                    final isLoading =
+                        state.isLoading && state.action == AuthAction.verifyOtp;
+                    return AppButton(
+                      label: l10n.authOtpCta,
+                      isLoading: isLoading,
+                      onPressed: _isComplete && !isLoading ? _verify : null,
+                    );
+                  },
                 ),
                 const SizedBox(height: AppSpacing.md),
-                _ResendRow(
-                  label: _canResend
-                      ? l10n.authOtpResend
-                      : l10n.authOtpResendIn(_secondsLeft),
-                  onTap: _canResend ? _resend : null,
+                BlocBuilder<AuthCubit, AuthState>(
+                  buildWhen: (previous, current) =>
+                      previous.isLoading != current.isLoading ||
+                      previous.action != current.action,
+                  builder: (context, state) {
+                    final isResending =
+                        state.isLoading && state.action == AuthAction.resendOtp;
+                    return _ResendRow(
+                      label: _canResend
+                          ? l10n.authOtpResend
+                          : l10n.authOtpResendIn(_secondsLeft),
+                      onTap: _canResend && !isResending ? _resend : null,
+                    );
+                  },
                 ),
                 const Spacer(),
                 const SizedBox(height: AppSpacing.md),
@@ -236,6 +256,7 @@ class _CodeField extends StatelessWidget {
     );
   }
 }
+
 
 /// "Didn't get the code?" line — the action turns blue once the wait is over.
 class _ResendRow extends StatelessWidget {

@@ -1362,6 +1362,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get chatVideoWithIcon => 'Video';
 
+  @override
+  String get chatVoiceWithIcon => 'Voice message';
+
+  @override
+  String get chatFileWithIcon => 'File';
 
   @override
   String get legalCopied => 'Copied to clipboard';
@@ -1487,8 +1492,4 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get legalContactSent =>
       'Your message was sent — we\'ll get back to you soon';
-  String get chatVoiceWithIcon => 'Voice message';
-
-  @override
-  String get chatFileWithIcon => 'File';
 }

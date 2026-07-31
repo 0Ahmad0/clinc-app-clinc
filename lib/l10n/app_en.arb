@@ -471,7 +471,7 @@
   "chatImageWithIcon": "Image",
   "chatVideoWithIcon": "Video",
   "chatVoiceWithIcon": "Voice message",
-  "chatFileWithIcon": "File"
+  "chatFileWithIcon": "File",
 
 
   "legalCopied": "Copied to clipboard",

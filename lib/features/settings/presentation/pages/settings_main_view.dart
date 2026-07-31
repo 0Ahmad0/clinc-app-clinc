@@ -6,8 +6,11 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../core/enums/app_button_variant.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../auth/presentation/cubit/auth_cubit.dart';
+import '../../../auth/presentation/cubit/auth_state.dart';
 import '../../domain/app_language.dart';
 import '../../domain/app_theme_choice.dart';
 import '../../domain/notification_channel.dart';
@@ -148,11 +151,36 @@ class SettingsMainView extends StatelessWidget {
                       ],
                     ),
                     AppGaps.h16,
-                    AppButton(
-                      label: l10n.settingsLogout,
-                      icon: Iconsax.logout,
-                      variant: AppButtonVariant.danger,
-                      onPressed: () => context.go(AppRoutes.auth),
+                    BlocProvider(
+                      create: (_) => sl<AuthCubit>(),
+                      child: BlocConsumer<AuthCubit, AuthState>(
+                        listenWhen: (previous, current) =>
+                            previous.isLoading != current.isLoading ||
+                            current.action == AuthAction.logout,
+                        listener: (context, state) {
+                          if (!state.isLoading &&
+                              state.action == AuthAction.logout) {
+                            context.go(AppRoutes.auth);
+                          }
+                        },
+                        buildWhen: (previous, current) =>
+                            previous.isLoading != current.isLoading ||
+                            previous.action != current.action,
+                        builder: (context, authState) {
+                          final isLoggingOut =
+                              authState.isLoading &&
+                              authState.action == AuthAction.logout;
+                          return AppButton(
+                            label: l10n.settingsLogout,
+                            icon: Iconsax.logout,
+                            variant: AppButtonVariant.danger,
+                            isLoading: isLoggingOut,
+                            onPressed: isLoggingOut
+                                ? null
+                                : () => context.read<AuthCubit>().logout(),
+                          );
+                        },
+                      ),
                     ),
                     AppGaps.h16,
                     Text(
