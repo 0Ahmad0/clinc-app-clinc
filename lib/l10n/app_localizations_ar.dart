@@ -535,10 +535,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get addDoctorTo => 'إلى';
 
   @override
-  String get addDoctorDefaultStart => '09:00 AM';
+  String get addDoctorDefaultStart => '9:00 am';
 
   @override
-  String get addDoctorDefaultEnd => '05:00 PM';
+  String get addDoctorDefaultEnd => '5:00 pm';
 
   @override
   String get addDoctorSave => 'حفظ البيانات';
@@ -1262,13 +1262,13 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get report1Date => '18 Jul 2026 · 10:22 AM';
+  String get report1Date => '18 Jul 2026 · 10:22 am';
 
   @override
-  String get report2Date => '11 Jul 2026 · 10:22 AM';
+  String get report2Date => '11 Jul 2026 · 10:22 am';
 
   @override
-  String get report3Date => '04 Jul 2026 · 10:22 AM';
+  String get report3Date => '04 Jul 2026 · 10:22 am';
 
   @override
   String get toastOtpSentSuccess => 'تم إرسال رمز التحقق بنجاح';

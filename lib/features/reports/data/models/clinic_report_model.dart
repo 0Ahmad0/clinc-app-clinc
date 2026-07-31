@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/utils/app_url.dart';
+import '../../../../core/utils/app_time_formatter.dart';
 import '../../domain/report_breakdown.dart';
 import '../../domain/report_period.dart';
 import '../../domain/report_type.dart';
@@ -98,8 +99,7 @@ extension ClinicGeneratedReportModelX on ClinicGeneratedReportModel {
     if (raw == null || raw.isEmpty) return '-';
     final parsed = DateTime.tryParse(raw)?.toLocal();
     if (parsed == null) return raw;
-    final formatted = DateFormat('yyyy-MM-dd h:mm a').format(parsed);
-    return formatted.replaceAll('AM', 'am').replaceAll('PM', 'pm');
+    return formatDateTimeWithClock12(parsed);
   }
 
   String displayGeneratedAt({required String languageCode}) {
@@ -123,8 +123,7 @@ extension ClinicGeneratedReportModelX on ClinicGeneratedReportModel {
   }
 
   String _formatReportTime(DateTime value) {
-    final formatted = DateFormat('h:mm a').format(value);
-    return formatted.replaceAll('AM', 'am').replaceAll('PM', 'pm');
+    return formatDateTimeClock12(value);
   }
 
   Uri? get downloadableUri {

@@ -29,8 +29,9 @@ class ReportsExportButtons extends StatelessWidget {
           children: [
             Expanded(
               child: AppButton(
-                label: state.isExportingPdf ? '...' : l10n.reportsExportPdf,
+                label: l10n.reportsExportPdf,
                 icon: Iconsax.document_text,
+                isLoading: state.isExportingPdf,
                 onPressed: state.isExportingPdf
                     ? null
                     : context.read<ReportsCubit>().exportPdf,
@@ -39,9 +40,10 @@ class ReportsExportButtons extends StatelessWidget {
             AppGaps.w12,
             Expanded(
               child: AppButton(
-                label: state.isExportingXlsx ? '...' : 'XLSX',
+                label: 'XLSX',
                 icon: Iconsax.grid_1,
                 variant: AppButtonVariant.secondary,
+                isLoading: state.isExportingXlsx,
                 onPressed: state.isExportingXlsx
                     ? null
                     : context.read<ReportsCubit>().exportXlsx,

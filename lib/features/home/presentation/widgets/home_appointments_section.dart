@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
+import '../../../../core/utils/app_time_formatter.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/shared_empty_widget.dart';
 import '../../data/models/clinic_dashboard_model.dart';
@@ -106,7 +107,7 @@ class HomeAppointmentsSection extends StatelessWidget {
               HomeAppointmentCard(
                 name: appointments![index].patientName ?? '-',
                 service: appointments![index].serviceName ?? '-',
-                time: appointments![index].time ?? '',
+                time: formatClockTime12(appointments![index].time),
                 status: _statusLabel(context, appointments![index].status),
                 tone: _statusTone(appointments![index].status),
               ),

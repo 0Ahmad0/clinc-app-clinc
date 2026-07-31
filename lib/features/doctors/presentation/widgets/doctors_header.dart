@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_shimmer_placeholder.dart';
 import '../cubit/doctors_cubit.dart';
 import '../cubit/doctors_state.dart';
 
@@ -19,6 +20,8 @@ class DoctorsHeader extends StatelessWidget {
         final total = state.totalCount;
         final available = state.availableCount;
         final unavailable = state.unavailableCount;
+        final isLoading =
+            state.isFiltersLoading || state.pagination.isInitialLoading.value;
         final format = NumberFormat.decimalPattern(
           Localizations.localeOf(context).toLanguageTag(),
         );
@@ -86,18 +89,26 @@ class DoctorsHeader extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: AppSpacing.xs),
-                          Text(
-                            context.l10n.doctorsHeaderLine(
-                              format.format(total),
-                              format.format(available),
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: context.textTheme.bodySmall?.copyWith(
-                              color: colors.onBrand.withValues(alpha: 0.72),
-                              height: 1.05,
-                            ),
-                          ),
+                          isLoading
+                              ? AppShimmerPlaceholder(
+                                  width: 168,
+                                  height: 14,
+                                  borderRadius: AppRadius.pill,
+                                )
+                              : Text(
+                                  context.l10n.doctorsHeaderLine(
+                                    format.format(total),
+                                    format.format(available),
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    color: colors.onBrand.withValues(
+                                      alpha: 0.72,
+                                    ),
+                                    height: 1.05,
+                                  ),
+                                ),
                         ],
                       ),
                     ),
@@ -108,35 +119,10 @@ class DoctorsHeader extends StatelessWidget {
                         context.l10n.doctorsUnavailable,
                       ),
                     ])
-                      Container(
-                        margin: const EdgeInsetsDirectional.only(
-                          start: AppSpacing.xs,
-                        ),
-                        padding: const EdgeInsetsDirectional.symmetric(
-                          horizontal: AppSpacing.sm,
-                          vertical: AppSpacing.xs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: colors.onBrand.withValues(alpha: 0.13),
-                          borderRadius: BorderRadius.circular(AppRadius.sm),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              item.$1,
-                              style: context.textTheme.titleMedium?.copyWith(
-                                color: colors.onBrand,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Text(
-                              item.$2,
-                              style: context.textTheme.labelSmall?.copyWith(
-                                color: colors.onBrand.withValues(alpha: 0.7),
-                              ),
-                            ),
-                          ],
-                        ),
+                      _HeaderStat(
+                        value: item.$1,
+                        label: item.$2,
+                        isLoading: isLoading,
                       ),
                   ],
                 ),
@@ -145,6 +131,67 @@ class DoctorsHeader extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _HeaderStat extends StatelessWidget {
+  const _HeaderStat({
+    required this.value,
+    required this.label,
+    required this.isLoading,
+  });
+
+  final String value;
+  final String label;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Container(
+      margin: const EdgeInsetsDirectional.only(start: AppSpacing.xs),
+      constraints: const BoxConstraints(minWidth: 58, minHeight: 40),
+      padding: const EdgeInsetsDirectional.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs - 1,
+      ),
+      decoration: BoxDecoration(
+        color: colors.onBrand.withValues(alpha: 0.13),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 23,
+            child: Center(
+              child: isLoading
+                  ? const AppShimmerPlaceholder(
+                      width: 28,
+                      height: 16,
+                      borderRadius: AppRadius.pill,
+                    )
+                  : Text(
+                      value,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        color: colors.onBrand,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+            ),
+          ),
+          Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: context.textTheme.labelSmall?.copyWith(
+              color: colors.onBrand.withValues(alpha: 0.7),
+              height: 1.0,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

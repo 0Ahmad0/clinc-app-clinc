@@ -71,6 +71,9 @@ class SettingsMainView extends StatelessWidget {
                           tint: colors.warningFg,
                           name: l10n.settingsNotifApp,
                           toggleValue: state.isOn(NotificationChannel.app),
+                          toggleLoading: state.isChannelBusy(
+                            NotificationChannel.app,
+                          ),
                           onToggle: () =>
                               cubit.toggleChannel(NotificationChannel.app),
                         ),
@@ -79,6 +82,9 @@ class SettingsMainView extends StatelessWidget {
                           tint: colors.successFg,
                           name: l10n.settingsNotifEmail,
                           toggleValue: state.isOn(NotificationChannel.email),
+                          toggleLoading: state.isChannelBusy(
+                            NotificationChannel.email,
+                          ),
                           onToggle: () =>
                               cubit.toggleChannel(NotificationChannel.email),
                         ),
@@ -87,6 +93,9 @@ class SettingsMainView extends StatelessWidget {
                           tint: colors.info,
                           name: l10n.settingsNotifSms,
                           toggleValue: state.isOn(NotificationChannel.sms),
+                          toggleLoading: state.isChannelBusy(
+                            NotificationChannel.sms,
+                          ),
                           onToggle: () =>
                               cubit.toggleChannel(NotificationChannel.sms),
                         ),

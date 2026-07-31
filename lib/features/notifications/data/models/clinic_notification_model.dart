@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../core/utils/app_time_formatter.dart';
 import '../../domain/notification_kind.dart';
 
 part 'clinic_notification_model.freezed.dart';
@@ -94,9 +95,14 @@ extension ClinicNotificationModelX on ClinicNotificationModel {
 
   String get displayBody => body ?? message ?? '';
 
-  String get displayTime => (sentAt ?? createdAt ?? '').split('T').first;
+  String get displayTime =>
+      formatClockTime12(sentAt ?? createdAt, fallback: '');
 
-  String get group => displayTime.isEmpty ? '-' : displayTime;
+  String get group {
+    final raw = (sentAt ?? createdAt ?? '').trim();
+    if (raw.isEmpty) return '-';
+    return raw.split('T').first;
+  }
 
   NotificationKind get kind {
     final value = (type ?? '').toLowerCase();

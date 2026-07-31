@@ -23,10 +23,12 @@ class AppointmentFinishSheet extends StatefulWidget {
     super.key,
     required this.requiresResult,
     this.resultOnly = false,
+    this.onConfirm,
   });
 
   final bool requiresResult;
   final bool resultOnly;
+  final Future<void> Function(AppointmentFinishResult result)? onConfirm;
 
   @override
   State<AppointmentFinishSheet> createState() => _AppointmentFinishSheetState();
@@ -35,6 +37,7 @@ class AppointmentFinishSheet extends StatefulWidget {
 class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
   String? _fileName;
   String? _filePath;
+  bool _isSubmitting = false;
   final TextEditingController _note = TextEditingController();
 
   bool get _canConfirm => !widget.requiresResult || _fileName != null;
@@ -46,12 +49,30 @@ class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
   }
 
   Future<void> _pickFile() async {
+    if (_isSubmitting) return;
     final picked = await sl<MediaService>().pickPdf();
     if (picked == null) return;
     setState(() {
       _fileName = picked.name;
       _filePath = picked.path;
     });
+  }
+
+  Future<void> _confirm() async {
+    if (!_canConfirm || _isSubmitting) return;
+    final result = AppointmentFinishResult(
+      filePath: _filePath,
+      notes: _note.text.trim().isEmpty ? null : _note.text.trim(),
+    );
+    final onConfirm = widget.onConfirm;
+    if (onConfirm == null) {
+      Navigator.of(context).pop(result);
+      return;
+    }
+    setState(() => _isSubmitting = true);
+    await onConfirm(result);
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
   }
 
   @override
@@ -143,14 +164,10 @@ class _AppointmentFinishSheetState extends State<AppointmentFinishSheet> {
                 : widget.requiresResult
                 ? l10n.apptFinishConfirmLab
                 : l10n.apptFinishConfirm,
-            enabled: _canConfirm,
+            enabled: _canConfirm && !_isSubmitting,
+            isLoading: _isSubmitting,
             background: colors.success,
-            onTap: () => Navigator.of(context).pop(
-              AppointmentFinishResult(
-                filePath: _filePath,
-                notes: _note.text.trim().isEmpty ? null : _note.text.trim(),
-              ),
-            ),
+            onTap: _confirm,
           ),
         ],
       ),

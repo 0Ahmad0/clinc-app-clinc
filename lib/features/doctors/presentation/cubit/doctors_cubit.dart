@@ -113,10 +113,10 @@ class DoctorsCubit extends Cubit<DoctorsState> {
   }) async {
     final pagination = state.pagination;
     if (pagination.isBusy && !reset) return;
-    if (reset) pagination.reset();
     if (page == 1 && !refreshing) pagination.isInitialLoading.value = true;
     if (refreshing) pagination.isRefreshing.value = true;
     if (page > 1) pagination.isLoadingMore.value = true;
+    if (reset) pagination.reset();
     emit(state.copyWith(failure: null));
 
     final result = await _repository.getDoctors(

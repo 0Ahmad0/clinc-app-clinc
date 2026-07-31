@@ -34,8 +34,9 @@ class AddDoctorSaveBar extends StatelessWidget {
       ),
       child: BlocBuilder<AddDoctorCubit, AddDoctorState>(
         builder: (context, state) => AppButton(
-          label: state.isSaving ? '...' : context.l10n.addDoctorSave,
+          label: context.l10n.addDoctorSave,
           icon: Iconsax.save_2,
+          isLoading: state.isSaving,
           onPressed: state.isSaving ? null : onSave,
         ),
       ),

@@ -6,7 +6,8 @@ part 'clinic_specialization_model.g.dart';
 @freezed
 abstract class ClinicSpecializationModel with _$ClinicSpecializationModel {
   const factory ClinicSpecializationModel({
-    @JsonKey(name: 'specialization_id') String? specializationId,
+    @JsonKey(name: 'specialization_id', fromJson: _stringFromJson)
+    String? specializationId,
     String? name,
     @JsonKey(name: 'name_ar') String? nameAr,
     @JsonKey(name: 'name_en') String? nameEn,
@@ -18,3 +19,5 @@ abstract class ClinicSpecializationModel with _$ClinicSpecializationModel {
   factory ClinicSpecializationModel.fromJson(Map<String, dynamic> json) =>
       _$ClinicSpecializationModelFromJson(json);
 }
+
+String? _stringFromJson(Object? value) => value?.toString();

@@ -139,9 +139,9 @@ class NotificationsCubit extends Cubit<NotificationsState> {
   Future<void> _loadPage({required int page, bool reset = false}) async {
     final pagination = state.pagination;
     if (pagination.isBusy && !reset) return;
-    if (reset) pagination.reset();
     if (page == 1) pagination.isInitialLoading.value = true;
     if (page > 1) pagination.isLoadingMore.value = true;
+    if (reset) pagination.reset();
     emit(state.copyWith(failure: null));
 
     final result = await _repository.notifications(

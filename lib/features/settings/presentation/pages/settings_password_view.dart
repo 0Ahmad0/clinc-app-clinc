@@ -150,10 +150,9 @@ class _SettingsPasswordViewState extends State<SettingsPasswordView> {
                   buildWhen: (previous, current) =>
                       previous.isChangingPassword != current.isChangingPassword,
                   builder: (context, state) => AppButton(
-                    label: state.isChangingPassword
-                        ? '...'
-                        : l10n.settingsPasswordTitle,
+                    label: l10n.settingsPasswordTitle,
                     icon: Iconsax.refresh,
+                    isLoading: state.isChangingPassword,
                     onPressed: state.isChangingPassword ? null : _submit,
                   ),
                 ),

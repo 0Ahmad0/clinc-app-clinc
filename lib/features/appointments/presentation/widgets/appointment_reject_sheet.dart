@@ -10,7 +10,9 @@ import 'appointment_reason_option.dart';
 /// Bottom sheet for rejecting an appointment: pick a reason (or write one) and
 /// confirm. Pops the chosen reason string, or nothing when dismissed.
 class AppointmentRejectSheet extends StatefulWidget {
-  const AppointmentRejectSheet({super.key});
+  const AppointmentRejectSheet({super.key, this.onConfirm});
+
+  final Future<void> Function(String reason)? onConfirm;
 
   @override
   State<AppointmentRejectSheet> createState() => _AppointmentRejectSheetState();
@@ -18,6 +20,7 @@ class AppointmentRejectSheet extends StatefulWidget {
 
 class _AppointmentRejectSheetState extends State<AppointmentRejectSheet> {
   int? _selected;
+  bool _isSubmitting = false;
   final TextEditingController _note = TextEditingController();
 
   static const int _otherIndex = 3;
@@ -31,11 +34,18 @@ class _AppointmentRejectSheetState extends State<AppointmentRejectSheet> {
     super.dispose();
   }
 
-  void _confirm(List<String> reasons) {
-    if (!_canConfirm) return;
-    Navigator.of(
-      context,
-    ).pop(_otherPicked ? _note.text.trim() : reasons[_selected!]);
+  Future<void> _confirm(List<String> reasons) async {
+    if (!_canConfirm || _isSubmitting) return;
+    final reason = _otherPicked ? _note.text.trim() : reasons[_selected!];
+    final onConfirm = widget.onConfirm;
+    if (onConfirm == null) {
+      Navigator.of(context).pop(reason);
+      return;
+    }
+    setState(() => _isSubmitting = true);
+    await onConfirm(reason);
+    if (!mounted) return;
+    Navigator.of(context).pop(true);
   }
 
   @override
@@ -130,7 +140,8 @@ class _AppointmentRejectSheetState extends State<AppointmentRejectSheet> {
           AppGaps.h16,
           AppointmentConfirmButton(
             label: l10n.apptRejectConfirm,
-            enabled: _canConfirm,
+            enabled: _canConfirm && !_isSubmitting,
+            isLoading: _isSubmitting,
             background: colors.dangerFg,
             onTap: () => _confirm(reasons),
           ),

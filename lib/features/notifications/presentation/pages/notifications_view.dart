@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_section_shimmers.dart';
 import '../cubit/notifications_cubit.dart';
 import '../widgets/notification_group.dart';
 import '../widgets/notifications_empty.dart';
@@ -26,9 +27,9 @@ class NotificationsView extends StatelessWidget {
                 return AnimatedBuilder(
                   animation: state.pagination.items,
                   builder: (context, _) {
-                    if (state.pagination.isInitialLoading.value &&
+                    if (state.pagination.isBusy &&
                         state.pagination.items.isEmpty) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const ListShimmer(itemHeight: 92);
                     }
                     final groups = context.read<NotificationsCubit>().grouped();
                     if (groups.isEmpty) return const NotificationsEmpty();

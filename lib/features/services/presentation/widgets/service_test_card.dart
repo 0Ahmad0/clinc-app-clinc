@@ -21,6 +21,7 @@ class ServiceTestCard extends StatefulWidget {
     required this.price,
     required this.onToggle,
     required this.onPriceChanged,
+    this.loading = false,
   });
 
   final ClinicAvailableLabTestModel test;
@@ -29,6 +30,7 @@ class ServiceTestCard extends StatefulWidget {
   final String price;
   final VoidCallback onToggle;
   final ValueChanged<String> onPriceChanged;
+  final bool loading;
 
   @override
   State<ServiceTestCard> createState() => _ServiceTestCardState();
@@ -128,7 +130,11 @@ class _ServiceTestCardState extends State<ServiceTestCard> {
                 ),
               ),
               AppGaps.w8,
-              AppSwitch(value: widget.enabled, onChanged: widget.onToggle),
+              AppSwitch(
+                value: widget.enabled,
+                loading: widget.loading,
+                onChanged: widget.onToggle,
+              ),
             ],
           ),
           AppGaps.h12,

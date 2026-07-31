@@ -42,9 +42,14 @@ abstract class ServicesState with _$ServicesState {
         .toList(growable: false);
   }
 
+  List<ClinicEnabledSpecializationModel> get activeSpecializations =>
+      enabledSpecializations.items.value
+          .where((item) => item.isActive)
+          .toList(growable: false);
+
   int get activeCount =>
       enabledLabTests.items.value.where((test) => test.isActive).length +
-      enabledSpecializations.items.value.where((item) => item.isActive).length;
+      activeSpecializations.length;
 
   LabTestState testState(int? labTestId) {
     if (labTestId == null) return const LabTestState();

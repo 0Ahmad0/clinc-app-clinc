@@ -16,13 +16,16 @@ class AppointmentsView extends StatelessWidget {
     body: BlocBuilder<AppointmentsCubit, AppointmentsState>(
       builder: (context, state) {
         final selected = state.selected;
+        final hasSelectedId = state.selectedId != null;
         return PopScope(
-          canPop: selected == null,
+          canPop: !hasSelectedId,
           onPopInvokedWithResult: (didPop, _) {
             if (!didPop) context.read<AppointmentsCubit>().closeDetail();
           },
-          child: selected == null
+          child: !hasSelectedId
               ? const AppointmentsListView()
+              : selected == null
+              ? const AppointmentDetailLoadingView()
               : AppointmentDetailView(appointment: selected),
         );
       },

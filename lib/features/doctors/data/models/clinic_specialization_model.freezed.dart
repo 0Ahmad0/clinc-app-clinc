@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ClinicSpecializationModel {
 
-@JsonKey(name: 'specialization_id') String? get specializationId; String? get name;@JsonKey(name: 'name_ar') String? get nameAr;@JsonKey(name: 'name_en') String? get nameEn; String? get icon; String? get color;@JsonKey(name: 'is_active') bool get isActive;
+@JsonKey(name: 'specialization_id', fromJson: _stringFromJson) String? get specializationId; String? get name;@JsonKey(name: 'name_ar') String? get nameAr;@JsonKey(name: 'name_en') String? get nameEn; String? get icon; String? get color;@JsonKey(name: 'is_active') bool get isActive;
 /// Create a copy of ClinicSpecializationModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ClinicSpecializationModelCopyWith<$Res>  {
   factory $ClinicSpecializationModelCopyWith(ClinicSpecializationModel value, $Res Function(ClinicSpecializationModel) _then) = _$ClinicSpecializationModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'specialization_id') String? specializationId, String? name,@JsonKey(name: 'name_ar') String? nameAr,@JsonKey(name: 'name_en') String? nameEn, String? icon, String? color,@JsonKey(name: 'is_active') bool isActive
+@JsonKey(name: 'specialization_id', fromJson: _stringFromJson) String? specializationId, String? name,@JsonKey(name: 'name_ar') String? nameAr,@JsonKey(name: 'name_en') String? nameEn, String? icon, String? color,@JsonKey(name: 'is_active') bool isActive
 });
 
 
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'specialization_id')  String? specializationId,  String? name, @JsonKey(name: 'name_ar')  String? nameAr, @JsonKey(name: 'name_en')  String? nameEn,  String? icon,  String? color, @JsonKey(name: 'is_active')  bool isActive)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'specialization_id', fromJson: _stringFromJson)  String? specializationId,  String? name, @JsonKey(name: 'name_ar')  String? nameAr, @JsonKey(name: 'name_en')  String? nameEn,  String? icon,  String? color, @JsonKey(name: 'is_active')  bool isActive)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ClinicSpecializationModel() when $default != null:
 return $default(_that.specializationId,_that.name,_that.nameAr,_that.nameEn,_that.icon,_that.color,_that.isActive);case _:
@@ -180,7 +180,7 @@ return $default(_that.specializationId,_that.name,_that.nameAr,_that.nameEn,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'specialization_id')  String? specializationId,  String? name, @JsonKey(name: 'name_ar')  String? nameAr, @JsonKey(name: 'name_en')  String? nameEn,  String? icon,  String? color, @JsonKey(name: 'is_active')  bool isActive)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'specialization_id', fromJson: _stringFromJson)  String? specializationId,  String? name, @JsonKey(name: 'name_ar')  String? nameAr, @JsonKey(name: 'name_en')  String? nameEn,  String? icon,  String? color, @JsonKey(name: 'is_active')  bool isActive)  $default,) {final _that = this;
 switch (_that) {
 case _ClinicSpecializationModel():
 return $default(_that.specializationId,_that.name,_that.nameAr,_that.nameEn,_that.icon,_that.color,_that.isActive);case _:
@@ -200,7 +200,7 @@ return $default(_that.specializationId,_that.name,_that.nameAr,_that.nameEn,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'specialization_id')  String? specializationId,  String? name, @JsonKey(name: 'name_ar')  String? nameAr, @JsonKey(name: 'name_en')  String? nameEn,  String? icon,  String? color, @JsonKey(name: 'is_active')  bool isActive)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'specialization_id', fromJson: _stringFromJson)  String? specializationId,  String? name, @JsonKey(name: 'name_ar')  String? nameAr, @JsonKey(name: 'name_en')  String? nameEn,  String? icon,  String? color, @JsonKey(name: 'is_active')  bool isActive)?  $default,) {final _that = this;
 switch (_that) {
 case _ClinicSpecializationModel() when $default != null:
 return $default(_that.specializationId,_that.name,_that.nameAr,_that.nameEn,_that.icon,_that.color,_that.isActive);case _:
@@ -215,10 +215,10 @@ return $default(_that.specializationId,_that.name,_that.nameAr,_that.nameEn,_tha
 @JsonSerializable()
 
 class _ClinicSpecializationModel implements ClinicSpecializationModel {
-  const _ClinicSpecializationModel({@JsonKey(name: 'specialization_id') this.specializationId, this.name, @JsonKey(name: 'name_ar') this.nameAr, @JsonKey(name: 'name_en') this.nameEn, this.icon, this.color, @JsonKey(name: 'is_active') this.isActive = false});
+  const _ClinicSpecializationModel({@JsonKey(name: 'specialization_id', fromJson: _stringFromJson) this.specializationId, this.name, @JsonKey(name: 'name_ar') this.nameAr, @JsonKey(name: 'name_en') this.nameEn, this.icon, this.color, @JsonKey(name: 'is_active') this.isActive = false});
   factory _ClinicSpecializationModel.fromJson(Map<String, dynamic> json) => _$ClinicSpecializationModelFromJson(json);
 
-@override@JsonKey(name: 'specialization_id') final  String? specializationId;
+@override@JsonKey(name: 'specialization_id', fromJson: _stringFromJson) final  String? specializationId;
 @override final  String? name;
 @override@JsonKey(name: 'name_ar') final  String? nameAr;
 @override@JsonKey(name: 'name_en') final  String? nameEn;
@@ -259,7 +259,7 @@ abstract mixin class _$ClinicSpecializationModelCopyWith<$Res> implements $Clini
   factory _$ClinicSpecializationModelCopyWith(_ClinicSpecializationModel value, $Res Function(_ClinicSpecializationModel) _then) = __$ClinicSpecializationModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'specialization_id') String? specializationId, String? name,@JsonKey(name: 'name_ar') String? nameAr,@JsonKey(name: 'name_en') String? nameEn, String? icon, String? color,@JsonKey(name: 'is_active') bool isActive
+@JsonKey(name: 'specialization_id', fromJson: _stringFromJson) String? specializationId, String? name,@JsonKey(name: 'name_ar') String? nameAr,@JsonKey(name: 'name_en') String? nameEn, String? icon, String? color,@JsonKey(name: 'is_active') bool isActive
 });
 
 

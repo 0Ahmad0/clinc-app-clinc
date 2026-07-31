@@ -17,6 +17,7 @@ class SettingsRow extends StatelessWidget {
     this.sub,
     this.onTap,
     this.toggleValue,
+    this.toggleLoading = false,
     this.onToggle,
   });
 
@@ -26,6 +27,7 @@ class SettingsRow extends StatelessWidget {
   final String? sub;
   final VoidCallback? onTap;
   final bool? toggleValue;
+  final bool toggleLoading;
   final VoidCallback? onToggle;
 
   @override
@@ -71,7 +73,11 @@ class SettingsRow extends StatelessWidget {
             ),
           ),
           if (onToggle != null)
-            AppSwitch(value: toggleValue ?? false, onChanged: onToggle!)
+            AppSwitch(
+              value: toggleValue ?? false,
+              loading: toggleLoading,
+              onChanged: onToggle!,
+            )
           else if (onTap != null)
             Icon(
               Directionality.of(context) == TextDirection.rtl

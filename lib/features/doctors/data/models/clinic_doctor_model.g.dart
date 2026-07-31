@@ -8,11 +8,11 @@ part of 'clinic_doctor_model.dart';
 
 _ClinicDoctorModel _$ClinicDoctorModelFromJson(Map<String, dynamic> json) =>
     _ClinicDoctorModel(
-      doctorId: json['doctor_id'] as String?,
+      doctorId: _stringFromJson(json['doctor_id']),
       nameAr: json['name_ar'] as String?,
       nameEn: json['name_en'] as String?,
       name: json['name'] as String?,
-      specializationId: json['specialization_id'] as String?,
+      specializationId: _stringFromJson(json['specialization_id']),
       specializationName: json['specialization_name'] as String?,
       specializationIcon: json['specialization_icon'] as String?,
       specializationColor: json['specialization_color'] as String?,

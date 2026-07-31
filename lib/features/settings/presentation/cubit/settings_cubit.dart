@@ -58,9 +58,16 @@ class SettingsCubit extends Cubit<SettingsState> {
   void show(SettingsSection section) => emit(state.copyWith(section: section));
 
   Future<void> toggleChannel(NotificationChannel channel) async {
+    if (state.busyNotificationChannels.contains(channel)) return;
     final channels = {...state.channels};
     if (!channels.remove(channel)) channels.add(channel);
-    emit(state.copyWith(channels: channels, failure: null));
+    emit(
+      state.copyWith(
+        channels: channels,
+        busyNotificationChannels: {...state.busyNotificationChannels, channel},
+        failure: null,
+      ),
+    );
 
     final result = await _repository.updateNotificationSettings(
       appNotifications: channels.contains(NotificationChannel.app),
@@ -68,9 +75,18 @@ class SettingsCubit extends Cubit<SettingsState> {
       smsNotifications: channels.contains(NotificationChannel.sms),
     );
     result.when(
-      success: (response) =>
-          emit(state.copyWith(channels: _channels(response.result))),
-      failure: (exception) => emit(state.copyWith(failure: exception)),
+      success: (response) => emit(
+        state.copyWith(
+          channels: _channels(response.result),
+          busyNotificationChannels: _clearBusyChannel(channel),
+        ),
+      ),
+      failure: (exception) => emit(
+        state.copyWith(
+          busyNotificationChannels: _clearBusyChannel(channel),
+          failure: exception,
+        ),
+      ),
     );
   }
 
@@ -197,6 +213,11 @@ class SettingsCubit extends Cubit<SettingsState> {
       if (model.smsNotifications) NotificationChannel.sms,
     };
   }
+
+  Set<NotificationChannel> _clearBusyChannel(NotificationChannel channel) =>
+      state.busyNotificationChannels
+          .where((busyChannel) => busyChannel != channel)
+          .toSet();
 
   static AppThemeChoice _storedTheme() {
     return switch (StorageService.instance.appThemeMode) {

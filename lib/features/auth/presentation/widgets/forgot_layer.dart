@@ -109,6 +109,9 @@ class ForgotLayerState extends State<ForgotLayer> {
                         previous.action != current.action,
                     builder: (context, state) => AppButton(
                       label: l10n.authForgotCta,
+                      isLoading:
+                          state.isLoading &&
+                          state.action == AuthAction.forgotPassword,
                       onPressed:
                           state.isLoading &&
                               state.action == AuthAction.forgotPassword

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
+import '../../../../core/utils/app_time_formatter.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../data/models/clinic_doctor_model.dart';
 import '../../domain/weekday.dart';
@@ -10,9 +11,10 @@ import 'doctor_profile_section_title.dart';
 
 /// Working days as chips (off days struck through) plus the working-hours line.
 class DoctorProfileSchedule extends StatelessWidget {
-  const DoctorProfileSchedule({super.key, required this.schedules});
+  const DoctorProfileSchedule({super.key, required this.schedules, this.today});
 
   final List<ClinicDoctorScheduleModel> schedules;
+  final DateTime? today;
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +24,10 @@ class DoctorProfileSchedule extends StatelessWidget {
       for (final schedule in schedules)
         if (schedule.isActive) _weekday(schedule.day),
     };
-    final activeSchedules = schedules.where((schedule) => schedule.isActive);
-    final hoursText = activeSchedules.isEmpty
-        ? l10n.doctorProfileHours
-        : activeSchedules
-              .map(
-                (schedule) => '${schedule.from ?? '-'} - ${schedule.to ?? '-'}',
-              )
-              .toSet()
-              .join(' / ');
+    final todaySchedule = _scheduleOf(_today());
+    final hoursText = todaySchedule == null || !todaySchedule.isActive
+        ? l10n.addDoctorDayOff
+        : '${formatClockTime12(todaySchedule.from)} - ${formatClockTime12(todaySchedule.to)}';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -88,6 +85,27 @@ class DoctorProfileSchedule extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  ClinicDoctorScheduleModel? _scheduleOf(Weekday day) {
+    for (final schedule in schedules) {
+      if (_weekday(schedule.day) == day) return schedule;
+    }
+    return null;
+  }
+
+  Weekday _today() {
+    final value = today ?? DateTime.now();
+    return switch (value.weekday) {
+      DateTime.monday => Weekday.monday,
+      DateTime.tuesday => Weekday.tuesday,
+      DateTime.wednesday => Weekday.wednesday,
+      DateTime.thursday => Weekday.thursday,
+      DateTime.friday => Weekday.friday,
+      DateTime.saturday => Weekday.saturday,
+      DateTime.sunday => Weekday.sunday,
+      _ => Weekday.saturday,
+    };
   }
 
   Weekday _weekday(String? value) {

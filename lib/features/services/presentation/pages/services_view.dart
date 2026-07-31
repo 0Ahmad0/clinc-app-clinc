@@ -47,8 +47,10 @@ class ServicesView extends StatelessWidget {
                           state.availableLabTests.total ??
                           state.availableLabTests.items.length,
                       labTotal: state.visibleLabSections.length,
-                      specTotal: state.availableSpecializations.items.length,
+                      specTotal: state.activeSpecializations.length,
                       activeCount: state.activeCount,
+                      kind: state.kind,
+                      availableKinds: cubit.availableKinds,
                       onBack: cubit.closeDetail,
                     ),
                     Expanded(

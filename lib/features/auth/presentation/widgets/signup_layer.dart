@@ -139,6 +139,8 @@ class SignupLayerState extends State<SignupLayer> {
                   previous.action != current.action,
               builder: (context, state) => AppButton(
                 label: l10n.authSignupCta,
+                isLoading:
+                    state.isLoading && state.action == AuthAction.register,
                 onPressed:
                     state.isLoading && state.action == AuthAction.register
                     ? null

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AddDoctorState {
 
- ClinicDoctorModel? get initialDoctor; ClinicDoctorModel? get savedDoctor; List<ClinicSpecializationModel> get specializations; String? get selectedSpecializationId; String get gender; String? get imagePath; List<DoctorPickedQualification> get qualificationFiles; bool get specialtyOpen; Set<Weekday> get activeDays; Map<Weekday, WorkingHours> get hours; bool get isLoadingSpecializations; bool get isSaving; bool get saved; NetworkExceptions? get failure;
+ ClinicDoctorModel? get initialDoctor; ClinicDoctorModel? get savedDoctor; List<ClinicSpecializationModel> get specializations; String? get selectedSpecializationId; String get gender; String? get imagePath; List<DoctorPickedQualification> get qualificationFiles; bool get specialtyOpen; Set<Weekday> get activeDays; Map<Weekday, WorkingHours> get hours; bool get isLoadingSpecializations; bool get isSaving; bool get saved; bool get showScheduleValidation; NetworkExceptions? get failure;
 /// Create a copy of AddDoctorState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AddDoctorStateCopyWith<AddDoctorState> get copyWith => _$AddDoctorStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddDoctorState&&(identical(other.initialDoctor, initialDoctor) || other.initialDoctor == initialDoctor)&&(identical(other.savedDoctor, savedDoctor) || other.savedDoctor == savedDoctor)&&const DeepCollectionEquality().equals(other.specializations, specializations)&&(identical(other.selectedSpecializationId, selectedSpecializationId) || other.selectedSpecializationId == selectedSpecializationId)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath)&&const DeepCollectionEquality().equals(other.qualificationFiles, qualificationFiles)&&(identical(other.specialtyOpen, specialtyOpen) || other.specialtyOpen == specialtyOpen)&&const DeepCollectionEquality().equals(other.activeDays, activeDays)&&const DeepCollectionEquality().equals(other.hours, hours)&&(identical(other.isLoadingSpecializations, isLoadingSpecializations) || other.isLoadingSpecializations == isLoadingSpecializations)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving)&&(identical(other.saved, saved) || other.saved == saved)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddDoctorState&&(identical(other.initialDoctor, initialDoctor) || other.initialDoctor == initialDoctor)&&(identical(other.savedDoctor, savedDoctor) || other.savedDoctor == savedDoctor)&&const DeepCollectionEquality().equals(other.specializations, specializations)&&(identical(other.selectedSpecializationId, selectedSpecializationId) || other.selectedSpecializationId == selectedSpecializationId)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath)&&const DeepCollectionEquality().equals(other.qualificationFiles, qualificationFiles)&&(identical(other.specialtyOpen, specialtyOpen) || other.specialtyOpen == specialtyOpen)&&const DeepCollectionEquality().equals(other.activeDays, activeDays)&&const DeepCollectionEquality().equals(other.hours, hours)&&(identical(other.isLoadingSpecializations, isLoadingSpecializations) || other.isLoadingSpecializations == isLoadingSpecializations)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving)&&(identical(other.saved, saved) || other.saved == saved)&&(identical(other.showScheduleValidation, showScheduleValidation) || other.showScheduleValidation == showScheduleValidation)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,initialDoctor,savedDoctor,const DeepCollectionEquality().hash(specializations),selectedSpecializationId,gender,imagePath,const DeepCollectionEquality().hash(qualificationFiles),specialtyOpen,const DeepCollectionEquality().hash(activeDays),const DeepCollectionEquality().hash(hours),isLoadingSpecializations,isSaving,saved,failure);
+int get hashCode => Object.hash(runtimeType,initialDoctor,savedDoctor,const DeepCollectionEquality().hash(specializations),selectedSpecializationId,gender,imagePath,const DeepCollectionEquality().hash(qualificationFiles),specialtyOpen,const DeepCollectionEquality().hash(activeDays),const DeepCollectionEquality().hash(hours),isLoadingSpecializations,isSaving,saved,showScheduleValidation,failure);
 
 @override
 String toString() {
-  return 'AddDoctorState(initialDoctor: $initialDoctor, savedDoctor: $savedDoctor, specializations: $specializations, selectedSpecializationId: $selectedSpecializationId, gender: $gender, imagePath: $imagePath, qualificationFiles: $qualificationFiles, specialtyOpen: $specialtyOpen, activeDays: $activeDays, hours: $hours, isLoadingSpecializations: $isLoadingSpecializations, isSaving: $isSaving, saved: $saved, failure: $failure)';
+  return 'AddDoctorState(initialDoctor: $initialDoctor, savedDoctor: $savedDoctor, specializations: $specializations, selectedSpecializationId: $selectedSpecializationId, gender: $gender, imagePath: $imagePath, qualificationFiles: $qualificationFiles, specialtyOpen: $specialtyOpen, activeDays: $activeDays, hours: $hours, isLoadingSpecializations: $isLoadingSpecializations, isSaving: $isSaving, saved: $saved, showScheduleValidation: $showScheduleValidation, failure: $failure)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $AddDoctorStateCopyWith<$Res>  {
   factory $AddDoctorStateCopyWith(AddDoctorState value, $Res Function(AddDoctorState) _then) = _$AddDoctorStateCopyWithImpl;
 @useResult
 $Res call({
- ClinicDoctorModel? initialDoctor, ClinicDoctorModel? savedDoctor, List<ClinicSpecializationModel> specializations, String? selectedSpecializationId, String gender, String? imagePath, List<DoctorPickedQualification> qualificationFiles, bool specialtyOpen, Set<Weekday> activeDays, Map<Weekday, WorkingHours> hours, bool isLoadingSpecializations, bool isSaving, bool saved, NetworkExceptions? failure
+ ClinicDoctorModel? initialDoctor, ClinicDoctorModel? savedDoctor, List<ClinicSpecializationModel> specializations, String? selectedSpecializationId, String gender, String? imagePath, List<DoctorPickedQualification> qualificationFiles, bool specialtyOpen, Set<Weekday> activeDays, Map<Weekday, WorkingHours> hours, bool isLoadingSpecializations, bool isSaving, bool saved, bool showScheduleValidation, NetworkExceptions? failure
 });
 
 
@@ -62,7 +62,7 @@ class _$AddDoctorStateCopyWithImpl<$Res>
 
 /// Create a copy of AddDoctorState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? initialDoctor = freezed,Object? savedDoctor = freezed,Object? specializations = null,Object? selectedSpecializationId = freezed,Object? gender = null,Object? imagePath = freezed,Object? qualificationFiles = null,Object? specialtyOpen = null,Object? activeDays = null,Object? hours = null,Object? isLoadingSpecializations = null,Object? isSaving = null,Object? saved = null,Object? failure = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? initialDoctor = freezed,Object? savedDoctor = freezed,Object? specializations = null,Object? selectedSpecializationId = freezed,Object? gender = null,Object? imagePath = freezed,Object? qualificationFiles = null,Object? specialtyOpen = null,Object? activeDays = null,Object? hours = null,Object? isLoadingSpecializations = null,Object? isSaving = null,Object? saved = null,Object? showScheduleValidation = null,Object? failure = freezed,}) {
   return _then(_self.copyWith(
 initialDoctor: freezed == initialDoctor ? _self.initialDoctor : initialDoctor // ignore: cast_nullable_to_non_nullable
 as ClinicDoctorModel?,savedDoctor: freezed == savedDoctor ? _self.savedDoctor : savedDoctor // ignore: cast_nullable_to_non_nullable
@@ -77,6 +77,7 @@ as Set<Weekday>,hours: null == hours ? _self.hours : hours // ignore: cast_nulla
 as Map<Weekday, WorkingHours>,isLoadingSpecializations: null == isLoadingSpecializations ? _self.isLoadingSpecializations : isLoadingSpecializations // ignore: cast_nullable_to_non_nullable
 as bool,isSaving: null == isSaving ? _self.isSaving : isSaving // ignore: cast_nullable_to_non_nullable
 as bool,saved: null == saved ? _self.saved : saved // ignore: cast_nullable_to_non_nullable
+as bool,showScheduleValidation: null == showScheduleValidation ? _self.showScheduleValidation : showScheduleValidation // ignore: cast_nullable_to_non_nullable
 as bool,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as NetworkExceptions?,
   ));
@@ -199,10 +200,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ClinicDoctorModel? initialDoctor,  ClinicDoctorModel? savedDoctor,  List<ClinicSpecializationModel> specializations,  String? selectedSpecializationId,  String gender,  String? imagePath,  List<DoctorPickedQualification> qualificationFiles,  bool specialtyOpen,  Set<Weekday> activeDays,  Map<Weekday, WorkingHours> hours,  bool isLoadingSpecializations,  bool isSaving,  bool saved,  NetworkExceptions? failure)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ClinicDoctorModel? initialDoctor,  ClinicDoctorModel? savedDoctor,  List<ClinicSpecializationModel> specializations,  String? selectedSpecializationId,  String gender,  String? imagePath,  List<DoctorPickedQualification> qualificationFiles,  bool specialtyOpen,  Set<Weekday> activeDays,  Map<Weekday, WorkingHours> hours,  bool isLoadingSpecializations,  bool isSaving,  bool saved,  bool showScheduleValidation,  NetworkExceptions? failure)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AddDoctorState() when $default != null:
-return $default(_that.initialDoctor,_that.savedDoctor,_that.specializations,_that.selectedSpecializationId,_that.gender,_that.imagePath,_that.qualificationFiles,_that.specialtyOpen,_that.activeDays,_that.hours,_that.isLoadingSpecializations,_that.isSaving,_that.saved,_that.failure);case _:
+return $default(_that.initialDoctor,_that.savedDoctor,_that.specializations,_that.selectedSpecializationId,_that.gender,_that.imagePath,_that.qualificationFiles,_that.specialtyOpen,_that.activeDays,_that.hours,_that.isLoadingSpecializations,_that.isSaving,_that.saved,_that.showScheduleValidation,_that.failure);case _:
   return orElse();
 
 }
@@ -220,10 +221,10 @@ return $default(_that.initialDoctor,_that.savedDoctor,_that.specializations,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ClinicDoctorModel? initialDoctor,  ClinicDoctorModel? savedDoctor,  List<ClinicSpecializationModel> specializations,  String? selectedSpecializationId,  String gender,  String? imagePath,  List<DoctorPickedQualification> qualificationFiles,  bool specialtyOpen,  Set<Weekday> activeDays,  Map<Weekday, WorkingHours> hours,  bool isLoadingSpecializations,  bool isSaving,  bool saved,  NetworkExceptions? failure)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ClinicDoctorModel? initialDoctor,  ClinicDoctorModel? savedDoctor,  List<ClinicSpecializationModel> specializations,  String? selectedSpecializationId,  String gender,  String? imagePath,  List<DoctorPickedQualification> qualificationFiles,  bool specialtyOpen,  Set<Weekday> activeDays,  Map<Weekday, WorkingHours> hours,  bool isLoadingSpecializations,  bool isSaving,  bool saved,  bool showScheduleValidation,  NetworkExceptions? failure)  $default,) {final _that = this;
 switch (_that) {
 case _AddDoctorState():
-return $default(_that.initialDoctor,_that.savedDoctor,_that.specializations,_that.selectedSpecializationId,_that.gender,_that.imagePath,_that.qualificationFiles,_that.specialtyOpen,_that.activeDays,_that.hours,_that.isLoadingSpecializations,_that.isSaving,_that.saved,_that.failure);case _:
+return $default(_that.initialDoctor,_that.savedDoctor,_that.specializations,_that.selectedSpecializationId,_that.gender,_that.imagePath,_that.qualificationFiles,_that.specialtyOpen,_that.activeDays,_that.hours,_that.isLoadingSpecializations,_that.isSaving,_that.saved,_that.showScheduleValidation,_that.failure);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -240,10 +241,10 @@ return $default(_that.initialDoctor,_that.savedDoctor,_that.specializations,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ClinicDoctorModel? initialDoctor,  ClinicDoctorModel? savedDoctor,  List<ClinicSpecializationModel> specializations,  String? selectedSpecializationId,  String gender,  String? imagePath,  List<DoctorPickedQualification> qualificationFiles,  bool specialtyOpen,  Set<Weekday> activeDays,  Map<Weekday, WorkingHours> hours,  bool isLoadingSpecializations,  bool isSaving,  bool saved,  NetworkExceptions? failure)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ClinicDoctorModel? initialDoctor,  ClinicDoctorModel? savedDoctor,  List<ClinicSpecializationModel> specializations,  String? selectedSpecializationId,  String gender,  String? imagePath,  List<DoctorPickedQualification> qualificationFiles,  bool specialtyOpen,  Set<Weekday> activeDays,  Map<Weekday, WorkingHours> hours,  bool isLoadingSpecializations,  bool isSaving,  bool saved,  bool showScheduleValidation,  NetworkExceptions? failure)?  $default,) {final _that = this;
 switch (_that) {
 case _AddDoctorState() when $default != null:
-return $default(_that.initialDoctor,_that.savedDoctor,_that.specializations,_that.selectedSpecializationId,_that.gender,_that.imagePath,_that.qualificationFiles,_that.specialtyOpen,_that.activeDays,_that.hours,_that.isLoadingSpecializations,_that.isSaving,_that.saved,_that.failure);case _:
+return $default(_that.initialDoctor,_that.savedDoctor,_that.specializations,_that.selectedSpecializationId,_that.gender,_that.imagePath,_that.qualificationFiles,_that.specialtyOpen,_that.activeDays,_that.hours,_that.isLoadingSpecializations,_that.isSaving,_that.saved,_that.showScheduleValidation,_that.failure);case _:
   return null;
 
 }
@@ -255,7 +256,7 @@ return $default(_that.initialDoctor,_that.savedDoctor,_that.specializations,_tha
 
 
 class _AddDoctorState implements AddDoctorState {
-  const _AddDoctorState({this.initialDoctor, this.savedDoctor, final  List<ClinicSpecializationModel> specializations = const <ClinicSpecializationModel>[], this.selectedSpecializationId, this.gender = 'male', this.imagePath, final  List<DoctorPickedQualification> qualificationFiles = const <DoctorPickedQualification>[], this.specialtyOpen = false, final  Set<Weekday> activeDays = _defaultDays, final  Map<Weekday, WorkingHours> hours = _defaultHours, this.isLoadingSpecializations = false, this.isSaving = false, this.saved = false, this.failure}): _specializations = specializations,_qualificationFiles = qualificationFiles,_activeDays = activeDays,_hours = hours;
+  const _AddDoctorState({this.initialDoctor, this.savedDoctor, final  List<ClinicSpecializationModel> specializations = const <ClinicSpecializationModel>[], this.selectedSpecializationId, this.gender = 'male', this.imagePath, final  List<DoctorPickedQualification> qualificationFiles = const <DoctorPickedQualification>[], this.specialtyOpen = false, final  Set<Weekday> activeDays = _defaultDays, final  Map<Weekday, WorkingHours> hours = _defaultHours, this.isLoadingSpecializations = false, this.isSaving = false, this.saved = false, this.showScheduleValidation = false, this.failure}): _specializations = specializations,_qualificationFiles = qualificationFiles,_activeDays = activeDays,_hours = hours;
   
 
 @override final  ClinicDoctorModel? initialDoctor;
@@ -295,6 +296,7 @@ class _AddDoctorState implements AddDoctorState {
 @override@JsonKey() final  bool isLoadingSpecializations;
 @override@JsonKey() final  bool isSaving;
 @override@JsonKey() final  bool saved;
+@override@JsonKey() final  bool showScheduleValidation;
 @override final  NetworkExceptions? failure;
 
 /// Create a copy of AddDoctorState
@@ -307,16 +309,16 @@ _$AddDoctorStateCopyWith<_AddDoctorState> get copyWith => __$AddDoctorStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddDoctorState&&(identical(other.initialDoctor, initialDoctor) || other.initialDoctor == initialDoctor)&&(identical(other.savedDoctor, savedDoctor) || other.savedDoctor == savedDoctor)&&const DeepCollectionEquality().equals(other._specializations, _specializations)&&(identical(other.selectedSpecializationId, selectedSpecializationId) || other.selectedSpecializationId == selectedSpecializationId)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath)&&const DeepCollectionEquality().equals(other._qualificationFiles, _qualificationFiles)&&(identical(other.specialtyOpen, specialtyOpen) || other.specialtyOpen == specialtyOpen)&&const DeepCollectionEquality().equals(other._activeDays, _activeDays)&&const DeepCollectionEquality().equals(other._hours, _hours)&&(identical(other.isLoadingSpecializations, isLoadingSpecializations) || other.isLoadingSpecializations == isLoadingSpecializations)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving)&&(identical(other.saved, saved) || other.saved == saved)&&(identical(other.failure, failure) || other.failure == failure));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddDoctorState&&(identical(other.initialDoctor, initialDoctor) || other.initialDoctor == initialDoctor)&&(identical(other.savedDoctor, savedDoctor) || other.savedDoctor == savedDoctor)&&const DeepCollectionEquality().equals(other._specializations, _specializations)&&(identical(other.selectedSpecializationId, selectedSpecializationId) || other.selectedSpecializationId == selectedSpecializationId)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.imagePath, imagePath) || other.imagePath == imagePath)&&const DeepCollectionEquality().equals(other._qualificationFiles, _qualificationFiles)&&(identical(other.specialtyOpen, specialtyOpen) || other.specialtyOpen == specialtyOpen)&&const DeepCollectionEquality().equals(other._activeDays, _activeDays)&&const DeepCollectionEquality().equals(other._hours, _hours)&&(identical(other.isLoadingSpecializations, isLoadingSpecializations) || other.isLoadingSpecializations == isLoadingSpecializations)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving)&&(identical(other.saved, saved) || other.saved == saved)&&(identical(other.showScheduleValidation, showScheduleValidation) || other.showScheduleValidation == showScheduleValidation)&&(identical(other.failure, failure) || other.failure == failure));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,initialDoctor,savedDoctor,const DeepCollectionEquality().hash(_specializations),selectedSpecializationId,gender,imagePath,const DeepCollectionEquality().hash(_qualificationFiles),specialtyOpen,const DeepCollectionEquality().hash(_activeDays),const DeepCollectionEquality().hash(_hours),isLoadingSpecializations,isSaving,saved,failure);
+int get hashCode => Object.hash(runtimeType,initialDoctor,savedDoctor,const DeepCollectionEquality().hash(_specializations),selectedSpecializationId,gender,imagePath,const DeepCollectionEquality().hash(_qualificationFiles),specialtyOpen,const DeepCollectionEquality().hash(_activeDays),const DeepCollectionEquality().hash(_hours),isLoadingSpecializations,isSaving,saved,showScheduleValidation,failure);
 
 @override
 String toString() {
-  return 'AddDoctorState(initialDoctor: $initialDoctor, savedDoctor: $savedDoctor, specializations: $specializations, selectedSpecializationId: $selectedSpecializationId, gender: $gender, imagePath: $imagePath, qualificationFiles: $qualificationFiles, specialtyOpen: $specialtyOpen, activeDays: $activeDays, hours: $hours, isLoadingSpecializations: $isLoadingSpecializations, isSaving: $isSaving, saved: $saved, failure: $failure)';
+  return 'AddDoctorState(initialDoctor: $initialDoctor, savedDoctor: $savedDoctor, specializations: $specializations, selectedSpecializationId: $selectedSpecializationId, gender: $gender, imagePath: $imagePath, qualificationFiles: $qualificationFiles, specialtyOpen: $specialtyOpen, activeDays: $activeDays, hours: $hours, isLoadingSpecializations: $isLoadingSpecializations, isSaving: $isSaving, saved: $saved, showScheduleValidation: $showScheduleValidation, failure: $failure)';
 }
 
 
@@ -327,7 +329,7 @@ abstract mixin class _$AddDoctorStateCopyWith<$Res> implements $AddDoctorStateCo
   factory _$AddDoctorStateCopyWith(_AddDoctorState value, $Res Function(_AddDoctorState) _then) = __$AddDoctorStateCopyWithImpl;
 @override @useResult
 $Res call({
- ClinicDoctorModel? initialDoctor, ClinicDoctorModel? savedDoctor, List<ClinicSpecializationModel> specializations, String? selectedSpecializationId, String gender, String? imagePath, List<DoctorPickedQualification> qualificationFiles, bool specialtyOpen, Set<Weekday> activeDays, Map<Weekday, WorkingHours> hours, bool isLoadingSpecializations, bool isSaving, bool saved, NetworkExceptions? failure
+ ClinicDoctorModel? initialDoctor, ClinicDoctorModel? savedDoctor, List<ClinicSpecializationModel> specializations, String? selectedSpecializationId, String gender, String? imagePath, List<DoctorPickedQualification> qualificationFiles, bool specialtyOpen, Set<Weekday> activeDays, Map<Weekday, WorkingHours> hours, bool isLoadingSpecializations, bool isSaving, bool saved, bool showScheduleValidation, NetworkExceptions? failure
 });
 
 
@@ -344,7 +346,7 @@ class __$AddDoctorStateCopyWithImpl<$Res>
 
 /// Create a copy of AddDoctorState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? initialDoctor = freezed,Object? savedDoctor = freezed,Object? specializations = null,Object? selectedSpecializationId = freezed,Object? gender = null,Object? imagePath = freezed,Object? qualificationFiles = null,Object? specialtyOpen = null,Object? activeDays = null,Object? hours = null,Object? isLoadingSpecializations = null,Object? isSaving = null,Object? saved = null,Object? failure = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? initialDoctor = freezed,Object? savedDoctor = freezed,Object? specializations = null,Object? selectedSpecializationId = freezed,Object? gender = null,Object? imagePath = freezed,Object? qualificationFiles = null,Object? specialtyOpen = null,Object? activeDays = null,Object? hours = null,Object? isLoadingSpecializations = null,Object? isSaving = null,Object? saved = null,Object? showScheduleValidation = null,Object? failure = freezed,}) {
   return _then(_AddDoctorState(
 initialDoctor: freezed == initialDoctor ? _self.initialDoctor : initialDoctor // ignore: cast_nullable_to_non_nullable
 as ClinicDoctorModel?,savedDoctor: freezed == savedDoctor ? _self.savedDoctor : savedDoctor // ignore: cast_nullable_to_non_nullable
@@ -359,6 +361,7 @@ as Set<Weekday>,hours: null == hours ? _self._hours : hours // ignore: cast_null
 as Map<Weekday, WorkingHours>,isLoadingSpecializations: null == isLoadingSpecializations ? _self.isLoadingSpecializations : isLoadingSpecializations // ignore: cast_nullable_to_non_nullable
 as bool,isSaving: null == isSaving ? _self.isSaving : isSaving // ignore: cast_nullable_to_non_nullable
 as bool,saved: null == saved ? _self.saved : saved // ignore: cast_nullable_to_non_nullable
+as bool,showScheduleValidation: null == showScheduleValidation ? _self.showScheduleValidation : showScheduleValidation // ignore: cast_nullable_to_non_nullable
 as bool,failure: freezed == failure ? _self.failure : failure // ignore: cast_nullable_to_non_nullable
 as NetworkExceptions?,
   ));

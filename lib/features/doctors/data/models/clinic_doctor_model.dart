@@ -6,11 +6,12 @@ part 'clinic_doctor_model.g.dart';
 @freezed
 abstract class ClinicDoctorModel with _$ClinicDoctorModel {
   const factory ClinicDoctorModel({
-    @JsonKey(name: 'doctor_id') String? doctorId,
+    @JsonKey(name: 'doctor_id', fromJson: _stringFromJson) String? doctorId,
     @JsonKey(name: 'name_ar') String? nameAr,
     @JsonKey(name: 'name_en') String? nameEn,
     String? name,
-    @JsonKey(name: 'specialization_id') String? specializationId,
+    @JsonKey(name: 'specialization_id', fromJson: _stringFromJson)
+    String? specializationId,
     @JsonKey(name: 'specialization_name') String? specializationName,
     @JsonKey(name: 'specialization_icon') String? specializationIcon,
     @JsonKey(name: 'specialization_color') String? specializationColor,
@@ -48,3 +49,5 @@ abstract class ClinicDoctorScheduleModel with _$ClinicDoctorScheduleModel {
   factory ClinicDoctorScheduleModel.fromJson(Map<String, dynamic> json) =>
       _$ClinicDoctorScheduleModelFromJson(json);
 }
+
+String? _stringFromJson(Object? value) => value?.toString();

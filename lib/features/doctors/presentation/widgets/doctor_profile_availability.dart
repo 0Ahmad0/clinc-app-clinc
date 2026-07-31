@@ -12,10 +12,12 @@ class DoctorProfileAvailability extends StatelessWidget {
     super.key,
     required this.available,
     required this.onToggle,
+    this.loading = false,
   });
 
   final bool available;
   final VoidCallback onToggle;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +78,7 @@ class DoctorProfileAvailability extends StatelessWidget {
               ],
             ),
           ),
-          AppSwitch(value: available, onChanged: onToggle),
+          AppSwitch(value: available, loading: loading, onChanged: onToggle),
         ],
       ),
     );

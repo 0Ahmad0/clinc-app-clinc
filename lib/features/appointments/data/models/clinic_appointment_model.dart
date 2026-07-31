@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:intl/intl.dart';
 
+import '../../../../core/utils/app_time_formatter.dart';
 import '../../../../core/utils/app_url.dart';
 import '../../domain/appointment_kind.dart';
 import '../../domain/appointment_status.dart';
@@ -81,13 +81,6 @@ extension ClinicAppointmentModelX on ClinicAppointmentModel {
 
   String? _formatTime(String? rawTime) {
     if (rawTime == null || rawTime.isEmpty) return null;
-    for (final pattern in const ['HH:mm:ss', 'HH:mm', 'h:mm a', 'h:mm aaa']) {
-      final parsed = DateFormat(pattern).tryParseStrict(rawTime);
-      if (parsed != null) {
-        final formatted = DateFormat('h:mm a').format(parsed);
-        return formatted.replaceAll('AM', 'am').replaceAll('PM', 'pm');
-      }
-    }
-    return rawTime.replaceAll('AM', 'am').replaceAll('PM', 'pm');
+    return formatClockTime12(rawTime);
   }
 }

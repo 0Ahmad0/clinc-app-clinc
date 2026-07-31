@@ -27,7 +27,9 @@ class DoctorsList extends StatelessWidget {
           animation: state.pagination.items,
           builder: (context, _) {
             final doctors = state.pagination.items.value;
-            if (state.pagination.isInitialLoading.value && doctors.isEmpty) {
+            final isInitialLoading =
+                state.isFiltersLoading || state.pagination.isBusy;
+            if (isInitialLoading && doctors.isEmpty) {
               return const ListShimmer(itemHeight: 132);
             }
             if (doctors.isEmpty) {

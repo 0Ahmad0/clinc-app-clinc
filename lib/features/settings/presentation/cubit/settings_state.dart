@@ -17,10 +17,14 @@ abstract class SettingsState with _$SettingsState {
     @Default(false) bool profileSaved,
     @Default(false) bool isChangingPassword,
     @Default(false) bool passwordChanged,
+    @Default(<NotificationChannel>{})
+    Set<NotificationChannel> busyNotificationChannels,
     NetworkExceptions? failure,
   }) = _SettingsState;
 }
 
 extension SettingsStateX on SettingsState {
   bool isOn(NotificationChannel channel) => channels.contains(channel);
+  bool isChannelBusy(NotificationChannel channel) =>
+      busyNotificationChannels.contains(channel);
 }

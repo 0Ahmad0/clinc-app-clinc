@@ -120,9 +120,9 @@ class ReportsCubit extends Cubit<ReportsState> {
   Future<void> _loadGenerated({required int page, bool reset = false}) async {
     final pagination = state.pagination;
     if (pagination.isBusy && !reset) return;
-    if (reset) pagination.reset();
     if (page == 1) pagination.isInitialLoading.value = true;
     if (page > 1) pagination.isLoadingMore.value = true;
+    if (reset) pagination.reset();
     emit(state.copyWith(failure: null));
 
     final result = await _repository.generated(

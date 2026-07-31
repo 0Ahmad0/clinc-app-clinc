@@ -22,8 +22,8 @@ class AppShimmer extends StatelessWidget {
       width: width,
       height: height,
       child: LinearProgressIndicator(
-        color: context.colors.line,
-        backgroundColor: context.colors.fill,
+        color: context.colors.primary300.withValues(alpha: 0.46),
+        backgroundColor: context.colors.line.withValues(alpha: 0.72),
       ),
     ),
   );

@@ -57,12 +57,14 @@ class ServicesDetailList extends StatelessWidget {
             final test = tests[index];
             final testState = state.testState(test.labTestId);
             final testAccent = test.accent(context.colors, fallback: accent);
+            final testId = test.labTestId;
             return ServiceTestCard(
-              key: ValueKey(test.labTestId ?? test.code),
+              key: ValueKey(testId ?? test.code),
               test: test,
               accent: testAccent,
               enabled: testState.enabled,
               price: testState.price,
+              loading: testId != null && state.busyLabTestIds.contains(testId),
               onToggle: () => cubit.toggleTest(test.labTestId),
               onPriceChanged: (value) =>
                   cubit.setTestPrice(test.labTestId, value),

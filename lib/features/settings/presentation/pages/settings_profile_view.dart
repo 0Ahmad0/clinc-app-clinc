@@ -173,10 +173,9 @@ class _SettingsProfileViewState extends State<SettingsProfileView> {
                   ),
                 ),
                 child: AppButton(
-                  label: state.isSavingProfile
-                      ? '...'
-                      : l10n.settingsProfileSave,
+                  label: l10n.settingsProfileSave,
                   icon: Iconsax.document_download,
+                  isLoading: state.isSavingProfile,
                   onPressed: state.isSavingProfile
                       ? null
                       : () => context.read<SettingsCubit>().updateProfile(

@@ -43,6 +43,10 @@ class AddDoctorScheduleSection extends StatelessWidget {
                 day: day,
                 active: state.isActive(day),
                 hours: state.hoursOf(day),
+                endErrorText:
+                    state.showScheduleValidation && state.hasInvalidHours(day)
+                    ? _timeRangeErrorText(context)
+                    : null,
                 onToggle: () => cubit.toggleDay(day),
                 onPickStart: () =>
                     _pickTime(context, cubit, day, isStart: true),
@@ -54,5 +58,13 @@ class AddDoctorScheduleSection extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _timeRangeErrorText(BuildContext context) {
+    final locale = Localizations.localeOf(context).languageCode;
+    if (locale == 'ar') {
+      return 'وقت الانتهاء يجب أن يكون بعد وقت البدء';
+    }
+    return 'End time must be after start time';
   }
 }

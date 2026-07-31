@@ -21,6 +21,7 @@ abstract class AddDoctorState with _$AddDoctorState {
     @Default(false) bool isLoadingSpecializations,
     @Default(false) bool isSaving,
     @Default(false) bool saved,
+    @Default(false) bool showScheduleValidation,
     NetworkExceptions? failure,
   }) = _AddDoctorState;
 }
@@ -53,6 +54,12 @@ extension AddDoctorStateX on AddDoctorState {
 
   WorkingHours hoursOf(Weekday day) => hours[day] ?? _defaultDay;
 
+  bool hasInvalidHours(Weekday day) {
+    if (!isActive(day)) return false;
+    final hours = hoursOf(day);
+    return _minutesOf(hours.start) >= _minutesOf(hours.end);
+  }
+
   ClinicSpecializationModel? get selectedSpecialization {
     for (final specialization in specializations) {
       if (specialization.specializationId == selectedSpecializationId) {
@@ -62,3 +69,5 @@ extension AddDoctorStateX on AddDoctorState {
     return null;
   }
 }
+
+int _minutesOf(TimeOfDay value) => value.hour * 60 + value.minute;

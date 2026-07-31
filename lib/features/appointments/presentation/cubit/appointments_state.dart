@@ -19,6 +19,8 @@ abstract class AppointmentsState with _$AppointmentsState {
     @Default(0) int rejectedCount,
     String? selectedId,
     ClinicAppointmentModel? selected,
+    String? busyAppointmentId,
+    String? busyAction,
     NetworkExceptions? failure,
   }) = _AppointmentsState;
 }

@@ -124,6 +124,8 @@ class LoginLayerState extends State<LoginLayer> {
                         previous.action != current.action,
                     builder: (context, state) => AppButton(
                       label: l10n.authLoginCta,
+                      isLoading:
+                          state.isLoading && state.action == AuthAction.login,
                       onPressed:
                           state.isLoading && state.action == AuthAction.login
                           ? null
@@ -140,7 +142,9 @@ class LoginLayerState extends State<LoginLayer> {
                             },
                     ),
                   ),
+
                   const SizedBox(height: AppSpacing.sm),
+                  if(false)
                   const _GuestButton(onPressed: null),
                   const Spacer(),
                   const SizedBox(height: AppSpacing.lg),

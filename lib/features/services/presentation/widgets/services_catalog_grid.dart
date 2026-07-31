@@ -40,9 +40,10 @@ class ServicesCatalogGrid extends StatelessWidget {
         }
         if (isListLoading) return const CardsGridShimmer();
 
+        final activeSpecializations = state.activeSpecializations;
         final isEmpty = isLab
             ? state.visibleLabSections.isEmpty
-            : state.enabledSpecializations.items.isEmpty;
+            : activeSpecializations.isEmpty;
         final cards = <Widget>[
           if (isLab)
             for (final section in state.visibleLabSections)
@@ -63,7 +64,7 @@ class ServicesCatalogGrid extends StatelessWidget {
                 onTap: () => cubit.openDetail(section),
               )
           else
-            for (final specialty in state.enabledSpecializations.items.value)
+            for (final specialty in activeSpecializations)
               ServiceCard(
                 icon: specialty.iconData,
                 accent: specialty.accent(colors),

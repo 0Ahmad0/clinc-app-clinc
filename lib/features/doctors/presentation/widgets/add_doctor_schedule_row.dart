@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../../../config/theme/app_spacing.dart';
+import '../../../../core/utils/app_time_formatter.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../domain/weekday.dart';
 import '../cubit/add_doctor_cubit.dart';
@@ -20,6 +21,7 @@ class AddDoctorScheduleRow extends StatelessWidget {
     required this.onToggle,
     required this.onPickStart,
     required this.onPickEnd,
+    this.endErrorText,
   });
 
   final Weekday day;
@@ -28,11 +30,13 @@ class AddDoctorScheduleRow extends StatelessWidget {
   final VoidCallback onToggle;
   final VoidCallback onPickStart;
   final VoidCallback onPickEnd;
+  final String? endErrorText;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final l10n = context.l10n;
+    final hasEndError = endErrorText != null && endErrorText!.isNotEmpty;
     return Container(
       padding: const EdgeInsetsDirectional.all(AppSpacing.sm + 1),
       decoration: BoxDecoration(
@@ -79,7 +83,7 @@ class AddDoctorScheduleRow extends StatelessWidget {
                     ),
                     Text(
                       active
-                          ? '${hours.start.format(context)} - ${hours.end.format(context)}'
+                          ? '${formatTimeOfDay12(hours.start)} - ${formatTimeOfDay12(hours.end)}'
                           : l10n.addDoctorDayOff,
                       textDirection: active ? TextDirection.ltr : null,
                       style: context.textTheme.labelSmall?.copyWith(
@@ -96,32 +100,56 @@ class AddDoctorScheduleRow extends StatelessWidget {
             AppGaps.h12,
             Divider(height: 1, color: colors.line),
             AppGaps.h12,
-            Row(
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: AddDoctorTimeBox(
-                    label: l10n.addDoctorFrom,
-                    time: hours.start.format(context),
-                    onTap: onPickStart,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AddDoctorTimeBox(
+                        label: l10n.addDoctorFrom,
+                        time: formatTimeOfDay12(hours.start),
+                        onTap: onPickStart,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.symmetric(
+                        horizontal: AppSpacing.sm,
+                      ),
+                      child: Icon(
+                        Iconsax.arrow_left_3,
+                        size: AppSizes.iconSm,
+                        color: colors.muted,
+                      ),
+                    ),
+                    Expanded(
+                      child: AddDoctorTimeBox(
+                        label: l10n.addDoctorTo,
+                        time: formatTimeOfDay12(hours.end),
+                        onTap: onPickEnd,
+                        hasError: hasEndError,
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsetsDirectional.symmetric(
-                    horizontal: AppSpacing.sm,
+                if (hasEndError) ...[
+                  const SizedBox(height: AppSpacing.xxs + 2),
+                  Row(
+                    children: [
+                      const Expanded(child: SizedBox.shrink()),
+                      SizedBox(width: AppSizes.iconSm + AppSpacing.sm * 2),
+                      Expanded(
+                        child: Text(
+                          endErrorText!,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: colors.dangerFg,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Icon(
-                    Iconsax.arrow_left_3,
-                    size: AppSizes.iconSm,
-                    color: colors.muted,
-                  ),
-                ),
-                Expanded(
-                  child: AddDoctorTimeBox(
-                    label: l10n.addDoctorTo,
-                    time: hours.end.format(context),
-                    onTap: onPickEnd,
-                  ),
-                ),
+                ],
               ],
             ),
           ],

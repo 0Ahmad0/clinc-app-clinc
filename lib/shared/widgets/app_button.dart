@@ -12,17 +12,19 @@ class AppButton extends StatelessWidget {
     this.onPressed,
     this.variant = AppButtonVariant.primary,
     this.icon,
+    this.isLoading = false,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final AppButtonVariant variant;
   final IconData? icon;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final enabled = onPressed != null;
+    final enabled = onPressed != null && !isLoading;
     final primary = variant == AppButtonVariant.primary;
     final success = variant == AppButtonVariant.success;
     final danger = variant == AppButtonVariant.danger;
@@ -50,7 +52,7 @@ class AppButton extends StatelessWidget {
         : colors.surface.withValues(alpha: 0);
 
     return Opacity(
-      opacity: enabled ? 1 : 0.5,
+      opacity: enabled || isLoading ? 1 : 0.5,
       child: DecoratedBox(
         decoration: BoxDecoration(
           gradient: primary ? colors.ctaGradient : null,
@@ -64,29 +66,43 @@ class AppButton extends StatelessWidget {
         child: Material(
           color: colors.surface.withValues(alpha: 0),
           child: InkWell(
-            onTap: onPressed,
+            onTap: enabled ? onPressed : null,
             borderRadius: BorderRadius.circular(AppRadius.field),
             child: SizedBox(
               height: AppSizes.buttonHeightSm,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (icon != null) ...[
-                    Icon(icon, size: AppSizes.iconMd, color: foreground),
-                    AppGaps.w8,
-                  ],
-                  Flexible(
-                    child: Text(
-                      label,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: context.textTheme.labelLarge?.copyWith(
-                        color: foreground,
+              child: Center(
+                child: isLoading
+                    ? SizedBox.square(
+                        dimension: AppSizes.iconMd,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.2,
+                          valueColor: AlwaysStoppedAnimation<Color>(foreground),
+                        ),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (icon != null) ...[
+                            Icon(
+                              icon,
+                              size: AppSizes.iconMd,
+                              color: foreground,
+                            ),
+                            AppGaps.w8,
+                          ],
+                          Flexible(
+                            child: Text(
+                              label,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: context.textTheme.labelLarge?.copyWith(
+                                color: foreground,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ),

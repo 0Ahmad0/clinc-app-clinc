@@ -9,7 +9,7 @@ part of 'clinic_specialization_model.dart';
 _ClinicSpecializationModel _$ClinicSpecializationModelFromJson(
   Map<String, dynamic> json,
 ) => _ClinicSpecializationModel(
-  specializationId: json['specialization_id'] as String?,
+  specializationId: _stringFromJson(json['specialization_id']),
   name: json['name'] as String?,
   nameAr: json['name_ar'] as String?,
   nameEn: json['name_en'] as String?,

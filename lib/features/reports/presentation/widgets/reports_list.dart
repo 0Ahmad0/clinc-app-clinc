@@ -4,12 +4,12 @@ import 'package:intl/intl.dart' show NumberFormat;
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_section_shimmers.dart';
 import '../cubit/reports_cubit.dart';
 import 'report_entry_card.dart';
 
 class ReportsList extends StatelessWidget {
   const ReportsList({super.key});
-
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -77,11 +77,8 @@ class ReportsList extends StatelessWidget {
               animation: state.pagination.items,
               builder: (context, _) {
                 final items = state.pagination.items.value;
-                if (state.pagination.isInitialLoading.value && items.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.all(AppSpacing.lg),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
+                if (state.pagination.isBusy && items.isEmpty) {
+                  return const ListShimmer(itemHeight: 92, bottomPadding: 0);
                 }
                 return Column(
                   children: [

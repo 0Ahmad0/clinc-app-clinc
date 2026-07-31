@@ -34,7 +34,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onb1ChipTitle => 'Confirmed';
 
   @override
-  String get onb1ChipSub => 'Dr. Sara — 4:30 PM';
+  String get onb1ChipSub => 'Dr. Sara — 4:30 pm';
 
   @override
   String get onb2Kicker => 'FOR PATIENTS';
@@ -235,7 +235,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeDate => 'Saturday, July 18';
 
   @override
-  String get homeOpenStatus => 'Clinic open — 8:00 AM to 8:00 PM';
+  String get homeOpenStatus => 'Clinic open — 8:00 am to 8:00 pm';
 
   @override
   String get homeNewAppointment => 'Appointments';
@@ -301,7 +301,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeAppointment1Service => 'Cardiology consultation';
 
   @override
-  String get homeAppointment1Time => '9:00 AM';
+  String get homeAppointment1Time => '9:00 am';
 
   @override
   String get homeAppointment2Name => 'Fatimah Ali Al-Zahrani';
@@ -310,7 +310,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeAppointment2Service => 'Complete blood test';
 
   @override
-  String get homeAppointment2Time => '10:30 AM';
+  String get homeAppointment2Time => '10:30 am';
 
   @override
   String get homeAppointment3Name => 'Mohammed Abdullah Al-Ghamdi';
@@ -319,7 +319,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeAppointment3Service => 'Eye examination';
 
   @override
-  String get homeAppointment3Time => '12:00 PM';
+  String get homeAppointment3Time => '12:00 pm';
 
   @override
   String get homeAppointment4Name => 'Noura Salman Al-Qahtani';
@@ -328,7 +328,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeAppointment4Service => 'General consultation';
 
   @override
-  String get homeAppointment4Time => '2:00 PM';
+  String get homeAppointment4Time => '2:00 pm';
 
   @override
   String get homeAppointment5Name => 'Abdulrahman Khaled Al-Otaibi';
@@ -337,7 +337,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeAppointment5Service => 'X-ray';
 
   @override
-  String get homeAppointment5Time => '4:00 PM';
+  String get homeAppointment5Time => '4:00 pm';
 
   @override
   String get homeAppointmentUpcoming => 'Upcoming';
@@ -458,7 +458,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get doctorProfileSchedule => 'Working days';
 
   @override
-  String get doctorProfileHours => '4:00 PM to 9:00 PM — 20 min per visit';
+  String get doctorProfileHours => '4:00 pm to 9:00 pm — 20 min per visit';
 
   @override
   String get doctorProfileServices => 'Services & fees';
@@ -536,10 +536,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addDoctorTo => 'To';
 
   @override
-  String get addDoctorDefaultStart => '09:00 AM';
+  String get addDoctorDefaultStart => '9:00 am';
 
   @override
-  String get addDoctorDefaultEnd => '05:00 PM';
+  String get addDoctorDefaultEnd => '5:00 pm';
 
   @override
   String get addDoctorSave => 'Save data';
@@ -611,7 +611,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notif1Body =>
-      'A new appointment was booked with patient Ahmed Khaled at 3:00 PM';
+      'A new appointment was booked with patient Ahmed Khaled at 3:00 pm';
 
   @override
   String get notif2Title => 'Lab results';
@@ -637,7 +637,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notif5Body =>
-      'Patient Fahad Al-Anazi has an appointment tomorrow at 11:00 AM';
+      'Patient Fahad Al-Anazi has an appointment tomorrow at 11:00 am';
 
   @override
   String get apptTitle => 'Appointments';
@@ -1204,7 +1204,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportsOutcomePending => 'Pending';
 
   @override
-  String get reportsOutcomePendingLong => 'Pending review';
+  String get reportsOutcomePendingLong => 'Pending';
 
   @override
   String get reportsOutcomeCancelled => 'Cancelled';
@@ -1268,13 +1268,13 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get report1Date => '18 Jul 2026 · 10:22 AM';
+  String get report1Date => '18 Jul 2026 · 10:22 am';
 
   @override
-  String get report2Date => '11 Jul 2026 · 10:22 AM';
+  String get report2Date => '11 Jul 2026 · 10:22 am';
 
   @override
-  String get report3Date => '04 Jul 2026 · 10:22 AM';
+  String get report3Date => '04 Jul 2026 · 10:22 am';
 
   @override
   String get toastOtpSentSuccess => 'OTP sent successfully';

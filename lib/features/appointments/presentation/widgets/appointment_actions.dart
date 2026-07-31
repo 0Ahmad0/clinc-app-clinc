@@ -14,20 +14,20 @@ Future<void> openRejectSheet(
   String id,
 ) async {
   final l10n = context.l10n;
-  final reason = await showModalBottomSheet<String>(
+  final submitted = await showModalBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => const AppointmentRejectSheet(),
+    builder: (_) =>
+        AppointmentRejectSheet(onConfirm: (reason) => cubit.reject(id, reason)),
   );
-  if (reason == null || !context.mounted) return;
+  if (submitted != true || !context.mounted) return;
   AppToast.show(
     context,
     title: l10n.apptStatusRejected,
     message: l10n.apptRejectToast,
     type: AppFeedbackType.success,
   );
-  cubit.reject(id, reason);
 }
 
 Future<void> openFinishSheet(
@@ -36,22 +36,24 @@ Future<void> openFinishSheet(
   ClinicAppointmentModel appointment,
 ) async {
   final l10n = context.l10n;
-  final result = await showModalBottomSheet<AppointmentFinishResult>(
+  final id = appointment.appointmentId;
+  if (id == null) return;
+  final submitted = await showModalBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) => const AppointmentFinishSheet(requiresResult: false),
+    builder: (_) => AppointmentFinishSheet(
+      requiresResult: false,
+      onConfirm: (result) => cubit.finish(id, notes: result.notes),
+    ),
   );
-  if (result == null || !context.mounted) return;
+  if (submitted != true || !context.mounted) return;
   AppToast.show(
     context,
     title: l10n.apptStatusDone,
     message: l10n.apptFinishToast,
     type: AppFeedbackType.success,
   );
-  final id = appointment.appointmentId;
-  if (id == null) return;
-  cubit.finish(id, notes: result.notes);
 }
 
 Future<void> openResultSheet(
@@ -60,24 +62,29 @@ Future<void> openResultSheet(
   ClinicAppointmentModel appointment,
 ) async {
   final l10n = context.l10n;
-  final result = await showModalBottomSheet<AppointmentFinishResult>(
+  final id = appointment.appointmentId;
+  if (id == null) return;
+  final submitted = await showModalBottomSheet<bool>(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (_) =>
-        const AppointmentFinishSheet(requiresResult: true, resultOnly: true),
+    builder: (_) => AppointmentFinishSheet(
+      requiresResult: true,
+      resultOnly: true,
+      onConfirm: (result) {
+        final filePath = result.filePath;
+        if (filePath == null) return Future<void>.value();
+        return cubit.uploadResult(id, filePath);
+      },
+    ),
   );
-  if (result == null || !context.mounted) return;
-  final id = appointment.appointmentId;
-  final filePath = result.filePath;
-  if (id == null || filePath == null) return;
+  if (submitted != true || !context.mounted) return;
   AppToast.show(
     context,
     title: _uploadResultTitle(context),
     message: l10n.apptFinishToastLab,
     type: AppFeedbackType.success,
   );
-  cubit.uploadResult(id, filePath);
 }
 
 String _uploadResultTitle(BuildContext context) =>

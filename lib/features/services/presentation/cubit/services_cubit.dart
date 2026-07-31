@@ -279,9 +279,9 @@ class ServicesCubit extends Cubit<ServicesState> {
   }) async {
     final pagination = state.availableLabTests;
     if (pagination.isBusy && !reset) return;
-    if (reset) pagination.reset();
     pagination.isInitialLoading.value = page == 1;
     pagination.isLoadingMore.value = page > 1;
+    if (reset) pagination.reset();
 
     final result = await _repository.labTests(
       page: page,
@@ -312,9 +312,9 @@ class ServicesCubit extends Cubit<ServicesState> {
   }) async {
     final pagination = state.enabledLabTests;
     if (pagination.isBusy && !reset) return;
-    if (reset) pagination.reset();
     pagination.isInitialLoading.value = page == 1;
     pagination.isLoadingMore.value = page > 1;
+    if (reset) pagination.reset();
 
     final result = await _repository.enabledLabTests(
       page: page,
@@ -348,12 +348,12 @@ class ServicesCubit extends Cubit<ServicesState> {
   }) async {
     final pagination = state.availableSpecializations;
     if (pagination.isBusy && !reset) return;
-    if (reset) pagination.reset();
     if (page == 1) {
       emit(state.copyWith(isSpecializationFiltersLoading: true, failure: null));
     }
     pagination.isInitialLoading.value = page == 1;
     pagination.isLoadingMore.value = page > 1;
+    if (reset) pagination.reset();
 
     final result = await _repository.specializations(
       page: page,
@@ -395,9 +395,9 @@ class ServicesCubit extends Cubit<ServicesState> {
   }) async {
     final pagination = state.enabledSpecializations;
     if (pagination.isBusy && !reset) return;
-    if (reset) pagination.reset();
     pagination.isInitialLoading.value = page == 1;
     pagination.isLoadingMore.value = page > 1;
+    if (reset) pagination.reset();
 
     final result = await _repository.enabledSpecializations(
       page: page,

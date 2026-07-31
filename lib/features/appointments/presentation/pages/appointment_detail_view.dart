@@ -6,9 +6,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../core/enums/app_button_variant.dart';
 import '../../../../core/enums/app_feedback_type.dart';
+import '../../../../core/utils/app_time_formatter.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_section_card.dart';
+import '../../../../shared/widgets/app_shimmer_placeholder.dart';
 import '../../../../shared/widgets/app_toast.dart';
 import '../../data/models/clinic_appointment_model.dart';
 import '../appointment_kind_style.dart';
@@ -27,6 +29,17 @@ class AppointmentDetailView extends StatelessWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final cubit = context.read<AppointmentsCubit>();
+    final state = context.watch<AppointmentsCubit>().state;
+    final id = appointment.appointmentId;
+    final isBusy = state.busyAppointmentId == id;
+    final isAccepting =
+        isBusy && state.busyAction == AppointmentsCubit.acceptAction;
+    final isRejecting =
+        isBusy && state.busyAction == AppointmentsCubit.rejectAction;
+    final isFinishing =
+        isBusy && state.busyAction == AppointmentsCubit.finishAction;
+    final isUploading =
+        isBusy && state.busyAction == AppointmentsCubit.uploadResultAction;
     final requiresResult = appointment.kindValue.requiresResult;
     final notes = appointment.notes?.trim();
     final resultUri = appointment.resultFileUri;
@@ -89,7 +102,7 @@ class AppointmentDetailView extends StatelessWidget {
                     AppointmentInfoRow(
                       icon: Iconsax.clock,
                       label: l10n.apptRowTime,
-                      value: appointment.time ?? '-',
+                      value: formatClockTime12(appointment.time),
                     ),
                     if (appointment.rejectionReason != null) ...[
                       AppGaps.h12,
@@ -145,10 +158,10 @@ class AppointmentDetailView extends StatelessWidget {
                                 label: l10n.apptAccept,
                                 icon: Iconsax.tick_circle,
                                 variant: AppButtonVariant.success,
-                                onPressed: () {
-                                  final id = appointment.appointmentId;
-                                  if (id != null) cubit.accept(id);
-                                },
+                                isLoading: isAccepting,
+                                onPressed: id == null || isBusy
+                                    ? null
+                                    : () => cubit.accept(id),
                               ),
                             ),
                             AppGaps.w12,
@@ -157,12 +170,10 @@ class AppointmentDetailView extends StatelessWidget {
                                 label: l10n.apptReject,
                                 icon: Iconsax.close_circle,
                                 variant: AppButtonVariant.danger,
-                                onPressed: () {
-                                  final id = appointment.appointmentId;
-                                  if (id != null) {
-                                    openRejectSheet(context, cubit, id);
-                                  }
-                                },
+                                isLoading: isRejecting,
+                                onPressed: id == null || isBusy
+                                    ? null
+                                    : () => openRejectSheet(context, cubit, id),
                               ),
                             ),
                           ],
@@ -174,11 +185,14 @@ class AppointmentDetailView extends StatelessWidget {
                               child: AppButton(
                                 label: l10n.apptFinish,
                                 icon: Iconsax.tick_square,
-                                onPressed: () => openFinishSheet(
-                                  context,
-                                  cubit,
-                                  appointment,
-                                ),
+                                isLoading: isFinishing,
+                                onPressed: id == null || isBusy
+                                    ? null
+                                    : () => openFinishSheet(
+                                        context,
+                                        cubit,
+                                        appointment,
+                                      ),
                               ),
                             ),
                             AppGaps.w12,
@@ -187,11 +201,14 @@ class AppointmentDetailView extends StatelessWidget {
                                 label: _uploadResultLabel(context),
                                 icon: Iconsax.document_upload,
                                 variant: AppButtonVariant.secondary,
-                                onPressed: () => openResultSheet(
-                                  context,
-                                  cubit,
-                                  appointment,
-                                ),
+                                isLoading: isUploading,
+                                onPressed: id == null || isBusy
+                                    ? null
+                                    : () => openResultSheet(
+                                        context,
+                                        cubit,
+                                        appointment,
+                                      ),
                               ),
                             ),
                           ],
@@ -199,8 +216,14 @@ class AppointmentDetailView extends StatelessWidget {
                       : AppButton(
                           label: l10n.apptFinish,
                           icon: Iconsax.tick_square,
-                          onPressed: () =>
-                              openFinishSheet(context, cubit, appointment),
+                          isLoading: isFinishing,
+                          onPressed: id == null || isBusy
+                              ? null
+                              : () => openFinishSheet(
+                                  context,
+                                  cubit,
+                                  appointment,
+                                ),
                         ),
                 ),
               ],
@@ -242,4 +265,122 @@ class AppointmentDetailView extends StatelessWidget {
       type: AppFeedbackType.danger,
     );
   }
+}
+
+class AppointmentDetailLoadingView extends StatelessWidget {
+  const AppointmentDetailLoadingView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            gradient: colors.headerGradient,
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(AppRadius.homeHeader),
+            ),
+          ),
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(
+              AppSpacing.screen,
+              MediaQuery.paddingOf(context).top + AppSpacing.xs,
+              AppSpacing.screen,
+              AppSpacing.lg,
+            ),
+            child: Column(
+              children: [
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: SizedBox.square(
+                    dimension: AppSizes.hitTarget,
+                    child: Material(
+                      color: colors.onBrand.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(AppRadius.field),
+                      child: InkWell(
+                        onTap: () =>
+                            context.read<AppointmentsCubit>().closeDetail(),
+                        borderRadius: BorderRadius.circular(AppRadius.field),
+                        child: Icon(
+                          Directionality.of(context) == TextDirection.rtl
+                              ? Iconsax.arrow_right_3
+                              : Iconsax.arrow_left_2,
+                          color: colors.onBrand,
+                          size: AppSizes.iconMd,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const AppShimmerPlaceholder(
+                  width: AppSizes.appointmentDetailAvatar,
+                  height: AppSizes.appointmentDetailAvatar,
+                  shape: BoxShape.circle,
+                ),
+                AppGaps.h12,
+                const AppShimmerPlaceholder(
+                  width: 148,
+                  height: 22,
+                  borderRadius: AppRadius.pill,
+                ),
+                AppGaps.h12,
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppShimmerPlaceholder(
+                      width: 92,
+                      height: 28,
+                      borderRadius: AppRadius.pill,
+                    ),
+                    SizedBox(width: AppSpacing.sm),
+                    AppShimmerPlaceholder(
+                      width: 78,
+                      height: 28,
+                      borderRadius: AppRadius.pill,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(
+            AppSpacing.screen,
+            AppSpacing.md + 2,
+            AppSpacing.screen,
+            AppSpacing.xl,
+          ),
+          child: Column(
+            children: const [
+              _AppointmentDetailSectionShimmer(),
+              AppGaps.h16,
+              _AppointmentDetailSectionShimmer(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AppointmentDetailSectionShimmer extends StatelessWidget {
+  const _AppointmentDetailSectionShimmer();
+
+  @override
+  Widget build(BuildContext context) => AppSectionCard(
+    icon: Iconsax.user,
+    tint: context.colors.primary600,
+    title: '',
+    child: Column(
+      children: const [
+        AppShimmerPlaceholder(height: 42, borderRadius: AppRadius.sm),
+        AppGaps.h12,
+        AppShimmerPlaceholder(height: 42, borderRadius: AppRadius.sm),
+      ],
+    ),
+  );
 }

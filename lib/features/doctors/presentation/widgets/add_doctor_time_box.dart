@@ -12,11 +12,13 @@ class AddDoctorTimeBox extends StatelessWidget {
     required this.label,
     required this.time,
     required this.onTap,
+    this.hasError = false,
   });
 
   final String label;
   final String time;
   final VoidCallback onTap;
+  final bool hasError;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,9 @@ class AddDoctorTimeBox extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.sm),
             border: Border.all(
-              color: colors.ink.withValues(alpha: 0.08),
+              color: hasError
+                  ? colors.danger
+                  : colors.ink.withValues(alpha: 0.08),
               width: 1.5,
             ),
           ),

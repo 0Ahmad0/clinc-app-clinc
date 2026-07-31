@@ -23,11 +23,22 @@ class AppointmentCard extends StatelessWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final cubit = context.read<AppointmentsCubit>();
+    final state = context.watch<AppointmentsCubit>().state;
     final status = appointment.statusValue;
     final kind = appointment.kindValue;
     final accent = status.accent(colors);
     final kindAccent = kind.accent(colors);
     final name = appointment.patientName ?? '-';
+    final id = appointment.appointmentId;
+    final isBusy = state.busyAppointmentId == id;
+    final isAccepting =
+        isBusy && state.busyAction == AppointmentsCubit.acceptAction;
+    final isRejecting =
+        isBusy && state.busyAction == AppointmentsCubit.rejectAction;
+    final isFinishing =
+        isBusy && state.busyAction == AppointmentsCubit.finishAction;
+    final isUploading =
+        isBusy && state.busyAction == AppointmentsCubit.uploadResultAction;
     return Material(
       color: colors.surface,
       shape: RoundedRectangleBorder(
@@ -46,7 +57,6 @@ class AppointmentCard extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                final id = appointment.appointmentId;
                 if (id != null) cubit.open(id);
               },
               child: Padding(
@@ -193,10 +203,10 @@ class AppointmentCard extends StatelessWidget {
                         label: l10n.apptAccept,
                         icon: Iconsax.tick_circle,
                         variant: AppButtonVariant.success,
-                        onPressed: () {
-                          final id = appointment.appointmentId;
-                          if (id != null) cubit.accept(id);
-                        },
+                        isLoading: isAccepting,
+                        onPressed: id == null || isBusy
+                            ? null
+                            : () => cubit.accept(id),
                       ),
                     ),
                     AppGaps.w12,
@@ -205,10 +215,10 @@ class AppointmentCard extends StatelessWidget {
                         label: l10n.apptReject,
                         icon: Iconsax.close_circle,
                         variant: AppButtonVariant.danger,
-                        onPressed: () {
-                          final id = appointment.appointmentId;
-                          if (id != null) openRejectSheet(context, cubit, id);
-                        },
+                        isLoading: isRejecting,
+                        onPressed: id == null || isBusy
+                            ? null
+                            : () => openRejectSheet(context, cubit, id),
                       ),
                     ),
                   ],
@@ -229,8 +239,14 @@ class AppointmentCard extends StatelessWidget {
                             child: AppButton(
                               label: l10n.apptFinish,
                               icon: Iconsax.tick_square,
-                              onPressed: () =>
-                                  openFinishSheet(context, cubit, appointment),
+                              isLoading: isFinishing,
+                              onPressed: id == null || isBusy
+                                  ? null
+                                  : () => openFinishSheet(
+                                      context,
+                                      cubit,
+                                      appointment,
+                                    ),
                             ),
                           ),
                           AppGaps.w12,
@@ -239,8 +255,14 @@ class AppointmentCard extends StatelessWidget {
                               label: _uploadResultLabel(context),
                               icon: Iconsax.document_upload,
                               variant: AppButtonVariant.secondary,
-                              onPressed: () =>
-                                  openResultSheet(context, cubit, appointment),
+                              isLoading: isUploading,
+                              onPressed: id == null || isBusy
+                                  ? null
+                                  : () => openResultSheet(
+                                      context,
+                                      cubit,
+                                      appointment,
+                                    ),
                             ),
                           ),
                         ],
@@ -248,8 +270,11 @@ class AppointmentCard extends StatelessWidget {
                     : AppButton(
                         label: l10n.apptFinish,
                         icon: Iconsax.tick_square,
-                        onPressed: () =>
-                            openFinishSheet(context, cubit, appointment),
+                        isLoading: isFinishing,
+                        onPressed: id == null || isBusy
+                            ? null
+                            : () =>
+                                  openFinishSheet(context, cubit, appointment),
                       ),
               ),
             if (appointment.status == 'rejected' &&

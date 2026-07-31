@@ -86,7 +86,7 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
   void toggleDay(Weekday day) {
     final days = {...state.activeDays};
     if (!days.remove(day)) days.add(day);
-    emit(state.copyWith(activeDays: days));
+    emit(state.copyWith(activeDays: days, failure: null));
   }
 
   void setStart(Weekday day, TimeOfDay start) {
@@ -94,6 +94,7 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
     emit(
       state.copyWith(
         hours: {...state.hours, day: (start: start, end: current.end)},
+        failure: null,
       ),
     );
   }
@@ -103,6 +104,7 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
     emit(
       state.copyWith(
         hours: {...state.hours, day: (start: current.start, end: end)},
+        failure: null,
       ),
     );
   }
@@ -129,6 +131,11 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
       return;
     }
 
+    if (!_hasValidActiveSchedule()) {
+      emit(state.copyWith(showScheduleValidation: true, failure: null));
+      return;
+    }
+
     final body = {
       'name_ar': nameAr.trim(),
       'name_en': _nullable(nameEn),
@@ -152,7 +159,14 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
       ],
     };
 
-    emit(state.copyWith(isSaving: true, saved: false, failure: null));
+    emit(
+      state.copyWith(
+        isSaving: true,
+        saved: false,
+        showScheduleValidation: false,
+        failure: null,
+      ),
+    );
     final id = state.initialDoctor?.doctorId;
     final result = id == null
         ? await _repository.createDoctor(
@@ -186,6 +200,13 @@ class AddDoctorCubit extends Cubit<AddDoctorState> {
         state.copyWith(isSaving: false, saved: false, failure: exception),
       ),
     );
+  }
+
+  bool _hasValidActiveSchedule() {
+    for (final day in state.activeDays) {
+      if (state.hasInvalidHours(day)) return false;
+    }
+    return true;
   }
 
   String? _nullable(String value) {

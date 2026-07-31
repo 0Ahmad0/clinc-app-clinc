@@ -5,6 +5,7 @@ import 'package:intl/intl.dart' show NumberFormat;
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../data/models/clinic_service_model.dart';
+import '../../domain/service_kind.dart';
 import '../services_l10n.dart';
 
 /// Gradient screen header. In list mode it shows a briefcase, the title and two
@@ -17,6 +18,8 @@ class ServicesHeader extends StatelessWidget {
     required this.labTotal,
     required this.specTotal,
     required this.activeCount,
+    required this.kind,
+    required this.availableKinds,
     required this.onBack,
   });
 
@@ -25,6 +28,8 @@ class ServicesHeader extends StatelessWidget {
   final int labTotal;
   final int specTotal;
   final int activeCount;
+  final ServiceKind kind;
+  final List<ServiceKind> availableKinds;
   final VoidCallback onBack;
 
   @override
@@ -35,6 +40,11 @@ class ServicesHeader extends StatelessWidget {
       Localizations.localeOf(context).toLanguageTag(),
     );
     final inDetail = detail != null;
+    final showLabStat =
+        kind == ServiceKind.lab && availableKinds.contains(ServiceKind.lab);
+    final showSpecialtyStat =
+        kind == ServiceKind.specialty &&
+        availableKinds.contains(ServiceKind.specialty);
 
     return Container(
       clipBehavior: Clip.antiAlias,
@@ -109,8 +119,10 @@ class ServicesHeader extends StatelessWidget {
                 ),
                 if (!inDetail)
                   for (final pill in [
-                    (format.format(labTotal), l10n.servicesLabStat),
-                    (format.format(specTotal), l10n.servicesSpecialtyStat),
+                    if (showLabStat)
+                      (format.format(labTotal), l10n.servicesLabStat),
+                    if (showSpecialtyStat)
+                      (format.format(specTotal), l10n.servicesSpecialtyStat),
                   ])
                     Container(
                       margin: const EdgeInsetsDirectional.only(

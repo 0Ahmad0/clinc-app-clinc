@@ -149,7 +149,7 @@ abstract class AppLocalizations {
   /// No description provided for @onb1ChipSub.
   ///
   /// In en, this message translates to:
-  /// **'Dr. Sara — 4:30 PM'**
+  /// **'Dr. Sara — 4:30 pm'**
   String get onb1ChipSub;
 
   /// No description provided for @onb2Kicker.
@@ -539,7 +539,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeOpenStatus.
   ///
   /// In en, this message translates to:
-  /// **'Clinic open — 8:00 AM to 8:00 PM'**
+  /// **'Clinic open — 8:00 am to 8:00 pm'**
   String get homeOpenStatus;
 
   /// No description provided for @homeNewAppointment.
@@ -671,7 +671,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeAppointment1Time.
   ///
   /// In en, this message translates to:
-  /// **'9:00 AM'**
+  /// **'9:00 am'**
   String get homeAppointment1Time;
 
   /// No description provided for @homeAppointment2Name.
@@ -689,7 +689,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeAppointment2Time.
   ///
   /// In en, this message translates to:
-  /// **'10:30 AM'**
+  /// **'10:30 am'**
   String get homeAppointment2Time;
 
   /// No description provided for @homeAppointment3Name.
@@ -707,7 +707,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeAppointment3Time.
   ///
   /// In en, this message translates to:
-  /// **'12:00 PM'**
+  /// **'12:00 pm'**
   String get homeAppointment3Time;
 
   /// No description provided for @homeAppointment4Name.
@@ -725,7 +725,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeAppointment4Time.
   ///
   /// In en, this message translates to:
-  /// **'2:00 PM'**
+  /// **'2:00 pm'**
   String get homeAppointment4Time;
 
   /// No description provided for @homeAppointment5Name.
@@ -743,7 +743,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeAppointment5Time.
   ///
   /// In en, this message translates to:
-  /// **'4:00 PM'**
+  /// **'4:00 pm'**
   String get homeAppointment5Time;
 
   /// No description provided for @homeAppointmentUpcoming.
@@ -971,7 +971,7 @@ abstract class AppLocalizations {
   /// No description provided for @doctorProfileHours.
   ///
   /// In en, this message translates to:
-  /// **'4:00 PM to 9:00 PM — 20 min per visit'**
+  /// **'4:00 pm to 9:00 pm — 20 min per visit'**
   String get doctorProfileHours;
 
   /// No description provided for @doctorProfileServices.
@@ -1127,13 +1127,13 @@ abstract class AppLocalizations {
   /// No description provided for @addDoctorDefaultStart.
   ///
   /// In en, this message translates to:
-  /// **'09:00 AM'**
+  /// **'9:00 am'**
   String get addDoctorDefaultStart;
 
   /// No description provided for @addDoctorDefaultEnd.
   ///
   /// In en, this message translates to:
-  /// **'05:00 PM'**
+  /// **'5:00 pm'**
   String get addDoctorDefaultEnd;
 
   /// No description provided for @addDoctorSave.
@@ -1271,7 +1271,7 @@ abstract class AppLocalizations {
   /// No description provided for @notif1Body.
   ///
   /// In en, this message translates to:
-  /// **'A new appointment was booked with patient Ahmed Khaled at 3:00 PM'**
+  /// **'A new appointment was booked with patient Ahmed Khaled at 3:00 pm'**
   String get notif1Body;
 
   /// No description provided for @notif2Title.
@@ -1319,7 +1319,7 @@ abstract class AppLocalizations {
   /// No description provided for @notif5Body.
   ///
   /// In en, this message translates to:
-  /// **'Patient Fahad Al-Anazi has an appointment tomorrow at 11:00 AM'**
+  /// **'Patient Fahad Al-Anazi has an appointment tomorrow at 11:00 am'**
   String get notif5Body;
 
   /// No description provided for @apptTitle.
@@ -2429,7 +2429,7 @@ abstract class AppLocalizations {
   /// No description provided for @reportsOutcomePendingLong.
   ///
   /// In en, this message translates to:
-  /// **'Pending review'**
+  /// **'Pending'**
   String get reportsOutcomePendingLong;
 
   /// No description provided for @reportsOutcomeCancelled.
@@ -2549,19 +2549,19 @@ abstract class AppLocalizations {
   /// No description provided for @report1Date.
   ///
   /// In en, this message translates to:
-  /// **'18 Jul 2026 · 10:22 AM'**
+  /// **'18 Jul 2026 · 10:22 am'**
   String get report1Date;
 
   /// No description provided for @report2Date.
   ///
   /// In en, this message translates to:
-  /// **'11 Jul 2026 · 10:22 AM'**
+  /// **'11 Jul 2026 · 10:22 am'**
   String get report2Date;
 
   /// No description provided for @report3Date.
   ///
   /// In en, this message translates to:
-  /// **'04 Jul 2026 · 10:22 AM'**
+  /// **'04 Jul 2026 · 10:22 am'**
   String get report3Date;
 
   /// No description provided for @toastOtpSentSuccess.

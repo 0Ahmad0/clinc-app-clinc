@@ -32,8 +32,7 @@ class AppointmentsListView extends StatelessWidget {
                     animation: state.pagination.items,
                     builder: (context, _) {
                       final appointments = state.pagination.items.value;
-                      if (state.pagination.isInitialLoading.value &&
-                          appointments.isEmpty) {
+                      if (state.pagination.isBusy && appointments.isEmpty) {
                         return const ListShimmer(itemHeight: 116);
                       }
                       if (appointments.isEmpty)

@@ -8,6 +8,7 @@ import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_shimmer_placeholder.dart';
 import '../../data/models/clinic_doctor_model.dart';
 import '../../domain/doctor_specialty.dart';
 import '../../domain/doctor_summary.dart';
@@ -54,6 +55,12 @@ class _DoctorProfileView extends StatelessWidget {
 
     return BlocBuilder<DoctorsCubit, DoctorsState>(
       builder: (context, state) {
+        if (state.isDetailsLoading) {
+          return Scaffold(
+            backgroundColor: colors.bg,
+            body: DoctorProfileLoadingView(onBack: () => context.pop()),
+          );
+        }
         final model = state.selectedDoctor ?? initialDoctor;
         final doctor = model == null ? summary : _summary(model, summary);
         final available = model?.isActive ?? true;
@@ -94,6 +101,9 @@ class _DoctorProfileView extends StatelessWidget {
                           DoctorProfileStats(doctor: doctor),
                           DoctorProfileAvailability(
                             available: available,
+                            loading:
+                                model?.doctorId != null &&
+                                state.busyDoctorIds.contains(model!.doctorId),
                             onToggle: model == null
                                 ? () {}
                                 : () => context
@@ -190,5 +200,360 @@ class _DoctorProfileView extends StatelessWidget {
     }
 
     await launchUrl(phoneUri, mode: LaunchMode.externalApplication);
+  }
+}
+
+class DoctorProfileLoadingView extends StatelessWidget {
+  const DoctorProfileLoadingView({super.key, required this.onBack});
+
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsetsDirectional.only(
+        bottom: AppSizes.homeBottomClearance,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            width: double.infinity,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              gradient: colors.headerGradient,
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(AppRadius.homeHeader),
+              ),
+            ),
+            child: Stack(
+              children: [
+                PositionedDirectional(
+                  top: -AppSizes.homeHeaderCircleTop,
+                  end: -AppSizes.homeHeaderCircleStart,
+                  child: Container(
+                    width: AppSizes.homeHeaderCircleSmall,
+                    height: AppSizes.homeHeaderCircleSmall,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: colors.onBrand.withValues(alpha: 0.12),
+                        width: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(
+                    AppSpacing.screen,
+                    MediaQuery.paddingOf(context).top + AppSpacing.md,
+                    AppSpacing.screen,
+                    AppSpacing.xxl + AppSpacing.md,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          _LoadingCircleButton(
+                            icon: rtl ? Icons.arrow_forward : Icons.arrow_back,
+                            onTap: onBack,
+                          ),
+                          AppShimmerPlaceholder(
+                            width: 128,
+                            height: 20,
+                            borderRadius: AppRadius.pill,
+                          ),
+                          _LoadingCircleButton(
+                            icon: Icons.edit_outlined,
+                            onTap: null,
+                          ),
+                        ],
+                      ),
+                      AppGaps.h16,
+                      AppShimmerPlaceholder(
+                        width: AppSizes.addDoctorAvatar,
+                        height: AppSizes.addDoctorAvatar,
+                        shape: BoxShape.circle,
+                      ),
+                      AppGaps.h12,
+                      AppShimmerPlaceholder(
+                        width: 168,
+                        height: 24,
+                        borderRadius: AppRadius.pill,
+                      ),
+                      AppGaps.h8,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AppShimmerPlaceholder(
+                            width: 118,
+                            height: 28,
+                            borderRadius: AppRadius.pill,
+                          ),
+                          AppGaps.w8,
+                          AppShimmerPlaceholder(
+                            width: 72,
+                            height: 28,
+                            borderRadius: AppRadius.pill,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Transform.translate(
+            offset: const Offset(0, -AppSpacing.xl),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: const [
+                _LoadingStatsRow(),
+                AppGaps.h16,
+                _LoadingWideCard(height: 58),
+                AppGaps.h16,
+                _LoadingSectionTitle(width: 96),
+                AppGaps.h8,
+                _LoadingWideCard(height: 132),
+                AppGaps.h16,
+                _LoadingSectionTitle(width: 118),
+                AppGaps.h8,
+                _LoadingScheduleList(),
+                AppGaps.h16,
+                _LoadingSectionTitle(width: 110),
+                AppGaps.h8,
+                _LoadingServicesRow(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _LoadingCircleButton extends StatelessWidget {
+  const _LoadingCircleButton({required this.icon, this.onTap});
+
+  final IconData icon;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Material(
+      color: colors.onBrand.withValues(alpha: 0.14),
+      borderRadius: BorderRadius.circular(AppRadius.field),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppRadius.field),
+        child: SizedBox.square(
+          dimension: AppSizes.hitTarget - 2,
+          child: Icon(icon, color: colors.onBrand, size: AppSizes.iconMd),
+        ),
+      ),
+    );
+  }
+}
+
+class _LoadingStatsRow extends StatelessWidget {
+  const _LoadingStatsRow();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsetsDirectional.symmetric(
+      horizontal: AppSpacing.screen,
+    ),
+    child: Row(
+      children: [
+        for (var index = 0; index < 3; index++)
+          Expanded(
+            child: Padding(
+              padding: EdgeInsetsDirectional.only(
+                end: index == 2 ? 0 : AppSpacing.xs,
+              ),
+              child: const _LoadingCard(
+                height: 78,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppShimmerPlaceholder(
+                      width: 42,
+                      height: 22,
+                      borderRadius: AppRadius.pill,
+                    ),
+                    SizedBox(height: AppSpacing.xs),
+                    AppShimmerPlaceholder(
+                      width: 64,
+                      height: 12,
+                      borderRadius: AppRadius.pill,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
+    ),
+  );
+}
+
+class _LoadingWideCard extends StatelessWidget {
+  const _LoadingWideCard({required this.height});
+
+  final double height;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsetsDirectional.symmetric(
+      horizontal: AppSpacing.screen,
+    ),
+    child: _LoadingCard(
+      height: height,
+      child: Padding(
+        padding: const EdgeInsetsDirectional.all(AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AppShimmerPlaceholder(
+              width: double.infinity,
+              height: 14,
+              borderRadius: AppRadius.pill,
+            ),
+            if (height > 80) ...[
+              AppGaps.h12,
+              const AppShimmerPlaceholder(
+                width: double.infinity,
+                height: 14,
+                borderRadius: AppRadius.pill,
+              ),
+              AppGaps.h12,
+              const AppShimmerPlaceholder(
+                width: 190,
+                height: 14,
+                borderRadius: AppRadius.pill,
+              ),
+            ],
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class _LoadingSectionTitle extends StatelessWidget {
+  const _LoadingSectionTitle({required this.width});
+
+  final double width;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsetsDirectional.symmetric(
+      horizontal: AppSpacing.screen,
+    ),
+    child: Row(
+      children: [
+        AppShimmerPlaceholder(
+          width: AppSizes.homeSectionMarkerWidth,
+          height: AppSizes.homeSectionMarkerHeight,
+          borderRadius: AppRadius.sm,
+        ),
+        AppGaps.w8,
+        AppShimmerPlaceholder(
+          width: width,
+          height: 18,
+          borderRadius: AppRadius.pill,
+        ),
+      ],
+    ),
+  );
+}
+
+class _LoadingScheduleList extends StatelessWidget {
+  const _LoadingScheduleList();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsetsDirectional.symmetric(
+      horizontal: AppSpacing.screen,
+    ),
+    child: Column(
+      children: const [
+        _LoadingCard(height: 58, child: _LoadingScheduleLine()),
+        AppGaps.h8,
+        _LoadingCard(height: 58, child: _LoadingScheduleLine()),
+        AppGaps.h8,
+        _LoadingCard(height: 58, child: _LoadingScheduleLine()),
+      ],
+    ),
+  );
+}
+
+class _LoadingScheduleLine extends StatelessWidget {
+  const _LoadingScheduleLine();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsetsDirectional.all(AppSpacing.sm),
+    child: Row(
+      children: const [
+        AppShimmerPlaceholder(
+          width: 82,
+          height: 18,
+          borderRadius: AppRadius.pill,
+        ),
+        Spacer(),
+        AppShimmerPlaceholder(
+          width: 118,
+          height: 18,
+          borderRadius: AppRadius.pill,
+        ),
+      ],
+    ),
+  );
+}
+
+class _LoadingServicesRow extends StatelessWidget {
+  const _LoadingServicesRow();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsetsDirectional.symmetric(
+      horizontal: AppSpacing.screen,
+    ),
+    child: Row(
+      children: const [
+        Expanded(child: _LoadingCard(height: 86, child: SizedBox.shrink())),
+        AppGaps.w12,
+        Expanded(child: _LoadingCard(height: 86, child: SizedBox.shrink())),
+      ],
+    ),
+  );
+}
+
+class _LoadingCard extends StatelessWidget {
+  const _LoadingCard({required this.height, required this.child});
+
+  final double height;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Container(
+      height: height,
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.homeQuickAction),
+        border: Border.all(color: colors.line),
+        boxShadow: AppShadows.homeCard,
+      ),
+      child: child,
+    );
   }
 }
