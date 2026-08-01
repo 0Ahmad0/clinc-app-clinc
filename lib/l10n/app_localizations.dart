@@ -2863,6 +2863,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your message was sent — we\'ll get back to you soon'**
   String get legalContactSent;
+
+  /// No description provided for @settingsPublishAd.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish an ad'**
+  String get settingsPublishAd;
+
+  /// No description provided for @settingsPublishAdSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an ad to promote your services'**
+  String get settingsPublishAdSub;
+
+  /// No description provided for @adsCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New ad'**
+  String get adsCreateTitle;
+
+  /// No description provided for @adsCreateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Goes live after admin approval'**
+  String get adsCreateSubtitle;
+
+  /// No description provided for @adsCoverLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad image'**
+  String get adsCoverLabel;
+
+  /// No description provided for @adsCoverPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to upload the ad image'**
+  String get adsCoverPlaceholder;
+
+  /// No description provided for @adsCoverHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended 1200×675, up to 5 MB'**
+  String get adsCoverHint;
+
+  /// No description provided for @adsTitleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad title'**
+  String get adsTitleLabel;
+
+  /// No description provided for @adsTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 20% off teeth cleaning'**
+  String get adsTitleHint;
+
+  /// No description provided for @adsDescriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get adsDescriptionLabel;
+
+  /// No description provided for @adsDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the offer or service you\'re advertising...'**
+  String get adsDescriptionHint;
+
+  /// No description provided for @adsCharCounter.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}/{max}'**
+  String adsCharCounter(int count, int max);
+
+  /// No description provided for @adsReviewNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Ads are usually reviewed within 24 hours before going live for all users'**
+  String get adsReviewNote;
+
+  /// No description provided for @adsSubmitCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Send for review'**
+  String get adsSubmitCta;
+
+  /// No description provided for @adsSubmittedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad submitted'**
+  String get adsSubmittedTitle;
+
+  /// No description provided for @adsSubmittedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your ad is under review — we\'ll notify you as soon as it\'s approved'**
+  String get adsSubmittedDesc;
+
+  /// No description provided for @adsComposeAnother.
+  ///
+  /// In en, this message translates to:
+  /// **'Create another ad'**
+  String get adsComposeAnother;
 }
 
 class _AppLocalizationsDelegate

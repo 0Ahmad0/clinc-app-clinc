@@ -7,8 +7,8 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
+import '../../../../shared/widgets/app_gradient_header.dart';
 import '../legal_clipboard.dart';
-import '../widgets/legal_header.dart';
 
 /// Website shown in the about links.
 const _websiteUrl = 'https://alshifa-clinic.sa';
@@ -23,10 +23,26 @@ class AboutPage extends StatelessWidget {
     final colors = context.colors;
     final l10n = context.l10n;
     final features = <(IconData, String, String)>[
-      (Iconsax.calendar_tick, l10n.legalAboutFeature1, l10n.legalAboutFeature1Sub),
-      (Iconsax.document_text, l10n.legalAboutFeature2, l10n.legalAboutFeature2Sub),
-      (Iconsax.profile_2user, l10n.legalAboutFeature3, l10n.legalAboutFeature3Sub),
-      (Iconsax.shield_tick, l10n.legalAboutFeature4, l10n.legalAboutFeature4Sub),
+      (
+        Iconsax.calendar_tick,
+        l10n.legalAboutFeature1,
+        l10n.legalAboutFeature1Sub,
+      ),
+      (
+        Iconsax.document_text,
+        l10n.legalAboutFeature2,
+        l10n.legalAboutFeature2Sub,
+      ),
+      (
+        Iconsax.profile_2user,
+        l10n.legalAboutFeature3,
+        l10n.legalAboutFeature3Sub,
+      ),
+      (
+        Iconsax.shield_tick,
+        l10n.legalAboutFeature4,
+        l10n.legalAboutFeature4Sub,
+      ),
     ];
 
     return Scaffold(
@@ -35,7 +51,7 @@ class AboutPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            LegalHeader(title: l10n.settingsAbout),
+            AppGradientHeader(title: l10n.settingsAbout),
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(
                 AppSpacing.screen,
@@ -172,11 +188,7 @@ class _FeatureCard extends StatelessWidget {
               color: colors.primary500.withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(AppRadius.sm + 1),
             ),
-            child: Icon(
-              icon,
-              size: AppSizes.iconSm,
-              color: colors.primary600,
-            ),
+            child: Icon(icon, size: AppSizes.iconSm, color: colors.primary600),
           ),
           AppGaps.w12,
           Expanded(

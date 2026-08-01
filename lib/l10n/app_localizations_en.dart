@@ -1442,4 +1442,60 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get legalContactSent =>
       'Your message was sent — we\'ll get back to you soon';
+
+  @override
+  String get settingsPublishAd => 'Publish an ad';
+
+  @override
+  String get settingsPublishAdSub => 'Create an ad to promote your services';
+
+  @override
+  String get adsCreateTitle => 'New ad';
+
+  @override
+  String get adsCreateSubtitle => 'Goes live after admin approval';
+
+  @override
+  String get adsCoverLabel => 'Ad image';
+
+  @override
+  String get adsCoverPlaceholder => 'Tap to upload the ad image';
+
+  @override
+  String get adsCoverHint => 'Recommended 1200×675, up to 5 MB';
+
+  @override
+  String get adsTitleLabel => 'Ad title';
+
+  @override
+  String get adsTitleHint => 'e.g. 20% off teeth cleaning';
+
+  @override
+  String get adsDescriptionLabel => 'Description';
+
+  @override
+  String get adsDescriptionHint =>
+      'Describe the offer or service you\'re advertising...';
+
+  @override
+  String adsCharCounter(int count, int max) {
+    return '$count/$max';
+  }
+
+  @override
+  String get adsReviewNote =>
+      'Ads are usually reviewed within 24 hours before going live for all users';
+
+  @override
+  String get adsSubmitCta => 'Send for review';
+
+  @override
+  String get adsSubmittedTitle => 'Ad submitted';
+
+  @override
+  String get adsSubmittedDesc =>
+      'Your ad is under review — we\'ll notify you as soon as it\'s approved';
+
+  @override
+  String get adsComposeAnother => 'Create another ad';
 }

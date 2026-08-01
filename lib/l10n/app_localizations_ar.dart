@@ -1433,4 +1433,60 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get legalContactSent => 'تم إرسال رسالتك، سنعود إليك قريباً';
+
+  @override
+  String get settingsPublishAd => 'نشر إعلان';
+
+  @override
+  String get settingsPublishAdSub => 'أنشئ إعلاناً لعرض خدماتك';
+
+  @override
+  String get adsCreateTitle => 'إعلان جديد';
+
+  @override
+  String get adsCreateSubtitle => 'سيُعرض بعد موافقة الإدارة';
+
+  @override
+  String get adsCoverLabel => 'صورة الإعلان';
+
+  @override
+  String get adsCoverPlaceholder => 'انقر لرفع صورة الإعلان';
+
+  @override
+  String get adsCoverHint => 'مقاس مقترح ١٢٠٠×٦٧٥، بحد أقصى ٥ ميجابايت';
+
+  @override
+  String get adsTitleLabel => 'عنوان الإعلان';
+
+  @override
+  String get adsTitleHint => 'مثال: خصم ٢٠٪ على تنظيف الأسنان';
+
+  @override
+  String get adsDescriptionLabel => 'الوصف';
+
+  @override
+  String get adsDescriptionHint =>
+      'اكتب تفاصيل العرض أو الخدمة المُعلن عنها...';
+
+  @override
+  String adsCharCounter(int count, int max) {
+    return '$count/$max';
+  }
+
+  @override
+  String get adsReviewNote =>
+      'تراجع الإدارة الإعلان خلال ٢٤ ساعة عادةً قبل نشره لجميع المستخدمين';
+
+  @override
+  String get adsSubmitCta => 'إرسال للمراجعة';
+
+  @override
+  String get adsSubmittedTitle => 'تم إرسال الإعلان';
+
+  @override
+  String get adsSubmittedDesc =>
+      'إعلانك الآن قيد المراجعة، وسيتم إشعارك فور اعتماده من قِبل الإدارة';
+
+  @override
+  String get adsComposeAnother => 'إنشاء إعلان آخر';
 }

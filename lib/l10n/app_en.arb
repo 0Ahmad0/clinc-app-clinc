@@ -496,5 +496,26 @@
   "legalContactName": "Full name",
   "legalContactMessage": "Write your message here...",
   "legalContactSend": "Send message",
-  "legalContactSent": "Your message was sent — we'll get back to you soon"
+  "legalContactSent": "Your message was sent — we'll get back to you soon",
+
+  "settingsPublishAd": "Publish an ad",
+  "settingsPublishAdSub": "Create an ad to promote your services",
+  "adsCreateTitle": "New ad",
+  "adsCreateSubtitle": "Goes live after admin approval",
+  "adsCoverLabel": "Ad image",
+  "adsCoverPlaceholder": "Tap to upload the ad image",
+  "adsCoverHint": "Recommended 1200×675, up to 5 MB",
+  "adsTitleLabel": "Ad title",
+  "adsTitleHint": "e.g. 20% off teeth cleaning",
+  "adsDescriptionLabel": "Description",
+  "adsDescriptionHint": "Describe the offer or service you're advertising...",
+  "adsCharCounter": "{count}/{max}",
+  "@adsCharCounter": {
+    "placeholders": { "count": { "type": "int" }, "max": { "type": "int" } }
+  },
+  "adsReviewNote": "Ads are usually reviewed within 24 hours before going live for all users",
+  "adsSubmitCta": "Send for review",
+  "adsSubmittedTitle": "Ad submitted",
+  "adsSubmittedDesc": "Your ad is under review — we'll notify you as soon as it's approved",
+  "adsComposeAnother": "Create another ad"
 }

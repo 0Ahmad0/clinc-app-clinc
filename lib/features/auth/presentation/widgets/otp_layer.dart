@@ -109,7 +109,9 @@ class _OtpLayerState extends State<OtpLayer> {
               children: [
                 Align(
                   alignment: AlignmentDirectional.centerStart,
-                  child: AuthBackButton(onTap: () => cubit.show(state.otpOrigin)),
+                  child: AuthBackButton(
+                    onTap: () => cubit.show(state.otpOrigin),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 const Center(

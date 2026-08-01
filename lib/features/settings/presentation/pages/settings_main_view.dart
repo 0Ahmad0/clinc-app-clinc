@@ -61,6 +61,13 @@ class SettingsMainView extends StatelessWidget {
                           sub: l10n.settingsPasswordSub,
                           onTap: () => cubit.show(SettingsSection.password),
                         ),
+                        SettingsRow(
+                          icon: Iconsax.volume_high,
+                          tint: colors.pink,
+                          name: l10n.settingsPublishAd,
+                          sub: l10n.settingsPublishAdSub,
+                          onTap: () => context.push(AppRoutes.createAd),
+                        ),
                       ],
                     ),
                     const SizedBox(height: AppSpacing.md + 2),

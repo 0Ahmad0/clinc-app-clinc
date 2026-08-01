@@ -36,11 +36,11 @@ class _ResetPasswordLayerState extends State<ResetPasswordLayer> {
     super.dispose();
   }
 
-  bool get _mismatch =>
-      _confirm.text.isNotEmpty && _next.text != _confirm.text;
+  bool get _mismatch => _confirm.text.isNotEmpty && _next.text != _confirm.text;
 
   bool get _canSubmit =>
-      _next.text.length >= FormValidators.minPasswordLength && _next.text == _confirm.text;
+      _next.text.length >= FormValidators.minPasswordLength &&
+      _next.text == _confirm.text;
 
   void _submit() {
     FocusScope.of(context).unfocus();

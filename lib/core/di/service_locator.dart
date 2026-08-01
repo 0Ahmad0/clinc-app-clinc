@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import '../media/media_service.dart';
 
+import '../../features/ads/presentation/cubit/create_ad_cubit.dart';
 import '../../features/auth/domain/account_type.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 import '../../features/onboarding/presentation/cubit/onboarding_cubit.dart';
@@ -34,4 +35,5 @@ void configureDependencies() {
     (accountType, _) => ReportsCubit(accountType),
   );
   sl.registerFactory<SettingsCubit>(SettingsCubit.new);
+  sl.registerFactory<CreateAdCubit>(CreateAdCubit.new);
 }
