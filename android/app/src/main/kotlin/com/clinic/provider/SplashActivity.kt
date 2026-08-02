@@ -1,4 +1,4 @@
-package com.clinic.clinic_app
+package com.clinic.provider
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

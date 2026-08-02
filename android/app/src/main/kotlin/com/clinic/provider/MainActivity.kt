@@ -1,4 +1,4 @@
-package com.clinic.clinic_app
+package com.clinic.provider
 
 import io.flutter.embedding.android.FlutterActivity
 

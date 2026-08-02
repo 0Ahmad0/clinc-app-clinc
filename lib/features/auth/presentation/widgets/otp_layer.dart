@@ -257,7 +257,6 @@ class _CodeField extends StatelessWidget {
   }
 }
 
-
 /// "Didn't get the code?" line — the action turns blue once the wait is over.
 class _ResendRow extends StatelessWidget {
   const _ResendRow({required this.label, required this.onTap});
