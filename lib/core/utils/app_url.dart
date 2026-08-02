@@ -52,6 +52,7 @@ class AppUrl {
       "$clinicServices/specializations";
   static const clinicServicesEnabledSpecializations =
       "$clinicServices/enabled-specializations";
+  static const clinicAds = "${baseUrl}clinic/ads";
   static const clinicProfile = "${baseUrl}clinic/profile";
   static const clinicChangePassword = "${baseUrl}clinic/change-password";
   static const clinicNotificationSettings =

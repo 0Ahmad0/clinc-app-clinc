@@ -523,14 +523,23 @@
   "adsCoverHint": "مقاس مقترح ١٢٠٠×٦٧٥، بحد أقصى ٥ ميجابايت",
   "adsTitleLabel": "عنوان الإعلان",
   "adsTitleHint": "مثال: خصم ٢٠٪ على تنظيف الأسنان",
+  "adsTitleArLabel": "عنوان الإعلان بالعربية",
+  "adsTitleArHint": "مثال: خصم ٢٠٪ على تنظيف الأسنان",
+  "adsTitleEnLabel": "عنوان الإعلان بالإنجليزية",
+  "adsTitleEnHint": "e.g. 20% off teeth cleaning",
   "adsDescriptionLabel": "الوصف",
   "adsDescriptionHint": "اكتب تفاصيل العرض أو الخدمة المُعلن عنها...",
+  "adsDescriptionArLabel": "الوصف بالعربية",
+  "adsDescriptionArHint": "اكتب تفاصيل العرض أو الخدمة المُعلن عنها...",
+  "adsDescriptionEnLabel": "الوصف بالإنجليزية",
+  "adsDescriptionEnHint": "Describe the offer or service you're advertising...",
   "adsCharCounter": "{count}/{max}",
   "@adsCharCounter": {
     "placeholders": { "count": { "type": "int" }, "max": { "type": "int" } }
   },
   "adsReviewNote": "تراجع الإدارة الإعلان خلال ٢٤ ساعة عادةً قبل نشره لجميع المستخدمين",
   "adsSubmitCta": "إرسال للمراجعة",
+  "adsSubmitFailedTitle": "تعذر إرسال الإعلان",
   "adsSubmittedTitle": "تم إرسال الإعلان",
   "adsSubmittedDesc": "إعلانك الآن قيد المراجعة، وسيتم إشعارك فور اعتماده من قِبل الإدارة",
   "adsComposeAnother": "إنشاء إعلان آخر"

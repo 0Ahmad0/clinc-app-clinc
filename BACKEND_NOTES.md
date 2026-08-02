@@ -66,6 +66,21 @@
   - If `fcm_token` is present, backend stores it against the newly created clinic without requiring Authorization.
   - Admin status changes to `approved`, `rejected`, or `pending` create a clinic notification and send FCM to active clinic devices.
 
+### Clinic Ads Create
+- Endpoint: `POST /api/clinic/ads`
+- Status: available.
+- Auth: clinic token.
+- Request type: multipart/form-data.
+- Request fields:
+  - `title_ar`: required string.
+  - `title_en`: required string.
+  - `description_ar`: required string.
+  - `description_en`: required string.
+  - `cover`: required image.
+- Business behavior:
+  - Creates an ad with `status: pending`.
+  - Request goes to admin approval workflow.
+
 ### Clinic Login
 - Endpoint: `POST /api/clinic/login`
 - Status: available.

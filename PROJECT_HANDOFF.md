@@ -1015,3 +1015,27 @@ locator.registerFactory<FeatureCubit>(
   - `lib/features/doctors/presentation/widgets/doctor_card.dart`
   - `lib/shared/widgets/app_switch.dart`
   - `PROJECT_HANDOFF.md`
+
+## Completed: Clinic Ads Create Integration
+- Date: 2026-08-03.
+- Connected the existing Create Ad screen to `POST /api/clinic/ads` using clinic-token multipart form-data.
+- The form now captures required Arabic and English title/description fields and requires a cover image before submit.
+- Added ads data source and repository, registered them in GetIt, and wired submit loading/error/success states.
+- Submitted ads are created with backend `pending` status and remain in the existing admin-review confirmation flow.
+- Verification:
+  - `flutter gen-l10n`
+- Files added/modified:
+  - `lib/features/ads/data/clinic_ads_remote_data_source.dart`
+  - `lib/features/ads/domain/clinic_ads_repository.dart`
+  - `lib/features/ads/presentation/cubit/create_ad_cubit.dart`
+  - `lib/features/ads/presentation/cubit/create_ad_state.dart`
+  - `lib/features/ads/presentation/pages/create_ad_page.dart`
+  - `lib/core/di/service_locator.dart`
+  - `lib/core/utils/app_url.dart`
+  - `lib/l10n/app_ar.arb`
+  - `lib/l10n/app_en.arb`
+  - `lib/l10n/app_localizations.dart`
+  - `lib/l10n/app_localizations_ar.dart`
+  - `lib/l10n/app_localizations_en.dart`
+  - `PROJECT_HANDOFF.md`
+  - `BACKEND_NOTES.md`

@@ -5,10 +5,12 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../core/di/service_locator.dart';
+import '../../../../core/enums/app_feedback_type.dart';
 import '../../../../core/media/media_service.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/app_gradient_header.dart';
+import '../../../../shared/widgets/app_toast.dart';
 import '../../../../shared/widgets/media_source_sheet.dart';
 import '../cubit/create_ad_cubit.dart';
 import '../cubit/create_ad_state.dart';
@@ -38,13 +40,17 @@ class _CreateAdView extends StatefulWidget {
 }
 
 class _CreateAdViewState extends State<_CreateAdView> {
-  final _title = TextEditingController();
-  final _description = TextEditingController();
+  final _titleAr = TextEditingController();
+  final _titleEn = TextEditingController();
+  final _descriptionAr = TextEditingController();
+  final _descriptionEn = TextEditingController();
 
   @override
   void dispose() {
-    _title.dispose();
-    _description.dispose();
+    _titleAr.dispose();
+    _titleEn.dispose();
+    _descriptionAr.dispose();
+    _descriptionEn.dispose();
     super.dispose();
   }
 
@@ -67,8 +73,10 @@ class _CreateAdViewState extends State<_CreateAdView> {
   }
 
   void _composeAnother() {
-    _title.clear();
-    _description.clear();
+    _titleAr.clear();
+    _titleEn.clear();
+    _descriptionAr.clear();
+    _descriptionEn.clear();
     context.read<CreateAdCubit>().reset();
   }
 
@@ -76,16 +84,31 @@ class _CreateAdViewState extends State<_CreateAdView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.bg,
-      body: BlocBuilder<CreateAdCubit, CreateAdState>(
-        builder: (context, state) => state.submitted
-            ? _SubmittedView(onComposeAnother: _composeAnother)
-            : _ComposeView(
-                state: state,
-                titleController: _title,
-                descriptionController: _description,
-                onPickCover: _pickCover,
-                onSubmit: _submit,
-              ),
+      body: BlocConsumer<CreateAdCubit, CreateAdState>(
+        listenWhen: (previous, current) =>
+            previous.errorMessage != current.errorMessage &&
+            current.errorMessage.isNotEmpty,
+        listener: (context, state) {
+          AppToast.show(
+            context,
+            title: context.l10n.adsSubmitFailedTitle,
+            message: state.errorMessage,
+            type: AppFeedbackType.danger,
+          );
+        },
+        builder: (context, state) {
+          return state.submitted
+              ? _SubmittedView(onComposeAnother: _composeAnother)
+              : _ComposeView(
+                  state: state,
+                  titleArController: _titleAr,
+                  titleEnController: _titleEn,
+                  descriptionArController: _descriptionAr,
+                  descriptionEnController: _descriptionEn,
+                  onPickCover: _pickCover,
+                  onSubmit: _submit,
+                );
+        },
       ),
     );
   }
@@ -95,15 +118,19 @@ class _CreateAdViewState extends State<_CreateAdView> {
 class _ComposeView extends StatelessWidget {
   const _ComposeView({
     required this.state,
-    required this.titleController,
-    required this.descriptionController,
+    required this.titleArController,
+    required this.titleEnController,
+    required this.descriptionArController,
+    required this.descriptionEnController,
     required this.onPickCover,
     required this.onSubmit,
   });
 
   final CreateAdState state;
-  final TextEditingController titleController;
-  final TextEditingController descriptionController;
+  final TextEditingController titleArController;
+  final TextEditingController titleEnController;
+  final TextEditingController descriptionArController;
+  final TextEditingController descriptionEnController;
   final VoidCallback onPickCover;
   final VoidCallback onSubmit;
 
@@ -142,28 +169,57 @@ class _ComposeView extends StatelessWidget {
                   ),
                 ),
                 AppGaps.h24,
-                _FieldLabel(l10n.adsTitleLabel),
+                _FieldLabel(l10n.adsTitleArLabel),
                 AppGaps.h8,
                 _AdField(
-                  controller: titleController,
-                  hint: l10n.adsTitleHint,
+                  controller: titleArController,
+                  hint: l10n.adsTitleArHint,
                   maxLength: _titleMaxLength,
-                  onChanged: cubit.setTitle,
+                  textDirection: TextDirection.rtl,
+                  onChanged: cubit.setTitleAr,
                 ),
-                _Counter(count: state.title.length, max: _titleMaxLength),
+                _Counter(count: state.titleAr.length, max: _titleMaxLength),
                 AppGaps.h16,
-                _FieldLabel(l10n.adsDescriptionLabel),
+                _FieldLabel(l10n.adsTitleEnLabel),
                 AppGaps.h8,
                 _AdField(
-                  controller: descriptionController,
-                  hint: l10n.adsDescriptionHint,
+                  controller: titleEnController,
+                  hint: l10n.adsTitleEnHint,
+                  maxLength: _titleMaxLength,
+                  textDirection: TextDirection.ltr,
+                  onChanged: cubit.setTitleEn,
+                ),
+                _Counter(count: state.titleEn.length, max: _titleMaxLength),
+                AppGaps.h16,
+                _FieldLabel(l10n.adsDescriptionArLabel),
+                AppGaps.h8,
+                _AdField(
+                  controller: descriptionArController,
+                  hint: l10n.adsDescriptionArHint,
                   maxLength: _descriptionMaxLength,
                   maxLines: 5,
+                  textDirection: TextDirection.rtl,
                   textInputAction: TextInputAction.newline,
-                  onChanged: cubit.setDescription,
+                  onChanged: cubit.setDescriptionAr,
                 ),
                 _Counter(
-                  count: state.description.length,
+                  count: state.descriptionAr.length,
+                  max: _descriptionMaxLength,
+                ),
+                AppGaps.h16,
+                _FieldLabel(l10n.adsDescriptionEnLabel),
+                AppGaps.h8,
+                _AdField(
+                  controller: descriptionEnController,
+                  hint: l10n.adsDescriptionEnHint,
+                  maxLength: _descriptionMaxLength,
+                  maxLines: 5,
+                  textDirection: TextDirection.ltr,
+                  textInputAction: TextInputAction.newline,
+                  onChanged: cubit.setDescriptionEn,
+                ),
+                _Counter(
+                  count: state.descriptionEn.length,
                   max: _descriptionMaxLength,
                 ),
                 AppGaps.h16,
@@ -174,6 +230,7 @@ class _ComposeView extends StatelessWidget {
         ),
         _SubmitBar(
           enabled: state.canSubmit,
+          isLoading: state.isSubmitting,
           label: l10n.adsSubmitCta,
           onSubmit: onSubmit,
         ),
@@ -244,11 +301,13 @@ class _SubmittedView extends StatelessWidget {
 class _SubmitBar extends StatelessWidget {
   const _SubmitBar({
     required this.enabled,
+    required this.isLoading,
     required this.label,
     required this.onSubmit,
   });
 
   final bool enabled;
+  final bool isLoading;
   final String label;
   final VoidCallback onSubmit;
 
@@ -269,6 +328,7 @@ class _SubmitBar extends StatelessWidget {
       child: AppButton(
         label: label,
         icon: Iconsax.send_2,
+        isLoading: isLoading,
         onPressed: enabled ? onSubmit : null,
       ),
     );
@@ -321,6 +381,7 @@ class _AdField extends StatelessWidget {
     required this.maxLength,
     required this.onChanged,
     this.maxLines = 1,
+    this.textDirection,
     this.textInputAction = TextInputAction.next,
   });
 
@@ -329,6 +390,7 @@ class _AdField extends StatelessWidget {
   final int maxLength;
   final ValueChanged<String> onChanged;
   final int maxLines;
+  final TextDirection? textDirection;
   final TextInputAction textInputAction;
 
   @override
@@ -344,6 +406,7 @@ class _AdField extends StatelessWidget {
       onChanged: onChanged,
       maxLength: maxLength,
       maxLines: maxLines,
+      textDirection: textDirection,
       textInputAction: textInputAction,
       style: context.textTheme.bodyMedium?.copyWith(
         fontWeight: FontWeight.w500,

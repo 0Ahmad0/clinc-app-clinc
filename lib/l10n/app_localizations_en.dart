@@ -1521,10 +1521,36 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adsTitleHint => 'e.g. 20% off teeth cleaning';
 
   @override
+  String get adsTitleArLabel => 'Ad title in Arabic';
+
+  @override
+  String get adsTitleArHint => 'مثال: خصم ٢٠٪ على تنظيف الأسنان';
+
+  @override
+  String get adsTitleEnLabel => 'Ad title in English';
+
+  @override
+  String get adsTitleEnHint => 'e.g. 20% off teeth cleaning';
+
+  @override
   String get adsDescriptionLabel => 'Description';
 
   @override
   String get adsDescriptionHint =>
+      'Describe the offer or service you\'re advertising...';
+
+  @override
+  String get adsDescriptionArLabel => 'Description in Arabic';
+
+  @override
+  String get adsDescriptionArHint =>
+      'اكتب تفاصيل العرض أو الخدمة المُعلن عنها...';
+
+  @override
+  String get adsDescriptionEnLabel => 'Description in English';
+
+  @override
+  String get adsDescriptionEnHint =>
       'Describe the offer or service you\'re advertising...';
 
   @override
@@ -1538,6 +1564,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adsSubmitCta => 'Send for review';
+
+  @override
+  String get adsSubmitFailedTitle => 'Could not submit ad';
 
   @override
   String get adsSubmittedTitle => 'Ad submitted';

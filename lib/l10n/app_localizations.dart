@@ -3014,6 +3014,30 @@ abstract class AppLocalizations {
   /// **'e.g. 20% off teeth cleaning'**
   String get adsTitleHint;
 
+  /// No description provided for @adsTitleArLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad title in Arabic'**
+  String get adsTitleArLabel;
+
+  /// No description provided for @adsTitleArHint.
+  ///
+  /// In en, this message translates to:
+  /// **'مثال: خصم ٢٠٪ على تنظيف الأسنان'**
+  String get adsTitleArHint;
+
+  /// No description provided for @adsTitleEnLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Ad title in English'**
+  String get adsTitleEnLabel;
+
+  /// No description provided for @adsTitleEnHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 20% off teeth cleaning'**
+  String get adsTitleEnHint;
+
   /// No description provided for @adsDescriptionLabel.
   ///
   /// In en, this message translates to:
@@ -3025,6 +3049,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Describe the offer or service you\'re advertising...'**
   String get adsDescriptionHint;
+
+  /// No description provided for @adsDescriptionArLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description in Arabic'**
+  String get adsDescriptionArLabel;
+
+  /// No description provided for @adsDescriptionArHint.
+  ///
+  /// In en, this message translates to:
+  /// **'اكتب تفاصيل العرض أو الخدمة المُعلن عنها...'**
+  String get adsDescriptionArHint;
+
+  /// No description provided for @adsDescriptionEnLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description in English'**
+  String get adsDescriptionEnLabel;
+
+  /// No description provided for @adsDescriptionEnHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the offer or service you\'re advertising...'**
+  String get adsDescriptionEnHint;
 
   /// No description provided for @adsCharCounter.
   ///
@@ -3043,6 +3091,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Send for review'**
   String get adsSubmitCta;
+
+  /// No description provided for @adsSubmitFailedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not submit ad'**
+  String get adsSubmitFailedTitle;
 
   /// No description provided for @adsSubmittedTitle.
   ///

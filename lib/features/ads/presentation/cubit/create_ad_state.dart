@@ -3,37 +3,68 @@ import 'package:equatable/equatable.dart';
 /// The ad being composed, plus whether it has been sent for review.
 class CreateAdState extends Equatable {
   const CreateAdState({
-    this.title = '',
-    this.description = '',
+    this.titleAr = '',
+    this.titleEn = '',
+    this.descriptionAr = '',
+    this.descriptionEn = '',
     this.coverPath,
+    this.isSubmitting = false,
     this.submitted = false,
+    this.errorMessage = '',
   });
 
-  final String title;
-  final String description;
+  final String titleAr;
+  final String titleEn;
+  final String descriptionAr;
+  final String descriptionEn;
 
   /// Local path of the picked cover image; null until one is chosen.
   final String? coverPath;
 
+  final bool isSubmitting;
+
   /// True once the ad is queued for admin review.
   final bool submitted;
 
-  /// The cover is optional — an ad needs at least a title and a description.
+  final String errorMessage;
+
   bool get canSubmit =>
-      title.trim().isNotEmpty && description.trim().isNotEmpty;
+      titleAr.trim().isNotEmpty &&
+      titleEn.trim().isNotEmpty &&
+      descriptionAr.trim().isNotEmpty &&
+      descriptionEn.trim().isNotEmpty &&
+      coverPath != null &&
+      !isSubmitting;
 
   CreateAdState copyWith({
-    String? title,
-    String? description,
+    String? titleAr,
+    String? titleEn,
+    String? descriptionAr,
+    String? descriptionEn,
     String? coverPath,
+    bool? isSubmitting,
     bool? submitted,
+    String? errorMessage,
   }) => CreateAdState(
-    title: title ?? this.title,
-    description: description ?? this.description,
+    titleAr: titleAr ?? this.titleAr,
+    titleEn: titleEn ?? this.titleEn,
+    descriptionAr: descriptionAr ?? this.descriptionAr,
+    descriptionEn: descriptionEn ?? this.descriptionEn,
     coverPath: coverPath ?? this.coverPath,
+    isSubmitting: isSubmitting ?? this.isSubmitting,
     submitted: submitted ?? this.submitted,
+    errorMessage: errorMessage ?? this.errorMessage,
   );
 
   @override
-  List<Object?> get props => [title, description, coverPath, submitted];
+  List<Object?> get props => [
+    titleAr,
+    titleEn,
+    descriptionAr,
+    descriptionEn,
+    coverPath,
+    isSubmitting,
+    submitted,
+    errorMessage,
+  ];
 }

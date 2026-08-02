@@ -1512,11 +1512,37 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adsTitleHint => 'مثال: خصم ٢٠٪ على تنظيف الأسنان';
 
   @override
+  String get adsTitleArLabel => 'عنوان الإعلان بالعربية';
+
+  @override
+  String get adsTitleArHint => 'مثال: خصم ٢٠٪ على تنظيف الأسنان';
+
+  @override
+  String get adsTitleEnLabel => 'عنوان الإعلان بالإنجليزية';
+
+  @override
+  String get adsTitleEnHint => 'e.g. 20% off teeth cleaning';
+
+  @override
   String get adsDescriptionLabel => 'الوصف';
 
   @override
   String get adsDescriptionHint =>
       'اكتب تفاصيل العرض أو الخدمة المُعلن عنها...';
+
+  @override
+  String get adsDescriptionArLabel => 'الوصف بالعربية';
+
+  @override
+  String get adsDescriptionArHint =>
+      'اكتب تفاصيل العرض أو الخدمة المُعلن عنها...';
+
+  @override
+  String get adsDescriptionEnLabel => 'الوصف بالإنجليزية';
+
+  @override
+  String get adsDescriptionEnHint =>
+      'Describe the offer or service you\'re advertising...';
 
   @override
   String adsCharCounter(int count, int max) {
@@ -1529,6 +1555,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get adsSubmitCta => 'إرسال للمراجعة';
+
+  @override
+  String get adsSubmitFailedTitle => 'تعذر إرسال الإعلان';
 
   @override
   String get adsSubmittedTitle => 'تم إرسال الإعلان';

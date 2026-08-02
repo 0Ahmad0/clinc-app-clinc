@@ -6,6 +6,8 @@ import '../services/fcm_token_sync_service.dart';
 import '../domain/services/api_service.dart';
 import '../domain/services/api_services_imp.dart';
 
+import '../../features/ads/data/clinic_ads_remote_data_source.dart';
+import '../../features/ads/domain/clinic_ads_repository.dart';
 import '../../features/ads/presentation/cubit/create_ad_cubit.dart';
 import '../../features/auth/domain/account_type.dart';
 import '../../features/auth/data/clinic_auth_remote_data_source.dart';
@@ -96,6 +98,12 @@ void configureDependencies() {
   sl.registerLazySingleton<ClinicServicesRepository>(
     () => ClinicServicesRepository(sl()),
   );
+  sl.registerLazySingleton<ClinicAdsRemoteDataSource>(
+    () => ClinicAdsRemoteDataSource(sl()),
+  );
+  sl.registerLazySingleton<ClinicAdsRepository>(
+    () => ClinicAdsRepository(sl()),
+  );
 
   sl.registerFactory<OnboardingCubit>(OnboardingCubit.new);
   sl.registerFactory<AuthCubit>(() => AuthCubit(sl(), sl()));
@@ -113,5 +121,5 @@ void configureDependencies() {
     (accountType, _) => ReportsCubit(accountType, sl()),
   );
   sl.registerFactory<SettingsCubit>(() => SettingsCubit(sl()));
-  sl.registerFactory<CreateAdCubit>(CreateAdCubit.new);
+  sl.registerFactory<CreateAdCubit>(() => CreateAdCubit(sl()));
 }
