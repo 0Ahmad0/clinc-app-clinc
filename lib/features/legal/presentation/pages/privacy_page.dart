@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../config/theme/app_shadows.dart';
 import '../../../../config/theme/app_spacing.dart';
 import '../../../../shared/extensions/context_extensions.dart';
-import '../widgets/legal_header.dart';
+import '../../../../shared/widgets/app_gradient_header.dart';
 
 /// Privacy policy: a last-updated line followed by the policy sections.
 class PrivacyPage extends StatelessWidget {
@@ -27,7 +27,7 @@ class PrivacyPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            LegalHeader(title: l10n.settingsPrivacy),
+            AppGradientHeader(title: l10n.settingsPrivacy),
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(
                 AppSpacing.screen,

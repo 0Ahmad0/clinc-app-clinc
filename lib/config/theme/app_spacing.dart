@@ -89,6 +89,10 @@ class AppSizes {
   static const double addDoctorSectionIcon = 38;
   static const double addDoctorUploadHeight = 112;
 
+  // Ads
+  static const double adCoverHeight = 180;
+  static const double adSuccessBadge = 96;
+
   // Bottom sheets
   static const double sheetHandleWidth = 44;
   static const double sheetHandleHeight = 5;

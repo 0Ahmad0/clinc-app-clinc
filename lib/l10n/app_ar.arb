@@ -512,5 +512,26 @@
   "legalContactName": "الاسم الكامل",
   "legalContactMessage": "اكتب رسالتك هنا...",
   "legalContactSend": "إرسال الرسالة",
-  "legalContactSent": "تم إرسال رسالتك، سنعود إليك قريباً"
+  "legalContactSent": "تم إرسال رسالتك، سنعود إليك قريباً",
+
+  "settingsPublishAd": "نشر إعلان",
+  "settingsPublishAdSub": "أنشئ إعلاناً لعرض خدماتك",
+  "adsCreateTitle": "إعلان جديد",
+  "adsCreateSubtitle": "سيُعرض بعد موافقة الإدارة",
+  "adsCoverLabel": "صورة الإعلان",
+  "adsCoverPlaceholder": "انقر لرفع صورة الإعلان",
+  "adsCoverHint": "مقاس مقترح ١٢٠٠×٦٧٥، بحد أقصى ٥ ميجابايت",
+  "adsTitleLabel": "عنوان الإعلان",
+  "adsTitleHint": "مثال: خصم ٢٠٪ على تنظيف الأسنان",
+  "adsDescriptionLabel": "الوصف",
+  "adsDescriptionHint": "اكتب تفاصيل العرض أو الخدمة المُعلن عنها...",
+  "adsCharCounter": "{count}/{max}",
+  "@adsCharCounter": {
+    "placeholders": { "count": { "type": "int" }, "max": { "type": "int" } }
+  },
+  "adsReviewNote": "تراجع الإدارة الإعلان خلال ٢٤ ساعة عادةً قبل نشره لجميع المستخدمين",
+  "adsSubmitCta": "إرسال للمراجعة",
+  "adsSubmittedTitle": "تم إرسال الإعلان",
+  "adsSubmittedDesc": "إعلانك الآن قيد المراجعة، وسيتم إشعارك فور اعتماده من قِبل الإدارة",
+  "adsComposeAnother": "إنشاء إعلان آخر"
 }

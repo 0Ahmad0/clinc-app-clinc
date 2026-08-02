@@ -6,6 +6,7 @@ import '../services/fcm_token_sync_service.dart';
 import '../domain/services/api_service.dart';
 import '../domain/services/api_services_imp.dart';
 
+import '../../features/ads/presentation/cubit/create_ad_cubit.dart';
 import '../../features/auth/domain/account_type.dart';
 import '../../features/auth/data/clinic_auth_remote_data_source.dart';
 import '../../features/auth/domain/clinic_auth_repository.dart';
@@ -112,4 +113,5 @@ void configureDependencies() {
     (accountType, _) => ReportsCubit(accountType, sl()),
   );
   sl.registerFactory<SettingsCubit>(() => SettingsCubit(sl()));
+  sl.registerFactory<CreateAdCubit>(CreateAdCubit.new);
 }

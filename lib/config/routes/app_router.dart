@@ -8,6 +8,7 @@ import '../../features/doctors/domain/doctor_specialty.dart';
 import '../../features/doctors/domain/doctor_summary.dart';
 import '../../features/doctors/presentation/pages/add_doctor_page.dart';
 import '../../features/doctors/presentation/pages/doctor_profile_page.dart';
+import '../../features/ads/presentation/pages/create_ad_page.dart';
 import '../../features/appointments/presentation/pages/appointments_page.dart';
 import '../../features/doctors/presentation/pages/doctors_page.dart';
 import '../../features/legal/presentation/pages/about_page.dart';
@@ -88,6 +89,10 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.settings,
         builder: (context, state) => const SettingsPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.createAd,
+        builder: (context, state) => const CreateAdPage(),
       ),
       GoRoute(
         path: AppRoutes.about,

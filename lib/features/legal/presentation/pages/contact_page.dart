@@ -7,9 +7,9 @@ import '../../../../core/enums/app_feedback_type.dart';
 import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/form_validators.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../../shared/widgets/app_gradient_header.dart';
 import '../../../../shared/widgets/app_toast.dart';
 import '../legal_clipboard.dart';
-import '../widgets/legal_header.dart';
 
 /// Contact & support: the clinic's channels, support hours and a message form.
 class ContactPage extends StatefulWidget {
@@ -56,8 +56,16 @@ class _ContactPageState extends State<ContactPage> {
     final channels = <(IconData, String, String)>[
       (Iconsax.call, l10n.legalContactPhone, l10n.legalContactPhoneValue),
       (Iconsax.sms, l10n.legalContactEmail, l10n.legalContactEmailValue),
-      (Iconsax.location, l10n.legalContactAddress, l10n.legalContactAddressValue),
-      (Iconsax.message, l10n.legalContactWhatsapp, l10n.legalContactWhatsappValue),
+      (
+        Iconsax.location,
+        l10n.legalContactAddress,
+        l10n.legalContactAddressValue,
+      ),
+      (
+        Iconsax.message,
+        l10n.legalContactWhatsapp,
+        l10n.legalContactWhatsappValue,
+      ),
     ];
 
     return Scaffold(
@@ -66,7 +74,7 @@ class _ContactPageState extends State<ContactPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            LegalHeader(title: l10n.legalContactTitle),
+            AppGradientHeader(title: l10n.legalContactTitle),
             Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(
                 AppSpacing.screen,

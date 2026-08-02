@@ -13,6 +13,7 @@ class AppRoutes {
   static const services = '/services';
   static const reports = '/reports';
   static const settings = '/settings';
+  static const createAd = '/ads/create';
   static const about = '/legal/about';
   static const privacy = '/legal/privacy';
   static const contact = '/legal/contact';

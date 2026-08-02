@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
-import '../../../../config/theme/app_spacing.dart';
-import '../../../../shared/extensions/context_extensions.dart';
+import '../../config/theme/app_spacing.dart';
+import '../extensions/context_extensions.dart';
 
-/// Gradient app bar shared by the about / privacy / contact screens: a back
-/// button that pops the route and the page title.
-class LegalHeader extends StatelessWidget {
-  const LegalHeader({super.key, required this.title});
+/// Gradient app bar for pushed detail screens: a back button that pops the
+/// route, the page title and an optional supporting line under it.
+class AppGradientHeader extends StatelessWidget {
+  const AppGradientHeader({super.key, required this.title, this.subtitle});
 
   final String title;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +28,11 @@ class LegalHeader extends StatelessWidget {
       child: Stack(
         children: [
           PositionedDirectional(
-            top: -AppSizes.homeHeaderCircleTop,
-            start: -AppSizes.homeHeaderCircleStart,
+            top: -AppSizes.doctorsHeaderCircleTop,
+            end: -AppSizes.doctorsHeaderCircleEnd,
             child: Container(
-              width: AppSizes.homeHeaderCircleSmall,
-              height: AppSizes.homeHeaderCircleSmall,
+              width: AppSizes.doctorsHeaderCircle,
+              height: AppSizes.doctorsHeaderCircle,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -68,12 +69,24 @@ class LegalHeader extends StatelessWidget {
                 ),
                 AppGaps.w12,
                 Expanded(
-                  child: Text(
-                    title,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      color: colors.onBrand,
-                      fontWeight: FontWeight.w700,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          color: colors.onBrand,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      if (subtitle != null)
+                        Text(
+                          subtitle!,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: colors.onBrand.withValues(alpha: 0.72),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
               ],
