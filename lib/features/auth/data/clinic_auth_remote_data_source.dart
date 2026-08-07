@@ -1,6 +1,7 @@
 import '../../../core/data/base_model.dart';
 import '../../../core/domain/services/api_service.dart';
 import '../../../core/utils/app_url.dart';
+import '../../settings/data/models/clinic_settings_model.dart';
 import 'models/clinic_login_model.dart';
 import 'models/clinic_logout_model.dart';
 import 'models/clinic_model.dart';
@@ -40,6 +41,7 @@ class ClinicAuthRemoteDataSource {
     required String email,
     required String password,
     required String type,
+    required List<int> insuranceIds,
     Map<String, dynamic> fcmPayload = const {},
   }) async {
     final response = await _apiServices.post(
@@ -50,6 +52,7 @@ class ClinicAuthRemoteDataSource {
         'email': email,
         'password': password,
         'type': type,
+        'insurance_ids': insuranceIds,
         ...fcmPayload,
       },
       hasToken: false,
@@ -58,6 +61,19 @@ class ClinicAuthRemoteDataSource {
     return BaseModel.fromJson(
       Map<String, dynamic>.from(response as Map),
       (json) => ClinicModel.fromJson(Map<String, dynamic>.from(json as Map)),
+    );
+  }
+
+  Future<BaseModel<BaseModels<ClinicInsuranceModel>>> insurances() async {
+    final response = await _apiServices.get(AppUrl.insurances, hasToken: false);
+    return BaseModel.fromJson(
+      Map<String, dynamic>.from(response as Map),
+      (json) => BaseModels.fromJson(
+        json,
+        (itemJson) => ClinicInsuranceModel.fromJson(
+          Map<String, dynamic>.from(itemJson as Map),
+        ),
+      ),
     );
   }
 

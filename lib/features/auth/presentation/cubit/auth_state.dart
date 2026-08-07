@@ -6,6 +6,7 @@ import '../../data/models/clinic_model.dart';
 import '../../data/models/clinic_otp_status_model.dart';
 import '../../data/models/clinic_otp_verification_model.dart';
 import '../../data/models/clinic_password_reset_model.dart';
+import '../../../settings/data/models/clinic_settings_model.dart';
 import '../../domain/account_type.dart';
 import '../../domain/auth_layer.dart';
 
@@ -30,6 +31,9 @@ abstract class AuthState with _$AuthState {
     @Default(AccountType.clinic) AccountType accountType,
     @Default(AuthAction.none) AuthAction action,
     @Default(false) bool isLoading,
+    @Default(false) bool isLoadingInsurances,
+    @Default(<ClinicInsuranceModel>[]) List<ClinicInsuranceModel> insurances,
+    @Default(<int>{}) Set<int> selectedInsuranceIds,
     ClinicLoginModel? login,
     ClinicModel? registeredClinic,
     ClinicOtpStatusModel? otpStatus,

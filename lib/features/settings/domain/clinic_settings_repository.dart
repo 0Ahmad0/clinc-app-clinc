@@ -25,6 +25,9 @@ class ClinicSettingsRepository {
     ),
   );
 
+  Future<ApiResponse<BaseModel<BaseModels<ClinicInsuranceModel>>>>
+  insurances() => _execute(_remoteDataSource.insurances);
+
   Future<ApiResponse<BaseModel<ClinicPasswordChangeModel>>> changePassword({
     required String currentPassword,
     required String password,

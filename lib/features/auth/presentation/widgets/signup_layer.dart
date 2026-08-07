@@ -9,6 +9,7 @@ import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/input/email_input.dart';
 import '../../../../shared/form_validators.dart';
 import '../../../../shared/widgets/app_button.dart';
+import '../../../settings/data/models/clinic_settings_model.dart';
 import '../../domain/account_type.dart';
 import '../../domain/auth_layer.dart';
 import '../cubit/auth_cubit.dart';
@@ -33,6 +34,12 @@ class SignupLayerState extends State<SignupLayer> {
   final licenseController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthCubit>().loadInsurances();
+  }
 
   @override
   void dispose() {
@@ -133,6 +140,21 @@ class SignupLayerState extends State<SignupLayer> {
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
+            _SectionLabel(l10n.settingsInsurances),
+            const SizedBox(height: AppSpacing.sm),
+            BlocBuilder<AuthCubit, AuthState>(
+              buildWhen: (previous, current) =>
+                  previous.isLoadingInsurances != current.isLoadingInsurances ||
+                  previous.insurances != current.insurances ||
+                  previous.selectedInsuranceIds != current.selectedInsuranceIds,
+              builder: (context, state) => _SignupInsuranceSelector(
+                isLoading: state.isLoadingInsurances,
+                insurances: state.insurances,
+                selectedIds: state.selectedInsuranceIds,
+                onToggle: cubit.toggleInsurance,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
             BlocBuilder<AuthCubit, AuthState>(
               buildWhen: (previous, current) =>
                   previous.isLoading != current.isLoading ||
@@ -152,6 +174,7 @@ class SignupLayerState extends State<SignupLayer> {
                             licenseNumber: licenseController.text,
                             email: normalizeEmailInput(emailController.text),
                             password: passwordController.text,
+                            insuranceIds: cubit.state.selectedInsuranceIds,
                           );
                         }
                       },
@@ -186,6 +209,150 @@ class SignupLayerState extends State<SignupLayer> {
         AccountType.lab => l10n.authFacilityHintLab,
         AccountType.both => l10n.authFacilityHintBoth,
       };
+}
+
+class _SignupInsuranceSelector extends StatelessWidget {
+  const _SignupInsuranceSelector({
+    required this.isLoading,
+    required this.insurances,
+    required this.selectedIds,
+    required this.onToggle,
+  });
+
+  final bool isLoading;
+  final List<ClinicInsuranceModel> insurances;
+  final Set<int> selectedIds;
+  final ValueChanged<int> onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: colors.fill.withValues(alpha: 0.9),
+        borderRadius: BorderRadius.circular(AppRadius.field),
+        border: Border.all(color: colors.line, width: 1.2),
+      ),
+      child: isLoading
+          ? Row(
+              children: [
+                SizedBox(
+                  width: AppSizes.iconSm,
+                  height: AppSizes.iconSm,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: colors.primary500,
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  context.l10n.settingsInsurancesLoading,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: colors.gray,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            )
+          : insurances.isEmpty
+          ? Text(
+              context.l10n.settingsInsurancesEmpty,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: colors.gray,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          : Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                for (final insurance in insurances)
+                  _SignupInsuranceChip(
+                    label: _insuranceName(context, insurance),
+                    selected: selectedIds.contains(insurance.id),
+                    enabled: insurance.isActive,
+                    onTap: () => onToggle(insurance.id),
+                  ),
+              ],
+            ),
+    );
+  }
+
+  String _insuranceName(BuildContext context, ClinicInsuranceModel insurance) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    if (isArabic) {
+      return insurance.nameAr ?? insurance.name ?? insurance.nameEn ?? '-';
+    }
+    return insurance.nameEn ?? insurance.name ?? insurance.nameAr ?? '-';
+  }
+}
+
+class _SignupInsuranceChip extends StatelessWidget {
+  const _SignupInsuranceChip({
+    required this.label,
+    required this.selected,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final foreground = selected
+        ? colors.onBrand
+        : enabled
+        ? colors.gray
+        : colors.muted;
+
+    return GestureDetector(
+      onTap: enabled ? onTap : null,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOutCubic,
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          AppSpacing.sm,
+          AppSpacing.xs + 1,
+          AppSpacing.md,
+          AppSpacing.xs + 1,
+        ),
+        decoration: BoxDecoration(
+          color: selected ? null : context.colors.surface,
+          gradient: selected ? colors.ctaGradient : null,
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+          border: Border.all(
+            color: selected ? colors.onBrand.withValues(alpha: 0) : colors.line,
+            width: 1.5,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              selected ? Iconsax.tick_circle : Iconsax.shield_tick,
+              size: AppSizes.filterChipIcon,
+              color: foreground,
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            Text(
+              label,
+              style: context.textTheme.bodySmall?.copyWith(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: foreground,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _Header extends StatelessWidget {

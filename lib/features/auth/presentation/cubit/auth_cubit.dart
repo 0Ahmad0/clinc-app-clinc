@@ -12,6 +12,7 @@ import '../../data/models/clinic_model.dart';
 import '../../data/models/clinic_otp_status_model.dart';
 import '../../data/models/clinic_otp_verification_model.dart';
 import '../../data/models/clinic_password_reset_model.dart';
+import '../../../settings/data/models/clinic_settings_model.dart';
 import '../../domain/account_type.dart';
 import '../../domain/auth_layer.dart';
 import '../../domain/clinic_auth_repository.dart';
@@ -31,6 +32,46 @@ class AuthCubit extends Cubit<AuthState> {
 
   void selectAccountType(AccountType type) =>
       emit(state.copyWith(accountType: type));
+
+  Future<void> loadInsurances() async {
+    if (state.isLoadingInsurances || state.insurances.isNotEmpty) return;
+    emit(state.copyWith(isLoadingInsurances: true, failure: null));
+
+    final result = await _repository.insurances();
+    result.when(
+      success: (response) {
+        final insurances = response.result?.list ?? const [];
+        emit(
+          state.copyWith(
+            insurances: insurances,
+            selectedInsuranceIds: {
+              for (final insurance in insurances)
+                if (insurance.isSelected) insurance.id,
+            },
+            isLoadingInsurances: false,
+            failure: null,
+          ),
+        );
+      },
+      failure: (exception) =>
+          emit(state.copyWith(isLoadingInsurances: false, failure: exception)),
+    );
+  }
+
+  void toggleInsurance(int id) {
+    ClinicInsuranceModel? insurance;
+    for (final item in state.insurances) {
+      if (item.id == id) {
+        insurance = item;
+        break;
+      }
+    }
+    if (insurance == null || !insurance.isActive) return;
+
+    final ids = {...state.selectedInsuranceIds};
+    if (!ids.remove(id)) ids.add(id);
+    emit(state.copyWith(selectedInsuranceIds: ids));
+  }
 
   Future<void> login({
     required String identifier,
@@ -55,6 +96,7 @@ class AuthCubit extends Cubit<AuthState> {
     required String licenseNumber,
     required String email,
     required String password,
+    required Set<int> insuranceIds,
   }) async {
     if (state.isLoading) return;
     _start(AuthAction.register);
@@ -67,6 +109,7 @@ class AuthCubit extends Cubit<AuthState> {
       email: normalizeEmailInput(email),
       password: password,
       type: state.accountType.name,
+      insuranceIds: insuranceIds.toList()..sort(),
       fcmPayload: fcmPayload,
     );
 

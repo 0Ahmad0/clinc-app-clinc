@@ -2012,6 +2012,24 @@ abstract class AppLocalizations {
   /// **'Contact info'**
   String get settingsContactInfo;
 
+  /// No description provided for @settingsInsurances.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted insurances'**
+  String get settingsInsurances;
+
+  /// No description provided for @settingsInsurancesLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading insurances...'**
+  String get settingsInsurancesLoading;
+
+  /// No description provided for @settingsInsurancesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No insurances available'**
+  String get settingsInsurancesEmpty;
+
   /// No description provided for @settingsFieldClinicName.
   ///
   /// In en, this message translates to:

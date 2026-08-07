@@ -993,6 +993,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsContactInfo => 'Contact info';
 
   @override
+  String get settingsInsurances => 'Accepted insurances';
+
+  @override
+  String get settingsInsurancesLoading => 'Loading insurances...';
+
+  @override
+  String get settingsInsurancesEmpty => 'No insurances available';
+
+  @override
   String get settingsFieldClinicName => 'Clinic name';
 
   @override

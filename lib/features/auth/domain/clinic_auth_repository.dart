@@ -8,6 +8,7 @@ import '../data/models/clinic_model.dart';
 import '../data/models/clinic_otp_status_model.dart';
 import '../data/models/clinic_otp_verification_model.dart';
 import '../data/models/clinic_password_reset_model.dart';
+import '../../settings/data/models/clinic_settings_model.dart';
 
 class ClinicAuthRepository {
   ClinicAuthRepository(this._remoteDataSource);
@@ -29,6 +30,7 @@ class ClinicAuthRepository {
     required String email,
     required String password,
     required String type,
+    required List<int> insuranceIds,
     Map<String, dynamic> fcmPayload = const {},
   }) {
     return _execute(
@@ -38,9 +40,15 @@ class ClinicAuthRepository {
         email: email,
         password: password,
         type: type,
+        insuranceIds: insuranceIds,
         fcmPayload: fcmPayload,
       ),
     );
+  }
+
+  Future<ApiResponse<BaseModel<BaseModels<ClinicInsuranceModel>>>>
+  insurances() {
+    return _execute(_remoteDataSource.insurances);
   }
 
   Future<ApiResponse<BaseModel<ClinicLoginModel>>> me() {

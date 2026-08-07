@@ -990,6 +990,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsContactInfo => 'بيانات التواصل';
 
   @override
+  String get settingsInsurances => 'شركات التأمين المقبولة';
+
+  @override
+  String get settingsInsurancesLoading => 'جار تحميل شركات التأمين...';
+
+  @override
+  String get settingsInsurancesEmpty => 'لا توجد شركات تأمين متاحة';
+
+  @override
   String get settingsFieldClinicName => 'اسم العيادة';
 
   @override

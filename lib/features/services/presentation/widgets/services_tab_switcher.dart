@@ -87,7 +87,8 @@ class _KindTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(kind.icon, size: AppSizes.filterChipIcon, color: foreground),
-            AppGaps.w8,
+            AppGaps.w6,
+
             Flexible(
               child: Text(
                 kind.tabLabel(context.l10n),

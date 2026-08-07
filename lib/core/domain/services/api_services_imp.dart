@@ -246,7 +246,9 @@ class ApiServicesImp implements ApiServices {
         data: formData ?? body,
         options: Options(
           headers: _headers,
-          contentType: Headers.jsonContentType,
+          contentType: formData != null
+              ? Headers.multipartFormDataContentType
+              : Headers.jsonContentType,
         ),
       );
       return _handleResponseAsJson(response);

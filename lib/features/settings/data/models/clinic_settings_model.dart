@@ -55,6 +55,23 @@ abstract class ClinicSettingsClinicModel with _$ClinicSettingsClinicModel {
 }
 
 @freezed
+abstract class ClinicInsuranceModel with _$ClinicInsuranceModel {
+  const factory ClinicInsuranceModel({
+    @JsonKey(fromJson: _intFromJson) required int id,
+    String? name,
+    @JsonKey(name: 'name_ar') String? nameAr,
+    @JsonKey(name: 'name_en') String? nameEn,
+    String? code,
+    String? logo,
+    @JsonKey(name: 'is_active') @Default(true) bool isActive,
+    @JsonKey(name: 'is_selected') @Default(false) bool isSelected,
+  }) = _ClinicInsuranceModel;
+
+  factory ClinicInsuranceModel.fromJson(Map<String, dynamic> json) =>
+      _$ClinicInsuranceModelFromJson(json);
+}
+
+@freezed
 abstract class ClinicNotificationSettingsModel
     with _$ClinicNotificationSettingsModel {
   const factory ClinicNotificationSettingsModel({
@@ -77,4 +94,10 @@ abstract class ClinicPasswordChangeModel with _$ClinicPasswordChangeModel {
 
   factory ClinicPasswordChangeModel.fromJson(Map<String, dynamic> json) =>
       _$ClinicPasswordChangeModelFromJson(json);
+}
+
+int _intFromJson(Object? value) {
+  if (value is int) return value;
+  if (value is num) return value.toInt();
+  return int.tryParse(value?.toString() ?? '') ?? 0;
 }

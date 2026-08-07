@@ -143,6 +143,7 @@ class AppSizes {
 class AppGaps {
   const AppGaps._();
 
+  static const w6 = SizedBox(width: AppSpacing.xxs);
   static const w8 = SizedBox(width: AppSpacing.xs);
   static const w12 = SizedBox(width: AppSpacing.sm);
   static const h8 = SizedBox(height: AppSpacing.xs);

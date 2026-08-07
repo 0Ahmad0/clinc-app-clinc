@@ -10,6 +10,7 @@ import '../../../../shared/extensions/context_extensions.dart';
 import '../../../../shared/input/email_input.dart';
 import '../../../../shared/widgets/app_button.dart';
 import '../../../../shared/widgets/media_source_sheet.dart';
+import '../../data/models/clinic_settings_model.dart';
 import '../cubit/settings_cubit.dart';
 import '../widgets/settings_group_title.dart';
 import '../widgets/settings_profile_cover.dart';
@@ -32,6 +33,12 @@ class _SettingsProfileViewState extends State<SettingsProfileView> {
   final _website = TextEditingController();
   final _description = TextEditingController();
   int? _clinicId;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<SettingsCubit>().loadInsurances();
+  }
 
   @override
   void dispose() {
@@ -106,6 +113,12 @@ class _SettingsProfileViewState extends State<SettingsProfileView> {
             ],
           ),
         ];
+        final insuranceSection = _ProfileInsuranceSection(
+          isLoading: state.isLoadingInsurances,
+          insurances: state.insurances,
+          selectedIds: state.selectedInsuranceIds,
+          onToggle: context.read<SettingsCubit>().toggleInsurance,
+        );
 
         return Stack(
           children: [
@@ -145,6 +158,10 @@ class _SettingsProfileViewState extends State<SettingsProfileView> {
                             ),
                           AppGaps.h8,
                         ],
+                        SettingsGroupTitle(title: l10n.settingsInsurances),
+                        AppGaps.h12,
+                        insuranceSection,
+                        AppGaps.h8,
                       ],
                     ),
                   ),
@@ -185,6 +202,7 @@ class _SettingsProfileViewState extends State<SettingsProfileView> {
                           location: _location.text.trim(),
                           description: _description.text.trim(),
                           website: _website.text.trim(),
+                          insuranceIds: state.selectedInsuranceIds,
                         ),
                 ),
               ),
@@ -207,5 +225,153 @@ class _SettingsProfileViewState extends State<SettingsProfileView> {
     final path = await sl<MediaService>().pickImage(source);
     if (path == null) return;
     cover ? cubit.setCover(path) : cubit.setAvatar(path);
+  }
+}
+
+class _ProfileInsuranceSection extends StatelessWidget {
+  const _ProfileInsuranceSection({
+    required this.isLoading,
+    required this.insurances,
+    required this.selectedIds,
+    required this.onToggle,
+  });
+
+  final bool isLoading;
+  final List<ClinicInsuranceModel> insurances;
+  final Set<int> selectedIds;
+  final ValueChanged<int> onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.field),
+        border: Border.all(
+          color: colors.ink.withValues(alpha: 0.08),
+          width: 1.5,
+        ),
+      ),
+      child: isLoading
+          ? Row(
+              children: [
+                SizedBox(
+                  width: AppSizes.iconSm,
+                  height: AppSizes.iconSm,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: colors.primary500,
+                  ),
+                ),
+                AppGaps.w8,
+                Text(
+                  context.l10n.settingsInsurancesLoading,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: colors.muted,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            )
+          : insurances.isEmpty
+          ? Text(
+              context.l10n.settingsInsurancesEmpty,
+              style: context.textTheme.bodySmall?.copyWith(
+                color: colors.muted,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          : Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.sm,
+              children: [
+                for (final insurance in insurances)
+                  _InsuranceChip(
+                    label: _insuranceName(context, insurance),
+                    selected: selectedIds.contains(insurance.id),
+                    enabled: insurance.isActive,
+                    onTap: () => onToggle(insurance.id),
+                  ),
+              ],
+            ),
+    );
+  }
+
+  String _insuranceName(BuildContext context, ClinicInsuranceModel insurance) {
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    if (isArabic) {
+      return insurance.nameAr ?? insurance.name ?? insurance.nameEn ?? '-';
+    }
+    return insurance.nameEn ?? insurance.name ?? insurance.nameAr ?? '-';
+  }
+}
+
+class _InsuranceChip extends StatelessWidget {
+  const _InsuranceChip({
+    required this.label,
+    required this.selected,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final foreground = selected
+        ? colors.onBrand
+        : enabled
+        ? colors.gray
+        : colors.muted;
+
+    return GestureDetector(
+      onTap: enabled ? onTap : null,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        curve: Curves.easeOutCubic,
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          AppSpacing.sm,
+          AppSpacing.xs + 1,
+          AppSpacing.md,
+          AppSpacing.xs + 1,
+        ),
+        decoration: BoxDecoration(
+          color: selected
+              ? null
+              : colors.fill.withValues(alpha: enabled ? 1 : 0.55),
+          gradient: selected ? colors.ctaGradient : null,
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+          border: Border.all(
+            color: selected ? colors.onBrand.withValues(alpha: 0) : colors.line,
+            width: 1.5,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              selected ? Iconsax.tick_circle : Iconsax.shield_tick,
+              size: AppSizes.filterChipIcon,
+              color: foreground,
+            ),
+            AppGaps.w8,
+            Text(
+              label,
+              style: context.textTheme.bodySmall?.copyWith(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: foreground,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -25,11 +25,25 @@ class ClinicSettingsRemoteDataSource {
     String? logoPath,
     String? coverPath,
   }) async {
-    final form = FormData.fromMap({
-      ...fields,
-      if (logoPath != null) 'logo': await MultipartFile.fromFile(logoPath),
-      if (coverPath != null) 'cover': await MultipartFile.fromFile(coverPath),
-    });
+    final form = FormData();
+    for (final entry in fields.entries) {
+      final value = entry.value;
+      if (value is List) {
+        for (var index = 0; index < value.length; index++) {
+          form.fields.add(MapEntry('${entry.key}[$index]', '${value[index]}'));
+        }
+      } else if (value != null) {
+        form.fields.add(MapEntry(entry.key, value.toString()));
+      }
+    }
+    if (logoPath != null) {
+      form.files.add(MapEntry('logo', await MultipartFile.fromFile(logoPath)));
+    }
+    if (coverPath != null) {
+      form.files.add(
+        MapEntry('cover', await MultipartFile.fromFile(coverPath)),
+      );
+    }
     final response = await _apiServices.put(
       AppUrl.clinicProfile,
       formData: form,
@@ -38,6 +52,19 @@ class ClinicSettingsRemoteDataSource {
       Map<String, dynamic>.from(response as Map),
       (json) => ClinicSettingsProfileUpdateModel.fromJson(
         Map<String, dynamic>.from(json as Map),
+      ),
+    );
+  }
+
+  Future<BaseModel<BaseModels<ClinicInsuranceModel>>> insurances() async {
+    final response = await _apiServices.get(AppUrl.clinicInsurances);
+    return BaseModel.fromJson(
+      Map<String, dynamic>.from(response as Map),
+      (json) => BaseModels.fromJson(
+        json,
+        (itemJson) => ClinicInsuranceModel.fromJson(
+          Map<String, dynamic>.from(itemJson as Map),
+        ),
       ),
     );
   }

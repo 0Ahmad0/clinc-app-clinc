@@ -55,7 +55,46 @@ class SettingsCubit extends Cubit<SettingsState> {
     );
   }
 
+  Future<void> loadInsurances() async {
+    if (state.isLoadingInsurances || state.insurances.isNotEmpty) return;
+    emit(state.copyWith(isLoadingInsurances: true, failure: null));
+    final result = await _repository.insurances();
+    result.when(
+      success: (response) {
+        final insurances = response.result?.list ?? const [];
+        emit(
+          state.copyWith(
+            insurances: insurances,
+            selectedInsuranceIds: {
+              for (final insurance in insurances)
+                if (insurance.isSelected) insurance.id,
+            },
+            isLoadingInsurances: false,
+            failure: null,
+          ),
+        );
+      },
+      failure: (exception) =>
+          emit(state.copyWith(isLoadingInsurances: false, failure: exception)),
+    );
+  }
+
   void show(SettingsSection section) => emit(state.copyWith(section: section));
+
+  void toggleInsurance(int id) {
+    ClinicInsuranceModel? insurance;
+    for (final item in state.insurances) {
+      if (item.id == id) {
+        insurance = item;
+        break;
+      }
+    }
+    if (insurance == null || !insurance.isActive) return;
+
+    final ids = {...state.selectedInsuranceIds};
+    if (!ids.remove(id)) ids.add(id);
+    emit(state.copyWith(selectedInsuranceIds: ids, profileSaved: false));
+  }
 
   Future<void> toggleChannel(NotificationChannel channel) async {
     if (state.busyNotificationChannels.contains(channel)) return;
@@ -115,6 +154,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     required String location,
     required String description,
     required String website,
+    required Set<int> insuranceIds,
   }) async {
     emit(
       state.copyWith(isSavingProfile: true, profileSaved: false, failure: null),
@@ -128,6 +168,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         'location': location,
         'description': description,
         'website': website,
+        'insurance_ids': insuranceIds.toList()..sort(),
       },
       logoPath: state.avatarPath,
       coverPath: state.coverPath,

@@ -20,12 +20,15 @@ class FcmTokenSyncService {
     _initialized = true;
     _refreshSubscription = FirebaseMessaging.instance.onTokenRefresh.listen(
       (token) => unawaited(syncToken(token: token)),
+      onError: (Object error, StackTrace stackTrace) {
+        debugPrint('FCM token refresh failed: $error');
+      },
     );
     await syncCurrentToken();
   }
 
   Future<void> syncCurrentToken() async {
-    final token = await FirebaseMessaging.instance.getToken();
+    final token = await _getToken();
     await syncToken(token: token);
   }
 
@@ -43,13 +46,22 @@ class FcmTokenSyncService {
   }
 
   Future<Map<String, dynamic>> registerPayload() async {
-    final token = await FirebaseMessaging.instance.getToken();
+    final token = await _getToken();
     if (token == null || token.isEmpty) return const {};
     return {
       'fcm_token': token,
       'platform': _platform,
       'locale': StorageService.instance.languageCode,
     };
+  }
+
+  Future<String?> _getToken() async {
+    try {
+      return await FirebaseMessaging.instance.getToken();
+    } catch (error) {
+      debugPrint('FCM token unavailable: $error');
+      return null;
+    }
   }
 
   String get _platform {

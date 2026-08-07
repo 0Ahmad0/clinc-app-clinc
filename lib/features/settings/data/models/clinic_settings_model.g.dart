@@ -84,6 +84,32 @@ Map<String, dynamic> _$ClinicSettingsClinicModelToJson(
   'working_hours': instance.workingHours,
 };
 
+_ClinicInsuranceModel _$ClinicInsuranceModelFromJson(
+  Map<String, dynamic> json,
+) => _ClinicInsuranceModel(
+  id: _intFromJson(json['id']),
+  name: json['name'] as String?,
+  nameAr: json['name_ar'] as String?,
+  nameEn: json['name_en'] as String?,
+  code: json['code'] as String?,
+  logo: json['logo'] as String?,
+  isActive: json['is_active'] as bool? ?? true,
+  isSelected: json['is_selected'] as bool? ?? false,
+);
+
+Map<String, dynamic> _$ClinicInsuranceModelToJson(
+  _ClinicInsuranceModel instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'name_ar': instance.nameAr,
+  'name_en': instance.nameEn,
+  'code': instance.code,
+  'logo': instance.logo,
+  'is_active': instance.isActive,
+  'is_selected': instance.isSelected,
+};
+
 _ClinicNotificationSettingsModel _$ClinicNotificationSettingsModelFromJson(
   Map<String, dynamic> json,
 ) => _ClinicNotificationSettingsModel(

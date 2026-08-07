@@ -903,6 +903,290 @@ as List<dynamic>,
 
 
 /// @nodoc
+mixin _$ClinicInsuranceModel {
+
+@JsonKey(fromJson: _intFromJson) int get id; String? get name;@JsonKey(name: 'name_ar') String? get nameAr;@JsonKey(name: 'name_en') String? get nameEn; String? get code; String? get logo;@JsonKey(name: 'is_active') bool get isActive;@JsonKey(name: 'is_selected') bool get isSelected;
+/// Create a copy of ClinicInsuranceModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ClinicInsuranceModelCopyWith<ClinicInsuranceModel> get copyWith => _$ClinicInsuranceModelCopyWithImpl<ClinicInsuranceModel>(this as ClinicInsuranceModel, _$identity);
+
+  /// Serializes this ClinicInsuranceModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClinicInsuranceModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.nameAr, nameAr) || other.nameAr == nameAr)&&(identical(other.nameEn, nameEn) || other.nameEn == nameEn)&&(identical(other.code, code) || other.code == code)&&(identical(other.logo, logo) || other.logo == logo)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isSelected, isSelected) || other.isSelected == isSelected));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,nameAr,nameEn,code,logo,isActive,isSelected);
+
+@override
+String toString() {
+  return 'ClinicInsuranceModel(id: $id, name: $name, nameAr: $nameAr, nameEn: $nameEn, code: $code, logo: $logo, isActive: $isActive, isSelected: $isSelected)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ClinicInsuranceModelCopyWith<$Res>  {
+  factory $ClinicInsuranceModelCopyWith(ClinicInsuranceModel value, $Res Function(ClinicInsuranceModel) _then) = _$ClinicInsuranceModelCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(fromJson: _intFromJson) int id, String? name,@JsonKey(name: 'name_ar') String? nameAr,@JsonKey(name: 'name_en') String? nameEn, String? code, String? logo,@JsonKey(name: 'is_active') bool isActive,@JsonKey(name: 'is_selected') bool isSelected
+});
+
+
+
+
+}
+/// @nodoc
+class _$ClinicInsuranceModelCopyWithImpl<$Res>
+    implements $ClinicInsuranceModelCopyWith<$Res> {
+  _$ClinicInsuranceModelCopyWithImpl(this._self, this._then);
+
+  final ClinicInsuranceModel _self;
+  final $Res Function(ClinicInsuranceModel) _then;
+
+/// Create a copy of ClinicInsuranceModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? nameAr = freezed,Object? nameEn = freezed,Object? code = freezed,Object? logo = freezed,Object? isActive = null,Object? isSelected = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,nameAr: freezed == nameAr ? _self.nameAr : nameAr // ignore: cast_nullable_to_non_nullable
+as String?,nameEn: freezed == nameEn ? _self.nameEn : nameEn // ignore: cast_nullable_to_non_nullable
+as String?,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String?,logo: freezed == logo ? _self.logo : logo // ignore: cast_nullable_to_non_nullable
+as String?,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
+as bool,isSelected: null == isSelected ? _self.isSelected : isSelected // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ClinicInsuranceModel].
+extension ClinicInsuranceModelPatterns on ClinicInsuranceModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ClinicInsuranceModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ClinicInsuranceModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ClinicInsuranceModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _ClinicInsuranceModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ClinicInsuranceModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ClinicInsuranceModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _intFromJson)  int id,  String? name, @JsonKey(name: 'name_ar')  String? nameAr, @JsonKey(name: 'name_en')  String? nameEn,  String? code,  String? logo, @JsonKey(name: 'is_active')  bool isActive, @JsonKey(name: 'is_selected')  bool isSelected)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ClinicInsuranceModel() when $default != null:
+return $default(_that.id,_that.name,_that.nameAr,_that.nameEn,_that.code,_that.logo,_that.isActive,_that.isSelected);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: _intFromJson)  int id,  String? name, @JsonKey(name: 'name_ar')  String? nameAr, @JsonKey(name: 'name_en')  String? nameEn,  String? code,  String? logo, @JsonKey(name: 'is_active')  bool isActive, @JsonKey(name: 'is_selected')  bool isSelected)  $default,) {final _that = this;
+switch (_that) {
+case _ClinicInsuranceModel():
+return $default(_that.id,_that.name,_that.nameAr,_that.nameEn,_that.code,_that.logo,_that.isActive,_that.isSelected);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: _intFromJson)  int id,  String? name, @JsonKey(name: 'name_ar')  String? nameAr, @JsonKey(name: 'name_en')  String? nameEn,  String? code,  String? logo, @JsonKey(name: 'is_active')  bool isActive, @JsonKey(name: 'is_selected')  bool isSelected)?  $default,) {final _that = this;
+switch (_that) {
+case _ClinicInsuranceModel() when $default != null:
+return $default(_that.id,_that.name,_that.nameAr,_that.nameEn,_that.code,_that.logo,_that.isActive,_that.isSelected);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ClinicInsuranceModel implements ClinicInsuranceModel {
+  const _ClinicInsuranceModel({@JsonKey(fromJson: _intFromJson) required this.id, this.name, @JsonKey(name: 'name_ar') this.nameAr, @JsonKey(name: 'name_en') this.nameEn, this.code, this.logo, @JsonKey(name: 'is_active') this.isActive = true, @JsonKey(name: 'is_selected') this.isSelected = false});
+  factory _ClinicInsuranceModel.fromJson(Map<String, dynamic> json) => _$ClinicInsuranceModelFromJson(json);
+
+@override@JsonKey(fromJson: _intFromJson) final  int id;
+@override final  String? name;
+@override@JsonKey(name: 'name_ar') final  String? nameAr;
+@override@JsonKey(name: 'name_en') final  String? nameEn;
+@override final  String? code;
+@override final  String? logo;
+@override@JsonKey(name: 'is_active') final  bool isActive;
+@override@JsonKey(name: 'is_selected') final  bool isSelected;
+
+/// Create a copy of ClinicInsuranceModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ClinicInsuranceModelCopyWith<_ClinicInsuranceModel> get copyWith => __$ClinicInsuranceModelCopyWithImpl<_ClinicInsuranceModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ClinicInsuranceModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClinicInsuranceModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.nameAr, nameAr) || other.nameAr == nameAr)&&(identical(other.nameEn, nameEn) || other.nameEn == nameEn)&&(identical(other.code, code) || other.code == code)&&(identical(other.logo, logo) || other.logo == logo)&&(identical(other.isActive, isActive) || other.isActive == isActive)&&(identical(other.isSelected, isSelected) || other.isSelected == isSelected));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,nameAr,nameEn,code,logo,isActive,isSelected);
+
+@override
+String toString() {
+  return 'ClinicInsuranceModel(id: $id, name: $name, nameAr: $nameAr, nameEn: $nameEn, code: $code, logo: $logo, isActive: $isActive, isSelected: $isSelected)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ClinicInsuranceModelCopyWith<$Res> implements $ClinicInsuranceModelCopyWith<$Res> {
+  factory _$ClinicInsuranceModelCopyWith(_ClinicInsuranceModel value, $Res Function(_ClinicInsuranceModel) _then) = __$ClinicInsuranceModelCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(fromJson: _intFromJson) int id, String? name,@JsonKey(name: 'name_ar') String? nameAr,@JsonKey(name: 'name_en') String? nameEn, String? code, String? logo,@JsonKey(name: 'is_active') bool isActive,@JsonKey(name: 'is_selected') bool isSelected
+});
+
+
+
+
+}
+/// @nodoc
+class __$ClinicInsuranceModelCopyWithImpl<$Res>
+    implements _$ClinicInsuranceModelCopyWith<$Res> {
+  __$ClinicInsuranceModelCopyWithImpl(this._self, this._then);
+
+  final _ClinicInsuranceModel _self;
+  final $Res Function(_ClinicInsuranceModel) _then;
+
+/// Create a copy of ClinicInsuranceModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? nameAr = freezed,Object? nameEn = freezed,Object? code = freezed,Object? logo = freezed,Object? isActive = null,Object? isSelected = null,}) {
+  return _then(_ClinicInsuranceModel(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,nameAr: freezed == nameAr ? _self.nameAr : nameAr // ignore: cast_nullable_to_non_nullable
+as String?,nameEn: freezed == nameEn ? _self.nameEn : nameEn // ignore: cast_nullable_to_non_nullable
+as String?,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String?,logo: freezed == logo ? _self.logo : logo // ignore: cast_nullable_to_non_nullable
+as String?,isActive: null == isActive ? _self.isActive : isActive // ignore: cast_nullable_to_non_nullable
+as bool,isSelected: null == isSelected ? _self.isSelected : isSelected // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$ClinicNotificationSettingsModel {
 
 @JsonKey(name: 'app_notifications') bool get appNotifications;@JsonKey(name: 'email_notifications') bool get emailNotifications;@JsonKey(name: 'sms_notifications') bool get smsNotifications;
